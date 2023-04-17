@@ -1,9 +1,12 @@
 package com.a307.ifidietommorow.domain.entity;
 
+import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -12,27 +15,35 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "user")
 public class User extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private Long userId;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String name;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String email;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private Integer age;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private String nickname;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
+    @ColumnDefault("false")
     private Boolean sendAgree;
 
     @Column // 비동의 시 null로?
@@ -41,10 +52,13 @@ public class User extends BaseEntity{
     @Column // 가입 이후 검사 전까지는 null
     private Long personalityId;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
     private Boolean newCheck;
 
-    @Column(nullable = false)
+    @Column
+    @NotNull
+    @ColumnDefault("false")
     private Boolean deleted;
 
 //    토큰 관련 부분은 확실하지 않아서 작성하고 주석처리했습니다.
