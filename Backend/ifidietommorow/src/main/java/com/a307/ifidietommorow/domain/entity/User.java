@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -13,6 +15,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DynamicInsert
 @Table(name = "user")
 public class User extends BaseEntity{
 
@@ -40,6 +43,7 @@ public class User extends BaseEntity{
 
     @Column
     @NotNull
+    @ColumnDefault("false")
     private Boolean sendAgree;
 
     @Column // 비동의 시 null로?
@@ -54,6 +58,7 @@ public class User extends BaseEntity{
 
     @Column
     @NotNull
+    @ColumnDefault("false")
     private Boolean deleted;
 
 //    토큰 관련 부분은 확실하지 않아서 작성하고 주석처리했습니다.
