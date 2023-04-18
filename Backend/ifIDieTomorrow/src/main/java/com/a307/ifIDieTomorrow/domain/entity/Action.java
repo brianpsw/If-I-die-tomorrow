@@ -18,21 +18,20 @@ import javax.persistence.*;
 @Builder
 @Table(name = "action")
 public class Action {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    @NotNull
-    private Long actionId;
-
-    @Column
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "personality_id")
-    private Personality personality;
-
-    @Column
-    @NotNull
-    private String content;
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column
+	@NotNull
+	private Long actionId;
+	
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "personality_id")
+	private Personality personality;
+	
+	@Column
+	@NotNull
+	private String content;
+	
 }
