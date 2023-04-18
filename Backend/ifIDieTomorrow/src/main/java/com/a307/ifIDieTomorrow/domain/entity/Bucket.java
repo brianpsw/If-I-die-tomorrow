@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Builder
 @DynamicInsert
 @Table(name = "bucket")
-public class Bucket {
+public class Bucket extends BaseEntity {
 
 	@Column
 	@Id
@@ -50,4 +50,5 @@ public class Bucket {
 	@NotNull
 	@ColumnDefault("0")
 	private Integer report;
+	
 }
