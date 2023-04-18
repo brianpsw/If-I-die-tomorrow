@@ -19,7 +19,7 @@ pipeline {
                 }
             }
             steps {
-                echo 'Testing...'
+                echo 'BE Testing...'
             }
         }
 
@@ -31,7 +31,7 @@ pipeline {
                 }
             }
             steps {
-                echo 'Testing...'
+                echo 'FE Testing...'
             }
         }
 
