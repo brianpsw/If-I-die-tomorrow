@@ -199,6 +199,9 @@ pipeline {
                 }
 
             }
+            steps {
+                sh 'docker run -d -p 8000:8080 --name back-springboot --network my-network back-springboot'
+            }
 
             post {
                 success {
