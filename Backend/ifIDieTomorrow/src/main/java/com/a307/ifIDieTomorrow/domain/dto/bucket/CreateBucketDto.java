@@ -1,4 +1,4 @@
-package com.a307.ifIDieTomorrow.domain.dto;
+package com.a307.ifIDieTomorrow.domain.dto.bucket;
 
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import lombok.AllArgsConstructor;
@@ -18,16 +18,6 @@ public class CreateBucketDto {
 	private Boolean complete;
 	private String imageUrl;
 	private Boolean secret;
-	
-	public static CreateBucketDto toDto(Bucket bucket) {
-		return new CreateBucketDto(
-				bucket.getUserId(),
-				bucket.getTitle(),
-				bucket.getContent(),
-				bucket.getComplete(),
-				bucket.getImageUrl(),
-				bucket.getSecret()
-		);
-	}
+	private Boolean hasPhoto;
 	
 }

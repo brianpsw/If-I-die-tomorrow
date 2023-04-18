@@ -1,4 +1,4 @@
-package com.a307.ifIDieTomorrow.domain.dto;
+package com.a307.ifIDieTomorrow.domain.dto.bucket;
 
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import lombok.AllArgsConstructor;
