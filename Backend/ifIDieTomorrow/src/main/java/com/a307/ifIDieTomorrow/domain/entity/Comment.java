@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
@@ -16,38 +15,27 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @DynamicInsert
-@Table(name = "bucket")
-public class Bucket {
+@Table(name = "comment")
+public class Comment {
 
 	@Column
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long bucketId;
+	private Long commentId;
 	
 	@Column
 	@NotNull
 	private Long userId;
 	
-	@Column(length = 100)
-	@NotNull
-	private String title;
-	
 	@Column(columnDefinition = "TEXT")
+	@NotNull
 	private String content;
 	
+	@Column
 	@NotNull
-	@Column
-	@ColumnDefault("false")
-	private Boolean complete;
-	
-	@Column
-	private String imageUrl;
-	
-	@Column
-	private Boolean secret;
+	private Boolean type;
 	
 	@Column
 	@NotNull
-	@ColumnDefault("0")
-	private Integer report;
+	private Long typeId;
 }
