@@ -22,7 +22,6 @@ public class Photo {
 	@NotNull
 	private Long photoId;
 
-	@Column
 	@NotNull
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "category_id")
