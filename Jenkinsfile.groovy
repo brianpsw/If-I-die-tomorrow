@@ -6,7 +6,7 @@ pipeline {
 
             steps {
                 echo "Running ${env.GIT_BRANCH} on ${env.JENKINS_URL}"
-                echo "Clone ${env.gitlabActionType}, ${env.JENKINS_URL}, "
+                echo "Clone ${env.gitlabActionType}, "
                 git branch: "${env.GIT_BRANCH}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
             }
         }
