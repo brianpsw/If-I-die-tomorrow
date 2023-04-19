@@ -147,7 +147,7 @@ pipeline {
                 sh 'echo " Image Bulid Start"'
                 sh '''
                 cd Frontend/frontend
-                docker build -t front-react -f ./DockerFile .
+                docker build -t front-react .
                 '''
             }
             post {
