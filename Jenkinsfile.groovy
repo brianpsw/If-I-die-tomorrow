@@ -108,9 +108,16 @@ pipeline {
         stage('BE Build') {
             when {
                 anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-be' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                    allOf{
+                        expression { env.gitlabActionType == 'PUSH' }
+                        expression { env.gitlabTargetBranch == 'master' }
+                    }
+                    allOf{
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'PUSH' }
+                    }
                 }
+
             }
             steps {
 
@@ -140,7 +147,7 @@ pipeline {
                 sh 'echo " Image Bulid Start"'
                 sh '''
                 cd Frontend/frontend
-                docker build -t front-react -f ./DockerFile .
+                docker build -t front-react .
                 '''
             }
             post {
