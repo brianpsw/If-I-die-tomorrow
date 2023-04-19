@@ -108,9 +108,16 @@ pipeline {
         stage('BE Build') {
             when {
                 anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-be' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                    allOf{
+                        expression { env.gitlabActionType == 'PUSH' }
+                        expression { env.gitlabTargetBranch == 'master' }
+                    }
+                    allOf{
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'PUSH' }
+                    }
                 }
+
             }
             steps {
 
