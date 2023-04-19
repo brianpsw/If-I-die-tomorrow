@@ -32,7 +32,7 @@ public class BucketController {
 	
 	@PutMapping("")
 	public ResponseEntity<?> updateBucket(
-			@RequestBody MultipartFile photo,
+			@RequestBody(required = false) MultipartFile photo,
 			@RequestBody UpdateBucketDto updateBucketDto) throws IOException, NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(photo, updateBucketDto));
 	}
