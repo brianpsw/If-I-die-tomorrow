@@ -1,13 +1,15 @@
 pipeline {
     agent any
 
+    options { skipDefaultCheckout() }
     stages {
         stage('Clone') {
 
             steps {
-                echo "Running ${env.GIT_BRANCH} on ${env.JENKINS_URL}"
-                echo 'Clone ${env.GIT_BRANCH}, ${env.JENKINS_URL}, '
-                git branch: "${env.GIT_BRANCH}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
+                echo "Running ${env.gitlabSourceBranch} on ${env.gitlabTargetBranch}"
+                echo "Clone ${env.gitlabActionType} ,  "
+
+                git branch: "${env.gitlabSourceBranch}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
             }
         }
 
@@ -45,10 +47,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-fe'
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -77,10 +79,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-be'
+                        expression { env.gitlabTargetBranch == 'develop-be' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -107,9 +109,16 @@ pipeline {
         stage('BE Build') {
             when {
                 anyOf{
-                    branch 'develop-be'
-                    branch 'master'
+                    allOf{
+                        expression { env.gitlabActionType == 'PUSH' }
+                        expression { env.gitlabTargetBranch == 'master' }
+                    }
+                    allOf{
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'PUSH' }
+                    }
                 }
+
             }
             steps {
 
@@ -126,10 +135,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-fe'
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -158,10 +167,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-be'
+                        expression { env.gitlabTargetBranch == 'develop-be' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -190,10 +199,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-be'
+                        expression { env.gitlabTargetBranch == 'develop-be' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -219,10 +228,10 @@ pipeline {
                 anyOf{
                     allOf{
                         expression { env.gitlabActionType == 'PUSH' }
-                        branch 'master'
+                        expression { env.gitlabTargetBranch == 'master' }
                     }
                     allOf{
-                        branch 'develop-fe'
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
                         expression { env.gitlabActionType == 'PUSH' }
                     }
                 }
@@ -244,3 +253,4 @@ pipeline {
         }
     }
 }
+
