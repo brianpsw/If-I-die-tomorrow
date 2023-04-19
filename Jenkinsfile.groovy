@@ -5,7 +5,7 @@ pipeline {
         stage('Clone') {
 
             steps {
-                echo "Running ${env.GIT_BRANCH} on ${env.JENKINS_URL}"
+                echo "Running ${env.gitlabSourceBranch} on ${env.gitlabTargetBranch}"
                 echo "Clone ${env.gitlabActionType}, "
                 git branch: "${env.GIT_BRANCH}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
             }
