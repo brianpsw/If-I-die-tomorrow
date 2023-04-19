@@ -34,3 +34,32 @@ cloud:
       static: ap-northeast-2
     stack:
       auto: false
+
+#Spring doc
+springdoc:
+  packages-to-scan:
+    - com.a307.ifidietomorrow
+  paths-to-match:
+    - /*/**
+  api-docs:
+    path: /api-docs/json
+    groups:
+      enabled: true
+
+#Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
+  endpoint:
+    health:
+      show-details: always
+
+# MatterMost Notification
+notification:
+  mattermost:
+    webhook-url: ${MATTERMOST_URL}
+    pretext: Web-BackEnd
+    enabled: 'true'
