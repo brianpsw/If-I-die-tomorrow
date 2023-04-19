@@ -1,10 +1,12 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.service.BucketService;
 //import io.swagger.annotations.Api;
 //import io.swagger.annotations.ApiOperation;
 //import io.swagger.annotations.ApiParam;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,13 @@ public class BucketController {
 			@RequestBody MultipartFile photo,
 			@RequestBody CreateBucketDto createBucketDto) throws IOException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.createBucket(photo, createBucketDto));
+	}
+	
+	@PutMapping("")
+	public ResponseEntity<?> updateBucket(
+			@RequestBody(required = false) MultipartFile photo,
+			@RequestBody UpdateBucketDto updateBucketDto) throws IOException, NotFoundException {
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(photo, updateBucketDto));
 	}
 	
 }

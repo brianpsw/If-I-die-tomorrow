@@ -1,19 +1,15 @@
 package com.a307.ifIDieTomorrow.domain.dto.bucket;
 
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
-@ToString
+@Data
 @AllArgsConstructor
 public class CreateBucketResDto {
 	
+	private Long bucketId;
 	private Long userId;
 	private String title;
 	private String content;
@@ -26,6 +22,7 @@ public class CreateBucketResDto {
 	
 	public static CreateBucketResDto toDto(Bucket bucket) {
 		return new CreateBucketResDto(
+				bucket.getBucketId(),
 				bucket.getUserId(),
 				bucket.getTitle(),
 				bucket.getContent(),

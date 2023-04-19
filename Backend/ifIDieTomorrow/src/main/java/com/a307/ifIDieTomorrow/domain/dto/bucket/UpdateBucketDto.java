@@ -4,8 +4,9 @@ import lombok.*;
 
 @Data
 @AllArgsConstructor
-public class CreateBucketDto {
+public class UpdateBucketDto {
 	
+	private Long bucketId;
 	private Long userId;
 	private String title;
 	private String content;

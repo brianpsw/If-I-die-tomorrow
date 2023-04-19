@@ -51,4 +51,12 @@ public class Bucket extends BaseEntity {
 	@ColumnDefault("0")
 	private Integer report;
 	
+	public void updateBucket (String title, String content, Boolean complete, String imageUrl, Boolean secret) {
+		this.title = title;
+		this.content = content;
+		this.complete = complete;
+		this.imageUrl = imageUrl;
+		this.secret = secret;
+	}
+	
 }
