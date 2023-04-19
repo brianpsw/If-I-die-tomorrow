@@ -25,16 +25,22 @@ public class BucketController {
 	
 	@PostMapping("")
 	public ResponseEntity<?> createBucket(
-			@RequestBody MultipartFile photo,
-			@RequestBody CreateBucketDto createBucketDto) throws IOException {
+			@RequestPart(required = false) MultipartFile photo,
+			@RequestPart CreateBucketDto createBucketDto) throws IOException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.createBucket(photo, createBucketDto));
 	}
 	
 	@PutMapping("")
 	public ResponseEntity<?> updateBucket(
-			@RequestBody(required = false) MultipartFile photo,
-			@RequestBody UpdateBucketDto updateBucketDto) throws IOException, NotFoundException {
+			@RequestPart(required = false) MultipartFile photo,
+			@RequestPart UpdateBucketDto updateBucketDto) throws IOException, NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(photo, updateBucketDto));
+	}
+	
+	@DeleteMapping("/{bucketId}")
+	public ResponseEntity<?> deleteBucket(
+			@PathVariable Long bucketId) throws Exception {
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.deleteBucket(bucketId));
 	}
 	
 }

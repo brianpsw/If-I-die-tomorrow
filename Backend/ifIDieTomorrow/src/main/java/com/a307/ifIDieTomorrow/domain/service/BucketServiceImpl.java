@@ -36,16 +36,17 @@ public class BucketServiceImpl implements BucketService {
 	
 	@Override
 	public CreateBucketResDto updateBucket (MultipartFile photo, UpdateBucketDto updateBucketDto) throws NotFoundException {
-		Bucket bucket = bucketRepository.findByBucketId(updateBucketDto.getBucketId());
-		if (bucket == null) throw new NotFoundException("존재하지 않는 버킷 ID 입니다.");
+		Bucket bucket = bucketRepository.findByBucketId(updateBucketDto.getBucketId())
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
 		
 		try {
-			if (!"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
+			// 사진이 업데이트되었고 기존에 사진이 있었다면 S3에서 사진을 삭제함
+			if (updateBucketDto.getUpdatePhoto() && !"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
 			bucket.updateBucket(
 					updateBucketDto.getTitle(),
 					updateBucketDto.getContent(),
 					updateBucketDto.getComplete(),
-					updateBucketDto.getHasPhoto() ? s3Upload.uploadFiles(photo, "bucket") : "",
+					updateBucketDto.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "bucket") : "",
 					updateBucketDto.getSecret()
 			);
 		} catch (Exception e) {
@@ -53,6 +54,18 @@ public class BucketServiceImpl implements BucketService {
 		}
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
+	
+	@Override
+	public Long deleteBucket (Long bucketId) throws Exception {
+		Bucket bucket = bucketRepository.findByBucketId(bucketId)
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
+		
+		// 사진이 있었다면 S3에서 사진을 삭제함
+		if (!"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
+		bucketRepository.delete(bucket);
+		
+		return bucketId;
 	}
 	
 }

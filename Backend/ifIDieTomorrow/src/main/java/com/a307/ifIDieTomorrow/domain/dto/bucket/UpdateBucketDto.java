@@ -13,6 +13,6 @@ public class UpdateBucketDto {
 	private Boolean complete;
 	private String imageUrl;
 	private Boolean secret;
-	private Boolean hasPhoto;
+	private Boolean updatePhoto;
 	
 }

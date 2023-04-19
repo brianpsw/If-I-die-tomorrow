@@ -12,4 +12,6 @@ public interface BucketService {
 	CreateBucketResDto createBucket (MultipartFile photo, CreateBucketDto createBucketDto) throws IOException;
 	
 	CreateBucketResDto updateBucket (MultipartFile photo, UpdateBucketDto createBucketDto) throws IOException, NotFoundException;
+	
+	Long deleteBucket (Long bucketId) throws Exception;
 }
