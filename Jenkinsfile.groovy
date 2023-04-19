@@ -8,6 +8,7 @@ pipeline {
             steps {
                 echo "Running ${env.gitlabSourceBranch} on ${env.gitlabTargetBranch}"
                 echo "Clone ${env.gitlabActionType} ,  "
+                sh "ls -al"
                 git branch: "${env.gitlabSourceBranch}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
             }
         }
