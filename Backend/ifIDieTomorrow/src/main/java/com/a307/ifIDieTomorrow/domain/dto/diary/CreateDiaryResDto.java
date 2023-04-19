@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiaryCreateResDto {
+public class CreateDiaryResDto {
 
 	private Long diaryId;
 
@@ -25,8 +25,8 @@ public class DiaryCreateResDto {
 
 	private Integer report;
 
-	public static DiaryCreateResDto toDto(Diary diary){
-		return DiaryCreateResDto.builder()
+	public static CreateDiaryResDto toDto(Diary diary){
+		return CreateDiaryResDto.builder()
 				.diaryId(diary.getDiaryId())
 				.title(diary.getTitle())
 				.content(diary.getContent())

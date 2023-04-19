@@ -1,7 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
-import com.a307.ifIDieTomorrow.domain.dto.diary.DiaryCreateReqDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.DiaryCreateResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +21,9 @@ public class DiaryController {
 	private final DiaryService diaryService;
 
 	@PostMapping ("")
-	public ResponseEntity<DiaryCreateResDto> createDiary(
+	public ResponseEntity<CreateDiaryResDto> createDiary(
 			@RequestBody MultipartFile photo,
-			@RequestBody DiaryCreateReqDto req
+			@RequestBody CreateDiaryReqDto req
 			) throws IOException, NotFoundException
 	{
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(req, photo));
