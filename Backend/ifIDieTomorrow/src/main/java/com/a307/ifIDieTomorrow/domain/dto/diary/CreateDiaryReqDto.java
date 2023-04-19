@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class DiaryCreateReqDto {
+public class CreateDiaryReqDto {
 
 	private Long userId;
 	private String title;
