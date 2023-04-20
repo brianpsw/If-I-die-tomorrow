@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.global.handler;
 
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,5 +25,10 @@ public class CustomExceptionHandler {
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 
+	@ExceptionHandler
+	public ResponseEntity<?> handleNoPhotoException(final NoPhotoException ex){
+		log.warn("400 bad request(no photo) error", ex);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
 
 }
