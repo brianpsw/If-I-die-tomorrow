@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @DynamicInsert
 @Table(name = "comment")
-public class Comment {
+public class Comment extends BaseEntity{
 
 	@Column
 	@Id
