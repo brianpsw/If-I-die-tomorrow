@@ -15,7 +15,7 @@ public interface BucketService {
 	
 	CreateBucketResDto updateBucket (MultipartFile photo, UpdateBucketDto createBucketDto) throws IOException, NotFoundException;
 	
-	Long deleteBucket (Long bucketId) throws Exception;
+	Long deleteBucket (Long bucketId) throws NotFoundException;
 	
 	List<GetBucketResDto> getBucketByUserId (Long userId) throws NotFoundException;
 }
