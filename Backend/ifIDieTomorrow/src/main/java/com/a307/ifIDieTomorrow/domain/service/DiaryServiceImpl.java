@@ -7,6 +7,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
@@ -29,10 +30,14 @@ public class DiaryServiceImpl implements DiaryService{
 	private final CommentRepository commentRepository;
 
 	@Override
-	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NotFoundException {
+	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NotFoundException, NoPhotoException {
 
 //		이후 jwt 적용 시 해당 부분은 생략합니다. (유저아이디는 토큰에서 받아옴)
 		if (!userRepository.existsByUserId(req.getUserId())) throw new NotFoundException("존재하지 않는 유저입니다.");
+
+//		사진 검증
+		if (req.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
+
 
 		return CreateDiaryResDto.toDto(
 				diaryRepository.save(Diary.builder()
