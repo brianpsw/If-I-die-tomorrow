@@ -37,18 +37,20 @@ pipeline {
         }
 
         stage('Sonar Analysis') {
-           
+            environment {
+                SCANNER_HOME = tool 'a307'
+            }
+          
             steps {
-                
-                sh '''
-                ls -al
-                ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
-                -Dsonar.sources=. \
-                -Dsonar.java.binaries=./Backend/ifidietomorrow/build/classes/java/ \
-                -Dsonar.host.url=${SONAR_URL} \
-                -Dsonar.login=${SONAR_TOKEN}
-                '''
-                
+                withSonarQubeEnv(){
+                    sh '''
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
+                    -Dsonar.sources=. \
+                    -Dsonar.java.binaries=./Backend/ifidietomorrow/build/classes/java/ \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    '''
+                }    
             }
         }
         stage('Docker FE Rm') {
