@@ -13,13 +13,15 @@ spring:
     password: ${MYSQL_PASS}
   jpa:
     database: mysql
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         use_sql_comments : true
         show_sql: true
         format_sql: true
-        ddl-auto: update # create, create-drop, update, validate, none #
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
 
 file:
   path: C:/images

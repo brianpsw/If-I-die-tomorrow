@@ -17,8 +17,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"FROM Diary d " +
 			"LEFT JOIN Comment c " +
 			"ON d.diaryId = c.typeId " +
-			"WHERE c.type = true " +
-			"AND d.userId = :userId " +
+			"AND c.type = true " +
+			"WHERE d.userId = :userId " +
 			"GROUP BY d.diaryId")
 	List<GetDiaryByUserResDto> findAllByUserIdWithCommentCount (@Param("userId") Long userId);
 

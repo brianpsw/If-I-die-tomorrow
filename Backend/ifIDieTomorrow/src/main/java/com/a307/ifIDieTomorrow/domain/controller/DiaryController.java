@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,10 +29,9 @@ public class DiaryController {
 	@PostMapping ("")
 	@Operation(summary = "다이어리 작성", description = "다이어리를 작성합니다. 사진을 업로드 할 수 있습니다(필수 아님)")
 	public ResponseEntity<CreateDiaryResDto> createDiary(
-			@RequestPart(required = false) MultipartFile photo,
-			@RequestPart CreateDiaryReqDto req
-			) throws IOException, NotFoundException
-	{
+			@RequestPart(required = false, value = "photo") MultipartFile photo,
+			@RequestPart(value = "req") CreateDiaryReqDto req
+			) throws IOException, NotFoundException, NoPhotoException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(req, photo));
 	}
 
@@ -42,7 +42,7 @@ public class DiaryController {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getDiaryByUserId(userId));
 	}
 
-	@GetMapping("/{diaryId}")
+	@GetMapping("/detail/{diaryId}")
 	@Operation(summary = "다이어리 하나 불러오기", description = "다이어리 아이디로 특정 다이어리 하나만 불러옵니다. 작성자 아이디와 닉네임이 같이 가며 댓글 리스트도 같이 갑니다")
 	public ResponseEntity<HashMap<String, Object>> getDiaryByDiaryId(@PathVariable Long diaryId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getDiaryById(diaryId));
