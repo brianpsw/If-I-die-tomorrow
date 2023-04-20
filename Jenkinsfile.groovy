@@ -36,16 +36,47 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
+        stage('Sonar Analysis-fe') {
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-fe' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
             environment {
                 SCANNER_HOME = tool 'a307'
             }
           
             steps {
-                withSonarQubeEnv('SonarQube-local'){
+                withSonarQubeEnv('SonarQube-local-fe'){
               
                     sh '''
-                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
+                    -Dsonar.sources=. \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    '''
+                }
+            }
+        }
+
+        stage('Sonar Analysis-be') {
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-be' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
+            environment {
+                SCANNER_HOME = tool 'a307'
+            }
+          
+            steps {
+                withSonarQubeEnv('SonarQube-local-be'){
+              
+                    sh '''
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_BE} \
                     -Dsonar.sources=. \
                     -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.host.url=${SONAR_URL} \
@@ -56,6 +87,13 @@ pipeline {
         }
 
         stage('SonarQube Quality Gate'){
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-fe' }
+                    expression { env.gitlabTargetBranch == 'develop-be' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
             steps{
                 timeout(time: 1, unit: 'MINUTES') {
                     script{
@@ -75,6 +113,7 @@ pipeline {
                 }
             }
         }
+   
         
         stage('Docker FE Rm') {
             when {
