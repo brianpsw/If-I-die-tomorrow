@@ -47,6 +47,8 @@ springdoc:
     path: /api-docs/json
     groups:
       enabled: true
+  swagger-ui:
+    path: /swagger
 
 #Actuator
 management:
