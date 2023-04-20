@@ -48,7 +48,7 @@ pipeline {
             }
           
             steps {
-                withSonarQubeEnv('SonarQube-local-fe'){
+                withSonarQubeEnv('SonarQube-local'){
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
@@ -73,7 +73,7 @@ pipeline {
             }
           
             steps {
-                withSonarQubeEnv('SonarQube-local-be'){
+                withSonarQubeEnv('SonarQube-local'){
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_BE} \
