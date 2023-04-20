@@ -37,8 +37,14 @@ pipeline {
         }
 
         stage('Sonar Analysis') {
+           
             steps {
-                echo 'Sonar Analysis...'
+                withSonarQubeEnv() {
+                    sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.projectKey=$PROJECT_KEY \
+                    -Dsonar.sources=. \
+                    -Dsonar.host.url=$SONAR_URL \
+                    -Dsonar.login=$SONAR_TOKEN'''
+                }
             }
         }
         stage('Docker FE Rm') {
