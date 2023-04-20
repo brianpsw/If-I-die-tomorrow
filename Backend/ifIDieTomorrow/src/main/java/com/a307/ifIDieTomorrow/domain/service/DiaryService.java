@@ -18,4 +18,6 @@ public interface DiaryService {
 	List<GetDiaryByUserResDto> getDiaryByUserId(Long userId) throws NotFoundException;
 
 	HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException;
+
+	Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException;
 }
