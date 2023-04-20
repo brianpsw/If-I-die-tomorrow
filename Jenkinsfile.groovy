@@ -55,7 +55,7 @@ pipeline {
                     -Dsonar.sources=. \
                     -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.host.url=${SONAR_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
+                    -Dsonar.login=${SONAR_TOKEN_FE}
                     '''
                 }
             }
