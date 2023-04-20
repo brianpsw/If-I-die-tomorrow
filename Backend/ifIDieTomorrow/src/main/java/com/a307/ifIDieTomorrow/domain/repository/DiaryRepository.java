@@ -11,7 +11,7 @@ import java.util.List;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto" +
-			"(d.diaryId, d.userId, d.title, d.content, d.imageUrl, d.secret, d.report, d.createdAt, d.updatedAt, COUNT(c.commentId)) " +
+			"(d.diaryId, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt, COUNT(c.commentId)) " +
 			"FROM Diary d " +
 			"LEFT JOIN Comment c " +
 			"ON d.diaryId = c.typeId " +
