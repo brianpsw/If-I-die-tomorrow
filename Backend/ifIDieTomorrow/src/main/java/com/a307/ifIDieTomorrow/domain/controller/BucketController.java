@@ -2,7 +2,7 @@ package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.service.BucketService;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -35,7 +35,7 @@ public class BucketController {
 	
 	@GetMapping("/{userId}")
 	@Operation(summary = "유저의 버킷 리스트 전체 조회", description = "유저의 버킷 리스트를 전체 조회합니다.")
-	public ResponseEntity<List<GetBucketResDto>> getBucket(
+	public ResponseEntity<List<GetBucketByUserResDto>> getBucket(
 			@PathVariable Long userId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByUserId(userId));
 	}

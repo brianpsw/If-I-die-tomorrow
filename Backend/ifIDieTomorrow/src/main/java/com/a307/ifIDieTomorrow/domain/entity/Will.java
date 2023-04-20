@@ -31,10 +31,13 @@ public class Will extends BaseEntity{
 	private String content;
 	
 	@Column
-	private String voice_url;
+	private String videoUrl;
+	
+	@Column
+	private String voiceUrl;
 	
 	// 일단 null 열어뒀습니다.
 	@Column
-	private String sign_url;
+	private String signUrl;
 	
 }
