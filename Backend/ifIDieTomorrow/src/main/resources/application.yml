@@ -38,7 +38,7 @@ cloud:
 #Spring doc
 springdoc:
   packages-to-scan:
-    - com.a307.ifidietomorrow
+    - com.a307.ifIDieTomorrow
   paths-to-match:
     - /*/**
   api-docs:
