@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -25,6 +27,10 @@ public class CreateDiaryResDto {
 
 	private Integer report;
 
+	private LocalDateTime createdAt;
+
+	private LocalDateTime updatedAt;
+
 	public static CreateDiaryResDto toDto(Diary diary){
 		return CreateDiaryResDto.builder()
 				.diaryId(diary.getDiaryId())
@@ -33,6 +39,8 @@ public class CreateDiaryResDto {
 				.imageUrl(diary.getImageUrl())
 				.secret(diary.getSecret())
 				.report(diary.getReport())
+				.createdAt(diary.getCreatedAt())
+				.updatedAt(diary.getUpdatedAt())
 				.build();
 	}
 }
