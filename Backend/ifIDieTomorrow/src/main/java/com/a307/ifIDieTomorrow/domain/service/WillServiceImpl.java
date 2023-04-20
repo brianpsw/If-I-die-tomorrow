@@ -19,6 +19,6 @@ public class WillServiceImpl implements WillService {
 	public GetWillByUserResDto getWillByUserId (Long userId) throws NotFoundException {
 		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
 		
-		return willRepository.findByUserId(userId);
+		return willRepository.findByUserId(userId).orElseThrow(() -> new NotFoundException("유언을 찾을 수 없습니다."));
 	}
 }
