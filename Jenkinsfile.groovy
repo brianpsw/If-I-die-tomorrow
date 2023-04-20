@@ -36,11 +36,85 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis') {
+        stage('Sonar Analysis-fe') {
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-fe' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
+            environment {
+                SCANNER_HOME = tool 'a307'
+            }
+          
             steps {
-                echo 'Sonar Analysis...'
+                withSonarQubeEnv('SonarQube-local'){
+              
+                    sh '''
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
+                    -Dsonar.sources=. \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_TOKEN_FE}
+                    '''
+                }
             }
         }
+
+        stage('Sonar Analysis-be') {
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-be' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
+            environment {
+                SCANNER_HOME = tool 'a307'
+            }
+          
+            steps {
+                withSonarQubeEnv('SonarQube-local'){
+              
+                    sh '''
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
+                    -Dsonar.sources=. \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    '''
+                }
+            }
+        }
+
+        stage('SonarQube Quality Gate'){
+            when {
+                anyOf{
+                    expression { env.gitlabTargetBranch == 'develop-fe' }
+                    expression { env.gitlabTargetBranch == 'develop-be' }
+                    expression { env.gitlabTargetBranch == 'master' }
+                }
+            }
+            steps{
+                timeout(time: 1, unit: 'MINUTES') {
+                    script{
+                        echo "Start~~~~"
+                        def qg = waitForQualityGate()
+                        echo "Status: ${qg.status}"
+                        if(qg.status != 'OK') {
+                            echo "NOT OK Status: ${qg.status}"
+                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "failed")
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        } else{
+                            echo "OK Status: ${qg.status}"
+                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "success")
+                        }
+                        echo "End~~~~"
+                    }
+                }
+            }
+        }
+   
+        
         stage('Docker FE Rm') {
             when {
                 anyOf{
@@ -252,3 +326,4 @@ pipeline {
         }
     }
 }
+
