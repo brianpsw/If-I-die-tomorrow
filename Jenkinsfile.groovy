@@ -42,15 +42,15 @@ pipeline {
             }
           
             steps {
-                withSonarQubeEnv('a307'){
-                    sh '''
-                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=. \
-                    -Dsonar.java.binaries=./Backend/ifidietomorrow/build/classes/java/ \
-                    -Dsonar.host.url=${SONAR_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
-                    '''
-                }    
+                
+                sh '''
+                ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
+                -Dsonar.sources=. \
+                -Dsonar.java.binaries=./Backend/ifidietomorrow/build/classes/java/ \
+                -Dsonar.host.url=${SONAR_URL} \
+                -Dsonar.login=${SONAR_TOKEN}
+                '''
+                
             }
         }
         stage('Docker FE Rm') {
