@@ -2,9 +2,11 @@ package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
+import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +14,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class BucketServiceImpl implements BucketService {
 	
 	private final S3Upload s3Upload;
+	
+	private final UserRepository userRepository;
 	
 	private final BucketRepository bucketRepository;
 	
@@ -32,6 +37,13 @@ public class BucketServiceImpl implements BucketService {
 				secret(createBucketDto.getSecret()).build();
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
+	
+	@Override
+	public List<GetBucketResDto> getBucketByUserId (Long userId) throws NotFoundException {
+		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
+		
+		return bucketRepository.findAllByUserId(userId);
 	}
 	
 	@Override
@@ -67,5 +79,6 @@ public class BucketServiceImpl implements BucketService {
 		
 		return bucketId;
 	}
+	
 	
 }
