@@ -2,7 +2,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
@@ -40,7 +40,7 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public List<GetBucketResDto> getBucketByUserId (Long userId) throws NotFoundException {
+	public List<GetBucketByUserResDto> getBucketByUserId (Long userId) throws NotFoundException {
 		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
 		
 		return bucketRepository.findAllByUserId(userId);

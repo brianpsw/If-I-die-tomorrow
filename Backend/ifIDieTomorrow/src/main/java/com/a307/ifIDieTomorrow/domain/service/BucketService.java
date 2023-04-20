@@ -2,7 +2,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,5 +17,5 @@ public interface BucketService {
 	
 	Long deleteBucket (Long bucketId) throws NotFoundException;
 	
-	List<GetBucketResDto> getBucketByUserId (Long userId) throws NotFoundException;
+	List<GetBucketByUserResDto> getBucketByUserId (Long userId) throws NotFoundException;
 }
