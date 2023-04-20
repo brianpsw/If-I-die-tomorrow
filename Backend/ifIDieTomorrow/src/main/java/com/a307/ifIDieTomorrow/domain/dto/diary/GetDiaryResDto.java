@@ -1,4 +1,4 @@
-package com.a307.ifIDieTomorrow.domain.dto.comment;
+package com.a307.ifIDieTomorrow.domain.dto.diary;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,13 +11,25 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetCommentResDto {
+public class GetDiaryResDto {
 
-	private Long commentId;
-	private String content;
+	private Long diaryId;
+
 	private Long userId;
+
 	private String nickname;
+
+	private String title;
+
+	private String content;
+
+	private String imageUrl;
+
+	private Boolean secret;
+
 	private LocalDateTime createdAt;
+
 	private LocalDateTime updatedAt;
+
 
 }

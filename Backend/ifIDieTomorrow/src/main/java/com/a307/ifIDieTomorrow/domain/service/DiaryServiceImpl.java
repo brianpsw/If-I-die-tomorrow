@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
+import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -24,6 +26,7 @@ public class DiaryServiceImpl implements DiaryService{
 	private final S3Upload s3Upload;
 	private final UserRepository userRepository;
 	private final DiaryRepository diaryRepository;
+	private final CommentRepository commentRepository;
 
 	@Override
 	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NotFoundException {
@@ -49,5 +52,22 @@ public class DiaryServiceImpl implements DiaryService{
 		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
 
 		return diaryRepository.findAllByUserIdWithCommentCount(userId);
+	}
+
+	@Override
+	public HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException {
+
+		return diaryRepository.findByIdWithUserNickName(diaryId)
+				.map(dto -> {
+
+//					다이어리 내용과 댓글을 해쉬맵 형태로 반환합니다.
+					HashMap<String, Object> result  = new HashMap<>();
+					result.put("diary", dto);
+					result.put("comments", commentRepository.findCommentsByTypeId(diaryId, true));
+
+					return result;
+				})
+				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
+
 	}
 }
