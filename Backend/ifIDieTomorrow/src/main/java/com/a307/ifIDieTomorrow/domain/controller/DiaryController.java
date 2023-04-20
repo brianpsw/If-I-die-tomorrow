@@ -48,5 +48,11 @@ public class DiaryController {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getDiaryById(diaryId));
 	}
 
+	@DeleteMapping("/{diaryId}")
+	@Operation(summary = "다이어리 삭제하기", description = "다이어리를 삭제하고 사진도 삭제하고 댓글도 삭제합니다.")
+	public ResponseEntity<Long> deleteDiary(@PathVariable Long diaryId) throws NotFoundException {
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(diaryService.deleteDiaryByDiaryId(diaryId));
+	}
+
 
 }

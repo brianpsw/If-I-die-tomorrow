@@ -75,4 +75,21 @@ public class DiaryServiceImpl implements DiaryService{
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
 
 	}
+	@Override
+	public Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException {
+
+		Diary diary = diaryRepository.findById(diaryId)
+				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
+
+//		사진 삭제
+		if (!"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+
+//		댓글 삭제
+		commentRepository.deleteAllInBatch(commentRepository.findAllByTypeIdAndType(diaryId, true));
+
+//		다이어리 삭제
+		diaryRepository.delete(diary);
+
+		return diaryId;
+	}
 }
