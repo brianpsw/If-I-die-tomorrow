@@ -11,7 +11,6 @@ public class UpdateBucketDto {
 	private String title;
 	private String content;
 	private Boolean complete;
-	private String imageUrl;
 	private Boolean secret;
 	private Boolean updatePhoto;
 	

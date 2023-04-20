@@ -2,6 +2,7 @@ package com.a307.ifIDieTomorrow;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication(
 		exclude = {
@@ -10,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 				org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration.class
 		}
 )
+@EnableJpaAuditing
 public class IfIDieTomorrowApplication {
 
 	public static void main(String[] args) {
