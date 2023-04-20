@@ -8,6 +8,7 @@ import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public interface BucketService {
@@ -18,4 +19,6 @@ public interface BucketService {
 	Long deleteBucket (Long bucketId) throws NotFoundException;
 	
 	List<GetBucketByUserResDto> getBucketByUserId (Long userId) throws NotFoundException;
+	
+	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException;
 }

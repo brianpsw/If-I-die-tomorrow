@@ -1,6 +1,8 @@
 package com.a307.ifIDieTomorrow.domain.repository;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,4 +21,12 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"WHERE userId = :userId " +
 			"ORDER BY complete, updatedAt DESC ")
 	List<GetBucketByUserResDto> findAllByUserId (@Param("userId") Long userId);
+	
+	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto" +
+			"(b.bucketId, b.userId, u.nickname, b.title, b.content, b.complete, b.imageUrl, b.secret, b.createdAt, b.updatedAt) " +
+			"FROM Bucket b " +
+			"JOIN User u " +
+			"ON b.userId = u.userId " +
+			"WHERE b.bucketId = :bucketId")
+	Optional<GetBucketResDto> findByBucketIdWithUserNickName (@Param("bucketId") Long bucketId);
 }
