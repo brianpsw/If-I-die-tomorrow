@@ -41,6 +41,7 @@ pipeline {
             steps {
                 
                 sh '''
+                ls -al
                 ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
                 -Dsonar.sources=. \
                 -Dsonar.java.binaries=./Backend/ifidietomorrow/build/classes/java/ \
