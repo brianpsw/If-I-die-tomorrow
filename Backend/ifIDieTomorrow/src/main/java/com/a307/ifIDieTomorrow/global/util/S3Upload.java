@@ -68,19 +68,14 @@ public class S3Upload {
 	}
 	
 	//파일 삭제
-	public void fileDelete(String fileUrl) throws Exception {
+	public void fileDelete(String fileUrl) {
 		try {
-			try {
-				amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileUrl));
-			} catch (AmazonServiceException e) {
-				System.err.println(e.getErrorMessage());
-				System.exit(1);
-			}
-			
-			System.out.println(String.format("[%s] deletion complete", fileUrl));
-			
-		} catch (Exception e) {
-			throw e;
+			amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileUrl));
+		} catch (AmazonServiceException e) {
+			System.err.println(e.getErrorMessage());
+			System.exit(1);
 		}
+		
+		System.out.println(String.format("[%s] deletion complete", fileUrl));
 	}
 }

@@ -69,7 +69,7 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public Long deleteBucket (Long bucketId) throws Exception {
+	public Long deleteBucket (Long bucketId) throws NotFoundException {
 		Bucket bucket = bucketRepository.findByBucketId(bucketId)
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
 		
