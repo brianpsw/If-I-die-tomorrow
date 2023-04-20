@@ -37,10 +37,45 @@ pipeline {
         }
 
         stage('Sonar Analysis') {
+            environment {
+                SCANNER_HOME = tool 'a307'
+            }
+          
             steps {
-                echo 'Sonar Analysis...'
+                withSonarQubeEnv('SonarQube-local'){
+              
+                    sh '''
+                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
+                    -Dsonar.sources=. \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.login=${SONAR_TOKEN}
+                    '''
+                }
             }
         }
+
+        stage('SonarQube Quality Gate'){
+            steps{
+                timeout(time: 1, unit: 'MINUTES') {
+                    script{
+                        echo "Start~~~~"
+                        def qg = waitForQualityGate()
+                        echo "Status: ${qg.status}"
+                        if(qg.status != 'OK') {
+                            echo "NOT OK Status: ${qg.status}"
+                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "failed")
+                            error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                        } else{
+                            echo "OK Status: ${qg.status}"
+                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "success")
+                        }
+                        echo "End~~~~"
+                    }
+                }
+            }
+        }
+        
         stage('Docker FE Rm') {
             when {
                 anyOf{
@@ -252,3 +287,4 @@ pipeline {
         }
     }
 }
+
