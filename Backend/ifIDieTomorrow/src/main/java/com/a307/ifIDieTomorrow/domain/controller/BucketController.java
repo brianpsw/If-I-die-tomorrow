@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Tag(name = "버킷 리스트", description = "APIs for BUCKET LIST")
@@ -38,6 +39,13 @@ public class BucketController {
 	public ResponseEntity<List<GetBucketByUserResDto>> getBucket(
 			@PathVariable Long userId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByUserId(userId));
+	}
+	
+	@GetMapping("/detail/{bucketId}")
+	@Operation(summary = "유저의 버킷 리스트 1개 조회", description = "유저의 버킷 리스트를 1개 조회합니다.")
+	public ResponseEntity<HashMap<String, Object>> getBucketDetail(
+			@PathVariable Long bucketId) throws NotFoundException {
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByBucketId(bucketId));
 	}
 	
 	@PutMapping("")
