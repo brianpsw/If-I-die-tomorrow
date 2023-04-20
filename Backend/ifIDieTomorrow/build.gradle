@@ -22,9 +22,6 @@ dependencies {
 	// S3 연결
 	implementation group : 'org.springframework.cloud', name:'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 	
-	// Swagger
-//	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
-//	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
