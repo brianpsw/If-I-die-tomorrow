@@ -16,8 +16,6 @@ public class GetDiaryByUserResDto {
 
 	private Long diaryId;
 
-	private Long userId;
-
 	private String title;
 
 	private String content;
@@ -25,8 +23,6 @@ public class GetDiaryByUserResDto {
 	private String imageUrl;
 
 	private Boolean secret;
-
-	private Integer report;
 
 	private LocalDateTime createdAt;
 
