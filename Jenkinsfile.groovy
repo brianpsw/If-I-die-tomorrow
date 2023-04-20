@@ -42,7 +42,7 @@ pipeline {
             }
           
             steps {
-                withSonarQubeEnv('SonarCloudOne'){
+                withSonarQubeEnv('a307'){
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
                     -Dsonar.sources=. \
