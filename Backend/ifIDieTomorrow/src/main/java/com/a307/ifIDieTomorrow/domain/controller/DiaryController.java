@@ -2,7 +2,7 @@ package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-//@Api(value = "다이어리 관련 컨트롤러")
 @RequestMapping("/diary")
 @RequiredArgsConstructor
 public class DiaryController {
@@ -33,7 +32,7 @@ public class DiaryController {
 
 //	이후 jwt 적용 시 수정
 	@GetMapping("/{userId}")
-	public ResponseEntity<List<GetDiaryResDto>> getDiaryByUserId(@PathVariable Long userId) throws NotFoundException {
+	public ResponseEntity<List<GetDiaryByUserResDto>> getDiaryByUserId(@PathVariable Long userId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getDiaryByUserId(userId));
 	}
 
