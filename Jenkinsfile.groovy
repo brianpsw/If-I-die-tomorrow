@@ -1,7 +1,10 @@
 pipeline {
     agent any
 
-    options { skipDefaultCheckout() }
+    options { 
+        skipDefaultCheckout()
+        gitLabConnection('gitlab') 
+    }
     stages {
         stage('Clone') {
 
