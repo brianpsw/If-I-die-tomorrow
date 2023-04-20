@@ -2,21 +2,21 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 
-import Home from 'pages/Home/Home';
-import Room from 'pages/Home/Room';
-import Bucket from 'pages/Bucket/Bucket';
-import Diary from 'pages/Diary/Diary';
-import LogIn from 'pages/LogIn/LogIn';
-import Nickname from 'pages/LogIn/Nickname';
-import ServiceAgreement from 'pages/Profile/ServiceAgreement';
-import FeedList from 'pages/Feed/FeedList';
-import DiaryDetail from 'pages/Diary/DiaryDetail';
-import BucketDetail from 'pages/Bucket/BucketDetail';
-import MyPage from 'pages/Profile/MyPage';
-import Survey from 'pages/Diary/Survey';
-import PhotoCloud from 'pages/PhotoCloud/PhotoCloud';
-import CreateCategory from 'pages/PhotoCloud/CreateCategory';
-import UploadPhoto from 'pages/PhotoCloud/UploadPhoto';
+import Home from './pages/Home/Home';
+import Room from './pages/Home/Room';
+import Bucket from './pages/Bucket/Bucket';
+import Diary from './pages/Diary/Diary';
+import Login from './pages/LogIn/Login';
+import Nickname from './pages/LogIn/Nickname';
+import ServiceAgreement from './pages/Profile/ServiceAgreement';
+import FeedList from './pages/Feed/FeedList';
+import DiaryDetail from './pages/Diary/DiaryDetail';
+import BucketDetail from './pages/Bucket/BucketDetail';
+import MyPage from './pages/Profile/MyPage';
+import Survey from './pages/Diary/Survey';
+import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
+import CreateCategory from './pages/PhotoCloud/CreateCategory';
+import UploadPhoto from './pages/PhotoCloud/UploadPhoto';
 
 function App() {
   return (
@@ -27,7 +27,7 @@ function App() {
         <Route path="/room" element={<Room />} />
         <Route path="/bucket" element={<Bucket />} />
         <Route path="/diary" element={<Diary />} />
-        <Route path="/login" element={<LogIn />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/nickname" element={<Nickname />} />
         <Route path="/feed" element={<FeedList />} />
         <Route path="/service-agreement" element={<ServiceAgreement />} />
