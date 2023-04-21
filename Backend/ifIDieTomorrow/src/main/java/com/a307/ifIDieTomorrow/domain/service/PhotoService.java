@@ -9,4 +9,6 @@ public interface PhotoService {
 	CreateCategoryResDto createCategory (CreateCategoryDto data);
 	
 	CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException;
+	
+	Long deleteCategory (Long categoryId) throws NotFoundException;
 }
