@@ -14,5 +14,5 @@ public interface PhotoService {
 	
 	Long deleteCategory (Long categoryId) throws NotFoundException;
 	
-	List<CreateCategoryResDto> getCategory(Long userId);
+	List<CreateCategoryResDto> getCategory (Long userId);
 }

@@ -35,7 +35,7 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public List<CreateCategoryResDto> getCategory(Long userId) {
+	public List<CreateCategoryResDto> getCategory (Long userId) {
 		return categoryRepository.findAllByUserId(userId);
 	}
 	
