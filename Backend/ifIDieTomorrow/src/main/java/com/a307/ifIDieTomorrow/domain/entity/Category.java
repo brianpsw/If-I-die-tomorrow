@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "catgeory")
+@Table(name = "category")
 public class Category extends BaseEntity{
 
 	@Id
