@@ -23,6 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BucketServiceImpl implements BucketService {
 	
+	private final String BUCKET = "bucket";
+	
 	private final S3Upload s3Upload;
 	
 	private final UserRepository userRepository;
@@ -41,8 +43,9 @@ public class BucketServiceImpl implements BucketService {
 				title(data.getTitle()).
 				content(data.getContent()).
 				complete(data.getComplete()).
-				imageUrl(data.getHasPhoto() ? s3Upload.uploadFiles(photo, "bucket") : "").
-				secret(data.getSecret()).build();
+				imageUrl(data.getHasPhoto() ? s3Upload.uploadFiles(photo, BUCKET) : "").
+				secret(data.getSecret()).
+				build();
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
 	}
@@ -60,7 +63,7 @@ public class BucketServiceImpl implements BucketService {
 				.map(dto -> {
 //					버킷 리스트의 내용과 댓글을 해쉬맵 형태로 반환합니다.
 					HashMap<String, Object> result  = new HashMap<>();
-					result.put("bucket", dto);
+					result.put(BUCKET, dto);
 					result.put("comments", commentRepository.findCommentsByTypeId(bucketId, true));
 					
 					return result;
@@ -80,7 +83,7 @@ public class BucketServiceImpl implements BucketService {
 					data.getTitle(),
 					data.getContent(),
 					data.getComplete(),
-					data.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "bucket") : "",
+					data.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, BUCKET) : "",
 					data.getSecret()
 			);
 		} catch (Exception e) {
