@@ -43,7 +43,7 @@ html {
 body {
   margin: 0; /* 1 */
   line-height: inherit; /* 2 */
-  min-width: '700px';
+  max-width: '390px';
 }
 
 /*
