@@ -1,4 +1,5 @@
 import React from 'react';
+import GlobalStyles from './styles/GlobalStyles';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -8,6 +9,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
+    <GlobalStyles />
     <App />
   </React.StrictMode>,
 );
