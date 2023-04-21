@@ -1,9 +1,11 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreateCategoryDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreateCategoryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,16 @@ public class PhotoServiceImpl implements PhotoService {
 				userId(data.getUserId()).
 				name(data.getName()).
 				build();
+		
+		return CreateCategoryResDto.toDto(categoryRepository.save(category));
+	}
+	
+	@Override
+	public CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException {
+		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
+		
+		category.updateCategory(data.getName());
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
 	}

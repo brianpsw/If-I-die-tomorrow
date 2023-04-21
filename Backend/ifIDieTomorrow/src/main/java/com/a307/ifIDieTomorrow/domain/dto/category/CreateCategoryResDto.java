@@ -1,4 +1,4 @@
-package com.a307.ifIDieTomorrow.domain.dto.photo;
+package com.a307.ifIDieTomorrow.domain.dto.category;
 
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import lombok.AllArgsConstructor;
