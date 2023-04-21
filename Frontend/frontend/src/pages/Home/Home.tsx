@@ -1,3 +1,5 @@
+import Button from '../../components/common/Button';
+
 function Home() {
   return (
     <>
