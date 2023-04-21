@@ -67,3 +67,7 @@ notification:
     webhook-url: ${MATTERMOST_URL}
     pretext: Web-BackEnd
     enabled: 'true'
+
+# JWT Secret 설정
+jwt:
+  secret: '8sknjlO3NPTBqo319DHLNqsQAfRJEdKsETOds'
