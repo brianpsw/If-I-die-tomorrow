@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.service.CommunityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,5 +26,11 @@ public class CommunityController {
 	@Operation(summary = "공개 설정된 버킷 리스트", description = "공개 설정 된 버킷 + 댓글 목록입니다")
 	public ResponseEntity<List<GetBucketWithCommentDto>> getBucketWithComment(){
 		return ResponseEntity.status(HttpStatus.OK).body(communityService.getBucketWithComments());
+	}
+
+	@GetMapping("/diary")
+	@Operation(summary = "공개 설정된 다이어리", description = "공개 설정 된 다이어리 + 댓글 목록입니다")
+	public ResponseEntity<List<GetDiaryWithCommentDto>> getDiaryWithComment(){
+		return ResponseEntity.status(HttpStatus.OK).body(communityService.getDiaryWithComments());
 	}
 }
