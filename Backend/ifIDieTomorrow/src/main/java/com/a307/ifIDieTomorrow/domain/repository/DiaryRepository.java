@@ -30,5 +30,14 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"WHERE d.diaryId = :diaryId")
 	Optional<GetDiaryResDto> findByIdWithUserNickName(@Param("diaryId") Long diaryId);
 
+	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
+			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
+			"FROM Diary d " +
+			"JOIN User u " +
+			"ON d.userId = u.userId " +
+			"WHERE d.secret = false " +
+			"ORDER BY d.createdAt DESC")
+	List<GetDiaryResDto> findAllBySecretIsFalse();
+
 
 }
