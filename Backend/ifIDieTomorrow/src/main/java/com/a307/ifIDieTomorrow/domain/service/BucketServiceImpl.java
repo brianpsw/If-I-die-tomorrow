@@ -8,6 +8,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +32,17 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
-	public CreateBucketResDto createBucket (MultipartFile photo, CreateBucketDto createBucketDto) throws IOException {
+	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException {
+//		사진 검증
+		if (data.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
+		
 		Bucket bucket = Bucket.builder().
-				userId(createBucketDto.getUserId()).
-				title(createBucketDto.getTitle()).
-				content(createBucketDto.getContent()).
-				complete(createBucketDto.getComplete()).
-				imageUrl(createBucketDto.getHasPhoto() ? s3Upload.uploadFiles(photo, "bucket") : "").
-				secret(createBucketDto.getSecret()).build();
+				userId(data.getUserId()).
+				title(data.getTitle()).
+				content(data.getContent()).
+				complete(data.getComplete()).
+				imageUrl(data.getHasPhoto() ? s3Upload.uploadFiles(photo, "bucket") : "").
+				secret(data.getSecret()).build();
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
 	}
@@ -65,19 +69,19 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public CreateBucketResDto updateBucket (MultipartFile photo, UpdateBucketDto updateBucketDto) throws NotFoundException {
-		Bucket bucket = bucketRepository.findByBucketId(updateBucketDto.getBucketId())
+	public CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws NotFoundException {
+		Bucket bucket = bucketRepository.findByBucketId(data.getBucketId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
 		
 		try {
 			// 사진이 업데이트되었고 기존에 사진이 있었다면 S3에서 사진을 삭제함
-			if (updateBucketDto.getUpdatePhoto() && !"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
+			if (data.getUpdatePhoto() && !"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
 			bucket.updateBucket(
-					updateBucketDto.getTitle(),
-					updateBucketDto.getContent(),
-					updateBucketDto.getComplete(),
-					updateBucketDto.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "bucket") : "",
-					updateBucketDto.getSecret()
+					data.getTitle(),
+					data.getContent(),
+					data.getComplete(),
+					data.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "bucket") : "",
+					data.getSecret()
 			);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,10 +97,14 @@ public class BucketServiceImpl implements BucketService {
 		
 		// 사진이 있었다면 S3에서 사진을 삭제함
 		if (!"".equals(bucket.getImageUrl())) s3Upload.fileDelete(bucket.getImageUrl());
+
+		// 댓글 삭제
+		commentRepository.deleteAllInBatch(commentRepository.findAllByTypeIdAndType(bucketId, false));
+		
+		// 버킷 삭제
 		bucketRepository.delete(bucket);
 		
 		return bucketId;
 	}
-	
 	
 }

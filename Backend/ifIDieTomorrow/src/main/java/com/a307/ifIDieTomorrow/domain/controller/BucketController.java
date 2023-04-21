@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.service.BucketService;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,9 +30,9 @@ public class BucketController {
 	@PostMapping("")
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
-			@RequestPart(required = false) MultipartFile photo,
-			@RequestPart CreateBucketDto createBucketDto) throws IOException {
-		return ResponseEntity.status(HttpStatus.OK).body(bucketService.createBucket(photo, createBucketDto));
+			@RequestPart CreateBucketDto data,
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 	
 	@GetMapping("/{userId}")
@@ -51,16 +52,16 @@ public class BucketController {
 	@PutMapping("")
 	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
-			@RequestPart(required = false) MultipartFile photo,
-			@RequestPart UpdateBucketDto updateBucketDto) throws IOException, NotFoundException {
-		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(photo, updateBucketDto));
+			@RequestPart UpdateBucketDto data,
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException {
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
 	
 	@DeleteMapping("/{bucketId}")
 	@Operation(summary = "버킷 리스트 삭제", description = "버킷 리스트를 삭제합니다.")
 	public ResponseEntity<Long> deleteBucket(
 			@PathVariable Long bucketId) throws NotFoundException {
-		return ResponseEntity.status(HttpStatus.OK).body(bucketService.deleteBucket(bucketId));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(bucketService.deleteBucket(bucketId));
 	}
 	
 }
