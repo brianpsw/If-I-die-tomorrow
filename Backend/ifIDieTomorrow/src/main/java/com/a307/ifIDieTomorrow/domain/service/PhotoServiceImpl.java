@@ -10,6 +10,8 @@ import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
@@ -30,6 +32,11 @@ public class PhotoServiceImpl implements PhotoService {
 				build();
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
+	}
+	
+	@Override
+	public List<CreateCategoryResDto> getCategory (Long userId) {
+		return categoryRepository.findAllByUserId(userId);
 	}
 	
 	@Override
