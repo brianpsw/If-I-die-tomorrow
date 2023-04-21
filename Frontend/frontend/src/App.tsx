@@ -14,7 +14,7 @@ import Diary from './pages/Diary/Diary';
 import Login from './pages/LogIn/Login';
 import Nickname from './pages/LogIn/Nickname';
 import ServiceAgreement from './pages/Profile/ServiceAgreement';
-import FeedList from './pages/Feed/FeedList';
+import Feed from './pages/Feed/Feed';
 import DiaryDetail from './pages/Diary/DiaryDetail';
 import BucketDetail from './pages/Bucket/BucketDetail';
 import MyPage from './pages/Profile/MyPage';
@@ -35,7 +35,7 @@ function App() {
           <Route path="/diary" element={<Diary />} />
           <Route path="/login" element={<Login />} />
           <Route path="/nickname" element={<Nickname />} />
-          <Route path="/feed" element={<FeedList />} />
+          <Route path="/feed" element={<Feed />} />
           <Route path="/service-agreement" element={<ServiceAgreement />} />
           <Route path="/diary/:diaryId" element={<DiaryDetail />} />
           <Route path="/bucket/:bucketId" element={<BucketDetail />} />
