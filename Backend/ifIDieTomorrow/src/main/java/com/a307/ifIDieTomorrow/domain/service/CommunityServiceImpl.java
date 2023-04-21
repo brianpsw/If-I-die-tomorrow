@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
@@ -28,6 +29,18 @@ public class CommunityServiceImpl implements CommunityService{
 				.map(dto -> GetBucketWithCommentDto.builder()
 						.bucket(dto)
 						.comments(commentRepository.findCommentsByTypeId(dto.getBucketId(), false))
+						.build())
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<GetDiaryWithCommentDto> getDiaryWithComments(){
+
+		return diaryRepository.findAllBySecretIsFalse()
+				.stream()
+				.map(dto -> GetDiaryWithCommentDto.builder()
+						.diary(dto)
+						.comments(commentRepository.findCommentsByTypeId(dto.getDiaryId(), false))
 						.build())
 				.collect(Collectors.toList());
 	}
