@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "포토 클라우드와 카테고리", description = "APIs for PHOTO CLOUD and CATEGORY")
 @RestController
 @RequiredArgsConstructor
@@ -31,6 +33,13 @@ public class PhotoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data));
 	}
 	
+	@GetMapping("/category/{userId}")
+	@Operation(summary = "유저의 카테고리 전체 조회", description = "유저의 카테고리를 전체 조회합니다.")
+	public ResponseEntity<List<CreateCategoryResDto>> createCategory(
+			@PathVariable Long userId) {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.getCategory(userId));
+	}
+	
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
 	public ResponseEntity<CreateCategoryResDto> updateCategory(
@@ -42,7 +51,7 @@ public class PhotoController {
 	@Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
 	public ResponseEntity<Long> deleteCategory(
 			@PathVariable Long categoryId) throws NotFoundException {
-		return ResponseEntity.status(HttpStatus.OK).body(photoService.deleteCategory(categoryId));
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(photoService.deleteCategory(categoryId));
 	}
 	
 	//////////////////////////
