@@ -8,6 +8,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
@@ -34,7 +35,7 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
-	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException {
+	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
 //		사진 검증
 		if (data.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
 		

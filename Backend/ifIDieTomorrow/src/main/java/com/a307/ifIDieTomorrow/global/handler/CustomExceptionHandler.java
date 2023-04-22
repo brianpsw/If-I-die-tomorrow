@@ -1,15 +1,17 @@
 package com.a307.ifIDieTomorrow.global.handler;
 
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.amazonaws.AmazonServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class CustomExceptionHandler {
 
@@ -39,6 +41,18 @@ public class CustomExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
+	@ExceptionHandler({IllegalArgumentException.class})
+	public ResponseEntity<?> handleIllegalArgumentException(final IllegalArgumentException ex){
+		log.warn("error: MultipartFile -> File convert fail", ex);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+	@ExceptionHandler({AmazonServiceException.class})
+	public ResponseEntity<?> handleAmazonServiceException(final AmazonServiceException ex){
+		log.warn("error: error in file delete" , ex);
+		return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
+	}
+
 //	500 error
 	@ExceptionHandler({Exception.class})
 	public ResponseEntity<?> handleAll(final Exception ex){
@@ -46,5 +60,7 @@ public class CustomExceptionHandler {
 		log.error("500 error", ex);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 	}
+
+
 
 }
