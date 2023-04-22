@@ -3,6 +3,7 @@ package com.a307.ifIDieTomorrow.domain.controller;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -30,10 +31,10 @@ public class DiaryController {
 	@PostMapping ("")
 	@Operation(summary = "다이어리 작성", description = "다이어리를 작성합니다. 사진을 업로드 할 수 있습니다(필수 아님)")
 	public ResponseEntity<CreateDiaryResDto> createDiary(
-			@RequestPart(required = false, value = "photo") MultipartFile photo,
-			@RequestPart(value = "req") CreateDiaryReqDto req
+			@RequestPart(value = "data") CreateDiaryReqDto data,
+			@RequestPart(required = false, value = "photo") MultipartFile photo
 			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException {
-		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(req, photo));
+		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(data, photo));
 	}
 
 //	이후 jwt 적용 시 수정
@@ -53,6 +54,15 @@ public class DiaryController {
 	@Operation(summary = "다이어리 삭제하기", description = "다이어리를 삭제하고 사진도 삭제하고 댓글도 삭제합니다.")
 	public ResponseEntity<Long> deleteDiary(@PathVariable Long diaryId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(diaryService.deleteDiaryByDiaryId(diaryId));
+	}
+
+	@PutMapping("/{diaryId}")
+	@Operation(summary = "다이어리 수정하기", description = "다이어리를 수정합니다. 사진을 수정하고자 할 경우 기존 사진은 삭제 되고 새로운 사진이 업로드 됩니다")
+	public ResponseEntity<CreateDiaryResDto> updateDiary(
+			@RequestPart(value = "data") UpdateDiaryReqDto data,
+			@RequestPart(value = "photo", required = false) MultipartFile photo
+			) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException {
+		return ResponseEntity.status(HttpStatus.OK).body(diaryService.updateDiary(data, photo));
 	}
 
 
