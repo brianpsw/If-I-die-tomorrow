@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.service.BucketService;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class BucketController {
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
 			@RequestPart CreateBucketDto data,
-			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException {
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 	

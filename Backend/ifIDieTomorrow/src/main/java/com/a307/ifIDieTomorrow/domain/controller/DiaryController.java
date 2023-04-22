@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,7 +32,7 @@ public class DiaryController {
 	public ResponseEntity<CreateDiaryResDto> createDiary(
 			@RequestPart(required = false, value = "photo") MultipartFile photo,
 			@RequestPart(value = "req") CreateDiaryReqDto req
-			) throws IOException, NotFoundException, NoPhotoException {
+			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(req, photo));
 	}
 
