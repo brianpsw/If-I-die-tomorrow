@@ -61,7 +61,7 @@ public class DiaryController {
 	public ResponseEntity<CreateDiaryResDto> updateDiary(
 			@RequestPart(value = "data") UpdateDiaryReqDto data,
 			@RequestPart(value = "photo", required = false) MultipartFile photo
-			) throws NotFoundException, IOException, NoPhotoException {
+			) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.updateDiary(data, photo));
 	}
 

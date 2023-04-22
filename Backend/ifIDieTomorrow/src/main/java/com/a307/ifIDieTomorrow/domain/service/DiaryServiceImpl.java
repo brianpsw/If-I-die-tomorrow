@@ -96,7 +96,7 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException {
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException {
 		Diary diary = diaryRepository.findById(req.getDiaryId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
 
