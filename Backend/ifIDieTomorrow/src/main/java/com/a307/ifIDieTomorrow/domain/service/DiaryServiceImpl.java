@@ -3,6 +3,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
@@ -37,7 +38,7 @@ public class DiaryServiceImpl implements DiaryService{
 		if (!userRepository.existsByUserId(req.getUserId())) throw new NotFoundException("존재하지 않는 유저입니다.");
 
 //		사진 검증
-		if (req.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
+		if (req.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
 
 
 		return CreateDiaryResDto.toDto(
@@ -92,5 +93,26 @@ public class DiaryServiceImpl implements DiaryService{
 		diaryRepository.delete(diary);
 
 		return diaryId;
+	}
+
+	@Override
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException {
+		Diary diary = diaryRepository.findById(req.getDiaryId())
+				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
+
+//		사진 여부 검증
+		if (req.getUpdatePhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
+
+//		기존 사진 삭제
+		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+
+		diary.updateDiary(
+				req.getTitle(),
+				req.getContent(),
+				req.getUpdatePhoto() ? s3Upload.uploadFiles(photo, "diary") : "",
+				req.getSecret()
+		);
+
+		return CreateDiaryResDto.toDto(diaryRepository.save(diary));
 	}
 }
