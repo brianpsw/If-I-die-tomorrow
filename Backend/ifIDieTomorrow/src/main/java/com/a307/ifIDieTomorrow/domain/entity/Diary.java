@@ -50,5 +50,13 @@ public class Diary extends BaseEntity{
 	@NotNull
 	@ColumnDefault("0")
 	private Integer report;
-	
+
+
+	public void updateDiary(String title, String content, String imageUrl, Boolean secret) {
+		this.title = title;
+		this.content = content;
+		this.imageUrl = imageUrl;
+		this.secret = secret;
+
+	}
 }
