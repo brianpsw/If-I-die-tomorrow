@@ -13,22 +13,38 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @Slf4j
 public class CustomExceptionHandler {
 
-	@ExceptionHandler
+//	custom 400 error
+	@ExceptionHandler({BadRequestException.class})
 	public ResponseEntity<?> handleBadRequestException(final BadRequestException ex){
 		log.warn("400 bad request error", ex);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
 	}
 
-	@ExceptionHandler
+//	400 runtime error
+	@ExceptionHandler({RuntimeException.class})
+	public ResponseEntity<?> handleBadRequestException(final RuntimeException ex){
+		log.warn("400 bad request error", ex);
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+	@ExceptionHandler({NotFoundException.class})
 	public ResponseEntity<?> handleNotFoundException(final NotFoundException ex){
 		log.warn("404 not found error", ex);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
 	}
 
-	@ExceptionHandler
+	@ExceptionHandler({NoPhotoException.class})
 	public ResponseEntity<?> handleNoPhotoException(final NoPhotoException ex){
 		log.warn("400 bad request(no photo) error", ex);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+//	500 error
+	@ExceptionHandler({Exception.class})
+	public ResponseEntity<?> handleAll(final Exception ex){
+		log.info(ex.getClass().getName());
+		log.error("500 error", ex);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
 	}
 
 }
