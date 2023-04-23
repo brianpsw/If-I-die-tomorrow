@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,9 +27,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/bucket")
 public class BucketController {
-	
+
 	private final BucketService bucketService;
-	
+
 	@PostMapping("")
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
@@ -35,21 +37,23 @@ public class BucketController {
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
-	
+
 	@GetMapping("/{userId}")
 	@Operation(summary = "유저의 버킷 리스트 전체 조회", description = "유저의 버킷 리스트를 전체 조회합니다.")
 	public ResponseEntity<List<GetBucketByUserResDto>> getBucket(
 			@PathVariable Long userId) throws NotFoundException {
+
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByUserId(userId));
 	}
-	
+
 	@GetMapping("/detail/{bucketId}")
 	@Operation(summary = "유저의 버킷 리스트 1개 조회", description = "유저의 버킷 리스트를 1개 조회합니다.")
 	public ResponseEntity<HashMap<String, Object>> getBucketDetail(
 			@PathVariable Long bucketId) throws NotFoundException {
+
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByBucketId(bucketId));
 	}
-	
+
 	@PutMapping("")
 	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
@@ -57,12 +61,12 @@ public class BucketController {
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
-	
+
 	@DeleteMapping("/{bucketId}")
 	@Operation(summary = "버킷 리스트 삭제", description = "버킷 리스트를 삭제합니다.")
 	public ResponseEntity<Long> deleteBucket(
 			@PathVariable Long bucketId) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(bucketService.deleteBucket(bucketId));
 	}
-	
+
 }

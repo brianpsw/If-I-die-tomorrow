@@ -1,11 +1,15 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
+import com.a307.ifIDieTomorrow.domain.dto.UserDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfoFactory;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
+import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.OAuthProviderMisMatchException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -16,6 +20,8 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -44,25 +50,33 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         log.debug(user.getAttributes().toString());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         Optional<User> savedUser = userRepository.findByEmail(userInfo.getEmail());
-
+        User principal = new User();
         if (savedUser.isPresent()) {
-            updateUser(savedUser.get(), userInfo);
+            User existedUser = savedUser.get();
+            if (providerType != existedUser.getProviderType()) {
+                throw new OAuthProviderMisMatchException(
+                        "Looks like you're signed up with " + providerType +
+                                " account. Please use your " + existedUser.getProviderType() + " account to login."
+                );
+            }
+            principal = updateUser(savedUser.get(), userInfo);
         } else {
             // DB에 저장된 user가 없으면
-            createUser(userInfo);
+            principal = createUser(userInfo, providerType);
         }
 
-        return user;
+        return UserPrincipal.create(principal, user.getAttributes());
     }
 
     @Override
-    public User createUser(OAuth2UserInfo userInfo) {
+    public User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         log.debug("createUser 메서드가 CustomOAuth2UserService에서 실행됨");
         return userRepository.save(User.builder()
                 .age(userInfo.getAge())
                 .email(userInfo.getEmail())
                 .name(userInfo.getName())
                 .nickname(generateNickname())
+                .providerType(providerType)
                 .build()
         );
     }
@@ -70,11 +84,19 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     @Override
     public User updateUser(User user, OAuth2UserInfo userInfo) {
         log.debug("updateUser 메서드가 CustomOAuth2UserService에서 실행됨");
-        return user;
+        if(userInfo.getAge() != null && !userInfo.getAge().equals(user.getAge())){user.setAge(userInfo.getAge());}
+        if(userInfo.getName() != null && !userInfo.getName().equals(user.getName())){user.setName(userInfo.getName());}
+        user.setUpdatedAt(LocalDateTime.now());
+        return userRepository.save(user);
     }
 
     @Override
     public String generateNickname() {
         return "빨간 사과";
+    }
+
+    @Override
+    public UserDto getUser(Long userId) throws NotFoundException {
+        return userRepository.findById(userId).map(UserDto::new).orElseThrow(() -> new NotFoundException("존재하지 않는 User ID 입니다."));
     }
 }
