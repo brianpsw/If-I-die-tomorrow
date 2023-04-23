@@ -4,13 +4,13 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 const ModalOverlay = styled.div`
-  ${tw`flex items-end justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
+  ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[342px] shadow mt-[50%] mb-[50%] font-sans`}
+  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
+  bottom: 0;
 `;
-
 const ContentWrapper = styled.div`
   ${tw`m-1`}
 `;
