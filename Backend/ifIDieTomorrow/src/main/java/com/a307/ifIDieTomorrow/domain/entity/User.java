@@ -21,28 +21,22 @@ public class User extends BaseEntity{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private String name;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private String email;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private Integer age;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private String nickname;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	@ColumnDefault("false")
 	private Boolean sendAgree;
 	
@@ -51,13 +45,12 @@ public class User extends BaseEntity{
 	
 	@Column // 가입 이후 검사 전까지는 null
 	private Long personalityId;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
+	@ColumnDefault("true")
 	private Boolean newCheck;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	@ColumnDefault("false")
 	private Boolean deleted;
 
