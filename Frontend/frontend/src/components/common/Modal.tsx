@@ -8,7 +8,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[290px] shadow mt-[50%] mb-[50%] font-sans`}
+  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[342px] shadow mt-[50%] mb-[50%] font-sans`}
 `;
 
 const ContentWrapper = styled.div`
