@@ -33,7 +33,6 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         } catch (AuthenticationException ex) {
             throw ex;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
