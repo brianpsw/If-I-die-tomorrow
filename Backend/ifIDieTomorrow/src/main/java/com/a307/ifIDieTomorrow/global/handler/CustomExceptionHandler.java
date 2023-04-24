@@ -1,9 +1,7 @@
 package com.a307.ifIDieTomorrow.global.handler;
 
-import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
+import com.a307.ifIDieTomorrow.global.exception.*;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
-import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
-import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.amazonaws.AmazonServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +25,12 @@ public class CustomExceptionHandler {
 	public ResponseEntity<?> handleBadRequestException(final RuntimeException ex){
 		log.warn("400 bad request error", ex);
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+	}
+
+	@ExceptionHandler({UnAuthorizedException.class})
+	public ResponseEntity<?> handleUnAuthorizedException(final UnAuthorizedException ex){
+		log.warn("403 unauthorized error", ex);
+		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
 	}
 
 	@ExceptionHandler({NotFoundException.class})

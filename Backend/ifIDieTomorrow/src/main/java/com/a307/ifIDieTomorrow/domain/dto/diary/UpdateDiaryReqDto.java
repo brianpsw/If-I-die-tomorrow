@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 public class UpdateDiaryReqDto {
 
 	private Long diaryId;
-	private Long userId;
 	private String title;
 	private String content;
 	private Boolean secret;
