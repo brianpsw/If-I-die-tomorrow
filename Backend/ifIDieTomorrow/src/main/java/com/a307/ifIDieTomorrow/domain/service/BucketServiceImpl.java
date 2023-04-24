@@ -7,11 +7,11 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
-import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,8 +30,6 @@ public class BucketServiceImpl implements BucketService {
 	
 	private final S3Upload s3Upload;
 	
-	private final UserRepository userRepository;
-	
 	private final BucketRepository bucketRepository;
 	
 	private final CommentRepository commentRepository;
@@ -39,7 +37,7 @@ public class BucketServiceImpl implements BucketService {
 	@Override
 	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
 //		사진 검증
-		if (data.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
+		if (data.getHasPhoto() && photo == null) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
 		
 		Bucket bucket = Bucket.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
@@ -59,11 +57,15 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException {
+	public HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException, UnAuthorizedException {
+		Bucket bucket = bucketRepository.findByBucketId(bucketId).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
+		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("해당 버킷에 접근하기 위한 권한이 없습니다.");
+		
 		return bucketRepository.findByBucketIdWithUserNickName(bucketId)
 				.map(dto -> {
 //					버킷 리스트의 내용과 댓글을 해쉬맵 형태로 반환합니다.
-					HashMap<String, Object> result  = new HashMap<>();
+					HashMap<String, Object> result = new HashMap<>();
 					result.put(BUCKET, dto);
 					result.put("comments", commentRepository.findCommentsByTypeId(bucketId, true));
 					

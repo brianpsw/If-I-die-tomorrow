@@ -7,6 +7,7 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,5 +23,5 @@ public interface BucketService {
 	
 	List<GetBucketByUserResDto> getBucketByUserId () throws NotFoundException;
 	
-	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException;
+	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException, UnAuthorizedException;
 }
