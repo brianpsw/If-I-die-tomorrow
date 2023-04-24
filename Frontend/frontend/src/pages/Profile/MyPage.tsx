@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/mypage_bg.jpg';
 import Button from '../../components/common/Button';
+import { Icon } from '@iconify/react';
 
 const Background = styled.div`
   background-image: url(${backgroundImg});
@@ -53,7 +54,10 @@ function MyPage() {
           <HeadText>마이페이지</HeadText>
           <MyProfile>
             <h2>Nickname님, 환영합니다.</h2>
-            <span>유언장 작성하러 가기</span>
+            <span>
+              <Icon icon="line-md:clipboard-list" />
+              유언장 작성하러 가기
+            </span>
           </MyProfile>
 
           <SettingBox>
