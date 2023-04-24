@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
@@ -101,6 +102,20 @@ public class PhotoServiceImpl implements PhotoService {
 				build();
 		
 		return CreatePhotoResDto.toDto(photoRepository.save(photoEntity));
+	}
+	
+	@Override
+	public CreatePhotoResDto updatePhoto (UpdatePhotoDto data) throws NotFoundException, UnAuthorizedException {
+		Photo photo = photoRepository.findByPhotoId(data.getPhotoId())
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
+		
+		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+		
+		if (photo.getUserId() != 0 && !photo.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 포토 ID 입니다.");
+		
+		photo.updateCategory(data.getCaption());
+		
+		return CreatePhotoResDto.toDto(photoRepository.save(photo));
 	}
 	
 }

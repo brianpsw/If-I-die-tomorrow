@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "photo")
-public class Photo {
+public class Photo extends BaseEntity {
 	
 	@Column(nullable = false)
 	@Id
@@ -32,5 +32,9 @@ public class Photo {
 
 	@Column(columnDefinition = "TEXT")
 	private String caption;
-
+	
+	public void updateCategory (String caption) {
+		this.caption = caption;
+	}
+	
 }

@@ -4,6 +4,8 @@ import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 public class CreatePhotoResDto {
@@ -12,13 +14,17 @@ public class CreatePhotoResDto {
 	private Long categoryId;
 	private String imageUrl;
 	private String caption;
+	private LocalDateTime createdAt;
+	private LocalDateTime updatedAt;
 	
 	public static CreatePhotoResDto toDto(Photo photo) {
 		return new CreatePhotoResDto(
 				photo.getPhotoId(),
 				photo.getCategory().getCategoryId(),
 				photo.getImageUrl(),
-				photo.getCaption()
+				photo.getCaption(),
+				photo.getCreatedAt(),
+				photo.getUpdatedAt()
 		);
 	}
 }
