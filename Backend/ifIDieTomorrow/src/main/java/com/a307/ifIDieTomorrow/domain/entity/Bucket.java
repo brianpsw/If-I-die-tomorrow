@@ -19,24 +19,21 @@ import javax.validation.constraints.NotNull;
 @Table(name = "bucket")
 public class Bucket extends BaseEntity {
 
-	@Column
+	@Column(nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bucketId;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
 	
-	@Column(length = 100)
-	@NotNull
+	@Column(length = 100, nullable = false)
 	private String title;
 	
 	@Column(columnDefinition = "TEXT")
 	private String content;
 	
-	@NotNull
-	@Column
+	@Column(nullable = false)
 	@ColumnDefault("false")
 	private Boolean complete;
 	
@@ -46,8 +43,7 @@ public class Bucket extends BaseEntity {
 	@Column
 	private Boolean secret;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	@ColumnDefault("0")
 	private Integer report;
 	
