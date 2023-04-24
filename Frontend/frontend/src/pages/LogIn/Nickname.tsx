@@ -5,26 +5,41 @@ import requests from '../../api/config';
 // import { defaultApi } from '../../api/axios';
 import AppTitle from '../../assets/images/app_title.svg';
 import RefreshButton from '../../assets/icons/refresh_button.svg';
+import Button from '../../components/common/Button';
 const Container = styled.div`
-  ${tw`flex items-center flex-col w-full h-[100vh] justify-between`}
+  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
 `;
 const LogoContainer = styled.div`
-  ${tw`flex items-center flex-col w-full mt-[111px] space-y-6 `}
+  ${tw`flex items-center flex-col w-full mt-[120px] space-y-6 `}
 `;
 
 const TitleText = styled.div`
-  ${tw`text-h2 w-full px-6`}
-`;
-const InfoText = styled.span`
-  ${tw`w-full text-center mx-6`}
+  ${tw`text-h2 w-full mt-[48px]`}
 `;
 const NicknameContainer = styled.div`
-  ${tw`border-b w-full px-6 justify-between  `}
+  ${tw`flex items-center justify-between border-b border-black w-full h-[40px] px-[16px] mt-[64px]`}
 `;
+const InfoText = styled.span`
+  ${tw`w-full mt-[24px]`}
+`;
+const CheckText = styled.span`
+  ${tw`w-full mt-[256px]`}
+`;
+
 const IIDT = styled.span`
   ${tw`text-green-100`}
 `;
 function Nickname() {
+  const [nickname, setNickname] = useState('');
+  useEffect(() => {
+    //랜덤 닉네임 받아오는 API
+  }, []);
+  const handleNicknameChange = () => {
+    //랜덤 닉네임 받아오는 API
+  };
+  const handleNicknameSubmit = () => {
+    //닉네임 정하는 API
+  };
   return (
     <Container>
       <LogoContainer>
@@ -35,6 +50,26 @@ function Nickname() {
         <br />
         닉네임을 선택해주세요.
       </TitleText>
+      <NicknameContainer>
+        <span className="text-h2">{nickname}</span>
+        <img onClick={handleNicknameChange} src={RefreshButton} alt="" />
+      </NicknameContainer>
+      <InfoText>
+        유저의 개인정보를 보호하고자 랜덤으로 닉네임을 생성해 드립니다.
+      </InfoText>
+      <CheckText>
+        서비스 방침상 한번 설정한 닉네임은 추후 변경이 불가능합니다.
+        <br />
+        정말 지금 닉네임을 선택하시겠습니까?
+      </CheckText>
+      <Button
+        onClick={handleNicknameSubmit}
+        className="mt-[24px]"
+        color="#36C2CC"
+        size="lg"
+      >
+        선택 완료
+      </Button>
     </Container>
   );
 }
