@@ -92,6 +92,7 @@ public class PhotoServiceImpl implements PhotoService {
 		
 		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 		
+		// 공용 카테고리가 아니면서 다른 유저가 만든 카테고리에 업로드하려 할 때
 		if (category.getUserId() != 0 && !category.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 카테고리 ID 입니다.");
 		
 		Photo photoEntity = Photo.builder().
@@ -107,15 +108,35 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public CreatePhotoResDto updatePhoto (UpdatePhotoDto data) throws NotFoundException, UnAuthorizedException {
 		Photo photo = photoRepository.findByPhotoId(data.getPhotoId())
-				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 포토 ID 입니다."));
 		
 		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
 		
-		if (photo.getUserId() != 0 && !photo.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 포토 ID 입니다.");
+		// 본인의 사진이 아닌 경우
+		if (!photo.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 포토 ID 입니다.");
 		
 		photo.updateCategory(data.getCaption());
 		
 		return CreatePhotoResDto.toDto(photoRepository.save(photo));
+	}
+	
+	@Override
+	public Long deletePhoto (Long photoId) throws NotFoundException, UnAuthorizedException {
+		Photo photo = photoRepository.findByPhotoId(photoId)
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 포토 ID 입니다."));
+		
+		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+		
+		// 본인의 사진이 아닌 경우
+		if (!photo.getUserId().equals(userId)) throw new UnAuthorizedException("삭제할 수 없는 포토 ID 입니다.");
+		
+		// S3에서 사진 삭제
+		s3Upload.fileDelete(photo.getImageUrl());
+		
+		// Database 에서 사진 삭제
+		photoRepository.delete(photo);
+		
+		return photoId;
 	}
 	
 }

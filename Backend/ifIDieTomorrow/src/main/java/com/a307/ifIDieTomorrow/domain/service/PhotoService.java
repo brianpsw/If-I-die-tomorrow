@@ -27,4 +27,6 @@ public interface PhotoService {
 	CreatePhotoResDto createPhoto (CreatePhotoDto data, MultipartFile photo) throws IllegalArgumentException, IOException, NoPhotoException, NotFoundException, UnAuthorizedException;
 	
 	CreatePhotoResDto updatePhoto (UpdatePhotoDto data) throws NotFoundException, UnAuthorizedException;
+	
+	Long deletePhoto (Long photoId) throws NotFoundException, UnAuthorizedException;
 }
