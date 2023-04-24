@@ -4,5 +4,5 @@ import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 
 public interface WillService {
-	GetWillByUserResDto getWillByUserId (Long userId) throws NotFoundException;
+	GetWillByUserResDto getWillByUserId () throws NotFoundException;
 }

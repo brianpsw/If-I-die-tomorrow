@@ -8,6 +8,7 @@ import com.a307.ifIDieTomorrow.domain.service.BucketService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class BucketController {
 	@GetMapping("/{bucketId}")
 	@Operation(summary = "유저의 버킷 리스트 1개 조회", description = "유저의 버킷 리스트를 1개 조회합니다.")
 	public ResponseEntity<HashMap<String, Object>> getBucketDetail(
-			@PathVariable Long bucketId) throws NotFoundException {
+			@PathVariable Long bucketId) throws NotFoundException, UnAuthorizedException {
 
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByBucketId(bucketId));
 	}

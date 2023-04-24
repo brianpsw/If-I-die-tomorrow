@@ -18,11 +18,10 @@ public class WillController {
 	
 	private final WillService willService;
 	
-	@GetMapping("/{userId}")
+	@GetMapping("")
 	@Operation(summary = "유저의 유언 조회", description = "유저의 유언을 조회합니다.")
-	public ResponseEntity<GetWillByUserResDto> getWill(
-			@PathVariable Long userId) throws NotFoundException {
-		return ResponseEntity.status(HttpStatus.OK).body(willService.getWillByUserId(userId));
+	public ResponseEntity<GetWillByUserResDto> getWill() throws NotFoundException {
+		return ResponseEntity.status(HttpStatus.OK).body(willService.getWillByUserId());
 	}
 	
 	
