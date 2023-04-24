@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -14,20 +13,17 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 @Table(name = "category")
-public class Category extends BaseEntity{
+public class Category extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long categoryId;
 
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
 
-	@Column(length = 100)
-	@NotNull
+	@Column(length = 100, nullable = false)
 	private String name;
 	
 	public void updateCategory (String name) {

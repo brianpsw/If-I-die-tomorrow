@@ -6,8 +6,10 @@ import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.PhotoRepository;
+import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public class PhotoServiceImpl implements PhotoService {
 	@Override
 	public CreateCategoryResDto createCategory (CreateCategoryDto data) {
 		Category category = Category.builder().
-				userId(data.getUserId()).
+				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				name(data.getName()).
 				build();
 		
@@ -35,8 +37,8 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public List<CreateCategoryResDto> getCategory (Long userId) {
-		return categoryRepository.findAllByUserId(userId);
+	public List<CreateCategoryResDto> getCategory () {
+		return categoryRepository.findAllByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 	
 	@Override

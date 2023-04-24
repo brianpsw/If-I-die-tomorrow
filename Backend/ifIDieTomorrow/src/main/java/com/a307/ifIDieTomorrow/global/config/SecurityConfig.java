@@ -21,7 +21,7 @@ public class SecurityConfig {
     private final UserServiceImpl oAuth2UserService;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        http.csrf().disable()
             .authorizeRequests(authorize -> authorize
                     .anyRequest().authenticated()
             )

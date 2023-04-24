@@ -7,7 +7,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class CreateCategoryDto {
 
-	private Long userId;
 	private String name;
 	
 }

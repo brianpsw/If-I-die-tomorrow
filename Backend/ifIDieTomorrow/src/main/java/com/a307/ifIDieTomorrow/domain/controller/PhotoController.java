@@ -33,11 +33,10 @@ public class PhotoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data));
 	}
 	
-	@GetMapping("/category/{userId}")
+	@GetMapping("/category")
 	@Operation(summary = "유저의 카테고리 전체 조회", description = "유저의 카테고리를 전체 조회합니다.")
-	public ResponseEntity<List<CreateCategoryResDto>> getCategory(
-			@PathVariable Long userId) {
-		return ResponseEntity.status(HttpStatus.OK).body(photoService.getCategory(userId));
+	public ResponseEntity<List<CreateCategoryResDto>> getCategory() {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.getCategory());
 	}
 	
 	@PatchMapping("/category")
