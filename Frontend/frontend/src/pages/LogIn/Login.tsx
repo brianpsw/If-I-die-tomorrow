@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import requests from '../../api/config';
+// import { defaultApi } from '../../api/axios';
 import tw from 'twin.macro';
 import Logo from '../../assets/icons/logo.svg';
 import AppTitle from '../../assets/images/app_title.svg';
@@ -19,6 +21,13 @@ const InfoText = styled.span`
 `;
 
 function Login() {
+  const kakaoLogin = () => {
+    window.location.href = requests.KAKAO_LOGIN;
+  };
+
+  const naverLogin = () => {
+    window.location.href = requests.NAVER_LOGIN;
+  };
   return (
     <Container>
       <LogoContainer>
@@ -31,8 +40,8 @@ function Login() {
           <br />
           당신의 인생 저희 If I die tomorrow가 정리해드릴게요!
         </InfoText>
-        <img src={NaverLoginButton} alt="" />
-        <img src={KakaoLoginButton} alt="" />
+        <img src={NaverLoginButton} onClick={naverLogin} alt="naver_login" />
+        <img src={KakaoLoginButton} onClick={kakaoLogin} alt="kakao_login" />
       </LogInContainer>
     </Container>
   );
