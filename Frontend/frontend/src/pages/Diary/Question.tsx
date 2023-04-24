@@ -47,15 +47,18 @@ const RadioButton = styled.input`
 `;
 
 const StyledQuestion = styled.div`
-  ${tw`mb-6 p-6 bg-opacity-70`}
-  background-color: #F6F6F6;
+  ${tw`mb-6 p-6`}
+  background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
-  text-align: center;
 `;
 
 const QuestionTitle = styled.h2`
   ${tw`mb-4 font-bold`}
   font-size: 14px;
+`;
+
+const AgreeDisagreeText = styled.span`
+  font-size: 13px;
 `;
 
 const RadioGroup = styled.div`
@@ -85,7 +88,7 @@ const Question: React.FC<QuestionProps> = ({ id, title, onChange }) => {
     <StyledQuestion>
       <QuestionTitle>{title}</QuestionTitle>
       <RadioGroup>
-        <span>동의</span>
+        <AgreeDisagreeText>동의</AgreeDisagreeText>
         {Array.from({ length: 5 }, (_, index) => (
           <RadioLabel key={index}>
             <RadioButton
@@ -98,7 +101,7 @@ const Question: React.FC<QuestionProps> = ({ id, title, onChange }) => {
             <span></span>
           </RadioLabel>
         ))}
-        <span>비동의</span>
+        <AgreeDisagreeText>비동의</AgreeDisagreeText>
       </RadioGroup>
     </StyledQuestion>
   );
