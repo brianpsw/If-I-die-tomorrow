@@ -14,23 +14,14 @@ import java.time.LocalDateTime;
 public class GetBucketResDto {
 
 	private Long bucketId;
-
 	private Long userId;
-
 	private String nickname;
-
 	private String title;
-
 	private String content;
-	
 	private Boolean complete;
-
 	private String imageUrl;
-
 	private Boolean secret;
-
 	private LocalDateTime createdAt;
-
 	private LocalDateTime updatedAt;
 
 }

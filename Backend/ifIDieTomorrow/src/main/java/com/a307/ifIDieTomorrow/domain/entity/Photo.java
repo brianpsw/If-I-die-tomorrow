@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -15,24 +14,20 @@ import javax.validation.constraints.NotNull;
 @Builder
 @Table(name = "photo")
 public class Photo {
-
+	
+	@Column(nullable = false)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	@NotNull
 	private Long photoId;
-
-	@NotNull
+	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
+	@JoinColumn(name = "categoryId")
 	private Category category;
 
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
-
-	@Column
-	@NotNull
+	
+	@Column(nullable = false)
 	private String imageUrl;
 
 	@Column(columnDefinition = "TEXT")

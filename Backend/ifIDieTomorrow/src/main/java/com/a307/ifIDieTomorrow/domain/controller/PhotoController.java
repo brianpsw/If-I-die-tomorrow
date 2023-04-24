@@ -3,15 +3,22 @@ package com.a307.ifIDieTomorrow.domain.controller;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.service.PhotoService;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "포토 클라우드와 카테고리", description = "APIs for PHOTO CLOUD and CATEGORY")
@@ -56,5 +63,14 @@ public class PhotoController {
 	//////////////////////////
 	// APIs For PHOTO CLOUD //
 	//////////////////////////
+	
+	@PostMapping("")
+	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")
+	public ResponseEntity<CreatePhotoResDto> createPhoto(
+			@RequestPart CreatePhotoDto data,
+			@RequestPart MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException, NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createPhoto(data, photo));
+	}
+	
 	
 }
