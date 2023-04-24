@@ -80,5 +80,12 @@ public class PhotoController {
 		return ResponseEntity.status(HttpStatus.OK).body(photoService.updatePhoto(data));
 	}
 	
+	@DeleteMapping("/{photoId}") // 메타데이터의 takeAt? 추가 할 것
+	@Operation(summary = "사진 삭제", description = "포토 클라우드의 사진을 삭제합니다.")
+	public ResponseEntity<Long> deletePhoto(
+			@PathVariable Long photoId) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(photoService.deletePhoto(photoId));
+	}
+	
 	
 }
