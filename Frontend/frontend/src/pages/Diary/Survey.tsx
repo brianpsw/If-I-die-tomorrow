@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import Question from './Question';
 import Button from '../../components/common/Button';
+import backgroundImg from '../../assets/images/diary_bg.png';
 
 const questions = [
   '주기적으로 새로운 친구들을 만든다.',
@@ -16,6 +17,15 @@ interface PersonalityTestProps {
   onSubmit?: (answers: { [key: string]: number }) => void;
 }
 
+const Background = styled.div`
+  background-image: url(${backgroundImg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+`;
+
 const SurveyForm = styled.form`
   ${tw`flex flex-col items-center mx-auto`}
   max-width: calc(100% - 48px);
@@ -27,6 +37,12 @@ const QuestionWrapper = styled.div`
 
 const SurveyText = styled.p`
   text-align: center;
+  color: #fff;
+  font-size: 12px;
+`;
+
+const StyledButton = styled(Button)`
+  ${tw`mt-6 mb-12`}
 `;
 
 const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
@@ -42,26 +58,28 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
   };
 
   return (
-    <SurveyForm onSubmit={handleSubmit}>
-      <SurveyText>
-        성향 설문조사를 통해 나에게 맞는
-        <br />
-        추천 버킷리스트를 받아보세요
-      </SurveyText>
-      <QuestionWrapper>
-        {questions.map((title, index) => (
-          <Question
-            key={index}
-            id={index + 1}
-            title={title}
-            onChange={handleChange}
-          />
-        ))}
-      </QuestionWrapper>
-      <Button color="#FFA9A9" size="md">
-        선택완료
-      </Button>
-    </SurveyForm>
+    <Background>
+      <SurveyForm onSubmit={handleSubmit}>
+        <SurveyText>
+          성향 설문조사를 통해 나에게 맞는
+          <br />
+          추천 버킷리스트를 받아보세요
+        </SurveyText>
+        <QuestionWrapper>
+          {questions.map((title, index) => (
+            <Question
+              key={index}
+              id={index + 1}
+              title={title}
+              onChange={handleChange}
+            />
+          ))}
+        </QuestionWrapper>
+        <StyledButton color="#FFA9A9" size="md">
+          선택완료
+        </StyledButton>
+      </SurveyForm>
+    </Background>
   );
 };
 

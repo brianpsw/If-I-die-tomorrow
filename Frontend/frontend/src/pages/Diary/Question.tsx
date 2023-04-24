@@ -17,7 +17,7 @@ const RadioButton = styled.input`
     display: inline-block;
     width: 24px;
     height: 24px;
-    border: 2px solid black;
+    border: 1px solid black;
     border-radius: 50%;
     position: relative;
     cursor: pointer;
@@ -26,7 +26,7 @@ const RadioButton = styled.input`
   // 선택된 라디오 버튼 색상 변경
   &:checked + span {
     background-color: #ffa9a9;
-    border: 2px solid black;
+    border: 1px solid black;
   }
 
   // 각 크기에 대한 스타일
