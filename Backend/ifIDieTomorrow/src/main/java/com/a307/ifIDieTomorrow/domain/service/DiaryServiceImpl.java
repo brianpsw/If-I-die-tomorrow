@@ -7,13 +7,15 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
-import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,16 +29,13 @@ import java.util.List;
 public class DiaryServiceImpl implements DiaryService{
 
 	private final S3Upload s3Upload;
-	private final UserRepository userRepository;
 	private final DiaryRepository diaryRepository;
 	private final CommentRepository commentRepository;
 
 	@Override
-	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException {
+	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
 
-//		이후 jwt 적용 시 해당 부분은 생략합니다. (유저아이디는 토큰에서 받아옴)
-		if (!userRepository.existsByUserId(req.getUserId())) throw new NotFoundException("존재하지 않는 유저입니다.");
-
+//
 //		사진 검증
 		if (req.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
 
@@ -44,7 +43,7 @@ public class DiaryServiceImpl implements DiaryService{
 		return CreateDiaryResDto.toDto(
 				diaryRepository.save(Diary.builder()
 								.title(req.getTitle())
-								.userId(req.getUserId())
+								.userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 								.content(req.getContent())
 								.secret(req.getSecret())
 								.imageUrl(req.getHasPhoto() ? s3Upload.uploadFiles(photo, "diary") : "")
@@ -54,11 +53,9 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public List<GetDiaryByUserResDto> getDiaryByUserId(Long userId) throws NotFoundException {
+	public List<GetDiaryByUserResDto> getDiaryByUserId() {
 
-		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
-
-		return diaryRepository.findAllByUserIdWithCommentCount(userId);
+		return diaryRepository.findAllByUserIdWithCommentCount(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 
 	@Override
@@ -96,12 +93,19 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException {
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException, UnAuthorizedException {
 		Diary diary = diaryRepository.findById(req.getDiaryId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
 
+		//		유저 정보 파싱
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long userId = principal.getUserId();
+
+		if (!userId.equals(diary.getUserId())) throw new UnAuthorizedException("내가 작성한 다이어리가 아닙니다");
+
 //		사진 여부 검증
 		if (req.getUpdatePhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
+
 
 //		기존 사진 삭제
 		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
