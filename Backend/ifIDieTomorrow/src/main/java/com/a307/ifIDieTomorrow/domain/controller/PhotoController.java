@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.service.PhotoService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -64,12 +65,19 @@ public class PhotoController {
 	// APIs For PHOTO CLOUD //
 	//////////////////////////
 	
-	@PostMapping("")
+	@PostMapping("") // 메타데이터의 takeAt? 추가 할 것
 	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")
 	public ResponseEntity<CreatePhotoResDto> createPhoto(
 			@RequestPart CreatePhotoDto data,
 			@RequestPart MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException, NotFoundException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createPhoto(data, photo));
+	}
+	
+	@PatchMapping("") // 메타데이터의 takeAt? 추가 할 것
+	@Operation(summary = "사진 캡션 수정", description = "사진의 캡션을 수정합니다.")
+	public ResponseEntity<CreatePhotoResDto> updatePhoto(
+			@RequestBody UpdatePhotoDto data) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.updatePhoto(data));
 	}
 	
 	
