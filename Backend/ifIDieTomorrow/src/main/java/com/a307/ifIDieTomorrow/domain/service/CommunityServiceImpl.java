@@ -9,8 +9,10 @@ import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -53,7 +55,11 @@ public class CommunityServiceImpl implements CommunityService{
 	@Override
 	public CreateCommentResDto createComment(CreateCommentReqDto req) {
 
-		Comment comment = commentRepository.save(req.toEntity());
+		//		유저 정보 파싱
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long userId = principal.getUserId();
+
+		Comment comment = commentRepository.save(req.toEntity(userId));
 
 		return CreateCommentResDto.builder()
 				.commentId(comment.getCommentId())
