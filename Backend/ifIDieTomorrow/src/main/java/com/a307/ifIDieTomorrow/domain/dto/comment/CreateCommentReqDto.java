@@ -13,11 +13,10 @@ import lombok.NoArgsConstructor;
 public class CreateCommentReqDto {
 
 	private String content;
-	private Long userId;
 	private Boolean type;
 	private Long typeId;
 
-	public Comment toEntity () {
+	public Comment toEntity (Long userId) {
 		return Comment.builder()
 				.content(content)
 				.userId(userId)

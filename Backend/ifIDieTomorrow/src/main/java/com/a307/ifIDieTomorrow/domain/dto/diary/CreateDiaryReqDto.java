@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateDiaryReqDto {
 
-	private Long userId;
 	private String title;
 	private String content;
 	private Boolean secret;
