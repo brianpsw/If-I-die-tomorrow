@@ -7,7 +7,6 @@ import lombok.*;
 public class UpdateBucketDto {
 	
 	private Long bucketId;
-	private Long userId;
 	private String title;
 	private String content;
 	private Boolean complete;

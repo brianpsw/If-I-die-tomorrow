@@ -8,11 +8,13 @@ import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,7 +42,7 @@ public class BucketServiceImpl implements BucketService {
 		if (data.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
 		
 		Bucket bucket = Bucket.builder().
-				userId(data.getUserId()).
+				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				title(data.getTitle()).
 				content(data.getContent()).
 				complete(data.getComplete()).
@@ -52,10 +54,8 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public List<GetBucketByUserResDto> getBucketByUserId (Long userId) throws NotFoundException {
-		if (!userRepository.existsByUserId(userId)) throw new NotFoundException("존재하지 않는 유저입니다.");
-		
-		return bucketRepository.findAllByUserId(userId);
+	public List<GetBucketByUserResDto> getBucketByUserId () {
+		return bucketRepository.findAllByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 	
 	@Override

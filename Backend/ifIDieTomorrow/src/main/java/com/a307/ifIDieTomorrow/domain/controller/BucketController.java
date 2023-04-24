@@ -13,8 +13,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,15 +36,14 @@ public class BucketController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 
-	@GetMapping("/{userId}")
+	@GetMapping("")
 	@Operation(summary = "유저의 버킷 리스트 전체 조회", description = "유저의 버킷 리스트를 전체 조회합니다.")
-	public ResponseEntity<List<GetBucketByUserResDto>> getBucket(
-			@PathVariable Long userId) throws NotFoundException {
+	public ResponseEntity<List<GetBucketByUserResDto>> getBucket() throws NotFoundException {
 
-		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByUserId(userId));
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByUserId());
 	}
 
-	@GetMapping("/detail/{bucketId}")
+	@GetMapping("/{bucketId}")
 	@Operation(summary = "유저의 버킷 리스트 1개 조회", description = "유저의 버킷 리스트를 1개 조회합니다.")
 	public ResponseEntity<HashMap<String, Object>> getBucketDetail(
 			@PathVariable Long bucketId) throws NotFoundException {

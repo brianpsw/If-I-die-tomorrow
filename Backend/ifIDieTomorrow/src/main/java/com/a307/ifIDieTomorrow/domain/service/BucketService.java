@@ -20,7 +20,7 @@ public interface BucketService {
 	
 	Long deleteBucket (Long bucketId) throws NotFoundException;
 	
-	List<GetBucketByUserResDto> getBucketByUserId (Long userId) throws NotFoundException;
+	List<GetBucketByUserResDto> getBucketByUserId () throws NotFoundException;
 	
 	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException;
 }

@@ -6,7 +6,6 @@ import lombok.*;
 @AllArgsConstructor
 public class CreateBucketDto {
 	
-	private Long userId;
 	private String title;
 	private String content;
 	private Boolean complete;
