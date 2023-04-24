@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
@@ -71,7 +70,8 @@ const RadioLabel = styled.label`
 
 const Question: React.FC<QuestionProps> = ({ id, title, onChange }) => {
   const handleRadioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(id, Number(e.target.value));
+    const value = Number(e.target.value);
+    onChange(id, value);
   };
 
   const getRadioButtonSize = (index: number) => {
