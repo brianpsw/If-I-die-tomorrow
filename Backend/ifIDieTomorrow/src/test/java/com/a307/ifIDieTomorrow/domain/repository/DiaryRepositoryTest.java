@@ -38,6 +38,7 @@ class DiaryRepositoryTest {
 
 //		해당 다이어리에 작성된 댓글
 		Comment comment1 = Comment.builder()
+				.userId(1L)
 				.content("comment1")
 				.typeId(diary.getDiaryId())
 				.type(true)
@@ -46,6 +47,7 @@ class DiaryRepositoryTest {
 
 //		해당 다이어리에 작성되지 않은 댓글
 		Comment comment2 = Comment.builder()
+				.userId(1L)
 				.content("comment2")
 				.typeId(2L)
 				.type(true)
@@ -54,6 +56,7 @@ class DiaryRepositoryTest {
 
 		// When
 		List<GetDiaryByUserResDto> result = testDiaryRepository.findAllByUserIdWithCommentCount(userId);
+		System.out.println(result);
 
 		// Then
 		assertThat(result).isNotNull();
