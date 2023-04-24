@@ -28,16 +28,32 @@ const HeadText = styled.h1`
 `;
 
 const MyProfile = styled.div`
-  ${tw`mb-12 mt-12`}
+  ${tw`mb-6 mt-12`}
   color: white;
 `;
 
 const SettingBox = styled.div`
-  ${tw`mb-12 mt-12`}
+  ${tw`mb-12 mt-6 p-6`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
   width: 342px;
   height: 504px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const StyledButton = styled(Button)`
+  margin: 0 auto; // 추가
+`;
+
+const IconWithText = styled.div`
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  svg {
+    margin-right: 8px;
+  }
 `;
 
 const FixedNavBar = styled(NavBar)`
@@ -53,22 +69,33 @@ function MyPage() {
         <Container>
           <HeadText>마이페이지</HeadText>
           <MyProfile>
-            <h2>Nickname님, 환영합니다.</h2>
-            <span>
+            <h2 className="text-h2">Nickname님, 환영합니다.</h2>
+            <IconWithText>
               <Icon icon="line-md:clipboard-list" />
-              유언장 작성하러 가기
-            </span>
+              <span>유언장 작성하러 가기</span>
+            </IconWithText>
           </MyProfile>
 
           <SettingBox>
-            <h3>사후 전송 서비스 설정</h3>
-            <h4>생존 여부 알림</h4>
-            <div>
-              <h4>내 기록 받아볼 사람</h4>
-            </div>
-            <Button color="#FFA9A9" size="sm">
+            <IconWithText>
+              <h3 className="text-h4" style={{ display: 'inline-block' }}>
+                사후 전송 서비스 설정
+              </h3>
+              <Icon icon="line-md:switch-off-filled" />
+              <Icon icon="line-md:switch-off-to-switch-transition" />
+            </IconWithText>
+
+            <IconWithText>
+              <h4 style={{ display: 'inline-block' }}>생존 여부 알림</h4>
+              <Icon icon="line-md:question-circle-twotone" />
+            </IconWithText>
+            <IconWithText>
+              <h4 style={{ display: 'inline-block' }}>내 기록 받아볼 사람</h4>
+              <Icon icon="line-md:question-circle-twotone" />
+            </IconWithText>
+            <StyledButton color="#FFA9A9" size="sm">
               저장
-            </Button>
+            </StyledButton>
           </SettingBox>
         </Container>
       </Background>
