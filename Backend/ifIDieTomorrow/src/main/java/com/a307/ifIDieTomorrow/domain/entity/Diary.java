@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -22,32 +21,26 @@ public class Diary extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	@NotNull
 	private Long diaryId;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private String title;
 	
-	@Column(columnDefinition = "TEXT")
-	@NotNull
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
 	
 	// null 허용
 	@Column
 	private String imageUrl;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	@ColumnDefault("false")
 	private Boolean secret;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	@ColumnDefault("0")
 	private Integer report;
 
