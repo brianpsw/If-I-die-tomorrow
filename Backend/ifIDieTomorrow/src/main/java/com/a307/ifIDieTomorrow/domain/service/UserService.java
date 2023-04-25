@@ -5,10 +5,13 @@ import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.opencsv.exceptions.CsvException;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.io.IOException;
 
 public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user);
@@ -18,4 +21,6 @@ public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2
     String generateNickname();
 
     UserDto getUser(Long userId) throws NotFoundException;
+
+    String getNickname() throws IOException, CsvException;
 }

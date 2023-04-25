@@ -10,8 +10,13 @@ import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.OAuthProviderMisMatchException;
+import com.a307.ifIDieTomorrow.global.util.NicknameGenerator;
+import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -20,6 +25,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
@@ -29,7 +35,9 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl extends DefaultOAuth2UserService implements UserService{
 
+    private final NicknameGenerator nicknameGenerator;
     private final UserRepository userRepository;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -98,5 +106,10 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     @Override
     public UserDto getUser(Long userId) throws NotFoundException {
         return userRepository.findById(userId).map(UserDto::new).orElseThrow(() -> new NotFoundException("존재하지 않는 User ID 입니다."));
+    }
+
+    @Override
+    public String getNickname() throws IOException, CsvException {
+        return nicknameGenerator.getRandomItemFromCsv();
     }
 }
