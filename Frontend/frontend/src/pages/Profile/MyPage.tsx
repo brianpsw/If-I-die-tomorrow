@@ -37,7 +37,7 @@ const SettingBox = styled.div`
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
   width: 342px;
-  height: 504px;
+  height: auto;
   display: flex;
   flex-direction: column;
   // justify-content: space-between;
@@ -63,6 +63,10 @@ const InputRow = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 8px;
+`;
+
+const Receiver = styled.div`
+  ${tw`mb-6`}
 `;
 
 const StyledButton = styled(Button)`
@@ -97,19 +101,26 @@ function MyPage() {
     setReceivers(newReceivers);
   };
 
-  const [receiverTexts, setReceiverTexts] = useState<string[]>([]);
+  const [receiverTexts, setReceiverTexts] = useState<
+    Array<{ name: string; email: string; phone: string }>
+  >([]);
 
   const addReceiver = () => {
-    if (receivers.length < 3) {
+    if (receivers.length + receiverTexts.length < 3) {
       setReceivers([...receivers, { name: '', email: '', phone: '' }]);
     }
   };
   const handleSave = () => {
-    const newReceiverTexts = receivers.map(
-      (receiver) =>
-        `이름: ${receiver.name}, 이메일: ${receiver.email}, 전화번호: ${receiver.phone}`,
-    );
-    setReceiverTexts(newReceiverTexts);
+    const newReceiverTexts = receivers.map((receiver) => ({
+      name: `이름: ${receiver.name}`,
+      email: `이메일: ${receiver.email}`,
+      phone: `전화번호: ${receiver.phone}`,
+    }));
+    setReceiverTexts([
+      ...receiverTexts,
+      ...newReceiverTexts.slice(0, 3 - receiverTexts.length),
+    ]);
+    setReceivers([{ name: '', email: '', phone: '' }]);
   };
   return (
     <div>
@@ -161,32 +172,41 @@ function MyPage() {
               <h4>내 기록 받아볼 사람</h4>
               <Icon icon="line-md:question-circle-twotone" />
             </IconWithText>
-            {receivers.map((receiver, index) => (
-              <InputRow key={index}>
-                <input
-                  type="text"
-                  placeholder="이름"
-                  value={receiver.name}
-                  onChange={(e) => handleReceiverChange(index, 'name', e)}
-                />
-                <input
-                  type="email"
-                  placeholder="이메일"
-                  value={receiver.email}
-                  onChange={(e) => handleReceiverChange(index, 'email', e)}
-                />
-                <input
-                  type="tel"
-                  placeholder="전화번호"
-                  value={receiver.phone}
-                  onChange={(e) => handleReceiverChange(index, 'phone', e)}
-                />
-              </InputRow>
-            ))}
+            {receivers.map(
+              (receiver, index) =>
+                receiverTexts.length < 3 && (
+                  <InputRow key={index}>
+                    <input
+                      type="text"
+                      placeholder="이름"
+                      value={receiver.name}
+                      onChange={(e) => handleReceiverChange(index, 'name', e)}
+                    />
+                    <input
+                      type="email"
+                      placeholder="이메일"
+                      value={receiver.email}
+                      onChange={(e) => handleReceiverChange(index, 'email', e)}
+                    />
+                    <input
+                      type="tel"
+                      placeholder="전화번호"
+                      value={receiver.phone}
+                      onChange={(e) => handleReceiverChange(index, 'phone', e)}
+                    />
+                  </InputRow>
+                ),
+            )}
             {receiverTexts.map((text, index) => (
-              <p key={index}>{text}</p>
+              <Receiver key={index}>
+                <p>{text.name}</p>
+                <p>{text.email}</p>
+                <p>{text.phone}</p>
+              </Receiver>
             ))}
-            <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+            {receivers.length < 3 && receiverTexts.length < 3 && (
+              <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+            )}
             <StyledButton color="#FFA9A9" size="sm" onClick={handleSave}>
               저장
             </StyledButton>
