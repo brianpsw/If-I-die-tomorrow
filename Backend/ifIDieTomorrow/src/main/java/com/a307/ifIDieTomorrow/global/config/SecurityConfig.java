@@ -39,7 +39,6 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                    .loginPage("https://ifidietomorrow.co.kr/login")
                     .authorizationEndpoint().authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
                     .and()
                     .userInfoEndpoint(userInfo -> userInfo
