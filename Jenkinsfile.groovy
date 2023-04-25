@@ -182,30 +182,7 @@ pipeline {
                 }
             }
         }
-        stage('BE Build') {
-            when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
-            }
-            steps {
-
-                sh '''
-                cd Backend/ifIDieTomorrow
-                chmod +x gradlew
-                ./gradlew clean build
-                '''
-            }
-        }
-
+        
         stage('FE Dockerizing'){
             when {
                 anyOf{
