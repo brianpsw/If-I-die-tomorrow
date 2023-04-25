@@ -1,8 +1,11 @@
 package com.a307.ifIDieTomorrow.domain.repository;
 
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
+import com.a307.ifIDieTomorrow.domain.entity.User;
+import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,6 +26,8 @@ class DiaryRepositoryTest {
 	private DiaryRepository testDiaryRepository;
 	@Autowired
 	private CommentRepository testCommentRepository;
+	@Autowired
+	private UserRepository testUserRepository;
 
 
 
@@ -120,9 +126,44 @@ class DiaryRepositoryTest {
 
 
 	@Test
-	@DisplayName("특정 다이어리와 작성자 닉네임 조회")
+	@DisplayName("특정 아이디의 다이어리와 작성자 닉네임 조회")
 	void findByIdWithUserNickName() {
 
+//		given
+		User user = testUserRepository.save(User.builder()
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build());
+
+		Diary diary = testDiaryRepository.save(Diary.builder()
+				.userId(user.getUserId())
+				.title("tom diary title")
+				.content("tom content title")
+				.imageUrl("")
+				.secret(true)
+				.report(0)
+				.build());
+
+//		when
+
+//		해당 아이디에 속하는 다이어리 존재
+		Optional<GetDiaryResDto> result = testDiaryRepository.findByIdWithUserNickName(diary.getDiaryId());
+//		해당 아이디에 속하는 다이어리가 없을 경우
+		Optional<GetDiaryResDto> empty = testDiaryRepository.findByIdWithUserNickName(-1L);
+
+//		then
+		assertThat(result).isPresent();
+		GetDiaryResDto dto = result.get();
+		assertThat(dto.getDiaryId()).isEqualTo(diary.getDiaryId());
+		assertThat(dto.getNickname()).isEqualTo(user.getNickname());
+
+		assertThat(empty).isEmpty();
 	}
 
 	@Test
