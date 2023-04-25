@@ -66,7 +66,7 @@ const InputRow = styled.div`
 `;
 
 const Receiver = styled.div`
-  ${tw`mb-6`}
+  ${tw`mb-6 flex justify-between`}
 `;
 
 const StyledButton = styled(Button)`
@@ -122,6 +122,11 @@ function MyPage() {
     ]);
     setReceivers([{ name: '', email: '', phone: '' }]);
   };
+
+  const handleDelete = (index: number) => {
+    setReceiverTexts(receiverTexts.filter((_, i) => i !== index));
+  };
+
   return (
     <div>
       <Background>
@@ -199,9 +204,16 @@ function MyPage() {
             )}
             {receiverTexts.map((text, index) => (
               <Receiver key={index}>
-                <p>{text.name}</p>
-                <p>{text.email}</p>
-                <p>{text.phone}</p>
+                <div>
+                  <p>{text.name}</p>
+                  <p>{text.email}</p>
+                  <p>{text.phone}</p>
+                </div>
+                <Icon
+                  icon="line-md:remove"
+                  onClick={() => handleDelete(index)}
+                  style={{ cursor: 'pointer' }}
+                />
               </Receiver>
             ))}
             {receivers.length < 3 && receiverTexts.length < 3 && (
