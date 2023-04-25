@@ -6,9 +6,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -30,15 +28,25 @@ class DiaryRepositoryTest {
 	private UserRepository testUserRepository;
 
 
+	@AfterEach
+	void tearDown() {
+		testDiaryRepository.deleteAllInBatch();
+		testUserRepository.deleteAllInBatch();
+		testCommentRepository.deleteAllInBatch();
+	}
 
 
-	@BeforeEach
-	void setUp() {
 
-//		1번 유저 다이어리 (1, 2)
+	@Test
+	@DisplayName("특정 유저가 작성한 다이어리랑 댓글 개수 가져오기")
+	void findAllByUserIdWithCommentCount() {
+		// Given
+		Long userId = 1L;
+
+		//		1번 유저 다이어리 (1, 2)
 		Diary diary1 = testDiaryRepository.save(
 				Diary.builder()
-						.userId(1L)
+						.userId(userId)
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
@@ -49,7 +57,7 @@ class DiaryRepositoryTest {
 		System.out.println(diary1.getDiaryId());
 		Diary diary2 = testDiaryRepository.save(
 				Diary.builder()
-						.userId(1L)
+						.userId(userId)
 						.title("1-2 title")
 						.content("1-2 content")
 						.imageUrl("")
@@ -98,15 +106,6 @@ class DiaryRepositoryTest {
 						.type(true)
 						.build()
 		);
-
-
-	}
-
-	@Test
-	@DisplayName("특정 유저가 작성한 다이어리랑 댓글 개수 가져오기")
-	void findAllByUserIdWithCommentCount() {
-		// Given
-		Long userId = 1L;
 
 		// When
 		List<GetDiaryByUserResDto> result = testDiaryRepository.findAllByUserIdWithCommentCount(userId);
