@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoInCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -29,4 +30,6 @@ public interface PhotoService {
 	CreatePhotoResDto updatePhoto (UpdatePhotoDto data) throws NotFoundException, UnAuthorizedException;
 	
 	Long deletePhoto (Long photoId) throws NotFoundException, UnAuthorizedException;
+	
+	GetPhotoInCategoryResDto getPhotoInCategory (Long categoryId) throws NotFoundException, UnAuthorizedException;
 }
