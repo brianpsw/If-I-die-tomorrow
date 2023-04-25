@@ -39,13 +39,4 @@ public class UserContoller {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(principal.getUserId()));
     }
 
-    @GetMapping("/login")
-    public void oauthLogin(HttpServletResponse response, HttpServletRequest request) throws IOException {
-        String redirect_uri="https://www.google.com";
-        StringBuffer requestURL = request.getRequestURL();
-        String loginPage = requestURL.substring(0, requestURL.length() - request.getRequestURI().length()) + "/login";
-        System.out.println(loginPage);
-        response.sendRedirect(redirect_uri);
-    }
-
 }
