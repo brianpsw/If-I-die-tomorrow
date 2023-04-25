@@ -19,7 +19,12 @@ import Button from './Button';
 const Navbar = styled.div`
   ${tw`bg-gray_100`}
   width: 100%;
+  height: 70px;
   display: flex;
+  padding: 9px 31px;
+  justify-content: space-between;
+  position: absolute;
+  bottom: 0;
 `;
 function NavBar() {
   const navigate = useNavigate();
@@ -30,17 +35,7 @@ function NavBar() {
   const [isMypage, setIsMypage] = useState<boolean>(false);
   const [changeNav, setChangeNav] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   if (changeNav) {
-  //   }
-  // }, [changeNav]);
-
-  const handleChange = () => {
-    setChangeNav((prev) => !prev);
-  };
-
   const handleDiary = () => {
-    handleChange();
     setIsDiary(true);
     setIsBucket(false);
     setIsHome(false);
@@ -51,7 +46,6 @@ function NavBar() {
   };
 
   const handleBucket = () => {
-    handleChange();
     setIsDiary(false);
     setIsBucket(true);
     setIsHome(false);
@@ -62,7 +56,6 @@ function NavBar() {
   };
 
   const handleHome = () => {
-    handleChange();
     setIsDiary(false);
     setIsBucket(false);
     setIsHome(true);
@@ -73,7 +66,6 @@ function NavBar() {
   };
 
   const handleFeed = () => {
-    handleChange();
     setIsDiary(false);
     setIsBucket(false);
     setIsHome(false);
@@ -84,7 +76,6 @@ function NavBar() {
   };
 
   const handleMypage = () => {
-    handleChange();
     setIsDiary(false);
     setIsBucket(false);
     setIsHome(false);
@@ -97,51 +88,56 @@ function NavBar() {
   return (
     <Navbar>
       {isDiary ? (
-        <img src={diaryActive} alt="active diary button" />
+        <img src={diaryActive} alt="active diary button" width="36px" />
       ) : (
         <img
           src={diaryInactive}
           alt="inactive diary button"
+          width="36px"
           onClick={handleDiary}
         />
       )}
 
       {isBucket ? (
-        <img src={bucketActive} alt="active bucket button" />
+        <img src={bucketActive} alt="active bucket button" width="36px" />
       ) : (
         <img
           src={bucketInactive}
           alt="inactive bucket button"
+          width="36px"
           onClick={handleBucket}
         />
       )}
 
       {isHome ? (
-        <img src={homeActive} alt="active home button" />
+        <img src={homeActive} alt="active home button" width="36px" />
       ) : (
         <img
           src={homeInactive}
           alt="inactive home button"
+          width="36px"
           onClick={handleHome}
         />
       )}
 
       {isFeed ? (
-        <img src={feedActive} alt="active feed button" />
+        <img src={feedActive} alt="active feed button" width="36px" />
       ) : (
         <img
           src={feedInactive}
           alt="inactive feed button"
+          width="36px"
           onClick={handleFeed}
         />
       )}
 
       {isMypage ? (
-        <img src={mypageActive} alt="active mypage button" />
+        <img src={mypageActive} alt="active mypage button" width="36px" />
       ) : (
         <img
           src={mypageInactive}
           alt="inactive mypage button"
+          width="36px"
           onClick={handleMypage}
         />
       )}
