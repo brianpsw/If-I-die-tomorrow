@@ -80,6 +80,7 @@ const IconWithText = styled.div`
 
 function MyPage() {
   const [consent, setConsent] = useState<string | null>(null);
+
   const handleConsentChange = (event: ChangeEvent<HTMLInputElement>) => {
     setConsent(event.target.value);
   };
@@ -96,10 +97,19 @@ function MyPage() {
     setReceivers(newReceivers);
   };
 
+  const [receiverTexts, setReceiverTexts] = useState<string[]>([]);
+
   const addReceiver = () => {
     if (receivers.length < 3) {
       setReceivers([...receivers, { name: '', email: '', phone: '' }]);
     }
+  };
+  const handleSave = () => {
+    const newReceiverTexts = receivers.map(
+      (receiver) =>
+        `이름: ${receiver.name}, 이메일: ${receiver.email}, 전화번호: ${receiver.phone}`,
+    );
+    setReceiverTexts(newReceiverTexts);
   };
   return (
     <div>
@@ -173,8 +183,11 @@ function MyPage() {
                 />
               </InputRow>
             ))}
+            {receiverTexts.map((text, index) => (
+              <p key={index}>{text}</p>
+            ))}
             <Icon icon="line-md:plus-circle" onClick={addReceiver} />
-            <StyledButton color="#FFA9A9" size="sm">
+            <StyledButton color="#FFA9A9" size="sm" onClick={handleSave}>
               저장
             </StyledButton>
           </SettingBox>
