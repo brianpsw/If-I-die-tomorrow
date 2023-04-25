@@ -40,7 +40,7 @@ function BucketListItem() {
 
       {isClicked ? (
         <FormContainer>
-          <span className="text-p1">청담스케쥴 김치볶음밥</span>
+          <span className="text-p1">청담스케쥴 김치볶음밥알았어..</span>
         </FormContainer>
       ) : null}
     </Container>
