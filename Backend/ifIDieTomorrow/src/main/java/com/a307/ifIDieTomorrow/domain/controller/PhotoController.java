@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoInCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.service.PhotoService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
@@ -87,5 +88,11 @@ public class PhotoController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(photoService.deletePhoto(photoId));
 	}
 	
+	@GetMapping("/{categoryId}") // 메타데이터의 takeAt? 추가 할 것
+	@Operation(summary = "특정 카테고리의 사진들 조회", description = "카테고리에 속한 사진들을 모두 조회합니다.")
+	public ResponseEntity<GetPhotoInCategoryResDto> getPhotoInCategory(
+			@PathVariable Long categoryId) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.getPhotoInCategory(categoryId));
+	}
 	
 }

@@ -3,9 +3,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.*;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
@@ -137,6 +135,21 @@ public class PhotoServiceImpl implements PhotoService {
 		photoRepository.delete(photo);
 		
 		return photoId;
+	}
+	
+	@Override
+	public GetPhotoInCategoryResDto getPhotoInCategory (Long categoryId) throws NotFoundException, UnAuthorizedException {
+		Category category = categoryRepository.findByCategoryId(categoryId).
+				orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
+		
+		// 공용 카테고리가 아니면서 다른 유저가 만든 카테고리에 접근하려 할 때
+		if (category.getUserId() != 0 && !category.getUserId().equals(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()))
+			throw new UnAuthorizedException("접근할 수 없는 카테고리 ID 입니다.");
+		
+		return new GetPhotoInCategoryResDto(
+				CreateCategoryResDto.toDto(category),
+				photoRepository.findAllPhotoByCategory_CategoryId(categoryId)
+		);
 	}
 	
 }
