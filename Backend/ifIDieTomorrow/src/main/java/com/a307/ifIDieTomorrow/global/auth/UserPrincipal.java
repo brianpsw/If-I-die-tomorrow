@@ -20,6 +20,7 @@ public class UserPrincipal implements OAuth2User {
 
     private final String email;
     private final Long userId;
+    private final Boolean newCheck;
     private final RoleType roleType;
     private final Collection<GrantedAuthority> authorities;
     private Map<String, Object> attributes;
@@ -43,6 +44,7 @@ public class UserPrincipal implements OAuth2User {
         return new UserPrincipal(
                 user.getEmail(),
                 user.getUserId(),
+                user.getNewCheck(),
                 RoleType.USER,
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.getCode()))
         );
@@ -52,6 +54,7 @@ public class UserPrincipal implements OAuth2User {
         return new UserPrincipal(
                 user.getEmail(),
                 user.getUserId(),
+                user.getNewCheck(),
                 RoleType.ADMIN,
                 Collections.singletonList(new SimpleGrantedAuthority(RoleType.ADMIN.getCode()))
         );

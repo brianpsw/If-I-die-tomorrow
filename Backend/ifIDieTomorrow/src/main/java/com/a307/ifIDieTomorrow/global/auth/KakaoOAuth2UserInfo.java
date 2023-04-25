@@ -1,7 +1,6 @@
 package com.a307.ifIDieTomorrow.global.auth;
 
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
