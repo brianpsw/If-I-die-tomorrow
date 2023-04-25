@@ -23,4 +23,6 @@ public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2
     UserDto getUser(Long userId) throws NotFoundException;
 
     String getNickname() throws IOException, CsvException;
+
+    UserDto changeNickname(String nickname, Long userId) throws NotFoundException;
 }

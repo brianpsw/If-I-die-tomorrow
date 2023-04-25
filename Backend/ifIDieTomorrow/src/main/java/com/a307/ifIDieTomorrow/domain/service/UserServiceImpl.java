@@ -112,4 +112,13 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     public String getNickname() throws IOException, CsvException {
         return nicknameGenerator.getRandomItemFromCsv();
     }
+
+    @Override
+    public UserDto changeNickname(String nickname, Long userId) throws NotFoundException {
+        Optional<User> temp = userRepository.findById(userId);
+        User user = temp.orElseThrow(() -> new NotFoundException("존재하지 않는 유저 ID입니다."));
+        user.setNickname(nickname + "#" + userId);
+        user.setNewCheck(false);
+        return new UserDto(userRepository.save(user));
+    }
 }

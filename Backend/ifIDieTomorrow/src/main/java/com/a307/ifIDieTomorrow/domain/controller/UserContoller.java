@@ -12,9 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -38,6 +36,13 @@ public class UserContoller {
     @Operation(summary = "랜덤 닉네임 얻기", description = "랜덤 닉네임 생성하기")
     public ResponseEntity<String> getNickname() throws IOException, CsvException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getNickname());
+    }
+
+    @PatchMapping("/nickname")
+    @Operation(summary = "유저의 닉네임 변경", description = "유저의 닉네임 변경합니다.")
+    public ResponseEntity<UserDto> getUser(@RequestBody String nickname) throws NotFoundException {
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nickname, principal.getUserId()));
     }
 
 }
