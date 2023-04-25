@@ -2,11 +2,14 @@ package com.a307.ifIDieTomorrow.global.util;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Random;
 
@@ -17,9 +20,11 @@ public class NicknameGenerator {
     public String getRandomItemFromCsv() throws IOException, CsvException {
         if (animals == null || modifiers == null) {
             // Load the CSV file if it's not already loaded
-            CSVReader reader = new CSVReader(new FileReader("animal.csv"));
+            Resource resourceAnimal = new ClassPathResource("animal.csv");
+            CSVReader reader = new CSVReader(new InputStreamReader(resourceAnimal.getInputStream()));
             animals = reader.readAll();
-            reader = new CSVReader(new FileReader("modifier.csv"));
+            Resource resourceModifier = new ClassPathResource("modifier.csv");
+            reader = new CSVReader(new InputStreamReader(resourceModifier.getInputStream()));
             modifiers = reader.readAll();
             reader.close();
         }
