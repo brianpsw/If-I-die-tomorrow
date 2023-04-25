@@ -44,17 +44,59 @@ function MyPage() {
       setReceivers([...receivers, { name: '', email: '', phone: '' }]);
     }
   };
+  const inputRefs = receivers.map(() => ({
+    name: React.createRef<HTMLInputElement>(),
+    email: React.createRef<HTMLInputElement>(),
+    phone: React.createRef<HTMLInputElement>(),
+  }));
   const handleSave = () => {
-    const newReceiverTexts = receivers.map((receiver) => ({
+    let invalidIndex = -1;
+    const validReceivers: typeof receivers = [];
+
+    for (let index = 0; index < receivers.length; index++) {
+      const receiver = receivers[index];
+      const isValid = Object.values(receiver).every(
+        (value) => value.trim() !== '',
+      );
+
+      if (isValid) {
+        validReceivers.push(receiver);
+      } else if (invalidIndex === -1) {
+        invalidIndex = index;
+      }
+    }
+
+    const newReceiverTexts = validReceivers.map((receiver) => ({
       name: `이름: ${receiver.name}`,
       email: `이메일: ${receiver.email}`,
       phone: `전화번호: ${receiver.phone}`,
     }));
+
     setReceiverTexts([
       ...receiverTexts,
       ...newReceiverTexts.slice(0, 3 - receiverTexts.length),
     ]);
-    setReceivers([{ name: '', email: '', phone: '' }]);
+
+    if (invalidIndex !== -1) {
+      const invalidReceiver = receivers[invalidIndex];
+      const emptyField = Object.keys(invalidReceiver).find(
+        (field) =>
+          invalidReceiver[field as keyof typeof invalidReceiver].trim() === '',
+      );
+      if (emptyField) {
+        inputRefs[invalidIndex][
+          emptyField as keyof (typeof inputRefs)[0]
+        ].current?.focus();
+      }
+    }
+
+    const newReceivers = receivers.filter(
+      (_, index) => !validReceivers.includes(receivers[index]),
+    );
+    if (newReceivers.length === 0) {
+      newReceivers.push({ name: '', email: '', phone: '' });
+    }
+    setReceivers(newReceivers);
   };
 
   const handleDelete = (index: number) => {
@@ -118,18 +160,21 @@ function MyPage() {
                     <input
                       type="text"
                       placeholder="이름"
+                      ref={inputRefs[index].name}
                       value={receiver.name}
                       onChange={(e) => handleReceiverChange(index, 'name', e)}
                     />
                     <input
                       type="email"
                       placeholder="이메일"
+                      ref={inputRefs[index].email}
                       value={receiver.email}
                       onChange={(e) => handleReceiverChange(index, 'email', e)}
                     />
                     <input
                       type="tel"
                       placeholder="전화번호"
+                      ref={inputRefs[index].phone}
                       value={receiver.phone}
                       onChange={(e) => handleReceiverChange(index, 'phone', e)}
                     />
