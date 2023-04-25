@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -15,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @DynamicInsert
+@ToString
 @Table(name = "diary")
 public class Diary extends BaseEntity{
 	
@@ -37,7 +35,7 @@ public class Diary extends BaseEntity{
 	private String imageUrl;
 
 	@Column(nullable = false)
-	@ColumnDefault("false")
+	@ColumnDefault("true")
 	private Boolean secret;
 
 	@Column(nullable = false)

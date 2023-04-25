@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,19 +18,15 @@ public class Receiver extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    @NotNull
     private Long receiverId;
 	
-    @Column
-    @NotNull
+    @Column(nullable = false)
     private Long userId;
 
-    @Column
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @Column
-    @NotNull
+    @Column(nullable = false)
     private String phoneNumber;
 	
 }

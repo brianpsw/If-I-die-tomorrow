@@ -21,7 +21,7 @@ public class Photo extends BaseEntity {
 	private Long photoId;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "categoryId")
+	@JoinColumn(name = "categoryId", nullable = false)
 	private Category category;
 
 	@Column(nullable = false)

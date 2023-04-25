@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -19,11 +18,9 @@ public class Will extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column
-	@NotNull
 	private Long willId;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
 	
 	// 유저가 텍스트로 입력하거나 음성으로 올릴 수 있어서 null 허용

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -21,11 +20,9 @@ public class After {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long afterId;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private Long userId;
 	
-	@Column
-	@NotNull
+	@Column(nullable = false)
 	private String uuid;
 }
