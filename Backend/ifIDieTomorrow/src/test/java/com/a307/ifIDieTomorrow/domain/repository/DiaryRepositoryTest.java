@@ -1,8 +1,11 @@
 package com.a307.ifIDieTomorrow.domain.repository;
 
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
+import com.a307.ifIDieTomorrow.domain.entity.User;
+import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.List;
+import java.util.Optional;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,6 +26,11 @@ class DiaryRepositoryTest {
 	private DiaryRepository testDiaryRepository;
 	@Autowired
 	private CommentRepository testCommentRepository;
+	@Autowired
+	private UserRepository testUserRepository;
+
+
+
 
 	@BeforeEach
 	void setUp() {
@@ -29,7 +39,6 @@ class DiaryRepositoryTest {
 		Diary diary1 = testDiaryRepository.save(
 				Diary.builder()
 						.userId(1L)
-						.diaryId(1L)
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
@@ -37,10 +46,10 @@ class DiaryRepositoryTest {
 						.secret(true)
 						.build()
 		);
+		System.out.println(diary1.getDiaryId());
 		Diary diary2 = testDiaryRepository.save(
 				Diary.builder()
 						.userId(1L)
-						.diaryId(2L)
 						.title("1-2 title")
 						.content("1-2 content")
 						.imageUrl("")
@@ -53,7 +62,6 @@ class DiaryRepositoryTest {
 		Diary diary3 = testDiaryRepository.save(
 				Diary.builder()
 						.userId(2L)
-						.diaryId(3L)
 						.title("2-1 title")
 						.content("2-1 content")
 						.imageUrl("")
@@ -64,7 +72,6 @@ class DiaryRepositoryTest {
 		Diary diary4 = testDiaryRepository.save(
 				Diary.builder()
 						.userId(2L)
-						.diaryId(4L)
 						.title("2-2 title")
 						.content("2-2 content")
 						.imageUrl("")
@@ -78,7 +85,7 @@ class DiaryRepositoryTest {
 				Comment.builder()
 						.userId(3L)
 						.content("comment1")
-						.typeId(1L)
+						.typeId(diary1.getDiaryId())
 						.type(true)
 						.build()
 		);
@@ -87,7 +94,7 @@ class DiaryRepositoryTest {
 				Comment.builder()
 						.userId(3L)
 						.content("comment2")
-						.typeId(2L)
+						.typeId(diary2.getDiaryId())
 						.type(true)
 						.build()
 		);
@@ -108,12 +115,10 @@ class DiaryRepositoryTest {
 //		다이어리 2개
 		assertThat(result).hasSize(2);
 
-//		1번 다이어리 게시글
+//		다이어리 작성자 검증
+//		해당 메서드가 작성자를 반환하지 않아 내용으로 검증했습니다.
 		GetDiaryByUserResDto dto = result.get(0);
 		assertThat(dto.getTitle()).isEqualTo("1-1 title");
-		assertThat(dto.getContent()).isEqualTo("1-1 content");
-		assertThat(dto.getImageUrl()).isEqualTo("");
-		assertThat(dto.getSecret()).isEqualTo(true);
 
 //		댓글 1개
 		assertThat(dto.getCommentCount()).isEqualTo(1L);
@@ -121,7 +126,44 @@ class DiaryRepositoryTest {
 
 
 	@Test
+	@DisplayName("특정 아이디의 다이어리와 작성자 닉네임 조회")
 	void findByIdWithUserNickName() {
+
+//		given
+		User user = testUserRepository.save(User.builder()
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build());
+
+		Diary diary = testDiaryRepository.save(Diary.builder()
+				.userId(user.getUserId())
+				.title("tom diary title")
+				.content("tom content title")
+				.imageUrl("")
+				.secret(true)
+				.report(0)
+				.build());
+
+//		when
+
+//		해당 아이디에 속하는 다이어리 존재
+		Optional<GetDiaryResDto> result = testDiaryRepository.findByIdWithUserNickName(diary.getDiaryId());
+//		해당 아이디에 속하는 다이어리가 없을 경우
+		Optional<GetDiaryResDto> empty = testDiaryRepository.findByIdWithUserNickName(-1L);
+
+//		then
+		assertThat(result).isPresent();
+		GetDiaryResDto dto = result.get();
+		assertThat(dto.getDiaryId()).isEqualTo(diary.getDiaryId());
+		assertThat(dto.getNickname()).isEqualTo(user.getNickname());
+
+		assertThat(empty).isEmpty();
 	}
 
 	@Test
