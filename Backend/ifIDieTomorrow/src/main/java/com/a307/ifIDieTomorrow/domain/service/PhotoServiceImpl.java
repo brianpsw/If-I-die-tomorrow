@@ -3,6 +3,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.*;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
@@ -15,13 +16,17 @@ import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
@@ -138,18 +143,30 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public GetPhotoInCategoryResDto getPhotoInCategory (Long categoryId) throws NotFoundException, UnAuthorizedException {
+	public GetPhotoByCategoryResDto getPhotoByCategory (Long categoryId) throws NotFoundException, UnAuthorizedException {
 		Category category = categoryRepository.findByCategoryId(categoryId).
 				orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
-		
+		 
 		// 공용 카테고리가 아니면서 다른 유저가 만든 카테고리에 접근하려 할 때
 		if (category.getUserId() != 0 && !category.getUserId().equals(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()))
 			throw new UnAuthorizedException("접근할 수 없는 카테고리 ID 입니다.");
 		
-		return new GetPhotoInCategoryResDto(
+		return new GetPhotoByCategoryResDto(
 				CreateCategoryResDto.toDto(category),
 				photoRepository.findAllPhotoByCategory_CategoryId(categoryId)
 		);
+	}
+	
+	@Override
+	public List<GetPhotoByCategoryResDto> getPhotoByUser () {
+		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+		List<CreateCategoryResDto> categories = categoryRepository.findAllByUserId(userId);
+		List<GetPhotoByCategoryResDto> list = new ArrayList<>();
+		categories.forEach(x -> list.add(
+				new GetPhotoByCategoryResDto(x, photoRepository.findAllPhotoByCategory_CategoryId(x.getCategoryId())))
+		);
+		
+		return list;
 	}
 	
 }

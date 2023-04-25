@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPhotoInCategoryResDto {
+public class GetPhotoByCategoryResDto {
 
 	private CreateCategoryResDto category;
 	private List<GetPhotoResDto> photos;
