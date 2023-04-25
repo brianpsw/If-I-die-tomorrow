@@ -62,7 +62,14 @@ const RadioButton = styled.input.attrs({ type: 'radio' })`
 const InputRow = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+
+  input {
+    margin-bottom: 8px;
+    border-radius: 5px;
+    height: 30px;
+    padding: 3px;
+  }
 `;
 
 const Receiver = styled.div`
