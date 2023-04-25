@@ -1,4 +1,3 @@
-import NavBar from '../../components/common/NavBar';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -56,15 +55,9 @@ const IconWithText = styled.div`
   }
 `;
 
-const FixedNavBar = styled(NavBar)`
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-`;
-
 function MyPage() {
   return (
-    <>
+    <div>
       <Background>
         <Container>
           <HeadText>마이페이지</HeadText>
@@ -99,8 +92,7 @@ function MyPage() {
           </SettingBox>
         </Container>
       </Background>
-      <FixedNavBar />
-    </>
+    </div>
   );
 }
 

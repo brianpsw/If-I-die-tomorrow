@@ -22,6 +22,7 @@ import Survey from './pages/Diary/Survey';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import CreateCategory from './pages/PhotoCloud/CreateCategory';
 import UploadPhoto from './pages/PhotoCloud/UploadPhoto';
+import NavBar from './components/common/NavBar';
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           />
           {/* <Route path="/*" element={<ErrorPage />} /> */}
         </Routes>
+        <NavBar />
       </BrowserRouter>
     </div>
   );
