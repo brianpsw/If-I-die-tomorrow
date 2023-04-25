@@ -54,7 +54,7 @@ class DiaryRepositoryTest {
 						.content("1-2 content")
 						.imageUrl("")
 						.report(0)
-						.secret(false)
+						.secret(true)
 						.build()
 		);
 
@@ -76,7 +76,7 @@ class DiaryRepositoryTest {
 						.content("2-2 content")
 						.imageUrl("")
 						.report(0)
-						.secret(false)
+						.secret(true)
 						.build()
 		);
 
@@ -167,6 +167,60 @@ class DiaryRepositoryTest {
 	}
 
 	@Test
+	@DisplayName("공개 여부 설정된 다이어리 전체 불러오기")
 	void findAllBySecretIsFalse() {
+
+//		given
+		User user = testUserRepository.save(User.builder()
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build());
+
+//		공개 다이어리(2개)
+		Diary diary1 = testDiaryRepository.save(Diary.builder()
+				.userId(user.getUserId())
+				.title("no secret 1")
+				.content("content")
+				.imageUrl("")
+				.secret(false)
+				.report(0)
+				.build());
+
+		Diary diary2 = testDiaryRepository.save(Diary.builder()
+				.userId(user.getUserId())
+				.title("no secret 2")
+				.content("content")
+				.imageUrl("")
+				.secret(false)
+				.report(0)
+				.build());
+
+//		비공개 다이어리(1개)
+		Diary diary3 = testDiaryRepository.save(Diary.builder()
+				.userId(user.getUserId())
+				.title("secret 1")
+				.content("content")
+				.imageUrl("")
+				.secret(true)
+				.report(0)
+				.build());
+
+//		when
+		List<GetDiaryResDto> result = testDiaryRepository.findAllBySecretIsFalse();
+
+//		then
+		assertThat(result)
+				.hasSize(2)
+				.allSatisfy(dto -> {
+					assertThat(dto.getSecret()).isEqualTo(false);
+					assertThat(dto.getNickname()).isEqualTo("tommy");
+				});
+
 	}
 }
