@@ -14,6 +14,7 @@ import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BucketServiceImpl implements BucketService {
 	
@@ -90,7 +92,7 @@ public class BucketServiceImpl implements BucketService {
 					data.getSecret()
 			);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage());
 		}
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
