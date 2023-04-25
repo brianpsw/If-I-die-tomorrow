@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -22,20 +21,16 @@ public class Comment extends BaseEntity{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long commentId;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private Long userId;
 	
-	@Column(columnDefinition = "TEXT")
-	@NotNull
+	@Column(columnDefinition = "TEXT", nullable = false)
 	private String content;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private Boolean type;
-	
-	@Column
-	@NotNull
+
+	@Column(nullable = false)
 	private Long typeId;
 }

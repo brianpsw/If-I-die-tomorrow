@@ -17,7 +17,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 			"ON c.userId = u.userId " +
 			"WHERE c.typeId = :typeId AND c.type = :type " +
 			"ORDER BY c.createdAt ASC")
-	List<GetCommentResDto> findCommentsByTypeId(@Param("typeId") Long typeId, Boolean type);
+	List<GetCommentResDto> findCommentsByTypeId(@Param("typeId") Long typeId, @Param("type")Boolean type);
 
 	List<Comment> findAllByTypeIdAndType(Long typeId, Boolean type);
 }
