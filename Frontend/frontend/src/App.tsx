@@ -18,10 +18,12 @@ import Feed from './pages/Feed/Feed';
 import DiaryDetail from './pages/Diary/DiaryDetail';
 import BucketDetail from './pages/Bucket/BucketDetail';
 import MyPage from './pages/Profile/MyPage';
+import Will from './pages/Profile/Will';
 import Survey from './pages/Diary/Survey';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import CreateCategory from './pages/PhotoCloud/CreateCategory';
 import UploadPhoto from './pages/PhotoCloud/UploadPhoto';
+import NavBar from './components/common/NavBar';
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
           <Route path="/diary/:diaryId" element={<DiaryDetail />} />
           <Route path="/bucket/:bucketId" element={<BucketDetail />} />
           <Route path="/mypage" element={<MyPage />} />
+          <Route path="/will" element={<Will />} />
           <Route path="/survey" element={<Survey />} />
           <Route path="/photo-cloud" element={<PhotoCloud />} />
           <Route
@@ -52,6 +55,7 @@ function App() {
           />
           {/* <Route path="/*" element={<ErrorPage />} /> */}
         </Routes>
+        <NavBar />
       </BrowserRouter>
     </div>
   );

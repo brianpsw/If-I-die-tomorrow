@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import NavBar from '../../components/common/NavBar';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Modal from '../../components/common/Modal';
@@ -38,7 +37,6 @@ function Diary() {
         <Container onClick={openModal}>일반 모달</Container>
         <Container onClick={openBottomModal}>바텀 모달</Container>
         <Container onClick={openEditModal}>수정 모달</Container>
-        <NavBar />
       </div>
     </div>
   );
