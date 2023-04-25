@@ -12,6 +12,7 @@ import java.util.Optional;
 @Slf4j
 public class CookieUtil {
 
+    public CookieUtil() {}
 
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
