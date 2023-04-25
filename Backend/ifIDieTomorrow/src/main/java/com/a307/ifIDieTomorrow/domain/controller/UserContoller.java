@@ -1,26 +1,19 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.UserDto;
-import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
-import com.a307.ifIDieTomorrow.domain.service.PhotoService;
 import com.a307.ifIDieTomorrow.domain.service.UserService;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.opencsv.exceptions.CsvException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Tag(name = "유저", description = "APIs for User")
@@ -37,6 +30,19 @@ public class UserContoller {
     public ResponseEntity<UserDto> getUser() throws NotFoundException {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(principal.getUserId()));
+    }
+
+    @GetMapping("/nickname")
+    @Operation(summary = "랜덤 닉네임 얻기", description = "랜덤 닉네임 생성하기")
+    public ResponseEntity<String> getNickname() throws IOException, CsvException {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getNickname());
+    }
+
+    @PatchMapping("/nickname")
+    @Operation(summary = "유저의 닉네임 변경", description = "유저의 닉네임 변경합니다.")
+    public ResponseEntity<UserDto> getUser(@RequestBody String nickname) throws NotFoundException {
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nickname, principal.getUserId()));
     }
 
 }

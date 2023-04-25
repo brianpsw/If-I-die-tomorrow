@@ -1,5 +1,6 @@
 package com.a307.ifIDieTomorrow.global.util;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.SerializationUtils;
 
@@ -10,10 +11,8 @@ import java.util.Base64;
 import java.util.Optional;
 
 @Slf4j
+@RequiredArgsConstructor
 public class CookieUtil {
-
-    public CookieUtil() {}
-
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
