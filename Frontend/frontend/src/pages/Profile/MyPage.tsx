@@ -14,10 +14,16 @@ import {
   Receiver,
   StyledButton,
   IconWithText,
+  IconContainer,
 } from './MyPageEmotion';
 
 function MyPage() {
   const [consent, setConsent] = useState<string | null>(null);
+  const [serviceEnabled, setServiceEnabled] = useState(false);
+
+  const toggleService = () => {
+    setServiceEnabled(!serviceEnabled);
+  };
 
   const handleConsentChange = (event: ChangeEvent<HTMLInputElement>) => {
     setConsent(event.target.value);
@@ -121,8 +127,16 @@ function MyPage() {
           <SettingBox>
             <IconWithText>
               <h3 className="text-h4">사후 전송 서비스 설정</h3>
-              <Icon icon="line-md:switch-off-filled" />
-              <Icon icon="line-md:switch-off-to-switch-transition" />
+              <Icon
+                icon={
+                  serviceEnabled
+                    ? 'line-md:switch-off-to-switch-transition'
+                    : 'line-md:switch-off-filled'
+                }
+                onClick={toggleService}
+                width="32px"
+                height="32px"
+              />
             </IconWithText>
 
             <IconWithText>
@@ -137,6 +151,7 @@ function MyPage() {
                   value="agree"
                   checked={consent === 'agree'}
                   onChange={handleConsentChange}
+                  disabled={!serviceEnabled}
                 />
               </RadioButtonLabel>
               <RadioButtonLabel>
@@ -146,6 +161,7 @@ function MyPage() {
                   value="disagree"
                   checked={consent === 'disagree'}
                   onChange={handleConsentChange}
+                  disabled={!serviceEnabled}
                 />
               </RadioButtonLabel>
             </RadioContainer>
@@ -163,6 +179,7 @@ function MyPage() {
                       ref={inputRefs[index].name}
                       value={receiver.name}
                       onChange={(e) => handleReceiverChange(index, 'name', e)}
+                      disabled={!serviceEnabled}
                     />
                     <input
                       type="email"
@@ -170,6 +187,7 @@ function MyPage() {
                       ref={inputRefs[index].email}
                       value={receiver.email}
                       onChange={(e) => handleReceiverChange(index, 'email', e)}
+                      disabled={!serviceEnabled}
                     />
                     <input
                       type="tel"
@@ -177,6 +195,7 @@ function MyPage() {
                       ref={inputRefs[index].phone}
                       value={receiver.phone}
                       onChange={(e) => handleReceiverChange(index, 'phone', e)}
+                      disabled={!serviceEnabled}
                     />
                   </InputRow>
                 ),
@@ -196,7 +215,9 @@ function MyPage() {
               </Receiver>
             ))}
             {receivers.length < 3 && receiverTexts.length < 3 && (
-              <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+              <IconContainer>
+                <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+              </IconContainer>
             )}
             <StyledButton color="#FFA9A9" size="sm" onClick={handleSave}>
               저장

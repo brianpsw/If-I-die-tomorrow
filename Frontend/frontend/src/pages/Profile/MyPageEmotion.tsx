@@ -83,5 +83,13 @@ export const IconWithText = styled.div`
   margin-bottom: 8px;
   svg {
     margin-right: 8px;
+    margin-left: 8px;
   }
+`;
+
+export const IconContainer = styled.div`
+  ${tw`mb-6`}
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
