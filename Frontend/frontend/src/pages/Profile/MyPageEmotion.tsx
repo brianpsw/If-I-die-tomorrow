@@ -13,6 +13,10 @@ export const Background = styled.div`
   position: relative;
 `;
 
+const BtModal = styled.div`
+  ${tw`flex items-center justify-between border-b w-full `}
+`;
+
 export const Container = styled.div`
   ${tw`flex flex-col mx-auto`}
   max-width: calc(100% - 48px);

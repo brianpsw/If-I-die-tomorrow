@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
+import BottomModal from './MyPageModal';
 import {
   Background,
   Container,
@@ -20,6 +21,13 @@ import {
 function MyPage() {
   const [consent, setConsent] = useState<string | null>(null);
   const [serviceEnabled, setServiceEnabled] = useState(false);
+  const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
+  const openBottomModal = () => {
+    setIsBottomModalOpen(true);
+  };
+  const onLogoutClose = () => {
+    setIsBottomModalOpen(false);
+  };
 
   const toggleService = () => {
     setServiceEnabled(!serviceEnabled);
@@ -111,6 +119,9 @@ function MyPage() {
 
   return (
     <div>
+      {isBottomModalOpen ? (
+        <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
+      ) : null}
       <Background>
         <Container>
           <HeadText>마이페이지</HeadText>
@@ -141,7 +152,10 @@ function MyPage() {
 
             <IconWithText>
               <h4>생존 여부 알림</h4>
-              <Icon icon="line-md:question-circle-twotone" />
+              <Icon
+                icon="line-md:question-circle-twotone"
+                onClick={openBottomModal}
+              />
             </IconWithText>
             <RadioContainer>
               <RadioButtonLabel>
@@ -167,7 +181,10 @@ function MyPage() {
             </RadioContainer>
             <IconWithText>
               <h4>내 기록 받아볼 사람</h4>
-              <Icon icon="line-md:question-circle-twotone" />
+              <Icon
+                icon="line-md:question-circle-twotone"
+                onClick={openBottomModal}
+              />
             </IconWithText>
             {receivers.map(
               (receiver, index) =>
