@@ -6,10 +6,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +17,11 @@ import java.util.Random;
 public class NicknameGenerator {
     private List<String[]> animals = null;
     private List<String[]> modifiers = null;
+    private Random rand = SecureRandom.getInstanceStrong();
+
+    public NicknameGenerator() throws NoSuchAlgorithmException {
+    }
+
     public String getRandomItemFromCsv() throws IOException, CsvException {
         if (animals == null || modifiers == null) {
             // Load the CSV file if it's not already loaded
@@ -29,22 +34,20 @@ public class NicknameGenerator {
             reader.close();
         }
 
-        Random random = new Random();
-        int index = random.nextInt(modifiers.size());
+        int index = rand.nextInt(modifiers.size());
         String[] row = modifiers.get(index);
 
         // Return a random field from the row
-        int fieldIndex = random.nextInt(row.length);
+        int fieldIndex = rand.nextInt(row.length);
         StringBuilder sb = new StringBuilder();
         sb.append(row[fieldIndex].trim());
 
         // Get a random item from the CSV file
-        random = new Random();
-        index = random.nextInt(animals.size());
+        index = rand.nextInt(animals.size());
         row = animals.get(index);
 
         // Return a random field from the row
-        fieldIndex = random.nextInt(row.length);
+        fieldIndex = rand.nextInt(row.length);
         sb.append(' '+ row[fieldIndex].trim());
         return sb.toString();
     }
