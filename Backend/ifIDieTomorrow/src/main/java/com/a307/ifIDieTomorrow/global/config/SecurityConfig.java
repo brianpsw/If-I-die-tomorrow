@@ -39,12 +39,12 @@ public class SecurityConfig {
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
-                    .loginPage("https://ifidietomorrow.co.kr/login")
+//                    .loginPage("https://ifidietomorrow.co.kr/login")
                     .authorizationEndpoint().authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
                     .and()
                     .userInfoEndpoint(userInfo -> userInfo
                             .userService(oAuth2UserService))
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
+//                    .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler));
 
 
