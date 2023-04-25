@@ -1,3 +1,12 @@
+FROM jdk11
+ENV APP_HOME=/apps
+WORKDIR $APP_HOME
+COPY build.gradle settings.gradle gradlew $APP_HOME
+COPY gradle $APP_HOME/gradle
+RUN chmod +x gradlew
+COPY src $APP_HOME/src
+RUN ./gradlew clean build
+
 FROM openjdk:11
 ARG JAR_FILE=/build/libs/*.jar
 COPY ${JAR_FILE} app.jar

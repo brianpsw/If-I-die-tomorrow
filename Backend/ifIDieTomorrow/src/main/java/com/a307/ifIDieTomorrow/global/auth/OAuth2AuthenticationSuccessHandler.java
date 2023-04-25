@@ -36,7 +36,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         logger.debug("determineTargetUrl in SuccessHandler");
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
-
         String targetUrl = redirectUri.orElse("https://ifidietomorrow.co.kr");
 
         if(((UserPrincipal) authentication.getPrincipal()).getNewCheck() == null || ((UserPrincipal) authentication.getPrincipal()).getNewCheck()) targetUrl = "https://ifidietomorrow.co.kr/nickname";
