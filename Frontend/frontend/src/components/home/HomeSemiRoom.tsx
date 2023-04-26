@@ -8,7 +8,7 @@ function HomeSemiRoom() {
   const room3d = useGLTF('models/low_poly_room.glb', true);
   return (
     <Canvas
-      style={{ width: '100vw', height: '90vh' }}
+      style={{ width: '100vw', height: '92vh' }}
       orthographic
       camera={{
         position: [500, 300, 500],
@@ -17,8 +17,8 @@ function HomeSemiRoom() {
       <directionalLight position={[30, 50, 100]} intensity={1.2} />
       <primitive
         object={room3d.scene}
-        scale={[0.8, 1, 0.8]}
-        position={[0, -100, 0]}
+        scale={[0.6, 0.8, 0.6]}
+        position={[0, -200, 0]}
       />
       <OrbitControls />
     </Canvas>
