@@ -174,9 +174,31 @@ public class BucketRepositoryTest {
 	void findAllBySecretIsFalse() {
 		
 		// Given
+		User user1 = testUserRepository.save(User.builder()
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build());
+
+		User user2 = testUserRepository.save(User.builder()
+				.name("김영삼")
+				.nickname("삼영")
+				.email("zerothree@email.com")
+				.age(30)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build());
+
 		testBucketRepository.save(
 				Bucket.builder()
-						.userId(1L)
+						.userId(user1.getUserId())
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
@@ -188,7 +210,7 @@ public class BucketRepositoryTest {
 		
 		testBucketRepository.save(
 				Bucket.builder()
-						.userId(1L)
+						.userId(user1.getUserId())
 						.title("1-2 title")
 						.content("1-2 content")
 						.imageUrl("")
@@ -200,7 +222,7 @@ public class BucketRepositoryTest {
 		
 		testBucketRepository.save(
 				Bucket.builder()
-						.userId(2L)
+						.userId(user2.getUserId())
 						.title("2-1 title")
 						.content("2-1 content")
 						.imageUrl("")
@@ -212,12 +234,13 @@ public class BucketRepositoryTest {
 		
 		// When
 		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalse(PageRequest.of(0, 10));
-		
+
 		// Then
 		assertThat(list)
 				.hasSize(2)
 				.allSatisfy(dto -> {
-					assertThat(dto.getSecret()).isEqualTo(false); // 유저 닉네임도 넘어오는지 추가해주십시오
+					assertThat(dto.getSecret()).isEqualTo(false);
+					assertThat(dto.getNickname()).isNotBlank();
 				});
 		
 	}
