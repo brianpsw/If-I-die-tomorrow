@@ -32,7 +32,7 @@ const FeedTab = styled.div`
 `;
 
 const Tab = styled.span<{ isSelected: boolean }>`
-  ${tw`cursor-pointer mb-2 inline-block pb-1`}
+  ${tw`cursor-pointer mb-12 inline-block pb-1`}
   ${({ isSelected }) => (isSelected ? tw`font-bold border-b-4` : null)}
   ${({ isSelected }) => (isSelected ? { borderColor: '#FFA9A9' } : null)}
   width: 110px;
