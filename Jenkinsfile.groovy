@@ -262,7 +262,7 @@ pipeline {
 
             }
             steps {
-                sh 'docker run -d -p 8000:8080 --name back-springboot --env-file .env --network my-network back-springboot'
+                sh 'docker run -d -p 8000:8443 --name back-springboot --env-file .env --network my-network back-springboot'
             }
 
             post {

@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Will;
 import com.a307.ifIDieTomorrow.domain.repository.WillRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -18,5 +19,11 @@ public class WillServiceImpl implements WillService {
 	public GetWillByUserResDto getWillByUserId () throws NotFoundException {
 		return willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 				.orElseThrow(() -> new NotFoundException("유언을 찾을 수 없습니다."));
+	}
+
+	@Override
+	public void createWill(Long userId) {
+		willRepository.save(Will.builder().userId(userId).build());
+
 	}
 }

@@ -1,7 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.UserDto;
-import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
@@ -14,9 +13,6 @@ import com.a307.ifIDieTomorrow.global.util.NicknameGenerator;
 import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -27,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -37,6 +32,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
 
     private final NicknameGenerator nicknameGenerator;
     private final UserRepository userRepository;
+    private final WillService willService;
 
 
     @Override
@@ -79,14 +75,15 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     @Override
     public User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         log.debug("createUser 메서드가 CustomOAuth2UserService에서 실행됨");
-        return userRepository.save(User.builder()
+        User user = userRepository.save(User.builder()
                 .age(userInfo.getAge())
                 .email(userInfo.getEmail())
                 .name(userInfo.getName())
                 .nickname(generateNickname())
                 .providerType(providerType)
-                .build()
-        );
+                .build());
+        willService.createWill(user.getUserId());
+        return user;
     }
 
     @Override

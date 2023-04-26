@@ -5,4 +5,5 @@ import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 
 public interface WillService {
 	GetWillByUserResDto getWillByUserId () throws NotFoundException;
+	void createWill(Long userId);
 }
