@@ -1,9 +1,12 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
+import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -12,10 +15,13 @@ import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,27 +35,54 @@ public class CommunityServiceImpl implements CommunityService{
 	private final UserRepository userRepository;
 	
 	@Override
-	public List<GetBucketWithCommentDto> getBucketWithComments(){
+	public GetPageDto getBucketWithComments(Integer pageNo, Integer pageSize){
 
-		return bucketRepository.findAllBySecretIsFalse()
+		pageNo = Optional.ofNullable(pageNo).orElse(0);
+		pageSize = Optional.ofNullable(pageSize).orElse(10);
+		PageRequest pageable = PageRequest.of(pageNo, pageSize);
+
+//		페이징 객체
+		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalse(pageable);
+
+//		dto 리스트로 변환
+		List<GetBucketWithCommentDto> data = result
 				.stream()
 				.map(dto -> GetBucketWithCommentDto.builder()
 						.bucket(dto)
 						.comments(commentRepository.findCommentsByTypeId(dto.getBucketId(), false))
 						.build())
 				.collect(Collectors.toList());
+
+		return GetPageDto.builder()
+				.data(data)
+				.hasNext(result.hasNext())
+				.build();
 	}
 
 	@Override
-	public List<GetDiaryWithCommentDto> getDiaryWithComments(){
+	public GetPageDto getDiaryWithComments(Integer pageNo, Integer pageSize){
 
-		return diaryRepository.findAllBySecretIsFalse()
+		pageNo = Optional.ofNullable(pageNo).orElse(0);
+		pageSize = Optional.ofNullable(pageSize).orElse(10);
+		PageRequest pageable = PageRequest.of(pageNo, pageSize);
+
+//		페이징 객체
+		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalse(pageable);
+
+//		dto 리스트로 변환
+		List<GetDiaryWithCommentDto> data = result
 				.stream()
 				.map(dto -> GetDiaryWithCommentDto.builder()
 						.diary(dto)
 						.comments(commentRepository.findCommentsByTypeId(dto.getDiaryId(), true))
 						.build())
 				.collect(Collectors.toList());
+
+		return GetPageDto.builder()
+				.data(data)
+				.hasNext(result.hasNext())
+				.build();
+
 	}
 
 	@Override

@@ -35,6 +35,7 @@ public class CreateDiaryResDto {
 		return CreateDiaryResDto.builder()
 				.diaryId(diary.getDiaryId())
 				.title(diary.getTitle())
+				.userId(diary.getUserId())
 				.content(diary.getContent())
 				.imageUrl(diary.getImageUrl())
 				.secret(diary.getSecret())

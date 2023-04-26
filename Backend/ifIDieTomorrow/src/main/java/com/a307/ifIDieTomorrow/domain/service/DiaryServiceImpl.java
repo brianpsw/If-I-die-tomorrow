@@ -46,6 +46,7 @@ public class DiaryServiceImpl implements DiaryService{
 								.userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 								.content(req.getContent())
 								.secret(req.getSecret())
+								.report(0)
 								.imageUrl(req.getHasPhoto() ? s3Upload.uploadFiles(photo, "diary") : "")
 								.build()
 				)
