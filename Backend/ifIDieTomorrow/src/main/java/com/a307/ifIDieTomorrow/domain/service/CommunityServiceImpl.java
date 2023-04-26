@@ -13,6 +13,8 @@ import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -103,5 +105,28 @@ public class CommunityServiceImpl implements CommunityService{
 				.createdAt(comment.getCreatedAt())
 				.updatedAt(comment.getUpdatedAt())
 				.build();
+	}
+
+	@Override
+	public Long deleteComment(Long commentId) throws NotFoundException, UnAuthorizedException {
+
+//		댓글
+		Comment comment = commentRepository.findById(commentId)
+				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+
+//		유저 정보 파싱
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long userId = principal.getUserId();
+
+//		작성자 일치 여부 검증
+		if(!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다");
+
+		commentRepository.delete(comment);
+
+		return commentId;
+
+
+
+
 	}
 }
