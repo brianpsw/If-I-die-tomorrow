@@ -1,4 +1,23 @@
+FROM openjdk:11 as builder
+ENV APP_HOME=/apps
+WORKDIR $APP_HOME
+COPY build.gradle settings.gradle gradlew ${APP_HOME}
+
+COPY gradle ${APP_HOME}/gradle
+
+RUN chmod +x gradlew
+
+RUN ./gradlew build || return 0
+
+COPY src ${APP_HOME}/src
+
+RUN ./gradlew clean build
+
 FROM openjdk:11
-ARG JAR_FILE=/build/libs/*.jar
-COPY ${JAR_FILE} app.jar
+ENV APP_HOME=/apps
+
+ARG JAR_FILE=build/libs/*.jar
+COPY --from=builder ${APP_HOME}/${JAR_FILE} app.jar
+
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app.jar"]
