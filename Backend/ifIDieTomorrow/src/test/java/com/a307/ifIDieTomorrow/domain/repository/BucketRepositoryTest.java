@@ -211,12 +211,14 @@ public class BucketRepositoryTest {
 		);
 		
 		// When
-		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalse(PageRequest.of(1, 10));
+		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalse(PageRequest.of(0, 10));
 		
 		// Then
-		for (GetBucketResDto dto : list) {
-			assertThat(dto.getSecret()).isEqualTo(false);
-		}
+		assertThat(list)
+				.hasSize(2)
+				.allSatisfy(dto -> {
+					assertThat(dto.getSecret()).isEqualTo(false); // 유저 닉네임도 넘어오는지 추가해주십시오
+				});
 		
 	}
 	
