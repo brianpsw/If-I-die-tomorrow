@@ -3,6 +3,8 @@ package com.a307.ifIDieTomorrow.domain.repository;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -36,5 +38,5 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"ON b.userId = u.userId " +
 			"WHERE b.secret = false " +
 			"ORDER BY b.createdAt DESC")
-	List<GetBucketResDto> findAllBySecretIsFalse();
+	Page<GetBucketResDto> findAllBySecretIsFalse(Pageable pageable);
 }

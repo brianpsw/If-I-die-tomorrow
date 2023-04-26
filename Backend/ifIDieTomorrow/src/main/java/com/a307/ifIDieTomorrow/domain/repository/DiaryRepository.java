@@ -3,6 +3,8 @@ package com.a307.ifIDieTomorrow.domain.repository;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,7 +39,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"ON d.userId = u.userId " +
 			"WHERE d.secret = false " +
 			"ORDER BY d.createdAt DESC")
-	List<GetDiaryResDto> findAllBySecretIsFalse();
+	Page<GetDiaryResDto> findAllBySecretIsFalse(Pageable pageable);
 
 
 }
