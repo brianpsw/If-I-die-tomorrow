@@ -4,6 +4,8 @@ import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
 import com.a307.ifIDieTomorrow.domain.service.CommunityService;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +45,11 @@ public class CommunityController {
 			@RequestBody CreateCommentReqDto data
 	){
 		return ResponseEntity.status(HttpStatus.CREATED).body(communityService.createComment(data));
+	}
+
+	@DeleteMapping("/comment/{commentId}")
+	@Operation(summary = "댓글 삭제", description = "댓글 삭제입니다.")
+	public ResponseEntity<Long> deleteComment(@PathVariable Long commentId) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(communityService.deleteComment(commentId));
 	}
 }
