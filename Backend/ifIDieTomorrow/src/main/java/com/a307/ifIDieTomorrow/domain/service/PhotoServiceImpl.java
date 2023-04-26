@@ -3,8 +3,10 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
-import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.*;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoByCategoryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
@@ -24,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -74,7 +75,7 @@ public class PhotoServiceImpl implements PhotoService {
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
 		
 		// 카테고리에 엮인 사진 모두 삭제
-		photoRepository.deleteAllInBatchByPhotoIdIn(photoRepository.findAllPhotoIdByCategory_CategoryId(categoryId));
+		photoRepository.deleteAllByCategory_CategoryId(categoryId);
 		
 		// 카테고리 삭제
 		categoryRepository.delete(category);

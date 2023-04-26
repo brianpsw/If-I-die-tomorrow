@@ -9,6 +9,8 @@ import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -211,7 +213,7 @@ class DiaryRepositoryTest {
 				.build());
 
 //		when
-		List<GetDiaryResDto> result = testDiaryRepository.findAllBySecretIsFalse();
+		Page<GetDiaryResDto> result = testDiaryRepository.findAllBySecretIsFalse(PageRequest.of(1, 10));
 
 //		then
 		assertThat(result)

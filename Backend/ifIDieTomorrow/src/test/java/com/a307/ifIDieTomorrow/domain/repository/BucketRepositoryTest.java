@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -209,7 +211,7 @@ public class BucketRepositoryTest {
 		);
 		
 		// When
-		List<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalse();
+		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalse(PageRequest.of(1, 10));
 		
 		// Then
 		for (GetBucketResDto dto : list) {
