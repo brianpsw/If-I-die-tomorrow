@@ -24,6 +24,18 @@ pipeline {
             }
             steps {
                 echo 'BE Testing...'
+                sh """
+                git checkout ${env.gitlabTargetBranch}
+                git merge ${env.gitlabSourceBranch}
+                cd Backend/ifIDieTomorrow
+                chmod +x gradlew
+                ./gradlew clean test
+                """
+            }
+            post {
+                always {
+                    junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
+                }
             }
         }
 
