@@ -23,7 +23,7 @@ const Navbar = styled.div`
   display: flex;
   padding: 9px 31px;
   justify-content: space-between;
-  position: absolute;
+  position: fixed;
   bottom: 0;
 `;
 function NavBar() {
