@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.service.UserServiceImpl;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2AuthenticationFailureHandler;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2AuthenticationSuccessHandler;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import com.a307.ifIDieTomorrow.global.auth.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +41,7 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests(authorize -> authorize
                     .antMatchers("/after/**").permitAll()
+                    .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
