@@ -307,8 +307,33 @@ class DiaryServiceImplTest {
 	}
 
 	@Test
-	@Ignore
-	void deleteDiaryByDiaryId() {
+	@DisplayName("사진이 있는 다이어리 삭제 성공")
+	void deleteDiaryByDiaryIdWithImageUrl() {
+		// given
+
+		// when
+
+		// then
+	}
+
+	@Test
+	@DisplayName("사진이 없는 다이어리 삭제 성공")
+	void deleteDiaryByDiaryIdWithNoImageUrl() {
+		// given
+
+		// when
+
+		// then
+	}
+
+	@Test
+	@DisplayName("다이어리 삭제 실패 예외 처리")
+	void deleteDiaryByDiaryIdThrowsExceptionWhenWrongDiaryId() {
+		// given
+
+		// when
+
+		// then
 	}
 
 	@Test
