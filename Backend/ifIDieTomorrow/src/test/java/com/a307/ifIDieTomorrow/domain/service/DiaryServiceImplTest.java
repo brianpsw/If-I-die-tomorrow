@@ -356,111 +356,129 @@ class DiaryServiceImplTest {
 		}
 	}
 
+	@Nested
+	@DisplayName("다이어리 삭제")
+	class DeleteDiaryTest {
 
-	@Test
-	@DisplayName("사진이 있는 다이어리 삭제 성공")
-	void deleteDiaryByDiaryIdWithImageUrl() throws NotFoundException {
-		// given
-		Long diaryId = 1L;
-		String imageUrl = "https://example.com/test.jpg";
-		Diary diary = Diary.builder()
-				.diaryId(diaryId)
-				.title("title")
-				.userId(user.getUserId())
-				.content("content")
-				.secret(true)
-				.report(0)
-				.imageUrl(imageUrl)
-				.build();
+		@Nested
+		@DisplayName("성공 케이스")
+		class NormalScenario {
 
-		Comment comment1 = Comment.builder().commentId(1L).build();
-		Comment comment2 = Comment.builder().commentId(2L).build();
-		List<Comment> comments = List.of(comment1, comment2);
+			@Test
+			@DisplayName("사진이 있는 다이어리 삭제")
+			void deleteDiaryByDiaryIdWithImageUrl() throws NotFoundException {
+				// given
+				Long diaryId = 1L;
+				String imageUrl = "https://example.com/test.jpg";
+				Diary diary = Diary.builder()
+						.diaryId(diaryId)
+						.title("title")
+						.userId(user.getUserId())
+						.content("content")
+						.secret(true)
+						.report(0)
+						.imageUrl(imageUrl)
+						.build();
 
-		given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
-		given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
+				Comment comment1 = Comment.builder().commentId(1L).build();
+				Comment comment2 = Comment.builder().commentId(2L).build();
+				List<Comment> comments = List.of(comment1, comment2);
 
-		// when
-		Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
+				given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
+				given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
 
-		// then
-		/**
-		 * 동작 검증
-		 * 다이어리 조회
-		 * 파일 삭제
-		 * 댓글 조회
-		 * 댓글 삭제
-		 * 다이어리 삭제
-		 */
-		then(diaryRepository).should().findById(diaryId);
-		then(s3Upload).should().fileDelete(imageUrl);
-		then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
-		then(commentRepository).should().deleteAllInBatch(comments);
-		then(diaryRepository).should().delete(diary);
+				// when
+				Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
+
+				// then
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 파일 삭제
+				 * 댓글 조회
+				 * 댓글 삭제
+				 * 다이어리 삭제
+				 */
+				then(diaryRepository).should().findById(diaryId);
+				then(s3Upload).should().fileDelete(imageUrl);
+				then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
+				then(commentRepository).should().deleteAllInBatch(comments);
+				then(diaryRepository).should().delete(diary);
 
 
+			}
+
+			@Test
+			@DisplayName("사진이 없는 다이어리 삭제")
+			void deleteDiaryByDiaryIdWithNoImageUrl() throws NotFoundException {
+				// given
+				Long diaryId = 1L;
+				String imageUrl = "";
+				Diary diary = Diary.builder()
+						.diaryId(diaryId)
+						.title("title")
+						.userId(user.getUserId())
+						.content("content")
+						.secret(true)
+						.report(0)
+						.imageUrl(imageUrl)
+						.build();
+
+				Comment comment1 = Comment.builder().commentId(1L).build();
+				Comment comment2 = Comment.builder().commentId(2L).build();
+				List<Comment> comments = List.of(comment1, comment2);
+
+				given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
+				given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
+
+				// when
+				Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
+
+				// then
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 파일 삭제 안 함
+				 * 댓글 조회
+				 * 댓글 삭제
+				 * 다이어리 삭제
+				 */
+				then(diaryRepository).should().findById(diaryId);
+				then(s3Upload).shouldHaveNoInteractions();
+				then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
+				then(commentRepository).should().deleteAllInBatch(comments);
+				then(diaryRepository).should().delete(diary);
+			}
+
+		}
+
+		@Nested
+		@DisplayName("예외 케이스")
+		class ExceptionScenario {
+
+			@Test
+			@DisplayName("잘못된 다이어리 아이디")
+			void deleteDiaryByDiaryIdThrowsExceptionWhenWrongDiaryId() {
+				// given
+				Long diaryId = 1L;
+				given(diaryRepository.findById(diaryId)).willReturn(Optional.empty());
+
+				// when
+
+				// then
+				BDDAssertions.thenThrownBy(() -> diaryService.deleteDiaryByDiaryId(diaryId))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 다이어리 아이디입니다!");
+
+				then(diaryRepository).should().findById(diaryId);
+				then(s3Upload).shouldHaveNoInteractions();
+				then(commentRepository).shouldHaveNoInteractions();
+			}
+
+		}
 	}
 
-	@Test
-	@DisplayName("사진이 없는 다이어리 삭제 성공")
-	void deleteDiaryByDiaryIdWithNoImageUrl() throws NotFoundException {
-		// given
-		Long diaryId = 1L;
-		String imageUrl = "";
-		Diary diary = Diary.builder()
-				.diaryId(diaryId)
-				.title("title")
-				.userId(user.getUserId())
-				.content("content")
-				.secret(true)
-				.report(0)
-				.imageUrl(imageUrl)
-				.build();
 
-		Comment comment1 = Comment.builder().commentId(1L).build();
-		Comment comment2 = Comment.builder().commentId(2L).build();
-		List<Comment> comments = List.of(comment1, comment2);
-
-		given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
-		given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
-
-		// when
-		Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
-
-		// then
-		/**
-		 * 동작 검증
-		 * 다이어리 조회
-		 * 파일 삭제 안 함
-		 * 댓글 조회
-		 * 댓글 삭제
-		 * 다이어리 삭제
-		 */
-		then(diaryRepository).should().findById(diaryId);
-		then(s3Upload).shouldHaveNoInteractions();
-		then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
-		then(commentRepository).should().deleteAllInBatch(comments);
-		then(diaryRepository).should().delete(diary);
-	}
-
-	@Test
-	@DisplayName("다이어리 삭제 실패 예외 처리")
-	void deleteDiaryByDiaryIdThrowsExceptionWhenWrongDiaryId() {
-		// given
-		Long diaryId = 1L;
-		given(diaryRepository.findById(diaryId)).willReturn(Optional.empty());
-
-		// when
-
-		// then
-		BDDAssertions.thenThrownBy(() -> diaryService.deleteDiaryByDiaryId(diaryId))
-				.isInstanceOf(NotFoundException.class)
-				.hasMessage("잘못된 다이어리 아이디입니다!");
-
-		then(diaryRepository).should().findById(diaryId);
-		then(s3Upload).shouldHaveNoInteractions();
-		then(commentRepository).shouldHaveNoInteractions();
-	}
 
 	@Nested
 	@DisplayName("다이어리 업데이트")
