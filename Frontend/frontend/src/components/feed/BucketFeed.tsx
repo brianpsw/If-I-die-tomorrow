@@ -95,7 +95,7 @@ function BucketFeed() {
         loader={<h4>Loading...</h4>}
         endMessage={
           <p style={{ textAlign: 'center' }}>
-            <b>모든 버킷리스트를 불러왔습니다.</b>
+            <b style={{ color: 'white' }}>모든 버킷리스트를 불러왔습니다.</b>
           </p>
         }
       >
@@ -112,9 +112,17 @@ function BucketFeed() {
                   <Date>{bucket.created}</Date>
                 </NickDateWrap>
                 <ContentImg>
-                  <TitleContent>
+                  <TitleContent
+                    hasImage={Boolean(
+                      bucket.imageUrl && bucket.imageUrl !== '""',
+                    )}
+                  >
                     <Title>{bucket.title}</Title>
-                    <Content>{bucket.content}</Content>
+                    <Content>
+                      {bucket.content.length > 40
+                        ? bucket.content.substring(0, 40) + '⋯'
+                        : bucket.content}
+                    </Content>
                   </TitleContent>
                   <div>
                     {bucket.imageUrl && bucket.imageUrl.length > 0 && (

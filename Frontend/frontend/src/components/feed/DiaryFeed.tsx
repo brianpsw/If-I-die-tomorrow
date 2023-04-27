@@ -95,7 +95,7 @@ function DiaryFeed() {
         loader={<h4>Loading...</h4>}
         endMessage={
           <p style={{ textAlign: 'center' }}>
-            <b>모든 다이어리를 불러왔습니다.</b>
+            <b style={{ color: 'white' }}>모든 다이어리를 불러왔습니다.</b>
           </p>
         }
       >
@@ -112,12 +112,20 @@ function DiaryFeed() {
                   <Date>{diary.created}</Date>
                 </NickDateWrap>
                 <ContentImg>
-                  <TitleContent>
+                  <TitleContent
+                    hasImage={Boolean(
+                      diary.imageUrl && diary.imageUrl !== '""',
+                    )}
+                  >
                     <Title>{diary.title}</Title>
-                    <Content>{diary.content}</Content>
+                    <Content>
+                      {diary.content.length > 40
+                        ? diary.content.substring(0, 40) + '⋯'
+                        : diary.content}
+                    </Content>
                   </TitleContent>
                   <div>
-                    {diary.imageUrl && diary.imageUrl.length > 0 && (
+                    {diary.imageUrl && diary.imageUrl !== '""' && (
                       <Image src={diary.imageUrl} alt="Diary" />
                     )}
                   </div>

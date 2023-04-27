@@ -12,31 +12,39 @@ export const CardWrap = styled.div`
 `;
 
 export const NickDateWrap = styled.div`
-  ${tw`flex justify-between mb-2`}
+  ${tw`text-sm flex justify-between mb-2`}
 `;
 
 export const Title = styled.h3`
-  ${tw`text-lg font-bold mb-2`}
+  ${tw` font-bold mb-2`}
 `;
 
 export const Content = styled.p`
   ${tw`text-sm`}
+  width: 100%;
 `;
 
 export const Image = styled.img`
   ${tw`w-full mb-2`}
-  width: 100px;
+  width: 70px;
 `;
 
 export const ContentImg = styled.div`
   ${tw`flex justify-between`}
 `;
 
-export const TitleContent = styled.div`
+export const TitleContent = styled.div<{ hasImage: boolean }>`
   ${tw`flex flex-col`}
   text-align: start;
   justify-content: center;
+  width: ${(props) => (props.hasImage ? '70%' : '100%')};
+  //   border: solid 1px white;
 `;
+
+// export const TitleContent = styled.div<{ hasImage: boolean }>`
+//   flex: 1;
+//   width: ${(props) => (props.hasImage ? '50%' : '100%')};
+// `;
 
 export const Meta = styled.div`
   ${tw`text-xs mt-2`}

@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -7,6 +7,7 @@ import backgroundImg from '../../assets/images/feed.png';
 import Button from '../../components/common/Button';
 import DiaryFeed from '../../components/feed/DiaryFeed';
 import BucketFeed from '../../components/feed/BucketFeed';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Background = styled.div`
   background-image: url(${backgroundImg});
@@ -39,7 +40,25 @@ const Tab = styled.span<{ isSelected: boolean }>`
 `;
 
 function Feed() {
-  const [feedType, setFeedType] = useState<'diary' | 'bucketList'>('diary');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [feedType, setFeedType] = useState<'diary' | 'bucketList'>(
+    'bucketList',
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tabParam = params.get('tab');
+
+    if (tabParam === 'diary' || tabParam === 'bucketList') {
+      setFeedType(tabParam);
+    }
+  }, [location]);
+
+  const handleTabClick = (type: 'diary' | 'bucketList') => {
+    setFeedType(type);
+    navigate({ search: `?tab=${type}` });
+  };
 
   return (
     <Background>
@@ -47,13 +66,13 @@ function Feed() {
         <FeedTab>
           <Tab
             isSelected={feedType === 'bucketList'}
-            onClick={() => setFeedType('bucketList')}
+            onClick={() => handleTabClick('bucketList')}
           >
             버킷리스트
           </Tab>
           <Tab
             isSelected={feedType === 'diary'}
-            onClick={() => setFeedType('diary')}
+            onClick={() => handleTabClick('diary')}
           >
             다이어리
           </Tab>
