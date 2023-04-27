@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 
@@ -36,5 +37,17 @@ public class Will extends BaseEntity{
 	// 일단 null 열어뒀습니다.
 	@Column
 	private String signUrl;
+	
+	public void createSign (String signUrl) {
+		this.signUrl = signUrl;
+	}
+	
+	public void updateVideo (String videoUrl) {
+		this.videoUrl = videoUrl;
+	}
+	
+	public void updateVoice (String voiceUrl) {
+		this.voiceUrl = voiceUrl;
+	}
 	
 }
