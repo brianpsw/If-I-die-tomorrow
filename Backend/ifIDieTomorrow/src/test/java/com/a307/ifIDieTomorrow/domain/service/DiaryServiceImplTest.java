@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -308,22 +309,88 @@ class DiaryServiceImplTest {
 
 	@Test
 	@DisplayName("사진이 있는 다이어리 삭제 성공")
-	void deleteDiaryByDiaryIdWithImageUrl() {
+	void deleteDiaryByDiaryIdWithImageUrl() throws NotFoundException {
 		// given
+		Long diaryId = 1L;
+		String imageUrl = "https://example.com/test.jpg";
+		Diary diary = Diary.builder()
+				.diaryId(diaryId)
+				.title("title")
+				.userId(user.getUserId())
+				.content("content")
+				.secret(true)
+				.report(0)
+				.imageUrl(imageUrl)
+				.build();
+
+		Comment comment1 = Comment.builder().commentId(1L).build();
+		Comment comment2 = Comment.builder().commentId(2L).build();
+		List<Comment> comments = List.of(comment1, comment2);
+
+		given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
+		given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
 
 		// when
+		Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
 
 		// then
+		/**
+		 * 동작 검증
+		 * 다이어리 조회
+		 * 파일 삭제
+		 * 댓글 조회
+		 * 댓글 삭제
+		 * 다이어리 삭제
+		 */
+		then(diaryRepository).should().findById(diaryId);
+		then(s3Upload).should().fileDelete(imageUrl);
+		then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
+		then(commentRepository).should().deleteAllInBatch(comments);
+		then(diaryRepository).should().delete(diary);
+
+
 	}
 
 	@Test
 	@DisplayName("사진이 없는 다이어리 삭제 성공")
-	void deleteDiaryByDiaryIdWithNoImageUrl() {
+	void deleteDiaryByDiaryIdWithNoImageUrl() throws NotFoundException {
 		// given
+		Long diaryId = 1L;
+		String imageUrl = "";
+		Diary diary = Diary.builder()
+				.diaryId(diaryId)
+				.title("title")
+				.userId(user.getUserId())
+				.content("content")
+				.secret(true)
+				.report(0)
+				.imageUrl(imageUrl)
+				.build();
+
+		Comment comment1 = Comment.builder().commentId(1L).build();
+		Comment comment2 = Comment.builder().commentId(2L).build();
+		List<Comment> comments = List.of(comment1, comment2);
+
+		given(diaryRepository.findById(diaryId)).willReturn(Optional.of(diary));
+		given(commentRepository.findAllByTypeIdAndType(diaryId, true)).willReturn(comments);
 
 		// when
+		Long deletedDiaryId = diaryService.deleteDiaryByDiaryId(diaryId);
 
 		// then
+		/**
+		 * 동작 검증
+		 * 다이어리 조회
+		 * 파일 삭제 안 함
+		 * 댓글 조회
+		 * 댓글 삭제
+		 * 다이어리 삭제
+		 */
+		then(diaryRepository).should().findById(diaryId);
+		then(s3Upload).shouldHaveNoInteractions();
+		then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
+		then(commentRepository).should().deleteAllInBatch(comments);
+		then(diaryRepository).should().delete(diary);
 	}
 
 	@Test
