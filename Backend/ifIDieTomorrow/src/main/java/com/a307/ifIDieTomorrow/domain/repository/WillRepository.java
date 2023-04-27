@@ -12,10 +12,13 @@ import java.util.Optional;
 
 @Repository
 public interface WillRepository extends JpaRepository<Will, Long> {
-	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto(willId, content, videoUrl, voiceUrl, signUrl) " +
+	// DTO 를 가져올 때
+	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto" +
+			"(willId, content, videoUrl, voiceUrl, signUrl) " +
 			"FROM Will " +
 			"WHERE userId = :userId " )
 	Optional<GetWillByUserResDto> getByUserId (@Param("userId") Long userId);
 	
+	// Entity 를 가져올 때
 	Will findByUserId (Long userId);
 }

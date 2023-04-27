@@ -21,7 +21,7 @@ import java.io.IOException;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
-public class UserContoller {
+public class UserController {
 
     private final UserService userService;
 
