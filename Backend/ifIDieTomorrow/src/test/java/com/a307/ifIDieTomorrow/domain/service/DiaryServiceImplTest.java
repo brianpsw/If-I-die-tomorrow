@@ -397,10 +397,19 @@ class DiaryServiceImplTest {
 	@DisplayName("다이어리 삭제 실패 예외 처리")
 	void deleteDiaryByDiaryIdThrowsExceptionWhenWrongDiaryId() {
 		// given
+		Long diaryId = 1L;
+		given(diaryRepository.findById(diaryId)).willReturn(Optional.empty());
 
 		// when
 
 		// then
+		BDDAssertions.thenThrownBy(() -> diaryService.deleteDiaryByDiaryId(diaryId))
+				.isInstanceOf(NotFoundException.class)
+				.hasMessage("잘못된 다이어리 아이디입니다!");
+
+		then(diaryRepository).should().findById(diaryId);
+		then(s3Upload).shouldHaveNoInteractions();
+		then(commentRepository).shouldHaveNoInteractions();
 	}
 
 	@Test
