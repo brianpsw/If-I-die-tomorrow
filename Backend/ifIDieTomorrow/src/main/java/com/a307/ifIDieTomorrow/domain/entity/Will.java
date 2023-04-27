@@ -42,6 +42,10 @@ public class Will extends BaseEntity{
 		this.signUrl = signUrl;
 	}
 	
+	public void updateContent (String content) {
+		this.content = content;
+	}
+	
 	public void updateVideo (String videoUrl) {
 		this.videoUrl = videoUrl;
 	}

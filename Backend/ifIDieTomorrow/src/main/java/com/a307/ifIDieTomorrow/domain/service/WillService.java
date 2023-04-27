@@ -13,4 +13,6 @@ public interface WillService {
 	void createWill(Long userId);
 	
 	Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException;
+	
+	Long updateContent (String content);
 }

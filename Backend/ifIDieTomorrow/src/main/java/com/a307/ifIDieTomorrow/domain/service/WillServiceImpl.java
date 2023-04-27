@@ -38,9 +38,18 @@ public class WillServiceImpl implements WillService {
 	public Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException {
 		if (photo == null) throw new NoPhotoException("사진이 없습니다.");
 		
-		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
-		Will will = willRepository.findByUserId(userId);
+		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 		will.createSign(s3Upload.uploadFiles(photo, "will/sign"));
+		
+		willRepository.save(will);
+		
+		return will.getWillId();
+	}
+	
+	@Override
+	public Long updateContent (String content) {
+		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		will.updateContent(content);
 		
 		willRepository.save(will);
 		

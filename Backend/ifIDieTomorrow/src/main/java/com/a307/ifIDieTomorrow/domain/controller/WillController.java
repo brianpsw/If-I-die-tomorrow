@@ -31,8 +31,16 @@ public class WillController {
 	
 	@PatchMapping("/sign")
 	@Operation(summary = "서명 저장", description = "유저의 서명을 저장합니다.")
-	public ResponseEntity<Long> createSign(@RequestPart MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException {
+	public ResponseEntity<Long> createSign(
+			@RequestPart MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(willService.createSign(photo));
+	}
+	
+	@PatchMapping("/text")
+	@Operation(summary = "유언장 텍스트 수정", description = "유저의 텍스트를 수정합니다.")
+	public ResponseEntity<Long> updateContent(
+			@RequestBody String content) {
+		return ResponseEntity.status(HttpStatus.OK).body(willService.updateContent(content));
 	}
 	
 }
