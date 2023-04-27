@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +30,7 @@ public class BucketController {
 
 	private final BucketService bucketService;
 
-	@PostMapping("")
+	@PostMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
 			@RequestPart CreateBucketDto data,

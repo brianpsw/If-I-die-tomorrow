@@ -160,13 +160,17 @@ public class PhotoServiceImpl implements PhotoService {
 	
 	@Override
 	public List<GetPhotoByCategoryResDto> getPhotoByUser () {
-		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+		return getPhotoByUser(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+	}
+
+	@Override
+	public List<GetPhotoByCategoryResDto> getPhotoByUser (Long userId) {
 		List<CreateCategoryResDto> categories = categoryRepository.findAllByUserId(userId);
 		List<GetPhotoByCategoryResDto> list = new ArrayList<>();
 		categories.forEach(x -> list.add(
 				new GetPhotoByCategoryResDto(x, photoRepository.findAllPhotoByCategory_CategoryId(x.getCategoryId())))
 		);
-		
+
 		return list;
 	}
 	

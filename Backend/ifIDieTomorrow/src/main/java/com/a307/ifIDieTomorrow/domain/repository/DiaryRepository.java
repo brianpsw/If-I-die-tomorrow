@@ -41,5 +41,13 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"ORDER BY d.createdAt DESC")
 	Page<GetDiaryResDto> findAllBySecretIsFalse(Pageable pageable);
 
+	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
+			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
+			"FROM Diary d " +
+			"JOIN User u " +
+			"ON d.userId = u.userId " +
+			"WHERE d.userId = :userId")
+	List<GetDiaryResDto> findAllByUserIdIdWithUserNickName(@Param("userId") Long userId);
+
 
 }

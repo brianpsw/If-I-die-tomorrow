@@ -39,4 +39,12 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"WHERE b.secret = false " +
 			"ORDER BY b.createdAt DESC")
 	Page<GetBucketResDto> findAllBySecretIsFalse(Pageable pageable);
+
+	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto" +
+			"(b.bucketId, b.userId, u.nickname, b.title, b.content, b.complete, b.imageUrl, b.secret, b.createdAt, b.updatedAt) " +
+			"FROM Bucket b " +
+			"JOIN User u " +
+			"ON b.userId = u.userId " +
+			"WHERE b.userId = :userId")
+	List<GetBucketResDto> findAllByUserIdWithUserNickName (@Param("userId") Long userId);
 }
