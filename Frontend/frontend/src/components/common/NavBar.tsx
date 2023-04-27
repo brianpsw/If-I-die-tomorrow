@@ -17,13 +17,13 @@ import mypageActive from '../../assets/icons/mypage_active.svg';
 
 import Button from './Button';
 const Navbar = styled.div`
-  ${tw`bg-gray_100`}
+  ${tw`bg-gray_100 min-w-[390px] max-w-[390px]`}
   width: 100%;
   height: 70px;
   display: flex;
   padding: 9px 31px;
   justify-content: space-between;
-  position: fixed;
+  position: absolute;
   bottom: 0;
 `;
 function NavBar() {
