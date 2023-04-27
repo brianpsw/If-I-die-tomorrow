@@ -282,6 +282,28 @@ class DiaryServiceImplTest {
 	@DisplayName("다이어리 아이디가 없을 경우 다이어리 조회 예외처리")
 	void getDiaryByIdThrowsExceptionWhenWrongDiaryId(){
 
+		// given
+		Long diaryId = 1L;
+		given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.empty());
+
+		// when
+
+		// then
+		/**
+		 * 예외처리 검증
+		 */
+		BDDAssertions.thenThrownBy(() -> diaryService.getDiaryById(1L))
+				.isInstanceOf(NotFoundException.class)
+				.hasMessage("잘못된 다이어리 아이디입니다!");
+
+		/**
+		 * 동작 검증
+		 * 다이어리 조회를 한다
+		 * 댓글 조회를 하지 않는다(예외 발생)
+		 */
+		then(diaryRepository).should().findByIdWithUserNickName(diaryId);
+		then(commentRepository).shouldHaveNoInteractions();
+
 	}
 
 	@Test
