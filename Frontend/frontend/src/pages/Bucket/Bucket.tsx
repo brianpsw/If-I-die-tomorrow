@@ -7,6 +7,7 @@ import BucketListItem from './BucketListItem';
 import Logo from '../../assets/icons/logo.svg';
 import IIDT from '../../assets/icons/IIDT.svg';
 import EditModal from '../../components/common/EditModal';
+import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
 `;
@@ -31,6 +32,11 @@ function Bucket() {
         <BucketListItem setOpenEditModal={setOpenEditModal} />
         <BucketListItem setOpenEditModal={setOpenEditModal} />
         <BucketListItem setOpenEditModal={setOpenEditModal} />
+        <img
+          className="relative top-[326px] left-[165px]"
+          src={AddButtonIcon}
+          alt=""
+        />
       </Container>
     </div>
   );
