@@ -24,5 +24,5 @@ public interface DiaryService {
 
 	Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException;
 
-	CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException, UnAuthorizedException;
+	CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException;
 }
