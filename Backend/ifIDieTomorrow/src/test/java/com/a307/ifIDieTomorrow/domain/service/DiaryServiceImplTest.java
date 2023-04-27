@@ -1,19 +1,23 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
+import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
+import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import org.assertj.core.api.BDDAssertions;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -24,6 +28,11 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -39,6 +48,32 @@ class DiaryServiceImplTest {
 	private DiaryRepository diaryRepository;
 	@Mock
 	private S3Upload s3Upload;
+	@Mock
+	private CommentRepository commentRepository;
+
+	private User user;
+
+	/**
+	 * 테스트용 유저 및 인증 객체 생성
+	 */
+	@BeforeEach
+	void setUp() {
+		user = User.builder()
+				.userId(1L)
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build();
+
+		UserPrincipal userPrincipal = UserPrincipal.create(user);
+		TestingAuthenticationToken authentication = new TestingAuthenticationToken(userPrincipal, null);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+	}
 
 	@AfterEach
 	void tearDown() {
@@ -50,7 +85,6 @@ class DiaryServiceImplTest {
 	void createDiaryWithPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
 
 		// given
-
 		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
 		MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
@@ -64,29 +98,11 @@ class DiaryServiceImplTest {
 				.imageUrl("https://example.com/test.jpg")
 				.build();
 
-		User user = User.builder()
-				.userId(1L)
-				.name("tom")
-				.nickname("tommy")
-				.email("tom@email.com")
-				.age(23)
-				.sendAgree(false)
-				.newCheck(true)
-				.deleted(false)
-				.providerType(ProviderType.NAVER)
-				.build();
-
 		/**
 		 * 정상 동작 stubbing
 		 */
 		given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
 		given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/test.jpg");
-
-		/**
-		 * 테스트용 유저 인증객체 생성
-		 */
-		TestingAuthenticationToken authentication = new TestingAuthenticationToken(UserPrincipal.create(user), null);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// when
 		CreateDiaryResDto result = diaryService.createDiary(req, photo);
@@ -139,28 +155,12 @@ class DiaryServiceImplTest {
 				.imageUrl("")
 				.build();
 
-		User user = User.builder()
-				.userId(1L)
-				.name("tom")
-				.nickname("tommy")
-				.email("tom@email.com")
-				.age(23)
-				.sendAgree(false)
-				.newCheck(true)
-				.deleted(false)
-				.providerType(ProviderType.NAVER)
-				.build();
 
 		/**
 		 * 정상 동작 stubbing
 		 */
 		given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
 
-		/**
-		 * 테스트용 유저 인증객체 생성
-		 */
-		TestingAuthenticationToken authentication = new TestingAuthenticationToken(UserPrincipal.create(user), null);
-		SecurityContextHolder.getContext().setAuthentication(authentication);
 
 		// when
 		CreateDiaryResDto result = diaryService.createDiary(req, null);
@@ -198,24 +198,99 @@ class DiaryServiceImplTest {
 
 
 	@Test
-	@DisplayName("다이어리 생성 시 사진 없어서 에러 발생")
+	@DisplayName("다이어리 생성 시 사진 누락됐을 경우 예외처리")
 	void createDiaryThrowsExceptionWhenNoPhoto() {
 
+		// given
+		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
+
+		// when
+
+		// then
+		/**
+		 * 예외처리 검증
+		 */
+		BDDAssertions.thenThrownBy(() -> diaryService.createDiary(req, null))
+				.isInstanceOf(NoPhotoException.class)
+				.hasMessage("올리고자 하는 사진이 없습니다");
+
+		/**
+		 * 동작 검증
+		 * 사진을 업로드하거나 다이어리를 저장하지 않는다.
+		 */
+		then(diaryRepository).shouldHaveNoInteractions();
+		then(s3Upload).shouldHaveNoInteractions();
+
 	}
 
 	@Test
+	@DisplayName("유저가 작성한 다이러리 목록 가져오기")
 	void getDiaryByUserId() {
+
+		// given
+		List<GetDiaryByUserResDto> expected = Arrays.asList(
+				new GetDiaryByUserResDto(1L, "Title 1", "Content 1", "imageUrl1", true, LocalDateTime.now(), LocalDateTime.now(), 1L),
+				new GetDiaryByUserResDto(2L, "Title 2", "Content 2", "imageUrl2", false, LocalDateTime.now(), LocalDateTime.now(), 2L)
+		);
+
+
+		given(diaryRepository.findAllByUserIdWithCommentCount(user.getUserId())).willReturn(expected);
+
+		// when
+		List<GetDiaryByUserResDto> result = diaryService.getDiaryByUserId();
+
+		// then
+		BDDAssertions.then(result).isEqualTo(expected);
 	}
 
 	@Test
-	void getDiaryById() {
+	@DisplayName("다이어리 아이디로 다이어리 조회 성공")
+	void getDiaryById() throws NotFoundException {
+
+		// given
+		Long diaryId = 1L;
+		GetDiaryResDto diaryDto = new GetDiaryResDto(1L, 1L, "userNickname", "diaryTitle", "imageUrl", "diaryContent", true, LocalDateTime.now(), LocalDateTime.now());
+		List<GetCommentResDto> comments = List.of(
+				new GetCommentResDto(1L, "Test Comment 1", 2L, "user 2 nickname", LocalDateTime.now(), LocalDateTime.now()),
+				new GetCommentResDto(2L, "Test Comment 2", 3L, "user 3 nickname", LocalDateTime.now(), LocalDateTime.now())
+		);
+
+		given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.of(diaryDto));
+		given(commentRepository.findCommentsByTypeId(diaryId, true)).willReturn(comments);
+
+		// when
+		HashMap<String, Object> result = diaryService.getDiaryById(diaryId);
+
+		// then
+		/**
+		 * 결괏값 검증
+		 * 다이어리 일치 여부
+		 * 댓글 일치 여부
+		 */
+		BDDAssertions.then(result.get("diary")).isEqualTo(diaryDto);
+		BDDAssertions.then(result.get("comments")).isEqualTo(comments);
+		/**
+		 * 동작 검증
+		 * 다이어리 조회
+		 * 댓글 조회
+		 */
+		then(diaryRepository).should().findByIdWithUserNickName(diaryId);
+		then(commentRepository).should().findCommentsByTypeId(diaryId, true);
 	}
 
 	@Test
+	@DisplayName("다이어리 아이디가 없을 경우 다이어리 조회 예외처리")
+	void getDiaryByIdThrowsExceptionWhenWrongDiaryId(){
+
+	}
+
+	@Test
+	@Ignore
 	void deleteDiaryByDiaryId() {
 	}
 
 	@Test
+	@Ignore
 	void updateDiary() {
 	}
 }
