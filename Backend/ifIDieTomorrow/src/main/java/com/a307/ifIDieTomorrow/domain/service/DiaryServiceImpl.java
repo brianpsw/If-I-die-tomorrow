@@ -94,7 +94,7 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, NoPhotoException, IllegalArgumentException, UnAuthorizedException {
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException {
 		Diary diary = diaryRepository.findById(req.getDiaryId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
 
@@ -104,9 +104,6 @@ public class DiaryServiceImpl implements DiaryService{
 
 		if (!userId.equals(diary.getUserId())) throw new UnAuthorizedException("내가 작성한 다이어리가 아닙니다");
 
-//		사진 여부 검증
-		if (req.getUpdatePhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
-
 
 //		기존 사진 삭제
 		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
@@ -114,7 +111,7 @@ public class DiaryServiceImpl implements DiaryService{
 		diary.updateDiary(
 				req.getTitle(),
 				req.getContent(),
-				req.getUpdatePhoto() ? s3Upload.uploadFiles(photo, "diary") : "",
+				req.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "diary") : "",
 				req.getSecret()
 		);
 
