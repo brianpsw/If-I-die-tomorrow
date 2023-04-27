@@ -78,6 +78,7 @@ class DiaryServiceImplTest {
 	@AfterEach
 	void tearDown() {
 		diaryRepository.deleteAllInBatch();
+		commentRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -485,7 +486,7 @@ class DiaryServiceImplTest {
 				/**
 				 * 동작 검증
 				 * 다이어리 조회
-				 * 기존 사진 삭제 x
+				 * 기존 사진 삭제 메서드 호출 x
 				 * 신규 사진 업로드
 					 */
 				then(diaryRepository).should().findById(req.getDiaryId());
@@ -499,8 +500,6 @@ class DiaryServiceImplTest {
 				BDDAssertions.then(result.getContent()).isEqualTo(updatedDiary.getContent());
 				BDDAssertions.then(result.getSecret()).isEqualTo(updatedDiary.getSecret());
 				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedDiary.getImageUrl());
-
-
 
 			}
 
