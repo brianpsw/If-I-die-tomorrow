@@ -18,7 +18,7 @@ const BtModal = styled.div`
 `;
 
 export const Container = styled.div`
-  ${tw`flex flex-col mx-auto`}
+  ${tw`flex flex-col mx-auto pb-12`}
   max-width: calc(100% - 48px);
   // border: solid 1px white;
 `;
