@@ -1,58 +1,20 @@
 import React, { useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import styled from 'styled-components';
-import tw from 'twin.macro';
 import axios from 'axios';
-
-const Container = styled.div``;
-
-const DiaryCard = styled.div`
-  ${tw`mb-4 p-4 bg-white shadow rounded`}
-  background-color: rgba(246, 246, 246, 0.7);
-  border-radius: 10px;
-`;
-
-const NickDateWrap = styled.div`
-  ${tw`flex justify-between mb-2`}
-`;
-
-const Title = styled.h3`
-  ${tw`text-lg font-bold mb-2`}
-`;
-
-const Content = styled.p`
-  ${tw`text-sm`}
-`;
-
-const Image = styled.img`
-  ${tw`w-full mb-2`}
-  width: 100px;
-`;
-
-const ContentImg = styled.div`
-  ${tw`flex justify-between`}
-`;
-
-const TitleContent = styled.div`
-  ${tw`flex flex-col`}
-  text-align: start;
-  justify-content: center;
-`;
-
-const Meta = styled.div`
-  ${tw`text-xs mt-2`}
-  text-align: end;
-`;
-
-const Nickname = styled.span`
-  ${tw`font-medium`}
-`;
-
-const Comments = styled.span``;
-
-const Date = styled.span`
-  ${tw`text-gray-500`}
-`;
+import {
+  Container,
+  CardWrap,
+  NickDateWrap,
+  Title,
+  Content,
+  Image,
+  ContentImg,
+  TitleContent,
+  Meta,
+  Nickname,
+  Comments,
+  Date,
+} from './FeedEmotion';
 
 const mockData = [
   {
@@ -603,7 +565,7 @@ function DiaryFeed() {
         }
       >
         {items.map((diary) => (
-          <DiaryCard key={diary.diaryId}>
+          <CardWrap key={diary.diaryId}>
             <NickDateWrap>
               <Nickname>닉네임</Nickname>
               <Date>{diary.createdAt}</Date>
@@ -620,7 +582,7 @@ function DiaryFeed() {
             <Meta>
               <Comments>댓글 {diary.commentCount}개</Comments>
             </Meta>
-          </DiaryCard>
+          </CardWrap>
         ))}
       </InfiniteScroll>
     </Container>
