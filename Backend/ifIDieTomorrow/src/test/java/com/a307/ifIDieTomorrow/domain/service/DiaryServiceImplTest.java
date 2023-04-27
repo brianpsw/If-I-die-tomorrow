@@ -42,6 +42,7 @@ class DiaryServiceImplTest {
 
 	@AfterEach
 	void tearDown() {
+		diaryRepository.deleteAllInBatch();
 	}
 
 	@Test
@@ -120,6 +121,79 @@ class DiaryServiceImplTest {
 		BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
 	}
 
+	@Test
+	@DisplayName("정상적으로 다이어리 생성되는 경우(이미지 x)")
+	void createDiaryWithOutPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
+
+		// given
+
+		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, false);
+
+		Diary savedDiary = Diary.builder()
+				.diaryId(1L)
+				.title(req.getTitle())
+				.userId(1L)
+				.content(req.getContent())
+				.secret(req.getSecret())
+				.report(0)
+				.imageUrl("")
+				.build();
+
+		User user = User.builder()
+				.userId(1L)
+				.name("tom")
+				.nickname("tommy")
+				.email("tom@email.com")
+				.age(23)
+				.sendAgree(false)
+				.newCheck(true)
+				.deleted(false)
+				.providerType(ProviderType.NAVER)
+				.build();
+
+		/**
+		 * 정상 동작 stubbing
+		 */
+		given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
+
+		/**
+		 * 테스트용 유저 인증객체 생성
+		 */
+		TestingAuthenticationToken authentication = new TestingAuthenticationToken(UserPrincipal.create(user), null);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+
+		// when
+		CreateDiaryResDto result = diaryService.createDiary(req, null);
+		ArgumentCaptor<Diary> diaryCaptor = ArgumentCaptor.forClass(Diary.class);
+
+		// then
+		/**
+		 * 동작 검증
+		 * 사진이 업로드 되지 않는다
+		 * 다이어리가 저장 되는가
+		 */
+		then(s3Upload).shouldHaveNoInteractions();
+		then(diaryRepository).should().save(diaryCaptor.capture());
+
+		/**
+		 * 전달된 인자 검증
+		 * 유저 아이디가 정상적으로 들어갔는가
+		 * 이미지가 ""로 넘어가는가
+		 */
+		Diary capturedDiary = diaryCaptor.getValue();
+		BDDAssertions.then(capturedDiary.getUserId()).isEqualTo(1L);
+		BDDAssertions.then(capturedDiary.getImageUrl()).isEqualTo("");
+
+		/**
+		 * 결괏값 검증
+		 * 다이어리 아이디
+		 * 유저아이디
+		 * 이미지
+		 */
+		BDDAssertions.then(result.getDiaryId()).isEqualTo(savedDiary.getDiaryId());
+		BDDAssertions.then(result.getUserId()).isEqualTo(savedDiary.getUserId());
+		BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
+	}
 
 
 
