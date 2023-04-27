@@ -57,6 +57,6 @@ export const Nickname = styled.span`
 
 export const Comments = styled.span``;
 
-export const Date = styled.span`
+export const DateWrap = styled.span`
   ${tw`text-gray-500`}
 `;

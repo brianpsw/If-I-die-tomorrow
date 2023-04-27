@@ -14,7 +14,7 @@ import {
   Meta,
   Nickname,
   Comments,
-  Date,
+  DateWrap,
 } from './FeedEmotion';
 
 interface Comment {
@@ -109,7 +109,7 @@ function DiaryFeed() {
               <CardWrap key={index}>
                 <NickDateWrap>
                   <Nickname>{diary.nickname}</Nickname>
-                  <Date>{diary.created}</Date>
+                  <DateWrap>{diary.created}</DateWrap>
                 </NickDateWrap>
                 <ContentImg>
                   <TitleContent

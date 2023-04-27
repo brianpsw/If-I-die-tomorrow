@@ -14,7 +14,7 @@ import {
   Meta,
   Nickname,
   Comments,
-  Date,
+  DateWrap,
 } from './FeedEmotion';
 
 interface Comment {
@@ -109,7 +109,7 @@ function BucketFeed() {
               <CardWrap key={index}>
                 <NickDateWrap>
                   <Nickname>{bucket.nickname}</Nickname>
-                  <Date>{bucket.created}</Date>
+                  <DateWrap>{bucket.created}</DateWrap>
                 </NickDateWrap>
                 <ContentImg>
                   <TitleContent
