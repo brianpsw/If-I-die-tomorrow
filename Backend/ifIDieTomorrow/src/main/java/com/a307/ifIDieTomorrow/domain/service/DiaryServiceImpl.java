@@ -37,7 +37,7 @@ public class DiaryServiceImpl implements DiaryService{
 
 //
 //		사진 검증
-		if (req.getHasPhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
+		if (req.getHasPhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
 
 
 		return CreateDiaryResDto.toDto(
@@ -105,7 +105,7 @@ public class DiaryServiceImpl implements DiaryService{
 		if (!userId.equals(diary.getUserId())) throw new UnAuthorizedException("내가 작성한 다이어리가 아닙니다");
 
 //		사진 여부 검증
-		if (req.getUpdatePhoto() && photo.isEmpty()) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
+		if (req.getUpdatePhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
 
 
 //		기존 사진 삭제
