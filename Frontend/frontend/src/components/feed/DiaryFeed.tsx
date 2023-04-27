@@ -40,7 +40,7 @@ interface DiaryItem {
 }
 
 function DiaryFeed() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<DiaryItem[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
@@ -50,14 +50,23 @@ function DiaryFeed() {
         params: {
           page,
           size: 10,
+          // secret: true,
         },
         withCredentials: true,
       });
       if (response.status === 200) {
-        const { data, hasNext } = response.data;
-        setItems((prevItems) => prevItems.concat(data));
-        setHasMore(hasNext);
-        setPage((prevPage) => prevPage + 1);
+        const { data } = response.data;
+        setItems((prevItems: DiaryItem[]) => {
+          const newData = data.filter(
+            (newItem: DiaryItem) =>
+              !prevItems.some(
+                (prevItem: DiaryItem) =>
+                  prevItem.diary.diaryId === newItem.diary.diaryId,
+              ),
+          );
+          return [...prevItems, ...newData];
+        });
+        setHasMore(!!data.length);
       } else {
         setHasMore(false);
       }
@@ -67,14 +76,14 @@ function DiaryFeed() {
   };
 
   useEffect(() => {
-    fetchData(0);
-  }, []);
+    fetchData(page);
+  }, [page]);
 
   const fetchMoreData = () => {
-    if (!hasMore) {
-      return;
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+      console.log('무한 스크롤 작동');
     }
-    fetchData(page + 1);
   };
 
   return (
@@ -90,30 +99,36 @@ function DiaryFeed() {
           </p>
         }
       >
-        {items.map((item: DiaryItem) => {
-          const diary = item.diary;
-          const commentCount = item.comments.length;
-          return (
-            <CardWrap key={diary.diaryId}>
-              <NickDateWrap>
-                <Nickname>{diary.nickname}</Nickname>
-                <Date>{diary.created}</Date>
-              </NickDateWrap>
-              <ContentImg>
-                <TitleContent>
-                  <Title>{diary.title}</Title>
-                  <Content>{diary.content}</Content>
-                </TitleContent>
-                <div>
-                  {diary.imageUrl && <Image src={diary.imageUrl} alt="Diary" />}
-                </div>
-              </ContentImg>
-              <Meta>
-                <Comments>댓글 {commentCount}개</Comments>
-              </Meta>
-            </CardWrap>
-          );
-        })}
+        {items.length === 0 ? (
+          <div>게시물이 없습니다.</div>
+        ) : (
+          items.map((item: DiaryItem, index: number) => {
+            const diary = item.diary;
+            const commentCount = item.comments.length;
+            return (
+              <CardWrap key={index}>
+                <NickDateWrap>
+                  <Nickname>{diary.nickname}</Nickname>
+                  <Date>{diary.created}</Date>
+                </NickDateWrap>
+                <ContentImg>
+                  <TitleContent>
+                    <Title>{diary.title}</Title>
+                    <Content>{diary.content}</Content>
+                  </TitleContent>
+                  <div>
+                    {diary.imageUrl && (
+                      <Image src={diary.imageUrl} alt="Diary" />
+                    )}
+                  </div>
+                </ContentImg>
+                <Meta>
+                  <Comments>댓글 {commentCount}개</Comments>
+                </Meta>
+              </CardWrap>
+            );
+          })
+        )}
       </InfiniteScroll>
     </Container>
   );

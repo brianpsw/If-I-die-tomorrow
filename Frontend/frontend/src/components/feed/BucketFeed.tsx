@@ -18,7 +18,7 @@ import {
 
 const mockData = [
   {
-    diaryId: 1,
+    bucketId: 1,
     title: '인수경 귀여워 짜릿해',
     content: '갓수경 멋있어',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -28,7 +28,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 2,
+    bucketId: 2,
     title: '이거는 사진 없는 버킷',
     content: '룰루랄라',
     secret: false,
@@ -37,7 +37,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 3,
+    bucketId: 3,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     secret: false,
@@ -46,17 +46,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 4,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    diaryId: 5,
+    bucketId: 4,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -66,16 +56,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 6,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    diaryId: 7,
+    bucketId: 5,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -85,7 +66,16 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 8,
+    bucketId: 6,
+    title: '첫 번째 버킷',
+    content: '오늘은 첫 번째 버킷를 작성했습니다.',
+    secret: false,
+    createdAt: '2023-01-01',
+    updatedAt: '2023-01-01',
+    commentCount: 3,
+  },
+  {
+    bucketId: 7,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -95,7 +85,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 9,
+    bucketId: 8,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -105,7 +95,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 10,
+    bucketId: 9,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -115,7 +105,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 11,
+    bucketId: 10,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -125,7 +115,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 12,
+    bucketId: 11,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -135,7 +125,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 13,
+    bucketId: 12,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -145,7 +135,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 14,
+    bucketId: 13,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -155,7 +145,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 15,
+    bucketId: 14,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -165,7 +155,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 16,
+    bucketId: 15,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -175,7 +165,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 17,
+    bucketId: 16,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -185,7 +175,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 18,
+    bucketId: 17,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -195,7 +185,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 19,
+    bucketId: 18,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -205,7 +195,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 20,
+    bucketId: 19,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -215,7 +205,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 21,
+    bucketId: 20,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -225,7 +215,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 22,
+    bucketId: 21,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -235,7 +225,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 23,
+    bucketId: 22,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -245,7 +235,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 24,
+    bucketId: 23,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -255,7 +245,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 25,
+    bucketId: 24,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -265,7 +255,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 26,
+    bucketId: 25,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -275,7 +265,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 27,
+    bucketId: 26,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -285,7 +275,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 28,
+    bucketId: 27,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -295,7 +285,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 29,
+    bucketId: 28,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -305,7 +295,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 30,
+    bucketId: 29,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -315,7 +305,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 31,
+    bucketId: 30,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -325,7 +315,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 32,
+    bucketId: 31,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -335,7 +325,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 33,
+    bucketId: 32,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -345,7 +335,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 34,
+    bucketId: 33,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -355,7 +345,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 35,
+    bucketId: 34,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -365,7 +355,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 36,
+    bucketId: 35,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -375,7 +365,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 37,
+    bucketId: 36,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -385,7 +375,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 38,
+    bucketId: 37,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -395,7 +385,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 39,
+    bucketId: 38,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -405,7 +395,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 40,
+    bucketId: 39,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -415,7 +405,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 41,
+    bucketId: 40,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -425,7 +415,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 42,
+    bucketId: 41,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -435,7 +425,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 43,
+    bucketId: 42,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -445,7 +435,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 44,
+    bucketId: 43,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -455,7 +445,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 45,
+    bucketId: 44,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -465,7 +455,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 46,
+    bucketId: 45,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -475,7 +465,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 47,
+    bucketId: 46,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -485,7 +475,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 48,
+    bucketId: 47,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -495,7 +485,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 49,
+    bucketId: 48,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -505,7 +495,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 50,
+    bucketId: 49,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -515,7 +505,7 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 51,
+    bucketId: 50,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -525,7 +515,17 @@ const mockData = [
     commentCount: 3,
   },
   {
-    diaryId: 52,
+    bucketId: 51,
+    title: '첫 번째 버킷',
+    content: '오늘은 첫 번째 버킷를 작성했습니다.',
+    imageUrl: 'https://picsum.photos/300/300/?random',
+    secret: false,
+    createdAt: '2023-01-01',
+    updatedAt: '2023-01-01',
+    commentCount: 3,
+  },
+  {
+    bucketId: 52,
     title: '첫 번째 버킷',
     content: '오늘은 첫 번째 버킷를 작성했습니다.',
     imageUrl: 'https://picsum.photos/300/300/?random',
@@ -536,7 +536,7 @@ const mockData = [
   },
 ];
 
-function DiaryFeed() {
+function BucketFeed() {
   const [items, setItems] = useState(mockData.slice(0, 10));
   const [hasMore, setHasMore] = useState(true);
 
@@ -564,23 +564,25 @@ function DiaryFeed() {
           </p>
         }
       >
-        {items.map((diary) => (
-          <CardWrap key={diary.diaryId}>
+        {items.map((bucket) => (
+          <CardWrap key={bucket.bucketId}>
             <NickDateWrap>
               <Nickname>닉네임</Nickname>
-              <Date>{diary.createdAt}</Date>
+              <Date>{bucket.createdAt}</Date>
             </NickDateWrap>
             <ContentImg>
               <TitleContent>
-                <Title>{diary.title}</Title>
-                <Content>{diary.content}</Content>
+                <Title>{bucket.title}</Title>
+                <Content>{bucket.content}</Content>
               </TitleContent>
               <div>
-                {diary.imageUrl && <Image src={diary.imageUrl} alt="Diary" />}
+                {bucket.imageUrl && (
+                  <Image src={bucket.imageUrl} alt="bucket" />
+                )}
               </div>
             </ContentImg>
             <Meta>
-              <Comments>댓글 {diary.commentCount}개</Comments>
+              <Comments>댓글 {bucket.commentCount}개</Comments>
             </Meta>
           </CardWrap>
         ))}
@@ -589,4 +591,4 @@ function DiaryFeed() {
   );
 }
 
-export default DiaryFeed;
+export default BucketFeed;
