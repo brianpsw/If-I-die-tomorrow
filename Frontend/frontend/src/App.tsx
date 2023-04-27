@@ -58,6 +58,7 @@ function App() {
             />
             {/* <Route path="/*" element={<ErrorPage />} /> */}
           </Routes>
+          <NavBar />
         </BrowserRouter>
       </LocalizationProvider>
     </div>
