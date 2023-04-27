@@ -1,10 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.*;
 import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
@@ -15,9 +12,9 @@ import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import org.assertj.core.api.BDDAssertions;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -27,6 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,6 +36,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -280,7 +279,7 @@ class DiaryServiceImplTest {
 	}
 
 	@Test
-	@DisplayName("다이어리 아이디가 없을 경우 다이어리 조회 예외처리")
+	@DisplayName("다이어리 아이디가 잘못된 경우 다이어리 조회 예외처리")
 	void getDiaryByIdThrowsExceptionWhenWrongDiaryId(){
 
 		// given
@@ -412,8 +411,132 @@ class DiaryServiceImplTest {
 		then(commentRepository).shouldHaveNoInteractions();
 	}
 
-	@Test
-	@Ignore
-	void updateDiary() {
+	@Nested
+	@DisplayName("다이어리 업데이트")
+	class updateDiary {
+
+		@Nested
+		@DisplayName("성공 케이스")
+		class normalScenario {
+
+			@Test
+			@DisplayName("기존 사진 수정 + 내용 수정")
+			void updateAndReplacePhoto(){
+
+			}
+
+			@Test
+			@DisplayName("신규 사진 업로드 & 내용 수정")
+			void updateWithNewPhoto() throws IOException, IllegalArgumentException, NotFoundException, UnAuthorizedException {
+
+				// given
+
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(1L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(true)
+						.build();
+
+				MultipartFile photo = new MockMultipartFile("file", "new_test.jpg", "image/jpeg", "new_test".getBytes());
+
+				/**
+				 * 수정된 다이어리 (expected)
+				 */
+				Diary updatedDiary = Diary.builder()
+						.diaryId(1L)
+						.title(req.getTitle())
+						.userId(1L)
+						.content(req.getContent())
+						.secret(req.getSecret())
+						.report(0)
+						.imageUrl("https://example.com/new_test.jpg")
+						.build();
+
+				/**
+				 * 스터빙
+				 */
+				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
+				given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/new_test.jpg");
+				given(diaryRepository.save(any(Diary.class))).willReturn(updatedDiary);
+
+				// when
+				CreateDiaryResDto result = diaryService.updateDiary(req, photo);
+
+				// then
+
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 기존 사진 삭제 x
+				 * 신규 사진 업로드
+					 */
+				then(diaryRepository).should().findById(req.getDiaryId());
+				then(s3Upload).should(never()).fileDelete(any(String.class));
+				then(s3Upload).should().uploadFiles(photo, "diary");
+
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updatedDiary.getTitle());
+				BDDAssertions.then(result.getContent()).isEqualTo(updatedDiary.getContent());
+				BDDAssertions.then(result.getSecret()).isEqualTo(updatedDiary.getSecret());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedDiary.getImageUrl());
+
+
+
+			}
+
+			@Test
+			@DisplayName("사진 없이 내용 수정만")
+			void updatedWithNoPhoto(){
+
+			}
+
+			@Test
+			@DisplayName("기존 사진 삭제 + 내용 수정")
+			void updatedAndDeletePhoto(){
+
+			}
+
+		}
+
+		@Nested
+		@DisplayName("예외 케이스")
+		class exceptionScenario {
+
+			@Test
+			@DisplayName("다이어리 아이디 잘못된 경우")
+			void wrongDiaryId() {
+
+			}
+
+			@Test
+			@DisplayName("작성자랑 요청 사용자가 다른 경우")
+			void notTheAuthor() {
+
+			}
+
+		}
+
+
 	}
+
 }
