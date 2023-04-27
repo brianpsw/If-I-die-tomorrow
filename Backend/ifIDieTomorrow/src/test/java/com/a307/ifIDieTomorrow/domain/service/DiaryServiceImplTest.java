@@ -237,25 +237,44 @@ class DiaryServiceImplTest {
 		}
 	}
 
-	@Test
-	@DisplayName("유저가 작성한 다이러리 목록 가져오기")
-	void getDiaryByUserId() {
+	@Nested
+	@DisplayName("유저가 작성한 다이어리 목록 조회")
+	class GetDiaryByUserId {
 
-		// given
-		List<GetDiaryByUserResDto> expected = Arrays.asList(
-				new GetDiaryByUserResDto(1L, "Title 1", "Content 1", "imageUrl1", true, LocalDateTime.now(), LocalDateTime.now(), 1L),
-				new GetDiaryByUserResDto(2L, "Title 2", "Content 2", "imageUrl2", false, LocalDateTime.now(), LocalDateTime.now(), 2L)
-		);
+		@Nested
+		@DisplayName("성공 케이스")
+		class NormalScenario {
+
+			@Test
+			@DisplayName("유저가 작성한 다이러리 목록 가져오기")
+			void getDiaryByUserId() {
+
+				// given
+				List<GetDiaryByUserResDto> expected = Arrays.asList(
+						new GetDiaryByUserResDto(1L, "Title 1", "Content 1", "imageUrl1", true, LocalDateTime.now(), LocalDateTime.now(), 1L),
+						new GetDiaryByUserResDto(2L, "Title 2", "Content 2", "imageUrl2", false, LocalDateTime.now(), LocalDateTime.now(), 2L)
+				);
 
 
-		given(diaryRepository.findAllByUserIdWithCommentCount(user.getUserId())).willReturn(expected);
+				given(diaryRepository.findAllByUserIdWithCommentCount(user.getUserId())).willReturn(expected);
 
-		// when
-		List<GetDiaryByUserResDto> result = diaryService.getDiaryByUserId();
+				// when
+				List<GetDiaryByUserResDto> result = diaryService.getDiaryByUserId();
 
-		// then
-		BDDAssertions.then(result).isEqualTo(expected);
+				// then
+				BDDAssertions.then(result).isEqualTo(expected);
+			}
+		}
+
+		@Test
+		@DisplayName("해당 메서드는 서비스 단위에서 예외가 발생하지 않음")
+		void thereIsNoExceptionCase(){
+
+		}
 	}
+
+
+
 
 	@Nested
 	@DisplayName("개별 다이어리 조회")
