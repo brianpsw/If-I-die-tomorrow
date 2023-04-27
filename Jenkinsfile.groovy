@@ -55,8 +55,7 @@ pipeline {
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
-                    -Dsonar.sources=. \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.sources=Frontend/ \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN_FE}
                     '''
