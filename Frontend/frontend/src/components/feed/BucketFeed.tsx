@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
+import requests from '../../api/config';
 import {
   Container,
   CardWrap,
@@ -16,539 +17,73 @@ import {
   Date,
 } from './FeedEmotion';
 
-const mockData = [
-  {
-    bucketId: 1,
-    title: '인수경 귀여워 짜릿해',
-    content: '갓수경 멋있어',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 2,
-    title: '이거는 사진 없는 버킷',
-    content: '룰루랄라',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 3,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 4,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 5,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 6,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 7,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 8,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 9,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 10,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 11,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 12,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 13,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 14,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 15,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 16,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 17,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 18,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 19,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 20,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 21,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 22,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 23,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 24,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 25,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 26,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 27,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 28,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 29,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 30,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 31,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 32,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 33,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 34,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 35,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 36,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 37,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 38,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 39,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 40,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 41,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 42,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 43,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 44,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 45,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 46,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 47,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 48,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 49,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 50,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 51,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-  {
-    bucketId: 52,
-    title: '첫 번째 버킷',
-    content: '오늘은 첫 번째 버킷를 작성했습니다.',
-    imageUrl: 'https://picsum.photos/300/300/?random',
-    secret: false,
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    commentCount: 3,
-  },
-];
+interface Comment {
+  commentId: bigint;
+  content: string;
+  nickname: string;
+  created: string;
+  updated: string;
+}
+
+interface BucketItem {
+  bucket: {
+    bucketId: number;
+    nickname: string;
+    title: string;
+    content: string;
+    imageUrl: string;
+    secret: boolean;
+    created: string;
+    updated: string;
+  };
+  comments: Comment[];
+}
 
 function BucketFeed() {
-  const [items, setItems] = useState(mockData.slice(0, 10));
+  const [items, setItems] = useState<BucketItem[]>([]);
+  const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  const fetchMoreData = () => {
-    if (items.length >= mockData.length) {
-      setHasMore(false);
-      return;
+  const fetchData = async (page: number) => {
+    try {
+      const response = await axios.get(`${requests.base_url}/board/bucket`, {
+        params: {
+          page,
+          size: 10,
+          // secret: true,
+        },
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        const { data } = response.data;
+        setItems((prevItems: BucketItem[]) => {
+          const newData = data.filter(
+            (newItem: BucketItem) =>
+              !prevItems.some(
+                (prevItem: BucketItem) =>
+                  prevItem.bucket.bucketId === newItem.bucket.bucketId,
+              ),
+          );
+          return [...prevItems, ...newData];
+        });
+        setHasMore(!!data.length);
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    setTimeout(() => {
-      setItems(items.concat(mockData.slice(items.length, items.length + 10)));
-      console.log('무한 스크롤 작동, 새로운 데이터 로드');
-    }, 500);
+  };
+
+  useEffect(() => {
+    fetchData(page);
+  }, [page]);
+
+  const fetchMoreData = () => {
+    if (hasMore) {
+      setPage((prevPage) => prevPage + 1);
+      console.log('무한 스크롤 작동');
+    }
   };
 
   return (
@@ -560,32 +95,40 @@ function BucketFeed() {
         loader={<h4>Loading...</h4>}
         endMessage={
           <p style={{ textAlign: 'center' }}>
-            <b>모든 버킷를 불러왔습니다.</b>
+            <b>모든 버킷리스트를 불러왔습니다.</b>
           </p>
         }
       >
-        {items.map((bucket) => (
-          <CardWrap key={bucket.bucketId}>
-            <NickDateWrap>
-              <Nickname>닉네임</Nickname>
-              <Date>{bucket.createdAt}</Date>
-            </NickDateWrap>
-            <ContentImg>
-              <TitleContent>
-                <Title>{bucket.title}</Title>
-                <Content>{bucket.content}</Content>
-              </TitleContent>
-              <div>
-                {bucket.imageUrl && (
-                  <Image src={bucket.imageUrl} alt="bucket" />
-                )}
-              </div>
-            </ContentImg>
-            <Meta>
-              <Comments>댓글 {bucket.commentCount}개</Comments>
-            </Meta>
-          </CardWrap>
-        ))}
+        {items.length === 0 ? (
+          <div>게시물이 없습니다.</div>
+        ) : (
+          items.map((item: BucketItem, index: number) => {
+            const bucket = item.bucket;
+            const commentCount = item.comments.length;
+            return (
+              <CardWrap key={index}>
+                <NickDateWrap>
+                  <Nickname>{bucket.nickname}</Nickname>
+                  <Date>{bucket.created}</Date>
+                </NickDateWrap>
+                <ContentImg>
+                  <TitleContent>
+                    <Title>{bucket.title}</Title>
+                    <Content>{bucket.content}</Content>
+                  </TitleContent>
+                  <div>
+                    {bucket.imageUrl && bucket.imageUrl.length > 0 && (
+                      <Image src={bucket.imageUrl} alt="Bucket" />
+                    )}
+                  </div>
+                </ContentImg>
+                <Meta>
+                  <Comments>댓글 {commentCount}개</Comments>
+                </Meta>
+              </CardWrap>
+            );
+          })
+        )}
       </InfiniteScroll>
     </Container>
   );

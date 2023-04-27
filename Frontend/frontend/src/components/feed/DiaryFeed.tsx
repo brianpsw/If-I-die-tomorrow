@@ -117,7 +117,7 @@ function DiaryFeed() {
                     <Content>{diary.content}</Content>
                   </TitleContent>
                   <div>
-                    {diary.imageUrl && (
+                    {diary.imageUrl && diary.imageUrl.length > 0 && (
                       <Image src={diary.imageUrl} alt="Diary" />
                     )}
                   </div>
