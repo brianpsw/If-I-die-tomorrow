@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -66,7 +67,7 @@ public class PhotoController {
 	// APIs For PHOTO CLOUD //
 	//////////////////////////
 	
-	@PostMapping("") // 메타데이터의 takeAt? 추가 할 것
+	@PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}) // 메타데이터의 takeAt? 추가 할 것
 	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")
 	public ResponseEntity<CreatePhotoResDto> createPhoto(
 			@RequestPart CreatePhotoDto data,

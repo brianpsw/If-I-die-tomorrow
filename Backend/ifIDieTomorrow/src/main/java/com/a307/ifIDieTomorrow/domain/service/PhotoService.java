@@ -34,4 +34,6 @@ public interface PhotoService {
 	GetPhotoByCategoryResDto getPhotoByCategory (Long categoryId) throws NotFoundException, UnAuthorizedException;
 	
 	List<GetPhotoByCategoryResDto> getPhotoByUser ();
+
+	List<GetPhotoByCategoryResDto> getPhotoByUser (Long userId);
 }

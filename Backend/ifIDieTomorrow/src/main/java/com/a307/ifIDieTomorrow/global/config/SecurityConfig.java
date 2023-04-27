@@ -39,6 +39,7 @@ public class SecurityConfig {
             .cors(withDefaults())
             .csrf().disable()
             .authorizeRequests(authorize -> authorize
+                    .antMatchers("/after/**").permitAll()
                     .anyRequest().authenticated()
             )
             .oauth2Login(oauth2 -> oauth2
