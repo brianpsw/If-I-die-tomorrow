@@ -110,3 +110,7 @@ server:
     key-store: classpath:keystore.p12
     key-store-password: ${SSL_PASSWORD}      # 비밀번호를 입력한 경우
     key-store-type: PKCS12
+
+# admin 설정
+admin:
+  email: ${ADMIN_EMAIL}

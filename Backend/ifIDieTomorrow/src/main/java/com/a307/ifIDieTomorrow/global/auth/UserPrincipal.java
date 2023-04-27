@@ -65,4 +65,11 @@ public class UserPrincipal implements OAuth2User {
 
         return userPrincipal;
     }
+
+    public static UserPrincipal createAdmin(User user, Map<String, Object> attributes) {
+        UserPrincipal userPrincipal = createAdmin(user);
+        userPrincipal.setAttributes(attributes);
+
+        return userPrincipal;
+    }
 }

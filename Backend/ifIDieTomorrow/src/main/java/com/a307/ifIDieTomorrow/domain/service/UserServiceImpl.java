@@ -7,6 +7,7 @@ import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfoFactory;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.config.AdminProperties;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.OAuthProviderMisMatchException;
 import com.a307.ifIDieTomorrow.global.util.NicknameGenerator;
@@ -23,6 +24,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,6 +37,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     private final NicknameGenerator nicknameGenerator;
     private final UserRepository userRepository;
     private final WillService willService;
+    private final AdminProperties adminProperties;
 
 
     @Override
@@ -67,6 +72,10 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         } else {
             // DB에 저장된 user가 없으면
             principal = createUser(userInfo, providerType);
+        }
+        List<String> adminList = Arrays.asList(adminProperties.getEmail().split(","));
+        if(adminList.contains(principal.getEmail())){
+            return UserPrincipal.createAdmin(principal, user.getAttributes());
         }
 
         return UserPrincipal.create(principal, user.getAttributes());
