@@ -81,147 +81,160 @@ class DiaryServiceImplTest {
 		commentRepository.deleteAllInBatch();
 	}
 
-	@Test
-	@DisplayName("정상적으로 다이어리 생성되는 경우(이미지 o)")
-	void createDiaryWithPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
+	@DisplayName("다이어리 생성")
+	@Nested
+	class CreateDiaryTest {
 
-		// given
-		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
-		MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+		@DisplayName("성공 케이스")
+		@Nested
+		class NormalScenario {
 
-		Diary savedDiary = Diary.builder()
-				.diaryId(1L)
-				.title(req.getTitle())
-				.userId(1L)
-				.content(req.getContent())
-				.secret(req.getSecret())
-				.report(0)
-				.imageUrl("https://example.com/test.jpg")
-				.build();
+			@Test
+			@DisplayName("이미지 포함 다이어리 생성")
+			void createDiaryWithPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
 
-		/**
-		 * 정상 동작 stubbing
-		 */
-		given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
-		given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/test.jpg");
+				// given
+				CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
+				MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
 
-		// when
-		CreateDiaryResDto result = diaryService.createDiary(req, photo);
-		ArgumentCaptor<Diary> diaryCaptor = ArgumentCaptor.forClass(Diary.class);
+				Diary savedDiary = Diary.builder()
+						.diaryId(1L)
+						.title(req.getTitle())
+						.userId(1L)
+						.content(req.getContent())
+						.secret(req.getSecret())
+						.report(0)
+						.imageUrl("https://example.com/test.jpg")
+						.build();
 
-		// then
-		/**
-		 * 동작 검증
-		 * 사진 업로드가 되는가
-		 * 다이어리가 저장 되는가
-		 */
-		then(s3Upload).should().uploadFiles(photo, "diary");
-		then(diaryRepository).should().save(diaryCaptor.capture());
+				/**
+				 * 정상 동작 stubbing
+				 */
+				given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
+				given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/test.jpg");
 
-		/**
-		 * 전달된 인자 검증
-		 * 유저 아이디가 정상적으로 들어갔는가
-		 * 이미지가 정상적으로 업로드 되었는가
-		 */
-		Diary capturedDiary = diaryCaptor.getValue();
-		BDDAssertions.then(capturedDiary.getUserId()).isEqualTo(1L);
-		BDDAssertions.then(capturedDiary.getImageUrl()).isEqualTo("https://example.com/test.jpg");
+				// when
+				CreateDiaryResDto result = diaryService.createDiary(req, photo);
+				ArgumentCaptor<Diary> diaryCaptor = ArgumentCaptor.forClass(Diary.class);
 
-		/**
-		 * 결괏값 검증
-		 * 다이어리 아이디
-		 * 유저아이디
-		 * 이미지
-		 */
-		BDDAssertions.then(result.getDiaryId()).isEqualTo(savedDiary.getDiaryId());
-		BDDAssertions.then(result.getUserId()).isEqualTo(savedDiary.getUserId());
-		BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
-	}
+				// then
+				/**
+				 * 동작 검증
+				 * 사진 업로드가 되는가
+				 * 다이어리가 저장 되는가
+				 */
+				then(s3Upload).should().uploadFiles(photo, "diary");
+				then(diaryRepository).should().save(diaryCaptor.capture());
 
-	@Test
-	@DisplayName("정상적으로 다이어리 생성되는 경우(이미지 x)")
-	void createDiaryWithOutPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
+				/**
+				 * 전달된 인자 검증
+				 * 유저 아이디가 정상적으로 들어갔는가
+				 * 이미지가 정상적으로 업로드 되었는가
+				 */
+				Diary capturedDiary = diaryCaptor.getValue();
+				BDDAssertions.then(capturedDiary.getUserId()).isEqualTo(1L);
+				BDDAssertions.then(capturedDiary.getImageUrl()).isEqualTo("https://example.com/test.jpg");
 
-		// given
+				/**
+				 * 결괏값 검증
+				 * 다이어리 아이디
+				 * 유저아이디
+				 * 이미지
+				 */
+				BDDAssertions.then(result.getDiaryId()).isEqualTo(savedDiary.getDiaryId());
+				BDDAssertions.then(result.getUserId()).isEqualTo(savedDiary.getUserId());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
+			}
 
-		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, false);
+			@Test
+			@DisplayName("이미지 없이 다이어리 생성")
+			void createDiaryWithOutPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
 
-		Diary savedDiary = Diary.builder()
-				.diaryId(1L)
-				.title(req.getTitle())
-				.userId(1L)
-				.content(req.getContent())
-				.secret(req.getSecret())
-				.report(0)
-				.imageUrl("")
-				.build();
+				// given
 
+				CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, false);
 
-		/**
-		 * 정상 동작 stubbing
-		 */
-		given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
-
-
-		// when
-		CreateDiaryResDto result = diaryService.createDiary(req, null);
-		ArgumentCaptor<Diary> diaryCaptor = ArgumentCaptor.forClass(Diary.class);
-
-		// then
-		/**
-		 * 동작 검증
-		 * 사진이 업로드 되지 않는다
-		 * 다이어리가 저장 되는가
-		 */
-		then(s3Upload).shouldHaveNoInteractions();
-		then(diaryRepository).should().save(diaryCaptor.capture());
-
-		/**
-		 * 전달된 인자 검증
-		 * 유저 아이디가 정상적으로 들어갔는가
-		 * 이미지가 ""로 넘어가는가
-		 */
-		Diary capturedDiary = diaryCaptor.getValue();
-		BDDAssertions.then(capturedDiary.getUserId()).isEqualTo(1L);
-		BDDAssertions.then(capturedDiary.getImageUrl()).isEqualTo("");
-
-		/**
-		 * 결괏값 검증
-		 * 다이어리 아이디
-		 * 유저아이디
-		 * 이미지
-		 */
-		BDDAssertions.then(result.getDiaryId()).isEqualTo(savedDiary.getDiaryId());
-		BDDAssertions.then(result.getUserId()).isEqualTo(savedDiary.getUserId());
-		BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
-	}
+				Diary savedDiary = Diary.builder()
+						.diaryId(1L)
+						.title(req.getTitle())
+						.userId(1L)
+						.content(req.getContent())
+						.secret(req.getSecret())
+						.report(0)
+						.imageUrl("")
+						.build();
 
 
+				/**
+				 * 정상 동작 stubbing
+				 */
+				given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
 
-	@Test
-	@DisplayName("다이어리 생성 시 사진 누락됐을 경우 예외처리")
-	void createDiaryThrowsExceptionWhenNoPhoto() {
 
-		// given
-		CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
+				// when
+				CreateDiaryResDto result = diaryService.createDiary(req, null);
+				ArgumentCaptor<Diary> diaryCaptor = ArgumentCaptor.forClass(Diary.class);
 
-		// when
+				// then
+				/**
+				 * 동작 검증
+				 * 사진이 업로드 되지 않는다
+				 * 다이어리가 저장 되는가
+				 */
+				then(s3Upload).shouldHaveNoInteractions();
+				then(diaryRepository).should().save(diaryCaptor.capture());
 
-		// then
-		/**
-		 * 예외처리 검증
-		 */
-		BDDAssertions.thenThrownBy(() -> diaryService.createDiary(req, null))
-				.isInstanceOf(NoPhotoException.class)
-				.hasMessage("올리고자 하는 사진이 없습니다");
+				/**
+				 * 전달된 인자 검증
+				 * 유저 아이디가 정상적으로 들어갔는가
+				 * 이미지가 ""로 넘어가는가
+				 */
+				Diary capturedDiary = diaryCaptor.getValue();
+				BDDAssertions.then(capturedDiary.getUserId()).isEqualTo(1L);
+				BDDAssertions.then(capturedDiary.getImageUrl()).isEqualTo("");
 
-		/**
-		 * 동작 검증
-		 * 사진을 업로드하거나 다이어리를 저장하지 않는다.
-		 */
-		then(diaryRepository).shouldHaveNoInteractions();
-		then(s3Upload).shouldHaveNoInteractions();
+				/**
+				 * 결괏값 검증
+				 * 다이어리 아이디
+				 * 유저아이디
+				 * 이미지
+				 */
+				BDDAssertions.then(result.getDiaryId()).isEqualTo(savedDiary.getDiaryId());
+				BDDAssertions.then(result.getUserId()).isEqualTo(savedDiary.getUserId());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(savedDiary.getImageUrl());
+			}
+		}
 
+		@DisplayName("예외 케이스")
+		@Nested
+		class ExceptionScenario {
+
+			@Test
+			@DisplayName("사진 누락")
+			void ThrowsExceptionWhenNoPhoto() {
+
+				// given
+				CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
+
+				// when
+
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> diaryService.createDiary(req, null))
+						.isInstanceOf(NoPhotoException.class)
+						.hasMessage("올리고자 하는 사진이 없습니다");
+
+				/**
+				 * 동작 검증
+				 * 사진을 업로드하거나 다이어리를 저장하지 않는다.
+				 */
+				then(diaryRepository).shouldHaveNoInteractions();
+				then(s3Upload).shouldHaveNoInteractions();
+
+			}
+		}
 	}
 
 	@Test
@@ -244,68 +257,86 @@ class DiaryServiceImplTest {
 		BDDAssertions.then(result).isEqualTo(expected);
 	}
 
-	@Test
-	@DisplayName("다이어리 아이디로 다이어리 조회 성공")
-	void getDiaryById() throws NotFoundException {
+	@Nested
+	@DisplayName("개별 다이어리 조회")
+	class GetDiaryByIdTest {
 
-		// given
-		Long diaryId = 1L;
-		GetDiaryResDto diaryDto = new GetDiaryResDto(1L, 1L, "userNickname", "diaryTitle", "imageUrl", "diaryContent", true, LocalDateTime.now(), LocalDateTime.now());
-		List<GetCommentResDto> comments = List.of(
-				new GetCommentResDto(1L, "Test Comment 1", 2L, "user 2 nickname", LocalDateTime.now(), LocalDateTime.now()),
-				new GetCommentResDto(2L, "Test Comment 2", 3L, "user 3 nickname", LocalDateTime.now(), LocalDateTime.now())
-		);
+		@Nested
+		@DisplayName("성공 케이스")
+		class NormalScenario {
 
-		given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.of(diaryDto));
-		given(commentRepository.findCommentsByTypeId(diaryId, true)).willReturn(comments);
+			@Test
+			@DisplayName("다이어리 아이디로 다이어리 조회 성공")
+			void getDiaryById() throws NotFoundException {
 
-		// when
-		HashMap<String, Object> result = diaryService.getDiaryById(diaryId);
+				// given
+				Long diaryId = 1L;
+				GetDiaryResDto diaryDto = new GetDiaryResDto(1L, 1L, "userNickname", "diaryTitle", "imageUrl", "diaryContent", true, LocalDateTime.now(), LocalDateTime.now());
+				List<GetCommentResDto> comments = List.of(
+						new GetCommentResDto(1L, "Test Comment 1", 2L, "user 2 nickname", LocalDateTime.now(), LocalDateTime.now()),
+						new GetCommentResDto(2L, "Test Comment 2", 3L, "user 3 nickname", LocalDateTime.now(), LocalDateTime.now())
+				);
 
-		// then
-		/**
-		 * 결괏값 검증
-		 * 다이어리 일치 여부
-		 * 댓글 일치 여부
-		 */
-		BDDAssertions.then(result.get("diary")).isEqualTo(diaryDto);
-		BDDAssertions.then(result.get("comments")).isEqualTo(comments);
-		/**
-		 * 동작 검증
-		 * 다이어리 조회
-		 * 댓글 조회
-		 */
-		then(diaryRepository).should().findByIdWithUserNickName(diaryId);
-		then(commentRepository).should().findCommentsByTypeId(diaryId, true);
+				given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.of(diaryDto));
+				given(commentRepository.findCommentsByTypeId(diaryId, true)).willReturn(comments);
+
+				// when
+				HashMap<String, Object> result = diaryService.getDiaryById(diaryId);
+
+				// then
+				/**
+				 * 결괏값 검증
+				 * 다이어리 일치 여부
+				 * 댓글 일치 여부
+				 */
+				BDDAssertions.then(result.get("diary")).isEqualTo(diaryDto);
+				BDDAssertions.then(result.get("comments")).isEqualTo(comments);
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 댓글 조회
+				 */
+				then(diaryRepository).should().findByIdWithUserNickName(diaryId);
+				then(commentRepository).should().findCommentsByTypeId(diaryId, true);
+			}
+
+		}
+
+		@Nested
+		@DisplayName("예외 케이스")
+		class ExceptionScenario {
+
+			@Test
+			@DisplayName("다이어리 아이디가 잘못된 예외처리")
+			void ThrowsExceptionWhenWrongDiaryId(){
+
+				// given
+				Long diaryId = 1L;
+				given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.empty());
+
+				// when
+
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> diaryService.getDiaryById(1L))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 다이어리 아이디입니다!");
+
+				/**
+				 * 동작 검증
+				 * 다이어리 조회를 한다
+				 * 댓글 조회를 하지 않는다(예외 발생)
+				 */
+				then(diaryRepository).should().findByIdWithUserNickName(diaryId);
+				then(commentRepository).shouldHaveNoInteractions();
+
+			}
+
+		}
 	}
 
-	@Test
-	@DisplayName("다이어리 아이디가 잘못된 경우 다이어리 조회 예외처리")
-	void getDiaryByIdThrowsExceptionWhenWrongDiaryId(){
-
-		// given
-		Long diaryId = 1L;
-		given(diaryRepository.findByIdWithUserNickName(diaryId)).willReturn(Optional.empty());
-
-		// when
-
-		// then
-		/**
-		 * 예외처리 검증
-		 */
-		BDDAssertions.thenThrownBy(() -> diaryService.getDiaryById(1L))
-				.isInstanceOf(NotFoundException.class)
-				.hasMessage("잘못된 다이어리 아이디입니다!");
-
-		/**
-		 * 동작 검증
-		 * 다이어리 조회를 한다
-		 * 댓글 조회를 하지 않는다(예외 발생)
-		 */
-		then(diaryRepository).should().findByIdWithUserNickName(diaryId);
-		then(commentRepository).shouldHaveNoInteractions();
-
-	}
 
 	@Test
 	@DisplayName("사진이 있는 다이어리 삭제 성공")
@@ -414,11 +445,11 @@ class DiaryServiceImplTest {
 
 	@Nested
 	@DisplayName("다이어리 업데이트")
-	class updateDiary {
+	class UpdateDiaryTest {
 
 		@Nested
 		@DisplayName("성공 케이스")
-		class normalScenario {
+		class NormalScenario {
 
 			@Test
 			@DisplayName("기존 사진 수정 + 내용 수정")
@@ -519,7 +550,7 @@ class DiaryServiceImplTest {
 
 		@Nested
 		@DisplayName("예외 케이스")
-		class exceptionScenario {
+		class ExceptionScenario {
 
 			@Test
 			@DisplayName("다이어리 아이디 잘못된 경우")
