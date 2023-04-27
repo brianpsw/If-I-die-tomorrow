@@ -100,6 +100,10 @@ cors:
 
 # ssl 설정
 server:
+  servlet:
+    session:
+      cookie:
+        same-site: none
   port: 8443
   ssl:
     enabled: true
