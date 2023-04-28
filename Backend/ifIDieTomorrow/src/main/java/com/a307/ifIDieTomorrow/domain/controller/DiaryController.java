@@ -58,7 +58,7 @@ public class DiaryController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(diaryService.deleteDiaryByDiaryId(diaryId));
 	}
 
-	@PutMapping("/{diaryId}")
+	@PutMapping("")
 	@Operation(summary = "다이어리 수정하기", description = "다이어리를 수정합니다. 사진을 수정하고자 할 경우 기존 사진은 삭제 되고 새로운 사진이 업로드 됩니다")
 	public ResponseEntity<CreateDiaryResDto> updateDiary(
 			@RequestPart(value = "data") UpdateDiaryReqDto data,
