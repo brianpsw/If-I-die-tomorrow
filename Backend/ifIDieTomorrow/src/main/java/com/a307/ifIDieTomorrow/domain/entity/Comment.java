@@ -33,4 +33,9 @@ public class Comment extends BaseEntity{
 
 	@Column(nullable = false)
 	private Long typeId;
+
+	public void updateComment(String content){
+		this.content = content;
+	}
+
 }
