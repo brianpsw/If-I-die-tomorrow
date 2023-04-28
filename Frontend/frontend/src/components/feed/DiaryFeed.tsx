@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import requests from '../../api/config';
+import DiaryDetail from '../../pages/Diary/DiaryDetail';
+import { Link } from 'react-router-dom';
 import {
   Container,
   CardWrap,
@@ -106,34 +108,36 @@ function DiaryFeed() {
             const diary = item.diary;
             const commentCount = item.comments.length;
             return (
-              <CardWrap key={index}>
-                <NickDateWrap>
-                  <Nickname>{diary.nickname}</Nickname>
-                  <DateWrap>{diary.created}</DateWrap>
-                </NickDateWrap>
-                <ContentImg>
-                  <TitleContent
-                    hasImage={Boolean(
-                      diary.imageUrl && diary.imageUrl !== '""',
-                    )}
-                  >
-                    <Title>{diary.title}</Title>
-                    <Content>
-                      {diary.content.length > 40
-                        ? diary.content.substring(0, 40) + '⋯'
-                        : diary.content}
-                    </Content>
-                  </TitleContent>
-                  <div>
-                    {diary.imageUrl && diary.imageUrl !== '""' && (
-                      <Image src={diary.imageUrl} alt="Diary" />
-                    )}
-                  </div>
-                </ContentImg>
-                <Meta>
-                  <Comments>댓글 {commentCount}개</Comments>
-                </Meta>
-              </CardWrap>
+              <Link to={`/diary/${diary.diaryId}`} key={index}>
+                <CardWrap key={index}>
+                  <NickDateWrap>
+                    <Nickname>{diary.nickname}</Nickname>
+                    <DateWrap>{diary.created}</DateWrap>
+                  </NickDateWrap>
+                  <ContentImg>
+                    <TitleContent
+                      hasImage={Boolean(
+                        diary.imageUrl && diary.imageUrl !== '""',
+                      )}
+                    >
+                      <Title>{diary.title}</Title>
+                      <Content>
+                        {diary.content.length > 40
+                          ? diary.content.substring(0, 40) + '⋯'
+                          : diary.content}
+                      </Content>
+                    </TitleContent>
+                    <div>
+                      {diary.imageUrl && diary.imageUrl !== '""' && (
+                        <Image src={diary.imageUrl} alt="Diary" />
+                      )}
+                    </div>
+                  </ContentImg>
+                  <Meta>
+                    <Comments>댓글 {commentCount}개</Comments>
+                  </Meta>
+                </CardWrap>
+              </Link>
             );
           })
         )}

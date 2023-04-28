@@ -8,6 +8,7 @@ import Button from '../../components/common/Button';
 import DiaryFeed from '../../components/feed/DiaryFeed';
 import BucketFeed from '../../components/feed/BucketFeed';
 import { useNavigate, useLocation } from 'react-router-dom';
+import TopButton from '../../components/common/ScrollToTopButton';
 
 const Background = styled.div`
   background-image: url(${backgroundImg});
@@ -17,6 +18,7 @@ const Background = styled.div`
   min-height: 100vh;
   width: 100%;
   position: relative;
+  background-attachment: fixed;
 `;
 
 const Container = styled.div`
@@ -42,9 +44,26 @@ const Tab = styled.span<{ isSelected: boolean }>`
 function Feed() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const [feedType, setFeedType] = useState<'diary' | 'bucketList'>(
     'bucketList',
   );
+
+  const handleScroll = () => {
+    const currentScrollPos = window.pageYOffset;
+    setShowScrollToTop(currentScrollPos > 400);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -79,6 +98,7 @@ function Feed() {
         </FeedTab>
         {feedType === 'diary' ? <DiaryFeed /> : <BucketFeed />}
       </Container>
+      {showScrollToTop && <TopButton scrollToTop={scrollToTop} />}
     </Background>
   );
 }
