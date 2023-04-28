@@ -72,13 +72,8 @@ const CommentWrap = styled.div`
   max-width: calc(100% - 48px);
   border-radius: 10px;
   color: white;
-  border: solid 1px white;
+  // border: solid 1px white;
 `;
-
-// const CommentInput = styled.div`
-//   ${tw`mb-6 flex mx-auto`}
-//   color: white;
-// `;
 
 const CommentBox = styled.div`
   ${tw`mb-2 p-6 flex`}
@@ -100,20 +95,6 @@ const StyledInput = styled.input`
 const StyledButton = styled.button`
   ${tw`bg-blue-500 text-white px-4 py-2 rounded`}
 `;
-
-// const QuestionWrapper = styled.div`
-//   ${tw`w-full`}
-// `;
-
-// const SurveyText = styled.p`
-//   text-align: center;
-//   color: #fff;
-//   font-size: 12px;
-// `;
-
-// const StyledButton = styled(Button)`
-//   ${tw`mt-6 mb-12`}
-// `;
 
 function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
@@ -183,8 +164,12 @@ function CommentForm({ diaryId }: { diaryId: number }) {
     e.preventDefault();
     try {
       const response = await axios.post(
-        `${requests.base_url}/diary/${diaryId}/comment`,
-        { content },
+        `${requests.base_url}/board/comment`, // 수정된 API 엔드포인트
+        {
+          content,
+          type: true, // type을 true로 설정
+          typeId: diaryId, // typeId를 diaryId로 설정
+        },
         { withCredentials: true },
       );
       if (response.status === 201) {
