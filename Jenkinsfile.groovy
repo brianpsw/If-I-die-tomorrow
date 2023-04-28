@@ -24,6 +24,18 @@ pipeline {
             }
             steps {
                 echo 'BE Testing...'
+                sh """
+                git checkout ${env.gitlabTargetBranch}
+                git merge ${env.gitlabSourceBranch}
+                cd Backend/ifIDieTomorrow
+                chmod +x gradlew
+                ./gradlew clean test
+                """
+            }
+            post {
+                always {
+                    junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
+                }
             }
         }
 
@@ -36,6 +48,12 @@ pipeline {
             }
             steps {
                 echo 'FE Testing...'
+                sh """
+                git checkout ${env.gitlabTargetBranch}
+                git merge ${env.gitlabSourceBranch}
+                cd Frontend/frontend
+                npm install --force && CI= npm run build
+                """
             }
         }
 
@@ -55,8 +73,7 @@ pipeline {
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
-                    -Dsonar.sources=. \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.sources=Frontend/ \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN_FE}
                     '''
@@ -182,30 +199,7 @@ pipeline {
                 }
             }
         }
-        stage('BE Build') {
-            when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
-            }
-            steps {
-
-                sh '''
-                cd Backend/ifIDieTomorrow
-                chmod +x gradlew
-                ./gradlew clean build
-                '''
-            }
-        }
-
+        
         stage('FE Dockerizing'){
             when {
                 anyOf{
@@ -285,7 +279,7 @@ pipeline {
 
             }
             steps {
-                sh 'docker run -d -p 8000:8080 --name back-springboot --env-file .env --network my-network back-springboot'
+                sh 'docker run -d -p 8000:8443 --name back-springboot --env-file .env --network my-network back-springboot'
             }
 
             post {
