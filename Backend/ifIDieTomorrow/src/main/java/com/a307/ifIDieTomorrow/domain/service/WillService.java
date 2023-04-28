@@ -15,4 +15,6 @@ public interface WillService {
 	Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException;
 	
 	Long updateContent (String content);
+	
+	Long updateVideo (MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException;
 }

@@ -43,4 +43,11 @@ public class WillController {
 		return ResponseEntity.status(HttpStatus.OK).body(willService.updateContent(content));
 	}
 	
+	@PatchMapping("/video")
+	@Operation(summary = "유언장 영상 수정", description = "유저의 영상을 수정합니다.")
+	public ResponseEntity<Long> updateVideo(
+			@RequestPart MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException {
+		return ResponseEntity.status(HttpStatus.OK).body(willService.updateVideo(video));
+	}
+	
 }
