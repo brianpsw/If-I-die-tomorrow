@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "receiver")
-public class Receiver extends BaseEntity {
+public class Receiver {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
