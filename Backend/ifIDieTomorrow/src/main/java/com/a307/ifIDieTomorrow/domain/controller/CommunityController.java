@@ -2,6 +2,7 @@ package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
 import com.a307.ifIDieTomorrow.domain.service.CommunityService;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -45,6 +46,14 @@ public class CommunityController {
 			@RequestBody CreateCommentReqDto data
 	){
 		return ResponseEntity.status(HttpStatus.CREATED).body(communityService.createComment(data));
+	}
+
+	@PutMapping("/comment")
+	@Operation(summary = "댓글 수정", description = "댓글 수정입니다")
+	public ResponseEntity<CreateCommentResDto> updateComment(
+			@RequestBody UpdateCommentReqDto data
+	) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(communityService.updateComment(data));
 	}
 
 	@DeleteMapping("/comment/{commentId}")
