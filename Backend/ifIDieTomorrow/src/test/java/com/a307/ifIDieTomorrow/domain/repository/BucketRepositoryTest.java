@@ -16,7 +16,6 @@ import org.springframework.data.domain.PageRequest;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -234,7 +233,7 @@ public class BucketRepositoryTest {
 		);
 		
 		// When
-		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalseAneReportUnderLimit(PageRequest.of(0, 10), 5);
+		Page<GetBucketResDto> list = testBucketRepository.findAllBySecretIsFalseAndReportUnderLimit(PageRequest.of(0, 10), 5);
 
 		// Then
 		assertThat(list)

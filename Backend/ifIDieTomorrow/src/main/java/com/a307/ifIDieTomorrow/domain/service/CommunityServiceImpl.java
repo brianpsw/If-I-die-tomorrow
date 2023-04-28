@@ -43,7 +43,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAneReportUnderLimit(pageable, MAX_REPORT);
+		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetBucketWithCommentDto> data = result
