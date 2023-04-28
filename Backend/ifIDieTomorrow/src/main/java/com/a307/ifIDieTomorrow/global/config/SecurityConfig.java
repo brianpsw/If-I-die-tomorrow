@@ -1,3 +1,4 @@
+
 package com.a307.ifIDieTomorrow.global.config;
 
 import com.a307.ifIDieTomorrow.domain.service.UserServiceImpl;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.ArrayList;
@@ -37,20 +39,21 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(withDefaults())
-            .csrf().disable()
-            .authorizeRequests(authorize -> authorize
-                    .antMatchers("/after/**").permitAll()
-                    .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
-                    .anyRequest().authenticated()
-            )
-            .oauth2Login(oauth2 -> oauth2
-                    .authorizationEndpoint().authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
-                    .and()
-                    .userInfoEndpoint(userInfo -> userInfo
-                            .userService(oAuth2UserService))
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
-                    .failureHandler(oAuth2AuthenticationFailureHandler));
+                .cors(withDefaults())
+                .csrf().disable()
+                .authorizeRequests(authorize -> authorize
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                        .antMatchers("/after/**").permitAll()
+                        .antMatchers("/admin/**").hasAnyAuthority(RoleType.ADMIN.getCode())
+                        .anyRequest().authenticated()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .authorizationEndpoint().authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository)
+                        .and()
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService))
+                        .successHandler(oAuth2AuthenticationSuccessHandler)
+                        .failureHandler(oAuth2AuthenticationFailureHandler));
 
 
         return http.build();
@@ -63,10 +66,12 @@ public class SecurityConfig {
         headers.add(HttpHeaders.SET_COOKIE);
 
         CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedHeaders(Arrays.asList(corsProperties.getAllowedHeaders().split(",")));
         configuration.setAllowedOrigins(Arrays.asList(corsProperties.getAllowedOrigins().split(",")));
         configuration.setAllowedMethods(Arrays.asList(corsProperties.getAllowedMethods().split(",")));
         configuration.setAllowCredentials(true);
         configuration.setExposedHeaders(headers);
+        configuration.setMaxAge(corsProperties.getMaxAge());
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
