@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ReceiverRepository extends JpaRepository<Receiver, Long> {
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto" +
-			"(receiverId, name, phoneNumber, createdAt, updatedAt) " +
+			"(receiverId, name, phoneNumber) " +
 			"FROM Receiver " +
 			"WHERE userId = :userId " )
 	List<CreateReceiverResDto> findAllByUserId (@Param("userId") Long userId);
