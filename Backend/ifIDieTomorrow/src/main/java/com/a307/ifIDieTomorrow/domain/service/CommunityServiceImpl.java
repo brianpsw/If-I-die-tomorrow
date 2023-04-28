@@ -3,6 +3,7 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
@@ -124,9 +125,35 @@ public class CommunityServiceImpl implements CommunityService{
 		commentRepository.delete(comment);
 
 		return commentId;
-
-
-
-
 	}
+
+	@Override
+	public CreateCommentResDto updateComment(UpdateCommentReqDto req) throws NotFoundException, UnAuthorizedException {
+
+		//		댓글
+		Comment comment = commentRepository.findById(req.getCommentId())
+				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+
+		//		유저 정보 파싱
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long userId = principal.getUserId();
+
+//		작성자 일치 여부 검증
+		if (!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다");
+
+		comment.updateComment(req.getContent());
+		Comment updatedComment = commentRepository.save(comment);
+
+
+		return CreateCommentResDto.builder()
+				.commentId(updatedComment.getCommentId())
+				.content(updatedComment.getContent())
+				.nickname(principal.getNickname())
+				.type(updatedComment.getType())
+				.typeId(updatedComment.getTypeId())
+				.createdAt(updatedComment.getCreatedAt())
+				.updatedAt(updatedComment.getUpdatedAt())
+				.build();
+	}
+
 }
