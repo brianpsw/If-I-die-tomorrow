@@ -4,6 +4,9 @@ import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.ReportReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.ReportResDto;
+import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 
@@ -21,4 +24,6 @@ public interface CommunityService {
 	Long deleteComment(Long commentId) throws NotFoundException, UnAuthorizedException;
 
 	CreateCommentResDto updateComment(UpdateCommentReqDto req) throws NotFoundException, UnAuthorizedException;
+
+	ReportResDto createReport(ReportReqDto req) throws NotFoundException, BadRequestException;
 }
