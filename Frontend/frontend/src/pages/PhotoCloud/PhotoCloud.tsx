@@ -12,7 +12,7 @@ function PhotoCloud() {
   const [openCaptionEditModal, setOpenCaptionEditModal] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('6');
+  const [selectedCategory, setSelectedCategory] = useState('4');
 
   const handleEditOrDeleteModalOpen = () => {
     setOpenEditOrDeleteModal(true);
@@ -50,7 +50,7 @@ function PhotoCloud() {
         />
       ) : null}
       <PhotoCloudCategory
-      // setSelectedCategory={setSelectedCategory}
+        setSelectedCategory={setSelectedCategory}
       ></PhotoCloudCategory>
       <PhotoCloudDetail
         setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}

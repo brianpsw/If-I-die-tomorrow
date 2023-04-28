@@ -64,6 +64,7 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
   //   ],
   // };
 
+  // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -83,7 +84,7 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [props.selectedCategory]);
 
   const handleEditOrDeleteModalOpen = (id: number) => {
     props.setOpenEditOrDeleteModal(true);
