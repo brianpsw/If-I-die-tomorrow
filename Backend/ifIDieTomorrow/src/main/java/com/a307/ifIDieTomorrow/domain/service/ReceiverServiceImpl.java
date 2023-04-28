@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,6 +28,11 @@ public class ReceiverServiceImpl implements ReceiverService {
 				.build();
 		
 		return CreateReceiverResDto.toDto(receiverRepository.save(receiver));
+	}
+	
+	@Override
+	public List<CreateReceiverResDto> getReceiver () {
+		return receiverRepository.findAllByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 	
 }
