@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-
+import { css } from 'styled-components';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 
-//
-import EditModal from '../../components/common/EditModal';
 import requests from '../../api/config';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
@@ -16,8 +14,17 @@ import uploadIcon from '../../assets/icons/camera_alt.svg';
 const Container = styled.div`
   ${tw`flex flex-col items-center w-full my-2`}
 `;
+// const BucketContainer = styled.div<{ state: string; isClicked: boolean }>`
+//   ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1 border-l-8`}
+//   border-color: ${(props) => (props.state === 'inProcess' ? 'green-300' : 'green-800')};
+//   ${(props) =>
+//     props.isClicked &&
+//     css`
+//       border-color: yellow-500;
+//     `}
+// `;
 const BucketContainer = styled.div`
-  ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1`}
+  ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1 border-l-8`}
 `;
 const FormContainer = styled.div`
   ${tw`flex flex-col w-full bg-gray-100/80 mt-4 pt-4 px-4`}
@@ -35,7 +42,10 @@ const FeedCheckContainer = styled.div`
   ${tw`flex items-center w-full h-[24px] my-2`}
 `;
 interface BucketListItemProps {
-  setOpenEditModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedBucketId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedBucketContent: React.Dispatch<React.SetStateAction<string>>;
+  // 버킷 정보 가져오기
 }
 function BucketListItem(props: BucketListItemProps) {
   //Bucket controller
@@ -50,6 +60,9 @@ function BucketListItem(props: BucketListItemProps) {
   const [completeContent, setCompleteContent] = useState('');
   const [completeDate, setCompleteDate] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const handleSubmit = () => {
+    //버킷 완료 api 연결
+  };
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -71,18 +84,17 @@ function BucketListItem(props: BucketListItemProps) {
     setCompleteDate(transformedDate);
   };
 
-  //modal controller
-  // const [openEditModal, setOpenEditModal] = useState(false);
   const handleEditModalOpen = () => {
-    props.setOpenEditModal(true);
+    props.setOpenEditOrDeleteModal(true);
+    //해당 버킷 id 전달
+    props.setSelectedBucketId('');
+    //해당 버킷 content 전달
+    props.setSelectedBucketContent('');
   };
-  // const onLogoutClose = () => {
-  //   setOpenEditModal(false);
-  // };
 
   return (
     <Container>
-      {/* {openEditModal ? <EditModal onClose={onLogoutClose} /> : null} */}
+      {/* <BucketContainer state={BucketState}> isClicked={isClicked}*/}
       <BucketContainer>
         {isCompleted ? (
           <img onClick={handleBucketClick} src={CheckedIcon} alt="" />
@@ -149,7 +161,7 @@ function BucketListItem(props: BucketListItemProps) {
             <span className="text-p1 mx-2">피드 공개여부 체크</span>
           </FeedCheckContainer>
           <div className="flex w-full justify-center my-4">
-            <Button color="#B3E9EB" size="sm">
+            <Button onClick={handleSubmit} color="#B3E9EB" size="sm">
               작성 완료
             </Button>
           </div>
