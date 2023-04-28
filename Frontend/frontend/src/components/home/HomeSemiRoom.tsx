@@ -1,10 +1,13 @@
 import React, { useState, Suspense } from 'react';
 
+import { useNavigate } from 'react-router';
+
 import * as THREE from 'three';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 
 function HomeSemiRoom() {
+  const navigate = useNavigate();
   const room3d = useGLTF('models/low_poly_room.glb', true);
   const heart = useGLTF('models/heart.glb', true);
   const meshes = [...room3d.scene.children, ...heart.scene.children];
@@ -13,11 +16,13 @@ function HomeSemiRoom() {
   const raycaster = new THREE.Raycaster();
 
   const clickRoom = () => {
-    console.log('room click');
+    console.log('Room click');
+    // navigate('/photo-cloud/create-category');
   };
 
   const clickHeart = () => {
-    console.log('heart click');
+    // console.log('포토로 가자');
+    navigate('/photo-cloud');
   };
 
   // 카메라랑 마우스랑 교차되서 제일 위에 있는 물체만 선택되도록 하고 싶은데..안돼
@@ -67,7 +72,7 @@ function HomeSemiRoom() {
           onClick={clickRoom}
         />
 
-        {/* <OrbitControls /> */}
+        <OrbitControls />
       </Suspense>
     </Canvas>
   );
