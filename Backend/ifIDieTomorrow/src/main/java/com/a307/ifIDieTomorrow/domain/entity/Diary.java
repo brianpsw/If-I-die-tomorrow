@@ -48,6 +48,13 @@ public class Diary extends BaseEntity{
 		this.content = content;
 		this.imageUrl = imageUrl;
 		this.secret = secret;
+	}
 
+	public void reportDiary(){
+		this.report ++;
+	}
+
+	public void toggleSecret(){
+		this.secret = !this.secret;
 	}
 }
