@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import requests from '../../api/config';
+import BucketDetail from '../../pages/Bucket/BucketDetail';
+import { Link } from 'react-router-dom';
 import {
   Container,
   CardWrap,
@@ -106,34 +108,36 @@ function BucketFeed() {
             const bucket = item.bucket;
             const commentCount = item.comments.length;
             return (
-              <CardWrap key={index}>
-                <NickDateWrap>
-                  <Nickname>{bucket.nickname}</Nickname>
-                  <DateWrap>{bucket.created}</DateWrap>
-                </NickDateWrap>
-                <ContentImg>
-                  <TitleContent
-                    hasImage={Boolean(
-                      bucket.imageUrl && bucket.imageUrl !== '""',
-                    )}
-                  >
-                    <Title>{bucket.title}</Title>
-                    <Content>
-                      {bucket.content.length > 40
-                        ? bucket.content.substring(0, 40) + '⋯'
-                        : bucket.content}
-                    </Content>
-                  </TitleContent>
-                  <div>
-                    {bucket.imageUrl && bucket.imageUrl.length > 0 && (
-                      <Image src={bucket.imageUrl} alt="Bucket" />
-                    )}
-                  </div>
-                </ContentImg>
-                <Meta>
-                  <Comments>댓글 {commentCount}개</Comments>
-                </Meta>
-              </CardWrap>
+              <Link to={`/bucket/${bucket.bucketId}`} key={index}>
+                <CardWrap key={index}>
+                  <NickDateWrap>
+                    <Nickname>{bucket.nickname}</Nickname>
+                    <DateWrap>{bucket.created}</DateWrap>
+                  </NickDateWrap>
+                  <ContentImg>
+                    <TitleContent
+                      hasImage={Boolean(
+                        bucket.imageUrl && bucket.imageUrl !== '""',
+                      )}
+                    >
+                      <Title>{bucket.title}</Title>
+                      <Content>
+                        {bucket.content.length > 40
+                          ? bucket.content.substring(0, 40) + '⋯'
+                          : bucket.content}
+                      </Content>
+                    </TitleContent>
+                    <div>
+                      {bucket.imageUrl && bucket.imageUrl !== '""' && (
+                        <Image src={bucket.imageUrl} alt="Bucket" />
+                      )}
+                    </div>
+                  </ContentImg>
+                  <Meta>
+                    <Comments>댓글 {commentCount}개</Comments>
+                  </Meta>
+                </CardWrap>
+              </Link>
             );
           })
         )}
