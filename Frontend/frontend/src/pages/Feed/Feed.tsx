@@ -18,6 +18,7 @@ const Background = styled.div`
   min-height: 100vh;
   width: 100%;
   position: relative;
+  background-attachment: fixed;
 `;
 
 const Container = styled.div`
