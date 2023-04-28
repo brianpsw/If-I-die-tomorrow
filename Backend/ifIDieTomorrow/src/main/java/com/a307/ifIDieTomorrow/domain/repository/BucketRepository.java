@@ -37,8 +37,9 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"JOIN User u " +
 			"ON b.userId = u.userId " +
 			"WHERE b.secret = false " +
+			"AND b.report < :reportLimit " +
 			"ORDER BY b.createdAt DESC")
-	Page<GetBucketResDto> findAllBySecretIsFalse(Pageable pageable);
+	Page<GetBucketResDto> findAllBySecretIsFalseAneReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto" +
 			"(b.bucketId, b.userId, u.nickname, b.title, b.content, b.complete, b.imageUrl, b.secret, b.createdAt, b.updatedAt) " +
