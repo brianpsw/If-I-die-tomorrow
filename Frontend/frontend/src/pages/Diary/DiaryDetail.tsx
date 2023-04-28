@@ -36,6 +36,10 @@ const Background = styled.div`
   background-attachment: fixed;
 `;
 
+const Container = styled.div`
+  ${tw`pt-12 pb-24`}
+`;
+
 const DiaryWrap = styled.div`
   ${tw`mb-6 p-6 flex flex-col mx-auto`}
   max-width: calc(100% - 48px);
@@ -130,29 +134,31 @@ function DiaryDetail() {
 
   return (
     <Background>
-      <DiaryWrap>
-        <DiaryHeader>
-          <div>
-            <h2 className="text-h3">{diary.title}</h2>
-            <Nickname>{diary.nickname}</Nickname>
-          </div>
-          <DotIcon>
-            <img src={TreeDot} alt="" />
-          </DotIcon>
-        </DiaryHeader>
-        <DiaryImg>
-          {diary.imageUrl && diary.imageUrl !== '""' && (
-            <img src={diary.imageUrl} alt="Diary" />
-          )}
-        </DiaryImg>
-        <DiaryText>{diary.content}</DiaryText>
-      </DiaryWrap>
-      <CommentWrap>
-        <CommentForm diaryId={diary.diaryId} />
-        {comments.map((comment, index) => (
-          <Comment key={index} comment={comment} />
-        ))}
-      </CommentWrap>
+      <Container>
+        <DiaryWrap>
+          <DiaryHeader>
+            <div>
+              <h2 className="text-h3">{diary.title}</h2>
+              <Nickname>{diary.nickname}</Nickname>
+            </div>
+            <DotIcon>
+              <img src={TreeDot} alt="" />
+            </DotIcon>
+          </DiaryHeader>
+          <DiaryImg>
+            {diary.imageUrl && diary.imageUrl !== '""' && (
+              <img src={diary.imageUrl} alt="Diary" />
+            )}
+          </DiaryImg>
+          <DiaryText>{diary.content}</DiaryText>
+        </DiaryWrap>
+        <CommentWrap>
+          <CommentForm diaryId={diary.diaryId} />
+          {comments.map((comment, index) => (
+            <Comment key={index} comment={comment} />
+          ))}
+        </CommentWrap>
+      </Container>
     </Background>
   );
 }
