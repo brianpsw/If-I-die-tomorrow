@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import backgroundImg from '../../assets/images/diary_bg.png';
+import TreeDot from '../../assets/icons/three_dot.svg';
 
 interface Comment {
   commentId: bigint;
@@ -21,6 +25,81 @@ interface Diary {
   updated: string;
   nickname: string;
 }
+
+const Background = styled.div`
+  background-image: url(${backgroundImg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  background-attachment: fixed;
+`;
+
+const DiaryWrap = styled.div`
+  ${tw`mb-6 p-6 flex flex-col mx-auto`}
+  max-width: calc(100% - 48px);
+  background-color: rgba(246, 246, 246, 0.7);
+  border-radius: 10px;
+`;
+
+const DiaryHeader = styled.div`
+  ${tw`flex`}
+  justify-content: space-between;
+`;
+
+const DotIcon = styled.div`
+  ${tw`flex`}
+`;
+
+const Nickname = styled.p`
+  font-size: 15px;
+`;
+
+const DiaryImg = styled.div`
+  ${tw`mt-6 mb-6 flex flex-col mx-auto`}
+  width: 100%;
+`;
+
+const DiaryText = styled.div`
+  ${tw`flex flex-col mx-auto`}
+  width: 100%;
+  font-size: 15px;
+`;
+
+const CommentWrap = styled.div`
+  ${tw`mb-6 flex flex-col mx-auto`}
+  max-width: calc(100% - 48px);
+  border-radius: 10px;
+  color: white;
+  border: solid 1px white;
+`;
+
+const CommentInput = styled.div`
+  ${tw`mb-6 flex mx-auto`}
+  color: white;
+`;
+
+const CommentBox = styled.div`
+  ${tw`mb-2 p-6 flex`}
+  color: black;
+  background-color: rgba(246, 246, 246, 0.7);
+  border-radius: 10px;
+`;
+
+// const QuestionWrapper = styled.div`
+//   ${tw`w-full`}
+// `;
+
+// const SurveyText = styled.p`
+//   text-align: center;
+//   color: #fff;
+//   font-size: 12px;
+// `;
+
+// const StyledButton = styled(Button)`
+//   ${tw`mt-6 mb-12`}
+// `;
 
 function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
@@ -55,18 +134,31 @@ function DiaryDetail() {
   const diary = diaryDetail;
 
   return (
-    <div>
-      <h2>{diary.title}</h2>
-      <div>{diary.nickname}</div>
-      {diary.imageUrl && diary.imageUrl !== '""' && (
-        <img src={diary.imageUrl} alt="Diary" />
-      )}
-      <div>{diary.content}</div>
-      <CommentForm diaryId={diary.diaryId} />
-      {comments.map((comment, index) => (
-        <Comment key={index} comment={comment} />
-      ))}
-    </div>
+    <Background>
+      <DiaryWrap>
+        <DiaryHeader>
+          <div>
+            <h2 className="text-h3">{diary.title}</h2>
+            <Nickname>{diary.nickname}</Nickname>
+          </div>
+          <DotIcon>
+            <img src={TreeDot} alt="" />
+          </DotIcon>
+        </DiaryHeader>
+        <DiaryImg>
+          {diary.imageUrl && diary.imageUrl !== '""' && (
+            <img src={diary.imageUrl} alt="Diary" />
+          )}
+        </DiaryImg>
+        <DiaryText>{diary.content}</DiaryText>
+      </DiaryWrap>
+      <CommentWrap>
+        <CommentForm diaryId={diary.diaryId} />
+        {comments.map((comment, index) => (
+          <Comment key={index} comment={comment} />
+        ))}
+      </CommentWrap>
+    </Background>
   );
 }
 
@@ -90,24 +182,24 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <CommentInput onSubmit={handleSubmit}>
       <input
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button type="submit">Submit</button>
-    </form>
+      <button type="submit">작성</button>
+    </CommentInput>
   );
 }
 
 function Comment({ comment }: { comment: Comment }) {
   return (
-    <div>
-      <p>{comment.nickname}</p>
+    <CommentBox>
+      <b>{comment.nickname}</b>
       <p>{comment.content}</p>
       <p>{comment.created}</p>
-    </div>
+    </CommentBox>
   );
 }
 
