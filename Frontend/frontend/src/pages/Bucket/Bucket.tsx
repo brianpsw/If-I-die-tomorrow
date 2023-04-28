@@ -103,6 +103,42 @@ function Bucket() {
           setSelectedBucketId={setSelectedBucketId}
           setSelectedBucketContent={setSelectedBucketContent}
         />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+
         <img
           onClick={handleCreateModalOpen}
           className="fixed bottom-[78px] left-[330px]"
