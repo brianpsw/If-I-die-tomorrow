@@ -54,7 +54,4 @@ public class Diary extends BaseEntity{
 		this.report ++;
 	}
 
-	public void toggleSecret(){
-		this.secret = !this.secret;
-	}
 }
