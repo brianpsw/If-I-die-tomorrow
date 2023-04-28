@@ -58,8 +58,5 @@ public class Bucket extends BaseEntity {
 		this.report ++;
 	}
 
-	public void toggleSecret() {
-		this.secret = !this.secret;
-	}
 	
 }
