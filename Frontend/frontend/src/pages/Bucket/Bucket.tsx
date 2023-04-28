@@ -4,10 +4,14 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import BucketListItem from './BucketListItem';
+import CreateModal from '../../components/common/CreateModal';
+import DeleteModal from './DeleteModal';
 import Logo from '../../assets/icons/logo.svg';
 import IIDT from '../../assets/icons/IIDT.svg';
-import EditModal from '../../components/common/EditModal';
+import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
+import BucketEditModal from './BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
+
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
 `;
@@ -16,24 +20,92 @@ const LogoContainer = styled.img`
 `;
 
 function Bucket() {
-  //modal controller
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const handleEditModalOpen = () => {
-    setOpenEditModal(true);
+  const [openEditOrDeleteModal, setOpenEditOrDeleteModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openBucketEditModal, setOpenBucketEditModal] = useState(false);
+  const [selectedBucketId, setSelectedBucketId] = useState('');
+  const [selectedBucketContent, setSelectedBucketContent] = useState('');
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  // 수정, 삭제 모달 open
+  const handleEditOrDeleteModalOpen = () => {
+    setOpenEditOrDeleteModal(true);
   };
-  const onLogoutClose = () => {
-    setOpenEditModal(false);
+  // 수정, 삭제 모달 close
+  const onEditOrDeleteModalClose = () => {
+    setOpenEditOrDeleteModal(false);
   };
+  // 버킷 생성 모달 open
+  const handleCreateModalOpen = () => {
+    setOpenCreateModal(true);
+  };
+  // 버킷 생성 모달 close
+  const onCreateModalClose = () => {
+    setOpenCreateModal(false);
+  };
+  // 버킷 수정 모달 open
+  const handleBucketEditModalOpen = () => {
+    setOpenBucketEditModal(true);
+  };
+  // 버킷 수정 모달 close
+  const onBucketEditModalClose = () => {
+    setOpenBucketEditModal(false);
+  };
+
+  //삭제 모달 open
+  const handleDeleteModalOpen = () => {
+    setDeleteModalOpen(true);
+  };
+  //삭제 모달 close
+  const onDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+  };
+
   return (
-    <div>
-      {openEditModal ? <EditModal onClose={onLogoutClose} /> : null}
+    <div className="max-w-[390px]">
+      {/* 수정, 삭제 모달 */}
+      {openEditOrDeleteModal ? (
+        <EditOrDeleteModal
+          onClose={onEditOrDeleteModalClose}
+          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      ) : null}
+      {/* 버킷 생성 모달 */}
+      {openCreateModal ? <CreateModal onClose={onCreateModalClose} /> : null}
+      {/* 버킷 수정 모달 */}
+      {openBucketEditModal ? (
+        <BucketEditModal
+          onClose={onBucketEditModalClose}
+          selectedBucketId={selectedBucketId}
+          selectedBucketContent={selectedBucketContent}
+        />
+      ) : null}
+      {deleteModalOpen ? (
+        <DeleteModal
+          onClose={onDeleteModalClose}
+          selectedBucketId={selectedBucketId}
+        />
+      ) : null}
       <Container>
         <LogoContainer src={IIDT} />
-        <BucketListItem setOpenEditModal={setOpenEditModal} />
-        <BucketListItem setOpenEditModal={setOpenEditModal} />
-        <BucketListItem setOpenEditModal={setOpenEditModal} />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
+        <BucketListItem
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedBucketId={setSelectedBucketId}
+          setSelectedBucketContent={setSelectedBucketContent}
+        />
         <img
-          className="relative top-[326px] left-[165px]"
+          onClick={handleCreateModalOpen}
+          className="fixed bottom-[78px] left-[330px]"
           src={AddButtonIcon}
           alt=""
         />
