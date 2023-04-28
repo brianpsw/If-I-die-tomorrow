@@ -75,16 +75,30 @@ const CommentWrap = styled.div`
   border: solid 1px white;
 `;
 
-const CommentInput = styled.div`
-  ${tw`mb-6 flex mx-auto`}
-  color: white;
-`;
+// const CommentInput = styled.div`
+//   ${tw`mb-6 flex mx-auto`}
+//   color: white;
+// `;
 
 const CommentBox = styled.div`
   ${tw`mb-2 p-6 flex`}
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+`;
+
+const StyledCommentForm = styled.form`
+  ${tw`mb-6 flex mx-auto`}
+  color: white;
+`;
+
+const StyledInput = styled.input`
+  ${tw`flex-1 mr-2`}
+  color: black;
+`;
+
+const StyledButton = styled.button`
+  ${tw`bg-blue-500 text-white px-4 py-2 rounded`}
 `;
 
 // const QuestionWrapper = styled.div`
@@ -182,14 +196,14 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   };
 
   return (
-    <CommentInput onSubmit={handleSubmit}>
-      <input
+    <StyledCommentForm onSubmit={handleSubmit}>
+      <StyledInput
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
       />
-      <button type="submit">작성</button>
-    </CommentInput>
+      <StyledButton type="submit">작성</StyledButton>
+    </StyledCommentForm>
   );
 }
 
