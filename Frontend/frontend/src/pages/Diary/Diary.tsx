@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Modal from '../../components/common/Modal';
-import BottomModal from '../../components/common/BottomModal';
-import EditModal from '../../components/common/EditModal';
+
 const Container = styled.div`
   ${tw`flex items-center justify-between border-b w-full `}
 `;
@@ -27,11 +25,6 @@ function Diary() {
   };
   return (
     <div>
-      {isModalOpen ? <Modal onClose={onLogoutClose} children="qkqh" /> : null}
-      {isBottomModalOpen ? (
-        <BottomModal onClose={onLogoutClose} children="qkqh" />
-      ) : null}
-      {isEditModalOpen ? <EditModal onClose={onLogoutClose} /> : null}
       <div>
         <h2>diary</h2>
         <Container onClick={openModal}>일반 모달</Container>
