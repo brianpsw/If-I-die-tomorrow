@@ -12,6 +12,7 @@ import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.AdminUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,8 +34,8 @@ public class CommunityServiceImpl implements CommunityService{
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 	private final ReportRepository reportRepository;
-	private final Integer MAX_REPORT = 5; // 신고 누적으로 인해 공개/비공개 전환 커트라인
-	
+	private final AdminUtil adminUtil;
+
 	@Override
 	public GetPageDto getBucketWithComments(Integer pageNo, Integer pageSize){
 
@@ -43,7 +44,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAneReportUnderLimit(pageable, MAX_REPORT);
+		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetBucketWithCommentDto> data = result
@@ -68,7 +69,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, MAX_REPORT);
+		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetDiaryWithCommentDto> data = result
