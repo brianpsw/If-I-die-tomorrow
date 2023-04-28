@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -53,7 +52,7 @@ pipeline {
                 git checkout ${env.gitlabTargetBranch}
                 git merge ${env.gitlabSourceBranch}
                 cd Frontend/frontend
-                npm install --force && npm run build
+                npm install --force && CI= npm run build
                 """
             }
         }
