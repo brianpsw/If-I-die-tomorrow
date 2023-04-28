@@ -48,4 +48,6 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"ON b.userId = u.userId " +
 			"WHERE b.userId = :userId")
 	List<GetBucketResDto> findAllByUserIdWithUserNickName (@Param("userId") Long userId);
+
+	List<Bucket> findAllByReportIsGreaterThanEqual(Integer reportLimit);
 }
