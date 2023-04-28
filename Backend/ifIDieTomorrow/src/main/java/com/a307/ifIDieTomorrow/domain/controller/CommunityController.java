@@ -4,7 +4,10 @@ import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.ReportReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.ReportResDto;
 import com.a307.ifIDieTomorrow.domain.service.CommunityService;
+import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,4 +64,13 @@ public class CommunityController {
 	public ResponseEntity<Long> deleteComment(@PathVariable Long commentId) throws NotFoundException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.OK).body(communityService.deleteComment(commentId));
 	}
+
+	@PostMapping("/report")
+	@Operation(summary = "신고", description = "버킷/다이어리 신고, 신고 횟수가 5회를 넘어가면 자동으로 비공개 전환됩니다.")
+	public ResponseEntity<ReportResDto> reportDiaryOrBucket(
+			@RequestBody ReportReqDto data
+			) throws NotFoundException, BadRequestException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(communityService.createReport(data));
+	}
+
 }

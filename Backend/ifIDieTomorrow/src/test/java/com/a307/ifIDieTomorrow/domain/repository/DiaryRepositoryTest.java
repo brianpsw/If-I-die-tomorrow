@@ -213,7 +213,7 @@ class DiaryRepositoryTest {
 				.build());
 
 //		when
-		Page<GetDiaryResDto> result = testDiaryRepository.findAllBySecretIsFalse(PageRequest.of(0, 10));
+		Page<GetDiaryResDto> result = testDiaryRepository.findAllBySecretIsFalseAndReportUnderLimit(PageRequest.of(0, 10), 5);
 
 //		then
 		assertThat(result)

@@ -38,8 +38,9 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
 			"WHERE d.secret = false " +
+			"AND d.report < :reportLimit " +
 			"ORDER BY d.createdAt DESC")
-	Page<GetDiaryResDto> findAllBySecretIsFalse(Pageable pageable);
+	Page<GetDiaryResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
 			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +

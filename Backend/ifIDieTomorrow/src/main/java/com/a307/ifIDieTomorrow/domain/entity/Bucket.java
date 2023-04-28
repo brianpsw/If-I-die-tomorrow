@@ -8,7 +8,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -54,5 +53,10 @@ public class Bucket extends BaseEntity {
 		this.imageUrl = imageUrl;
 		this.secret = secret;
 	}
+
+	public void reportBucket(){
+		this.report ++;
+	}
+
 	
 }

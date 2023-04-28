@@ -4,16 +4,12 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
-import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
-import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
-import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.*;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.entity.Comment;
-import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
-import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
-import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
-import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.domain.entity.*;
+import com.a307.ifIDieTomorrow.domain.repository.*;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +32,8 @@ public class CommunityServiceImpl implements CommunityService{
 	private final DiaryRepository diaryRepository;
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
+	private final ReportRepository reportRepository;
+	private final Integer MAX_REPORT = 5; // 신고 누적으로 인해 공개/비공개 전환 커트라인
 	
 	@Override
 	public GetPageDto getBucketWithComments(Integer pageNo, Integer pageSize){
@@ -45,7 +43,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalse(pageable);
+		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAneReportUnderLimit(pageable, MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetBucketWithCommentDto> data = result
@@ -70,7 +68,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalse(pageable);
+		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetDiaryWithCommentDto> data = result
@@ -138,6 +136,11 @@ public class CommunityServiceImpl implements CommunityService{
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Long userId = principal.getUserId();
 
+//		해당하는 유저가 항상 존재함이 보증된다.
+		User user = userRepository.findById(userId).get();
+
+
+
 //		작성자 일치 여부 검증
 		if (!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다");
 
@@ -148,12 +151,62 @@ public class CommunityServiceImpl implements CommunityService{
 		return CreateCommentResDto.builder()
 				.commentId(updatedComment.getCommentId())
 				.content(updatedComment.getContent())
-				.nickname(principal.getNickname())
+				.nickname(user.getNickname())
 				.type(updatedComment.getType())
 				.typeId(updatedComment.getTypeId())
 				.createdAt(updatedComment.getCreatedAt())
 				.updatedAt(updatedComment.getUpdatedAt())
 				.build();
+	}
+
+	@Override
+	public ReportResDto createReport(ReportReqDto req) throws NotFoundException, BadRequestException {
+
+		//		유저 정보 파싱
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Long userId = principal.getUserId();
+
+//		중복 신고 예외처리
+		if (reportRepository.existsByUserIdAndTypeAndTypeId(userId, req.getType(), req.getTypeId())) throw new BadRequestException("이미 신고한 게시글입니다");
+
+//		신고 저장
+		Report report = reportRepository.save(
+				Report.builder()
+						.userId(userId)
+						.type(req.getType())
+						.typeId(req.getTypeId())
+						.content(req.getContent())
+						.build()
+		);
+
+		Integer reportCount;
+
+//		신고 처리: 다이어리
+		if (req.getType()) {
+//			잘못된 아이디 예외처리
+			Diary diary = diaryRepository.findById(req.getTypeId())
+					.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+
+//			신고 횟수 누적
+			diary.reportDiary();
+
+//			다이어리 저장
+			reportCount = diaryRepository.save(diary).getReport();
+
+		}
+
+//		신고처리: 버킷 (로직은 동일)
+		else {
+			Bucket bucket = bucketRepository.findByBucketId(req.getTypeId())
+					.orElseThrow(() -> new NotFoundException("잘못된 버킷 아이디입니다."));
+
+			bucket.reportBucket();
+
+			reportCount = bucketRepository.save(bucket).getReport();
+		}
+
+
+		return ReportResDto.toDto(report, reportCount);
 	}
 
 }
