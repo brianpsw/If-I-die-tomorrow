@@ -1,5 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.dto.receiver;
 
+import com.a307.ifIDieTomorrow.domain.entity.Receiver;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +17,15 @@ public class CreateReceiverResDto {
 	private String phoneNumber;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
+	
+	public static CreateReceiverResDto toDto(Receiver receiver) {
+		return new CreateReceiverResDto(
+				receiver.getReceiverId(),
+				receiver.getName(),
+				receiver.getPhoneNumber(),
+				receiver.getCreatedAt(),
+				receiver.getUpdatedAt()
+		);
+	}
 	
 }
