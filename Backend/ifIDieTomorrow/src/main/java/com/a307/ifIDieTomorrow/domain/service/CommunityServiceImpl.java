@@ -6,10 +6,7 @@ import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.*;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.entity.Bucket;
-import com.a307.ifIDieTomorrow.domain.entity.Comment;
-import com.a307.ifIDieTomorrow.domain.entity.Diary;
-import com.a307.ifIDieTomorrow.domain.entity.Report;
+import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
@@ -46,7 +43,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalse(pageable);
+		Page<GetBucketResDto> result = bucketRepository.findAllBySecretIsFalseAneReportUnderLimit(pageable, MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetBucketWithCommentDto> data = result
@@ -71,7 +68,7 @@ public class CommunityServiceImpl implements CommunityService{
 		PageRequest pageable = PageRequest.of(pageNo, pageSize);
 
 //		페이징 객체
-		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalse(pageable);
+		Page<GetDiaryResDto> result = diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, MAX_REPORT);
 
 //		dto 리스트로 변환
 		List<GetDiaryWithCommentDto> data = result
@@ -139,6 +136,11 @@ public class CommunityServiceImpl implements CommunityService{
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		Long userId = principal.getUserId();
 
+//		해당하는 유저가 항상 존재함이 보증된다.
+		User user = userRepository.findById(userId).get();
+
+
+
 //		작성자 일치 여부 검증
 		if (!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다");
 
@@ -149,7 +151,7 @@ public class CommunityServiceImpl implements CommunityService{
 		return CreateCommentResDto.builder()
 				.commentId(updatedComment.getCommentId())
 				.content(updatedComment.getContent())
-				.nickname(principal.getNickname())
+				.nickname(user.getNickname())
 				.type(updatedComment.getType())
 				.typeId(updatedComment.getTypeId())
 				.createdAt(updatedComment.getCreatedAt())
@@ -188,11 +190,6 @@ public class CommunityServiceImpl implements CommunityService{
 //			신고 횟수 누적
 			diary.reportDiary();
 
-//			기준치 넘을 시 비공개로 전환
-			if (diary.getReport() >= MAX_REPORT) {
-				diary.toggleSecret();
-			}
-
 //			다이어리 저장
 			reportCount = diaryRepository.save(diary).getReport();
 
@@ -204,10 +201,6 @@ public class CommunityServiceImpl implements CommunityService{
 					.orElseThrow(() -> new NotFoundException("잘못된 버킷 아이디입니다."));
 
 			bucket.reportBucket();
-
-			if (bucket.getReport() >= MAX_REPORT) {
-				bucket.toggleSecret();
-			}
 
 			reportCount = bucketRepository.save(bucket).getReport();
 		}
