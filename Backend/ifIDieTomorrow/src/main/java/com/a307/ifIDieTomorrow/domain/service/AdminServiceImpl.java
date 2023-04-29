@@ -1,12 +1,15 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.admin.GetOverLimitResDto;
+import com.a307.ifIDieTomorrow.domain.dto.admin.GetReportResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
+import com.a307.ifIDieTomorrow.domain.repository.ReportRepository;
 import com.a307.ifIDieTomorrow.global.auth.RoleType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class AdminServiceImpl implements AdminService{
 
+	private final ReportRepository reportRepository;
 	private final BucketRepository bucketRepository;
 	private final DiaryRepository diaryRepository;
 	private final AdminUtil adminUtil;
@@ -55,6 +59,28 @@ public class AdminServiceImpl implements AdminService{
 		return result.stream()
 				.sorted(Comparator.comparingInt(GetOverLimitResDto::getReport).reversed())
 				.collect(Collectors.toList());
-
 	}
+
+	@Override
+	public List<GetReportResDto> getReportsByTypeAndTypeId(Boolean type, Long typeId) throws UnAuthorizedException, NotFoundException {
+
+		//		권한 확인
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!principal.getRoleType().equals(RoleType.ADMIN)) throw new UnAuthorizedException("권한이 없습니다!");
+
+		if (type) {
+			if (!diaryRepository.existsById(typeId)) throw new NotFoundException("잘못된 다이어리 아이디입니다.");
+		}
+		else {
+			if (!bucketRepository.existsById(typeId)) throw new NotFoundException("잘못된 버킷 아이디입니다.");
+		}
+
+
+		return reportRepository.findAllByTypeAndTypeIdOrderByCreatedAtDesc(type, typeId)
+				.stream()
+				.map(GetReportResDto::toDto)
+				.collect(Collectors.toList());
+	}
+
+
 }
