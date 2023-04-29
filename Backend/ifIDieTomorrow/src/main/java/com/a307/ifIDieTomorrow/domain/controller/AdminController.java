@@ -1,5 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
+import com.a307.ifIDieTomorrow.domain.dto.admin.AdjustReportReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.admin.AdjustReportResDto;
 import com.a307.ifIDieTomorrow.domain.dto.admin.GetOverLimitResDto;
 import com.a307.ifIDieTomorrow.domain.dto.admin.GetReportResDto;
 import com.a307.ifIDieTomorrow.domain.service.AdminService;
@@ -11,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,4 +38,12 @@ public class AdminController {
 	{
 		return ResponseEntity.status(HttpStatus.OK).body(adminService.getReportsByTypeAndTypeId(type, typeId));
 	}
+
+	@PutMapping(value = "/report")
+	@Operation(summary = "개별 게시글의 신고 횟수를 조정합니다.", description = "개별 게시글의 신고 횟수를 조정합니다.")
+	public ResponseEntity<AdjustReportResDto> adjustReport(@RequestBody AdjustReportReqDto req) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(adminService.adjustReportCount(req));
+	}
+
+
 }
