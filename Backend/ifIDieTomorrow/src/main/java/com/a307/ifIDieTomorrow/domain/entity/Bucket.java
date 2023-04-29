@@ -58,5 +58,10 @@ public class Bucket extends BaseEntity {
 		this.report ++;
 	}
 
+	public void adjustReport(Integer reportCount){
+
+		this.report = reportCount;
+	}
+
 	
 }

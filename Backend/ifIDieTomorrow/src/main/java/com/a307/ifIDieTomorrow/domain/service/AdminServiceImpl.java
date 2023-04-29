@@ -1,5 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
+import com.a307.ifIDieTomorrow.domain.dto.admin.AdjustReportReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.admin.AdjustReportResDto;
 import com.a307.ifIDieTomorrow.domain.dto.admin.GetOverLimitResDto;
 import com.a307.ifIDieTomorrow.domain.dto.admin.GetReportResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
@@ -80,6 +82,36 @@ public class AdminServiceImpl implements AdminService{
 				.stream()
 				.map(GetReportResDto::toDto)
 				.collect(Collectors.toList());
+	}
+
+	@Override
+	public AdjustReportResDto adjustReportCount(AdjustReportReqDto req) throws UnAuthorizedException, NotFoundException {
+
+		//		권한 확인
+		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!principal.getRoleType().equals(RoleType.ADMIN)) throw new UnAuthorizedException("권한이 없습니다!");
+
+//		다이어리 신고 횟수 조정
+		if (req.getType()) {
+			Diary diary = diaryRepository.findById(req.getTypeId())
+					.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+
+			diary.adjustReport(req.getReportCount());
+
+			diaryRepository.save(diary);
+		}
+		else {
+			Bucket bucket = bucketRepository.findById(req.getTypeId())
+					.orElseThrow(() -> new NotFoundException("잘못된 버킷 아이디입니다."));
+
+			bucket.adjustReport(req.getReportCount());
+
+			bucketRepository.save(bucket);
+		}
+
+		return AdjustReportResDto.builder()
+				.reportCount(req.getReportCount())
+				.build();
 	}
 
 
