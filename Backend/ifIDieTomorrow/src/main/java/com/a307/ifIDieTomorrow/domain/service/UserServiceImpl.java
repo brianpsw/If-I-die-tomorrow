@@ -1,7 +1,11 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.UserDto;
+import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Personality;
 import com.a307.ifIDieTomorrow.domain.entity.User;
+import com.a307.ifIDieTomorrow.domain.repository.PersonalityRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfoFactory;
@@ -16,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -24,7 +29,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +42,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     private final UserRepository userRepository;
     private final WillService willService;
     private final AdminProperties adminProperties;
+    private final PersonalityRepository personalityRepository;
 
 
     @Override
@@ -126,5 +131,24 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         user.setNickname(nickname + "#" + userId);
         user.setNewCheck(false);
         return new UserDto(userRepository.save(user));
+    }
+
+    @Override
+    public PersonalityResDto insertPersonality(PersonalityReqDto req) throws NotFoundException {
+
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = principal.getUserId();
+
+        User user = userRepository.findById(userId).get();
+        Personality personality = personalityRepository.findById(req.getPersonalityId())
+                .orElseThrow(() -> new NotFoundException("존재 하지 않는 성향 아이디입니다."));
+
+        user.setPersonality(personality.getPersonalityId());
+
+        return PersonalityResDto.builder()
+                .personalityId(personality.getPersonalityId())
+                .name(personality.getName())
+                .build();
+
     }
 }
