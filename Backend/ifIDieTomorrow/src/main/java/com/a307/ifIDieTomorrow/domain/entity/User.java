@@ -6,8 +6,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -59,8 +58,8 @@ public class User extends BaseEntity{
 	private ProviderType providerType;
 
 
-//    토큰 관련 부분은 확실하지 않아서 작성하고 주석처리했습니다.
-//    @Column
-//    private String refreshToken;
+	public void setPersonality(Long personalityId){
+		this.personalityId = personalityId;
+	}
 
 }
