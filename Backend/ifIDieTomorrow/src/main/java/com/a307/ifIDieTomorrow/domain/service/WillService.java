@@ -10,6 +10,7 @@ import java.io.IOException;
 
 public interface WillService {
 	GetWillByUserResDto getWillByUserId () throws NotFoundException;
+	
 	void createWill(Long userId);
 	
 	Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException;
@@ -17,4 +18,6 @@ public interface WillService {
 	Long updateContent (String content);
 	
 	Long updateVideo (MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException;
+	
+	Long deleteVideo();
 }

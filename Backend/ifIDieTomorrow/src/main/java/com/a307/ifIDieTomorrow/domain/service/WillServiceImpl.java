@@ -61,10 +61,22 @@ public class WillServiceImpl implements WillService {
 		if (video.isEmpty() || video == null) throw new NoPhotoException("영상이 없습니다.");
 		
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
-		String oldUrl = will.getVideoUrl();
-		if (oldUrl != null) s3Upload.fileDelete(oldUrl);
+		if (will.getVideoUrl() != null) s3Upload.fileDelete(will.getVideoUrl());
 		will.updateVideo(s3Upload.uploadFiles(video, "will/video"));
 		
+		willRepository.save(will);
+		
+		return will.getWillId();
+	}
+	
+	@Override
+	public Long deleteVideo() {
+		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		
+		if (will.getVideoUrl() == null) return will.getWillId();
+		
+		s3Upload.fileDelete(will.getVideoUrl());
+		will.updateVideo(null);
 		willRepository.save(will);
 		
 		return will.getWillId();
