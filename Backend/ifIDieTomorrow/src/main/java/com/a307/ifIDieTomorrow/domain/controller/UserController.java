@@ -1,6 +1,8 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.UserDto;
+import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
 import com.a307.ifIDieTomorrow.domain.service.UserService;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -43,6 +45,12 @@ public class UserController {
     public ResponseEntity<UserDto> getUser(@RequestBody String nickname) throws NotFoundException {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nickname, principal.getUserId()));
+    }
+
+    @PatchMapping("/personality")
+    @Operation(summary = "유저의 성향 입력", description = "유저의 성향을 입력합니다.")
+    public ResponseEntity<PersonalityResDto> insertPersonality(@RequestBody PersonalityReqDto req) throws NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.insertPersonality(req));
     }
 
 }
