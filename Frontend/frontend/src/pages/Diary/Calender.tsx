@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import {
@@ -14,7 +14,7 @@ import {
 import NextVector from '../../assets/icons/next_vector.svg';
 import PreviousVector from '../../assets/icons/previous_vector.svg';
 const CalenderContainer = styled.div`
-  ${tw`flex flex-col w-full bg-gray-100/80 mt-4 py-4 px-4`}
+  ${tw`flex flex-col w-full rounded-lg bg-gray-100/80 mt-4 py-4 px-4`}
 `;
 const CalenderHeader = styled.div`
   ${tw`flex items-center justify-between`}
@@ -54,6 +54,19 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const dateFormat = 'yyyy.MM';
 
+  useEffect(() => {
+    const today = new Date();
+    const diary = diaryList.find((diary) =>
+      isSameDay(today, new Date(diary.createdAt)),
+    );
+    setSameDay(true);
+    if (diary) {
+      setSelectedDate(new Date(diary.createdAt));
+      showDetailsHandle(diary);
+    } else {
+      showDetailsHandle(null);
+    }
+  }, [diaryList]);
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
@@ -123,7 +136,6 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
             style={{ backgroundColor: getCellBackgroundColor(day) }}
             key={day.getTime()}
             onClick={() => {
-              console.log(cloneDay);
               setSelectedDate(cloneDay);
               onDateClickHandle(cloneDay);
             }}

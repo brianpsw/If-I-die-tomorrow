@@ -9,6 +9,21 @@ import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
+import { Link } from 'react-router-dom';
+
+import {
+  CardWrap,
+  NickDateWrap,
+  Title,
+  Content,
+  Image,
+  ContentImg,
+  TitleContent,
+  Meta,
+  Nickname,
+  Comments,
+  DateWrap,
+} from '../../components/feed/FeedEmotion';
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
 `;
@@ -17,7 +32,11 @@ const LogoContainer = styled.img`
 `;
 
 const FormContainer = styled.div`
-  ${tw`flex flex-col w-full bg-gray-100/80 mt-4 pt-4 px-4`}
+  ${tw`flex flex-col w-full rounded-lg bg-gray-100/80 mt-4 px-4`}
+`;
+
+const TitleInputContainer = styled.textarea`
+  ${tw`flex flex-wrap w-full h-[33px] rounded border-black break-all mt-4`}
 `;
 
 const ContentInputContainer = styled.textarea`
@@ -47,6 +66,7 @@ function Diary() {
   //Form controller
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
+  const [completeTitle, setCompleteTitle] = useState('');
   const [completeDate, setCompleteDate] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const handleSubmit = () => {
@@ -79,6 +99,16 @@ function Diary() {
       updatedAt: '2023-04-30 12:45:23',
       commentCount: 2,
     },
+    // {
+    //   diaryId: 1,
+    //   title: 'gkgk',
+    //   content: 'gkgk',
+    //   imageUrl: 'gkgk',
+    //   secret: true,
+    //   createdAt: '2023-05-01 12:45:23',
+    //   updatedAt: '2023-05-01 12:45:23',
+    //   commentCount: 2,
+    // },
     {
       diaryId: 2,
       title: 'gkgk',
@@ -111,16 +141,49 @@ function Diary() {
           diaryList={diaryList}
           setSameDay={setSameDay}
         />
+        {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
         {data ? (
-          <div className="">
-            <span>{data.content}</span>
-            <span>{data.diaryId}</span>
-          </div>
+          <Link to={`/diary/${data.diaryId}`}>
+            <CardWrap className="flex flex-col w-[340px] mt-6">
+              <NickDateWrap>
+                <Nickname>username</Nickname>
+                <DateWrap>{data.createdAt}</DateWrap>
+              </NickDateWrap>
+              <ContentImg>
+                <TitleContent
+                  hasImage={Boolean(data.imageUrl && data.imageUrl !== '""')}
+                >
+                  <Title>{data.title}</Title>
+                  <Content>
+                    {data.content.length > 40
+                      ? data.content.substring(0, 40) + '⋯'
+                      : data.content}
+                  </Content>
+                </TitleContent>
+                <div>
+                  {data.imageUrl && data.imageUrl !== '""' && (
+                    <Image src={data.imageUrl} alt="Diary" />
+                  )}
+                </div>
+              </ContentImg>
+              <Meta>
+                <Comments>댓글 {data.commentCount}개</Comments>
+              </Meta>
+            </CardWrap>
+          </Link>
         ) : (
           ''
         )}
-        {sameDay ? (
+        {/* 사용일자와 같은 날일 경우 다이어리 작성 form 보여주기 */}
+        {!data && sameDay ? (
           <FormContainer>
+            <form action="submit">
+              <TitleInputContainer
+                onChange={(e) => setCompleteTitle(e.target.value)}
+                value={completeTitle}
+                placeholder="제목을 작성해주세요."
+              />
+            </form>
             <form action="submit">
               <ContentInputContainer
                 onChange={(e) => setCompleteContent(e.target.value)}
