@@ -23,7 +23,6 @@ function CreateCategory() {
 
   const handleCategory = (category: string) => {
     setCategoryTitle(category);
-    console.log(categoryTitle);
   };
 
   const handleCustom = () => {
@@ -33,14 +32,24 @@ function CreateCategory() {
   };
 
   const handleTitle = (e: any) => {
-    setCustomTitle(e.target.value);
+    const regExp = /^.{0,30}$/;
+    const expspaces = /  +/g;
+    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+      setCustomTitle(e.target.value);
+    } else {
+      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+    }
   };
 
   const changeTitle = () => {
     setCategoryTitle(customTitle);
   };
 
-  const createCategory = () => {};
+  const createCategory = () => {
+    if (categoryTitle === '') {
+      alert('카테고리를 입력해주세요');
+    }
+  };
 
   return (
     <Background>
@@ -52,7 +61,7 @@ function CreateCategory() {
           />
         </Link>
         <h2 className="text-h3 text-white text-center">
-          사진 테마를 선택하세요
+          사진 카테고리를 선택하세요
         </h2>
         <div className="flex flex-wrap justify-center">
           {recommendCategory?.map((rec, idx) => {
@@ -87,10 +96,15 @@ function CreateCategory() {
             }}
           >
             <input
-              style={{ width: '310px', height: '35px', borderRadius: '10px' }}
+              style={{
+                width: '310px',
+                height: '35px',
+                borderRadius: '10px',
+                padding: '0 16px',
+              }}
               onChange={(e: any) => handleTitle(e)}
             />
-            <div className="flex justify-evenly w-[310px]">
+            <div className="flex justify-evenly w-[310px] mt-4">
               <Button color={'#B4B4B4'} size={'sm'} onClick={handleCustom}>
                 접기
               </Button>
@@ -123,9 +137,10 @@ function CreateCategory() {
             borderRadius: '10px',
             marginTop: '16px',
             width: '342px',
+            marginBottom: '32px',
           }}
         >
-          <p className="text-h4 text-green_800 text-center h-[27px]">
+          <p className="text-h4 text-green_800 text-center h-[54px]">
             {categoryTitle}
           </p>
         </div>
