@@ -12,11 +12,12 @@ import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.PhotoRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
-import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,7 +89,7 @@ public class PhotoServiceImpl implements PhotoService {
 	//////////////////////////
 	
 	@Override
-	public CreatePhotoResDto createPhoto (CreatePhotoDto data, MultipartFile photo) throws IllegalArgumentException, IOException, NoPhotoException, NotFoundException, UnAuthorizedException {
+	public CreatePhotoResDto createPhoto (CreatePhotoDto data, MultipartFile photo) throws IOException, NoPhotoException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
 		if (photo == null) throw new NoPhotoException("사진이 없습니다.");
 		
 		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
@@ -102,7 +103,7 @@ public class PhotoServiceImpl implements PhotoService {
 		Photo photoEntity = Photo.builder().
 				category(category).
 				userId(userId).
-				imageUrl(s3Upload.uploadFiles(photo, PHOTO)).
+				imageUrl(s3Upload.upload(photo, PHOTO)).
 				caption(data.getCaption()).
 				build();
 		
@@ -135,7 +136,7 @@ public class PhotoServiceImpl implements PhotoService {
 		if (!photo.getUserId().equals(userId)) throw new UnAuthorizedException("삭제할 수 없는 포토 ID 입니다.");
 		
 		// S3에서 사진 삭제
-		s3Upload.fileDelete(photo.getImageUrl());
+		s3Upload.delete(photo.getImageUrl());
 		
 		// Database 에서 사진 삭제
 		photoRepository.delete(photo);

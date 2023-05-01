@@ -13,6 +13,8 @@ import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,7 +35,7 @@ public class DiaryServiceImpl implements DiaryService{
 	private final CommentRepository commentRepository;
 
 	@Override
-	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
+	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 
 //
 //		사진 검증
@@ -47,7 +49,7 @@ public class DiaryServiceImpl implements DiaryService{
 								.content(req.getContent())
 								.secret(req.getSecret())
 								.report(0)
-								.imageUrl(req.getHasPhoto() ? s3Upload.uploadFiles(photo, "diary") : "")
+								.imageUrl(req.getHasPhoto() ? s3Upload.upload(photo, "diary") : "")
 								.build()
 				)
 		);
@@ -82,7 +84,7 @@ public class DiaryServiceImpl implements DiaryService{
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
 
 //		사진 삭제
-		if (!"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+		if (!"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 
 //		댓글 삭제
 		commentRepository.deleteAllInBatch(commentRepository.findAllByTypeIdAndType(diaryId, true));
@@ -94,7 +96,7 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException {
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, UnAuthorizedException, ImageProcessingException, MetadataException {
 		Diary diary = diaryRepository.findById(req.getDiaryId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
 
@@ -106,12 +108,12 @@ public class DiaryServiceImpl implements DiaryService{
 
 
 //		기존 사진 삭제
-		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 
 		diary.updateDiary(
 				req.getTitle(),
 				req.getContent(),
-				req.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "diary") : "",
+				req.getUpdatePhoto() && photo != null ? s3Upload.upload(photo, "diary") : "",
 				req.getSecret()
 		);
 

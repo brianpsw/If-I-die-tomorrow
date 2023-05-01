@@ -9,6 +9,8 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +36,7 @@ public class BucketController {
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
 			@RequestPart CreateBucketDto data,
-			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 
