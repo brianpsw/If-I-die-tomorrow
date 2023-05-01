@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
@@ -45,9 +46,32 @@ function CreateCategory() {
     setCategoryTitle(customTitle);
   };
 
+  const sendCategory = async () => {
+    try {
+      const res = await defaultApi.post(
+        requests.POST_CATEGORY(),
+        {
+          name: categoryTitle,
+        },
+        {
+          withCredentials: true,
+        },
+      );
+      console.log(res);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const createCategory = () => {
-    if (categoryTitle === '') {
+    if (
+      categoryTitle === '' ||
+      categoryTitle.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/gi, '') === ''
+    ) {
       alert('카테고리를 입력해주세요');
+    } else {
+      console.log(categoryTitle);
+      sendCategory();
     }
   };
 

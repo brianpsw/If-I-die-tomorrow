@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 
 interface CategoryInfo {
   categoryId: number;
@@ -19,7 +20,7 @@ function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${requests.base_url}/photo/category`, {
+      const response = await defaultApi.get(requests.GET_ALL_CATEGORY(), {
         withCredentials: true,
       });
       if (response.status === 200) {

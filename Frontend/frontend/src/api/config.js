@@ -3,7 +3,7 @@
 
 const requests = {
   //기본 URL 주소
-  base_url: 'https://ifidietomorrow.co.kr/api',
+  base_url: 'https://ifidietomorrow.co.kr',
   // base_url: 'https://70.12.246.220:8443/api',
   //카카오 소셜로그인 URL
   KAKAO_LOGIN:
