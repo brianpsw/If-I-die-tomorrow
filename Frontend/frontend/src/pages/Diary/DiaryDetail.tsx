@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
@@ -110,6 +110,7 @@ function DiaryDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -140,15 +141,13 @@ function DiaryDetail() {
 
   const deleteDiary = async (diaryId: number) => {
     try {
-      const response = await axios.delete(
-        `${requests.base_url}/diary/${diaryId}`,
-        { withCredentials: true },
-      );
-      if (response.status === 200) {
-        setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
-        setComments([]); // 댓글도 함께 초기화
-        alert('다이어리가 삭제되었습니다.'); // 삭제 완료 메시지
-      }
+      await axios.delete(`${requests.base_url}/diary/${diaryId}`, {
+        withCredentials: true,
+      });
+      navigate('/feed?tab=diary'); // 피드 페이지로 이동
+      setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
+      setComments([]); // 댓글도 함께 초기화
+      alert('다이어리가 삭제되었습니다.');
     } catch (error) {
       console.error(error);
     }
