@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -39,7 +40,14 @@ function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
   };
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'nowrap', overflow: 'scroll' }}>
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'nowrap',
+        overflow: 'scroll',
+        padding: '16px 24px',
+      }}
+    >
       {categoryData ? (
         categoryData.map((category: CategoryInfo) => {
           return (
@@ -79,11 +87,13 @@ function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
           marginRight: '10px',
         }}
       >
-        <Icon
-          icon="ph:plus-circle"
-          style={{ width: '40px', height: '40px' }}
-          className="text-pink_100"
-        />
+        <Link to="/photo-cloud/create-category">
+          <Icon
+            icon="ph:plus-circle"
+            style={{ width: '40px', height: '40px' }}
+            className="text-pink_100"
+          />
+        </Link>
       </div>
     </div>
   );
