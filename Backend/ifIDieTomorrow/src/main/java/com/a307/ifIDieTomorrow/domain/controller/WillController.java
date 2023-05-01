@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.service.WillService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +51,7 @@ public class WillController {
 	@Operation(summary = "유언장 영상 수정", description = "유저의 영상을 수정합니다.")
 	public ResponseEntity<Long> updateVideo(
 			@RequestPart MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException, ImageProcessingException, MetadataException {
+		if (!FileChecker.videoCheck(video.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.OK).body(willService.updateVideo(video));
 	}
 	
