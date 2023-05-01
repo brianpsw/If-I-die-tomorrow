@@ -6,13 +6,14 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
+import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 
 interface Comment {
   commentId: bigint;
   content: string;
   nickname: string;
-  created: string;
-  updated: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Diary {
@@ -21,8 +22,8 @@ interface Diary {
   content: string;
   imageUrl: string;
   secret: boolean;
-  created: string;
-  updated: string;
+  createdAt: string;
+  updatedAt: string;
   nickname: string;
 }
 
@@ -81,6 +82,7 @@ const CommentWrap = styled.div`
 
 const CommentBox = styled.div`
   ${tw`mb-2 p-6 flex`}
+  justify-content: space-between;
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
@@ -104,6 +106,23 @@ function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleBucketEditModalOpen = () => {
+    // 여기에 버킷 수정 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
+
+  const handleDeleteModalOpen = () => {
+    // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
 
   useEffect(() => {
     const fetchDiaryDetail = async () => {
@@ -133,33 +152,42 @@ function DiaryDetail() {
   const diary = diaryDetail;
 
   return (
-    <Background>
-      <Container>
-        <DiaryWrap>
-          <DiaryHeader>
-            <div>
-              <h2 className="text-h3">{diary.title}</h2>
-              <Nickname>{diary.nickname}</Nickname>
-            </div>
-            <DotIcon>
-              <img src={TreeDot} alt="" />
-            </DotIcon>
-          </DiaryHeader>
-          <DiaryImg>
-            {diary.imageUrl && diary.imageUrl !== '""' && (
-              <img src={diary.imageUrl} alt="Diary" />
-            )}
-          </DiaryImg>
-          <DiaryText>{diary.content}</DiaryText>
-        </DiaryWrap>
-        <CommentWrap>
-          <CommentForm diaryId={diary.diaryId} />
-          {comments.map((comment, index) => (
-            <Comment key={index} comment={comment} />
-          ))}
-        </CommentWrap>
-      </Container>
-    </Background>
+    <div>
+      {modalOpen && (
+        <EditOrDeleteModal
+          onClose={handleModalClose}
+          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+      <Background>
+        <Container>
+          <DiaryWrap>
+            <DiaryHeader>
+              <div>
+                <h2 className="text-h3">{diary.title}</h2>
+                <Nickname>{diary.nickname}</Nickname>
+              </div>
+              <DotIcon>
+                <img src={TreeDot} alt="" onClick={handleModalOpen} />
+              </DotIcon>
+            </DiaryHeader>
+            <DiaryImg>
+              {diary.imageUrl && diary.imageUrl !== '""' && (
+                <img src={diary.imageUrl} alt="Diary" />
+              )}
+            </DiaryImg>
+            <DiaryText>{diary.content}</DiaryText>
+          </DiaryWrap>
+          <CommentWrap>
+            <CommentForm diaryId={diary.diaryId} />
+            {comments.map((comment, index) => (
+              <Comment key={index} comment={comment} />
+            ))}
+          </CommentWrap>
+        </Container>
+      </Background>
+    </div>
   );
 }
 
@@ -199,12 +227,46 @@ function CommentForm({ diaryId }: { diaryId: number }) {
 }
 
 function Comment({ comment }: { comment: Comment }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleBucketEditModalOpen = () => {
+    // 여기에 버킷 수정 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
+
+  const handleDeleteModalOpen = () => {
+    // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
+
   return (
-    <CommentBox>
-      <b>{comment.nickname}</b>
-      <p>{comment.content}</p>
-      <p>{comment.created}</p>
-    </CommentBox>
+    <div>
+      <CommentBox>
+        <div>
+          <b>{comment.nickname}</b>
+          <p>{comment.createdAt}</p>
+        </div>
+        <div>
+          <p>{comment.content}</p>
+        </div>
+        <DotIcon>
+          <img src={TreeDot} alt="" onClick={handleModalOpen} />
+        </DotIcon>
+      </CommentBox>
+      {modalOpen && (
+        <EditOrDeleteModal
+          onClose={handleModalClose}
+          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+    </div>
   );
 }
 
