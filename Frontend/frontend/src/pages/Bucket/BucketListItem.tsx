@@ -14,15 +14,7 @@ import uploadIcon from '../../assets/icons/camera_alt.svg';
 const Container = styled.div`
   ${tw`flex flex-col items-center w-full my-2`}
 `;
-// const BucketContainer = styled.div<{ state: string; isClicked: boolean }>`
-//   ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1 border-l-8`}
-//   border-color: ${(props) => (props.state === 'inProcess' ? 'green-300' : 'green-800')};
-//   ${(props) =>
-//     props.isClicked &&
-//     css`
-//       border-color: yellow-500;
-//     `}
-// `;
+
 const BucketContainer = styled.div`
   ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1 border-l-8`}
 `;

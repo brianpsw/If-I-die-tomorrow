@@ -1,13 +1,18 @@
 import React from 'react';
-import BottomModal from './BottomModal';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import DeleteIcon from '../../assets/icons/deleteIcon.svg';
 import EditIcon from '../../assets/icons/editIcon.svg';
+const ModalOverlay = styled.div`
+  ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
+`;
 
+const ModalWrapper = styled.div`
+  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
+  bottom: 0;
+`;
 const ContentContainer = styled.div`
   ${tw`m-4 flex space-x-2`}
 `;
@@ -17,18 +22,22 @@ interface EditOrDeleteModalProps {
   handleDeleteModalOpen: () => void;
   onClose?: () => void;
 }
-function EditOrDeleteModal(props: EditOrDeleteModalProps) {
+function EditOrDeleteModal({
+  handleBucketEditModalOpen,
+  handleDeleteModalOpen,
+  onClose,
+}: EditOrDeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const handleEditClick = () => {
-    props.handleBucketEditModalOpen();
-    props.onClose?.();
+    handleBucketEditModalOpen();
+    onClose?.();
   };
   const handleDeleteClick = () => {
-    props.handleDeleteModalOpen();
-    props.onClose?.();
+    handleDeleteModalOpen();
+    onClose?.();
   };
   const handleClose = () => {
-    props.onClose?.();
+    onClose?.();
   };
 
   //모달 외부 클릭시 모달창 꺼짐
@@ -48,18 +57,18 @@ function EditOrDeleteModal(props: EditOrDeleteModalProps) {
     };
   }, []);
   return (
-    <BottomModal onClose={props.onClose}>
-      <ContentContainer onClick={handleEditClick}>
-        <img src={EditIcon} alt="edit_icon" />
-        <span>수정</span>
-      </ContentContainer>
-      <ContentContainer onClick={handleDeleteClick}>
-        <img src={DeleteIcon} alt="delete_icon" />
-        <span>삭제</span>
-      </ContentContainer>
-
-      <hr />
-    </BottomModal>
+    <ModalOverlay>
+      <ModalWrapper ref={modalRef}>
+        <ContentContainer onClick={handleEditClick}>
+          <img src={EditIcon} alt="edit_icon" />
+          <span>수정</span>
+        </ContentContainer>
+        <ContentContainer onClick={handleDeleteClick}>
+          <img src={DeleteIcon} alt="delete_icon" />
+          <span>삭제</span>
+        </ContentContainer>
+      </ModalWrapper>
+    </ModalOverlay>
   );
 }
 
