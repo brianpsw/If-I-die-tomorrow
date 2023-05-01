@@ -77,7 +77,7 @@ const CommentWrap = styled.div`
   ${tw`mb-6 flex flex-col mx-auto`}
   max-width: calc(100% - 48px);
   border-radius: 10px;
-  color: white;
+  // color: white;
   // border: solid 1px white;
 `;
 
@@ -172,17 +172,16 @@ function DiaryDetail() {
           handleDeleteModalOpen={handleDeleteModalOpen}
         />
       )}
-      {editModalOpen &&
-        diaryDetail && ( // Add this block
-          <EditDiaryModal
-            diaryId={diaryDetail.diaryId}
-            title={diaryDetail.title}
-            content={diaryDetail.content}
-            secret={diaryDetail.secret}
-            onClose={handleEditModalClose}
-            onUpdate={handleUpdate}
-          />
-        )}
+      {editModalOpen && diaryDetail && (
+        <EditDiaryModal
+          diaryId={diaryDetail.diaryId}
+          title={diaryDetail.title}
+          content={diaryDetail.content}
+          secret={diaryDetail.secret}
+          onClose={handleEditModalClose}
+          onUpdate={handleUpdate}
+        />
+      )}
       <Background>
         <Container>
           <DiaryWrap>
@@ -270,6 +269,13 @@ function Comment({ comment }: { comment: Comment }) {
 
   return (
     <div>
+      {modalOpen && (
+        <EditOrDeleteModal
+          onClose={handleModalClose}
+          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
       <CommentBox>
         <div>
           <b>{comment.nickname}</b>
@@ -282,13 +288,6 @@ function Comment({ comment }: { comment: Comment }) {
           <img src={TreeDot} alt="" onClick={handleModalOpen} />
         </DotIcon>
       </CommentBox>
-      {modalOpen && (
-        <EditOrDeleteModal
-          onClose={handleModalClose}
-          handleBucketEditModalOpen={handleBucketEditModalOpen}
-          handleDeleteModalOpen={handleDeleteModalOpen}
-        />
-      )}
     </div>
   );
 }

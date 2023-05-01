@@ -7,6 +7,8 @@ import DeleteIcon from '../../assets/icons/deleteIcon.svg';
 import EditIcon from '../../assets/icons/editIcon.svg';
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
+  left:0;
+  top: 0;
 `;
 
 const ModalWrapper = styled.div`
