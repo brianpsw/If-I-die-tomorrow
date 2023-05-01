@@ -1,0 +1,24 @@
+:root {
+  --main-color: #1a8fff;
+  --text-color: #777;
+  --text-color-light: #ccc;
+  --border-color: #eee;
+  --bg-color: #f9f9f9;
+  --neutral-color: #fff;
+}
+
+.cell {
+  border-left: 2px solid transparent;
+  position: relative;
+  height: 2em;
+  cursor: pointer;
+  transition: 0.25s ease-out;
+  font-size: 1.5em;
+}
+
+.selected {
+  background-color: #36c2cc;
+}
+.today {
+  background-color: #ffa9a9;
+}
