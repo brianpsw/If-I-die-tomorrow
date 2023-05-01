@@ -16,6 +16,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 	
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(categoryId, name) " +
 			"FROM Category " +
-			"WHERE userId = :userId ")
+			"WHERE userId = :userId " +
+			"OR userId = 0")
 	List<CreateCategoryResDto> findAllByUserId(@Param("userId") Long userId);
 }
