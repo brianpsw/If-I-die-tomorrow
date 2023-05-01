@@ -39,7 +39,7 @@ public class WillServiceImpl implements WillService {
 		if (photo == null) throw new NoPhotoException("사진이 없습니다.");
 		
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
-		will.createSign(s3Upload.uploadFiles(photo, "will/sign"));
+		will.createSign(s3Upload.upload(photo, "will/sign"));
 		
 		willRepository.save(will);
 		
@@ -61,8 +61,8 @@ public class WillServiceImpl implements WillService {
 		if (video.isEmpty() || video == null) throw new NoPhotoException("영상이 없습니다.");
 		
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
-		if (will.getVideoUrl() != null) s3Upload.fileDelete(will.getVideoUrl());
-		will.updateVideo(s3Upload.uploadFiles(video, "will/video"));
+		if (will.getVideoUrl() != null) s3Upload.delete(will.getVideoUrl());
+		will.updateVideo(s3Upload.upload(video, "will/video"));
 		
 		willRepository.save(will);
 		
@@ -75,7 +75,7 @@ public class WillServiceImpl implements WillService {
 		
 		if (will.getVideoUrl() == null) return will.getWillId();
 		
-		s3Upload.fileDelete(will.getVideoUrl());
+		s3Upload.delete(will.getVideoUrl());
 		will.updateVideo(null);
 		willRepository.save(will);
 		
