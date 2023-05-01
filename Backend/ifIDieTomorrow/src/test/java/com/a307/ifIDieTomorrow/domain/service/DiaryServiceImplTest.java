@@ -111,7 +111,7 @@ class DiaryServiceImplTest {
 				 * 정상 동작 stubbing
 				 */
 				given(diaryRepository.save(any(Diary.class))).willReturn(savedDiary);
-				given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/test.jpg");
+				given(s3Upload.upload(photo, "diary")).willReturn("https://example.com/test.jpg");
 
 				// when
 				CreateDiaryResDto result = diaryService.createDiary(req, photo);
@@ -123,7 +123,7 @@ class DiaryServiceImplTest {
 				 * 사진 업로드가 되는가
 				 * 다이어리가 저장 되는가
 				 */
-				then(s3Upload).should().uploadFiles(photo, "diary");
+				then(s3Upload).should().upload(photo, "diary");
 				then(diaryRepository).should().save(diaryCaptor.capture());
 
 				/**
@@ -400,7 +400,7 @@ class DiaryServiceImplTest {
 				 * 다이어리 삭제
 				 */
 				then(diaryRepository).should().findById(diaryId);
-				then(s3Upload).should().fileDelete(imageUrl);
+				then(s3Upload).should().delete(imageUrl);
 				then(commentRepository).should().findAllByTypeIdAndType(diaryId, true);
 				then(commentRepository).should().deleteAllInBatch(comments);
 				then(diaryRepository).should().delete(diary);
@@ -543,7 +543,7 @@ class DiaryServiceImplTest {
 				 * 스터빙
 				 */
 				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
-				given(s3Upload.uploadFiles(photo, "diary")).willReturn("https://example.com/new_test.jpg");
+				given(s3Upload.upload(photo, "diary")).willReturn("https://example.com/new_test.jpg");
 				given(diaryRepository.save(any(Diary.class))).willReturn(updatedDiary);
 
 				// when
@@ -558,8 +558,8 @@ class DiaryServiceImplTest {
 				 * 신규 사진 업로드
 					 */
 				then(diaryRepository).should().findById(req.getDiaryId());
-				then(s3Upload).should(never()).fileDelete(any(String.class));
-				then(s3Upload).should().uploadFiles(photo, "diary");
+				then(s3Upload).should(never()).delete(any(String.class));
+				then(s3Upload).should().upload(photo, "diary");
 
 				/**
 				 * 결과 검증

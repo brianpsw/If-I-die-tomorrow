@@ -102,7 +102,7 @@ public class PhotoServiceImpl implements PhotoService {
 		Photo photoEntity = Photo.builder().
 				category(category).
 				userId(userId).
-				imageUrl(s3Upload.uploadFiles(photo, PHOTO)).
+				imageUrl(s3Upload.upload(photo, PHOTO)).
 				caption(data.getCaption()).
 				build();
 		
@@ -135,7 +135,7 @@ public class PhotoServiceImpl implements PhotoService {
 		if (!photo.getUserId().equals(userId)) throw new UnAuthorizedException("삭제할 수 없는 포토 ID 입니다.");
 		
 		// S3에서 사진 삭제
-		s3Upload.fileDelete(photo.getImageUrl());
+		s3Upload.delete(photo.getImageUrl());
 		
 		// Database 에서 사진 삭제
 		photoRepository.delete(photo);

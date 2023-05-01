@@ -33,7 +33,7 @@ public class DiaryServiceImpl implements DiaryService{
 	private final CommentRepository commentRepository;
 
 	@Override
-	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException {
+	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException {
 
 //
 //		사진 검증
@@ -47,7 +47,7 @@ public class DiaryServiceImpl implements DiaryService{
 								.content(req.getContent())
 								.secret(req.getSecret())
 								.report(0)
-								.imageUrl(req.getHasPhoto() ? s3Upload.uploadFiles(photo, "diary") : "")
+								.imageUrl(req.getHasPhoto() ? s3Upload.upload(photo, "diary") : "")
 								.build()
 				)
 		);
@@ -82,7 +82,7 @@ public class DiaryServiceImpl implements DiaryService{
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
 
 //		사진 삭제
-		if (!"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+		if (!"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 
 //		댓글 삭제
 		commentRepository.deleteAllInBatch(commentRepository.findAllByTypeIdAndType(diaryId, true));
@@ -106,12 +106,12 @@ public class DiaryServiceImpl implements DiaryService{
 
 
 //		기존 사진 삭제
-		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.fileDelete(diary.getImageUrl());
+		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 
 		diary.updateDiary(
 				req.getTitle(),
 				req.getContent(),
-				req.getUpdatePhoto() && photo != null ? s3Upload.uploadFiles(photo, "diary") : "",
+				req.getUpdatePhoto() && photo != null ? s3Upload.upload(photo, "diary") : "",
 				req.getSecret()
 		);
 
