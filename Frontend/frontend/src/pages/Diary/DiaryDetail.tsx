@@ -7,6 +7,7 @@ import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
+import EditDiaryModal from '../../components/common/EditDiaryModal';
 
 interface Comment {
   commentId: bigint;
@@ -107,6 +108,7 @@ function DiaryDetail() {
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -116,8 +118,12 @@ function DiaryDetail() {
     setModalOpen(false);
   };
 
-  const handleBucketEditModalOpen = () => {
-    // 여기에 버킷 수정 모달을 연 상태로 변경하는 로직을 추가하세요.
+  const handleEditModalOpen = () => {
+    setEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
   };
 
   const handleDeleteModalOpen = () => {
@@ -156,10 +162,20 @@ function DiaryDetail() {
       {modalOpen && (
         <EditOrDeleteModal
           onClose={handleModalClose}
-          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleBucketEditModalOpen={handleEditModalOpen}
           handleDeleteModalOpen={handleDeleteModalOpen}
         />
       )}
+      {editModalOpen &&
+        diaryDetail && ( // Add this block
+          <EditDiaryModal
+            diaryId={diaryDetail.diaryId}
+            title={diaryDetail.title}
+            content={diaryDetail.content}
+            secret={diaryDetail.secret}
+            onClose={handleEditModalClose}
+          />
+        )}
       <Background>
         <Container>
           <DiaryWrap>
