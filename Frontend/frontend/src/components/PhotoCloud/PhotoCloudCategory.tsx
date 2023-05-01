@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
 
@@ -14,43 +15,6 @@ interface PhotoCloudCategoryProps {
 
 function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
-  // const dummyData = [
-  //   {
-  //     categoryId: 4,
-  //     name: '첫번째',
-  //     color: 'red',
-  //   },
-  //   {
-  //     categoryId: 5,
-  //     name: '두번째',
-  //     color: 'purple',
-  //   },
-  //   {
-  //     categoryId: 6,
-  //     name: '세번째',
-  //     color: 'pink',
-  //   },
-  //   {
-  //     categoryId: 7,
-  //     name: '네번째',
-  //     color: 'black',
-  //   },
-  //   {
-  //     categoryId: 8,
-  //     name: '다섯번째',
-  //     color: 'skyblue',
-  //   },
-  //   {
-  //     categoryId: 9,
-  //     name: '여섯번째',
-  //     color: 'orange',
-  //   },
-  //   {
-  //     categoryId: 10,
-  //     name: '일곱번째',
-  //     color: 'blue',
-  //   },
-  // ];
 
   const fetchData = async () => {
     try {
@@ -75,27 +39,52 @@ function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
   };
 
   return (
-    <div className="flex">
+    <div style={{ display: 'flex', flexWrap: 'nowrap', overflow: 'scroll' }}>
       {categoryData ? (
         categoryData.map((category: CategoryInfo) => {
           return (
             <div
               style={{
-                border: '1px solid #111',
-                width: '30px',
-                height: '30px',
+                flex: '0 0 auto',
+                width: '60px',
+                height: '60px',
                 backgroundColor: 'white',
+                borderRadius: '30px',
+                cursor: 'pointer',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginRight: '10px',
               }}
               key={category.categoryId}
               onClick={() => handleCategory(category.categoryId)}
             >
-              {category.categoryId}
+              <p className="text-h3">{category.categoryId}</p>
             </div>
           );
         })
       ) : (
-        <p>loading...</p>
+        <p>null</p>
       )}
+      <div
+        style={{
+          flex: '0 0 auto',
+          width: '55px',
+          height: '55px',
+          borderRadius: '30px',
+          cursor: 'pointer',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginRight: '10px',
+        }}
+      >
+        <Icon
+          icon="ph:plus-circle"
+          style={{ width: '40px', height: '40px' }}
+          className="text-pink_100"
+        />
+      </div>
     </div>
   );
 }
