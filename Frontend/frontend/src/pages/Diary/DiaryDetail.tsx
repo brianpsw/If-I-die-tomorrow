@@ -109,6 +109,7 @@ function DiaryDetail() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -128,6 +129,11 @@ function DiaryDetail() {
 
   const handleDeleteModalOpen = () => {
     // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
+
+  const handleUpdate = (updatedDiary: Diary) => {
+    setDiaryDetail(updatedDiary);
+    setUpdatePhoto(true);
   };
 
   useEffect(() => {
@@ -174,6 +180,7 @@ function DiaryDetail() {
             content={diaryDetail.content}
             secret={diaryDetail.secret}
             onClose={handleEditModalClose}
+            onUpdate={handleUpdate}
           />
         )}
       <Background>

@@ -19,6 +19,7 @@ interface EditDiaryModalProps {
   content: string;
   secret: boolean;
   onClose?: () => void;
+  onUpdate?: (updatedDiary: any) => void;
 }
 
 function EditDiaryModal({
@@ -27,6 +28,7 @@ function EditDiaryModal({
   content,
   secret,
   onClose,
+  onUpdate,
 }: EditDiaryModalProps) {
   const [newTitle, setNewTitle] = useState(title);
   const [newContent, setNewContent] = useState(content);
@@ -62,16 +64,22 @@ function EditDiaryModal({
       });
 
       if (response.status === 200) {
-        window.location.reload();
+        if (onClose) {
+          onClose();
+        }
+        if (onUpdate) {
+          // Add this line
+          onUpdate(response.data); // Add this line
+        } // Add this line
       }
     } catch (error) {
       console.error(error);
     }
   };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       setPhoto(e.target.files[0]);
+      setUpdatePhoto(true);
     }
   };
 
