@@ -64,10 +64,7 @@ function CreateCategory() {
   };
 
   const createCategory = () => {
-    if (
-      categoryTitle === '' ||
-      categoryTitle.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/gi, '') === ''
-    ) {
+    if (categoryTitle === '' || categoryTitle === ' ') {
       alert('카테고리를 입력해주세요');
     } else {
       console.log(categoryTitle);
