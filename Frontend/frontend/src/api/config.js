@@ -26,6 +26,15 @@ const requests = {
   POST_LOGOUT() {
     return `/api/logout`;
   },
+  PATCH_USERNICKNAME() {
+    return `/api/user/nickname`;
+  },
+  GET_USERNICKNAME() {
+    return `/api/user/nickname`;
+  },
+  PATCH_USERPERSONALITY() {
+    return `/api/user/personality`;
+  },
   DELETE_USER() {
     return `/api/delete`;
   },

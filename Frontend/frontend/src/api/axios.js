@@ -15,3 +15,15 @@ const axiosApi = (url, options) => {
 };
 
 export const defaultApi = axiosApi(BASE_URL);
+
+defaultApi.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const {
+      response: { status },
+    } = error;
+    if (status === 302) {
+      window.location.href = '/';
+    }
+  },
+);
