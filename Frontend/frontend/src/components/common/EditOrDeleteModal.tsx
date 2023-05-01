@@ -1,6 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -14,9 +13,6 @@ const ModalWrapper = styled.div`
   ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
   bottom: 0;
 `;
-const ContentWrapper = styled.div`
-  ${tw`m-1`}
-`;
 const ContentContainer = styled.div`
   ${tw`m-4 flex space-x-2`}
 `;
@@ -26,18 +22,22 @@ interface EditOrDeleteModalProps {
   handleDeleteModalOpen: () => void;
   onClose?: () => void;
 }
-function EditOrDeleteModal(props: EditOrDeleteModalProps) {
+function EditOrDeleteModal({
+  handleBucketEditModalOpen,
+  handleDeleteModalOpen,
+  onClose,
+}: EditOrDeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const handleEditClick = () => {
-    props.handleBucketEditModalOpen();
-    props.onClose?.();
+    handleBucketEditModalOpen();
+    onClose?.();
   };
   const handleDeleteClick = () => {
-    props.handleDeleteModalOpen();
-    props.onClose?.();
+    handleDeleteModalOpen();
+    onClose?.();
   };
   const handleClose = () => {
-    props.onClose?.();
+    onClose?.();
   };
 
   //모달 외부 클릭시 모달창 꺼짐
