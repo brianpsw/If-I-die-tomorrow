@@ -12,6 +12,8 @@ import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,7 +38,7 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
-	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException {
+	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 //		사진 검증
 		if (data.getHasPhoto() && photo == null) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
 		

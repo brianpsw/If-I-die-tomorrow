@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,19 +29,19 @@ public class S3Upload {
 	@Value("${S3_BUCKET}")
 	private String bucket;
 	
-	public String upload(MultipartFile image, String folder) throws IOException {
-//		MultipartFile resizedImage = imageProcess.resizeImage(image, 620);
+	public String upload(MultipartFile image, String folder) throws IOException, ImageProcessingException, MetadataException {
+		MultipartFile resizedImage = imageProcess.resizeImage(image, 620);
 //		String originalName = image.getOriginalFilename(); // 파일 이름
 //		System.out.println("파일 이름 : " + originalName);
 		String uuid = UUID.randomUUID().toString();
-//		long size = resizedImage.getSize(); // 파일 크기
-		long size = image.getSize(); // 파일 크기
+		long size = resizedImage.getSize(); // 파일 크기
+//		long size = image.getSize(); // 파일 크기
 //		System.out.println("UUID 발급 : " + uuid);
 		
 //		log.info("AWS 오브젝트 메타데이터 설정 중..");
 		ObjectMetadata objectMetaData = new ObjectMetadata();
-//		objectMetaData.setContentType(resizedImage.getContentType());
-		objectMetaData.setContentType(image.getContentType());
+		objectMetaData.setContentType(resizedImage.getContentType());
+//		objectMetaData.setContentType(image.getContentType());
 		objectMetaData.setContentLength(size);
 //		log.info("content type : " + resizedImage.getContentType());
 //		log.info("content type : " + image.getContentType());

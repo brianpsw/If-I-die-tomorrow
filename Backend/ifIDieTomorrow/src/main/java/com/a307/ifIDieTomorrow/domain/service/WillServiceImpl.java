@@ -8,6 +8,8 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class WillServiceImpl implements WillService {
 	}
 
 	@Override
-	public Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException {
+	public Long createSign (MultipartFile photo) throws NoPhotoException, IOException, ImageProcessingException, MetadataException {
 		if (photo == null) throw new NoPhotoException("사진이 없습니다.");
 		
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
@@ -57,7 +59,7 @@ public class WillServiceImpl implements WillService {
 	}
 	
 	@Override
-	public Long updateVideo (MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException {
+	public Long updateVideo (MultipartFile video) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 		if (video.isEmpty() || video == null) throw new NoPhotoException("영상이 없습니다.");
 		
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());

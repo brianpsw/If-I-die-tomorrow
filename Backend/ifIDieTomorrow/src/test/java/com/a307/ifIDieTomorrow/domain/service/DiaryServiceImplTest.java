@@ -14,6 +14,8 @@ import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -91,7 +93,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("이미지 포함 다이어리 생성")
-			void createDiaryWithPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
+			void createDiaryWithPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 
 				// given
 				CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
@@ -148,7 +150,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("이미지 없이 다이어리 생성")
-			void createDiaryWithOutPhoto() throws IOException, IllegalArgumentException, NoPhotoException {
+			void createDiaryWithOutPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 
 				// given
 
@@ -496,7 +498,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("신규 사진 업로드 & 내용 수정")
-			void updateWithNewPhoto() throws IOException, IllegalArgumentException, NotFoundException, UnAuthorizedException {
+			void updateWithNewPhoto() throws IOException, IllegalArgumentException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
 
 				// given
 

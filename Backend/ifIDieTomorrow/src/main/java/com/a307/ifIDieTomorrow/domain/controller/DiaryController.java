@@ -9,6 +9,8 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +37,7 @@ public class DiaryController {
 	public ResponseEntity<CreateDiaryResDto> createDiary(
 			@RequestPart(value = "data") CreateDiaryReqDto data,
 			@RequestPart(required = false, value = "photo") MultipartFile photo
-			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException {
+			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException, ImageProcessingException, MetadataException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(data, photo));
 	}
 
@@ -63,7 +65,7 @@ public class DiaryController {
 	public ResponseEntity<CreateDiaryResDto> updateDiary(
 			@RequestPart(value = "data") UpdateDiaryReqDto data,
 			@RequestPart(value = "photo", required = false) MultipartFile photo
-			) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException {
+			) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException, ImageProcessingException, MetadataException {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.updateDiary(data, photo));
 	}
 

@@ -34,7 +34,7 @@ public class ImageProcess {
 		String fileFormat = multipartFile.getContentType().substring(multipartFile.getContentType().lastIndexOf("/") + 1);
 		
 		// 이미지 크기가 충분히 작거나 gif 파일이면(1mb 이하의 gif 파일만 프론트에서 넘어옴) 처리할 필요가 없음
-		if(originalWidth <= targetWidth || "gif".equals(fileFormat)) return multipartFile;
+		if(originalWidth <= targetWidth || (!"png".equals(fileFormat) && !"jpeg".equals(fileFormat) && !"bmp".equals(fileFormat))) return multipartFile;
 		
 		// 목표로 하는 이미지의 가로 사이즈는 {targetWidth}px
 		int targetHeight = targetWidth * originalHeight / originalWidth;
@@ -47,7 +47,7 @@ public class ImageProcess {
 		graphics.dispose();
 		
 		// JPG 파일 회전 처리 부분
-		if ("jpeg".equals(fileFormat) || "jpg".equals(fileFormat) || "JPEG".equals(fileFormat) || "JPG".equals(fileFormat)) {
+		if ("jpeg".equals(fileFormat)) {
 			int rotate = 1;
 			// 회전 정보를 알아내기 위해 사진의 Metadata 를 가져옴
 			// IOException, ImageProcessingException 발생 가능
