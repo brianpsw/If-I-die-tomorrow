@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
-// import { defaultApi } from '../../api/axios';
+import { defaultApi } from '../../api/axios';
 import AppTitle from '../../assets/images/app_title.svg';
 import RefreshButton from '../../assets/icons/refresh_button.svg';
 import Button from '../../components/common/Button';
@@ -31,14 +31,43 @@ const IIDT = styled.span`
 `;
 function Nickname() {
   const [nickname, setNickname] = useState('');
+  const get_usernickname = async () => {
+    try {
+      const response = await defaultApi.get(requests.GET_USERNICKNAME(), {
+        withCredentials: true,
+      });
+      setNickname(response.data);
+
+      return console.log(response);
+    } catch (error) {
+      throw error;
+    }
+  };
   useEffect(() => {
     //랜덤 닉네임 받아오는 API
+    get_usernickname();
   }, []);
   const handleNicknameChange = () => {
     //랜덤 닉네임 받아오는 API
+    get_usernickname();
   };
   const handleNicknameSubmit = () => {
     //닉네임 정하는 API
+    const patch_usernickname = async () => {
+      try {
+        const response = await defaultApi.patch(
+          requests.PATCH_USERNICKNAME(),
+          { nickname },
+          {
+            withCredentials: true,
+          },
+        );
+        return console.log(response);
+      } catch (error) {
+        throw error;
+      }
+    };
+    patch_usernickname();
   };
   return (
     <Container>
@@ -52,7 +81,12 @@ function Nickname() {
       </TitleText>
       <NicknameContainer>
         <span className="text-h2">{nickname}</span>
-        <img onClick={handleNicknameChange} src={RefreshButton} alt="" />
+        <img
+          className="cursor-pointer"
+          onClick={handleNicknameChange}
+          src={RefreshButton}
+          alt=""
+        />
       </NicknameContainer>
       <InfoText>
         유저의 개인정보를 보호하고자 랜덤으로 닉네임을 생성해 드립니다.
