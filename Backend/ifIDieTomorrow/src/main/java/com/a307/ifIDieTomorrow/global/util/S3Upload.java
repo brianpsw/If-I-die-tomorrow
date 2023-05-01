@@ -31,7 +31,6 @@ public class S3Upload {
 	
 	public String upload(MultipartFile image, String folder) throws IOException, ImageProcessingException, MetadataException {
 		String content = image.getContentType().split("/")[0];
-		System.out.println(content);
 		MultipartFile resizedImage;
 		if ("image".equals(content)) resizedImage = imageProcess.resizeImage(image, 620);
 		else resizedImage = image;
