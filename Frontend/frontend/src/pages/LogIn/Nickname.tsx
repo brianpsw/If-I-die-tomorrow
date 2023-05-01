@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
@@ -30,6 +31,7 @@ const IIDT = styled.span`
   ${tw`text-green-100`}
 `;
 function Nickname() {
+  const navigate = useNavigate();
   const [nickname, setNickname] = useState('');
   const get_usernickname = async () => {
     try {
@@ -68,6 +70,7 @@ function Nickname() {
       }
     };
     patch_usernickname();
+    navigate('/home');
   };
   return (
     <Container>
