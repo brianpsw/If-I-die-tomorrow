@@ -96,7 +96,7 @@ notification:
 # cors 설정
 cors:
   allowed-origins: 'http://localhost:3000, http://localhost:8080, http://ifidietomorrow.co.kr, https://ifidietomorrow.co.kr'
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   max-age: 3600
 
