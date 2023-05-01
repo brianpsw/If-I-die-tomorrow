@@ -128,7 +128,30 @@ function DiaryDetail() {
   };
 
   const handleDeleteModalOpen = () => {
-    // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      // 확인/취소 버튼이 있는 모달을 띄움
+      if (diaryId) {
+        deleteDiary(parseInt(diaryId));
+      } else {
+        console.error('Diary ID is undefined');
+      }
+    }
+  };
+
+  const deleteDiary = async (diaryId: number) => {
+    try {
+      const response = await axios.delete(
+        `${requests.base_url}/diary/${diaryId}`,
+        { withCredentials: true },
+      );
+      if (response.status === 200) {
+        setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
+        setComments([]); // 댓글도 함께 초기화
+        alert('다이어리가 삭제되었습니다.'); // 삭제 완료 메시지
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleUpdate = (updatedDiary: Diary) => {
@@ -287,7 +310,22 @@ function Comment({
   };
 
   const handleDeleteModalOpen = () => {
-    // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+    deleteComment(comment.commentId);
+    handleModalClose();
+  };
+
+  const deleteComment = async (commentId: bigint) => {
+    try {
+      const response = await axios.delete(
+        `${requests.base_url}/board/comment/${commentId}`,
+        { withCredentials: true },
+      );
+      if (response.status === 200) {
+        onUpdate(); // 댓글 목록을 업데이트하도록 함수 호출
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const updateComment = async (commentId: bigint, content: string) => {
