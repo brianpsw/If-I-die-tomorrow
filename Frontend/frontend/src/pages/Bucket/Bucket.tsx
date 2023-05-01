@@ -1,4 +1,3 @@
-import NavBar from '../../components/common/NavBar';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -6,7 +5,6 @@ import requests from '../../api/config';
 import BucketListItem from './BucketListItem';
 import CreateModal from '../../components/common/CreateModal';
 import DeleteModal from './DeleteModal';
-import Logo from '../../assets/icons/logo.svg';
 import IIDT from '../../assets/icons/IIDT.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from './BucketEditModal';
