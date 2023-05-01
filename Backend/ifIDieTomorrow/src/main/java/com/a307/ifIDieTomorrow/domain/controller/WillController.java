@@ -5,6 +5,8 @@ import com.a307.ifIDieTomorrow.domain.service.WillService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +35,7 @@ public class WillController {
 	@PatchMapping(value = "/sign", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "서명 저장", description = "유저의 서명을 저장합니다.")
 	public ResponseEntity<Long> createSign(
-			@RequestPart MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException {
+			@RequestPart MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException, ImageProcessingException, MetadataException {
 		return ResponseEntity.status(HttpStatus.OK).body(willService.createSign(photo));
 	}
 	
@@ -47,7 +49,7 @@ public class WillController {
 	@PatchMapping(value = "/video", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "유언장 영상 수정", description = "유저의 영상을 수정합니다.")
 	public ResponseEntity<Long> updateVideo(
-			@RequestPart MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException {
+			@RequestPart MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException, ImageProcessingException, MetadataException {
 		return ResponseEntity.status(HttpStatus.OK).body(willService.updateVideo(video));
 	}
 	
