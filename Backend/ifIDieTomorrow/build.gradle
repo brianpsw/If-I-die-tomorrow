@@ -28,6 +28,9 @@ dependencies {
 	// 이미지 회전
 	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 	
+	// 확장자 변조 XSS 방지
+	implementation 'org.apache.tika:tika-core:2.7.0'
+	
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.14'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-batch'

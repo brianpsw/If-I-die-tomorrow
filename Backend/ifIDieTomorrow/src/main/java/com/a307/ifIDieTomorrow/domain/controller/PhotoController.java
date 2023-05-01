@@ -12,6 +12,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -74,6 +75,7 @@ public class PhotoController {
 	public ResponseEntity<CreatePhotoResDto> createPhoto(
 			@RequestPart CreatePhotoDto data,
 			@RequestPart MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
+		if (!FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createPhoto(data, photo));
 	}
 	
