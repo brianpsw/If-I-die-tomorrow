@@ -3,84 +3,102 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import {
   format,
-  subMonths,
-  addMonths,
   startOfWeek,
   addDays,
   isSameDay,
   lastDayOfWeek,
-  getWeek,
   addWeeks,
   subWeeks,
 } from 'date-fns';
 
+import NextVector from '../../assets/icons/next_vector.svg';
+import PreviousVector from '../../assets/icons/previous_vector.svg';
 const CalenderContainer = styled.div`
-  ${tw`flex flex-col w-full bg-gray-100/80 mt-4 pt-4 px-4`}
+  ${tw`flex flex-col w-full bg-gray-100/80 mt-4 py-4 px-4`}
 `;
-interface Props {
-  showDetailsHandle: (dayStr: string) => void;
+const CalenderHeader = styled.div`
+  ${tw`flex items-center justify-between`}
+`;
+const CalenderDaysContainer = styled.div`
+  ${tw`flex items-center justify-between`}
+`;
+const DaysCellContainer = styled.div`
+  ${tw`flex text-center justify-center flex-grow max-w-[90vw]`}
+`;
+const CalenderDateContainer = styled.div`
+  ${tw`flex items-center justify-between`}
+`;
+const DateCellContainer = styled.div`
+  ${tw`flex text-center justify-center flex-grow max-w-[90vw]`}
+`;
+interface DiaryList {
+  diaryId: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  secret: boolean;
+  createdAt: string;
+  updatedAt: string;
+  commentCount: number;
 }
 
-const Calendar = ({ showDetailsHandle }: Props) => {
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [currentWeek, setCurrentWeek] = useState<number>(getWeek(currentMonth));
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+interface Props {
+  showDetailsHandle: (diaryData: DiaryList | null) => void;
+  diaryList: DiaryList[];
+  setSameDay: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const changeMonthHandle = (btnType: 'prev' | 'next') => {
-    if (btnType === 'prev') {
-      setCurrentMonth(subMonths(currentMonth, 1));
-    }
-    if (btnType === 'next') {
-      setCurrentMonth(addMonths(currentMonth, 1));
-    }
-  };
+const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
+  let koreaDays = ['월', '화', '수', '목', '금', '토', '일'];
+  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const dateFormat = 'yyyy.MM';
 
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(subWeeks(currentMonth, 1)));
     }
     if (btnType === 'next') {
       setCurrentMonth(addWeeks(currentMonth, 1));
-      setCurrentWeek(getWeek(addWeeks(currentMonth, 1)));
     }
   };
 
-  const onDateClickHandle = (day: Date, dayStr: string) => {
+  const onDateClickHandle = (day: Date) => {
     setSelectedDate(day);
-    showDetailsHandle(dayStr);
-  };
+    const diary = diaryList.find((diary) => {
+      const createdAtDate: Date = new Date(diary.createdAt);
+      return isSameDay(day, createdAtDate);
+    });
+    const today = new Date();
+    if (isSameDay(today, day)) {
+      setSameDay(true);
+    } else {
+      setSameDay(false);
+    }
 
-  const renderHeader = () => {
-    const dateFormat = 'yyyy MM';
-    return (
-      <div className="header row flex-middle">
-        <div className="icon" onClick={() => changeWeekHandle('prev')}>
-          prev week
-        </div>
-        <span>{format(currentMonth, dateFormat)}</span>
-        <div className="col col-end" onClick={() => changeWeekHandle('next')}>
-          <div className="icon">next week</div>
-        </div>
-      </div>
-    );
+    showDetailsHandle(diary ? diary : null);
   };
 
   const renderDays = () => {
-    const dateFormat = 'EEE';
     const days: JSX.Element[] = [];
     let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
     for (let i = 0; i < 7; i++) {
       days.push(
-        <div className="col col-center" key={i}>
-          {format(addDays(startDate, i), dateFormat)}
-        </div>,
+        <DaysCellContainer>
+          {format(addDays(startDate, i), koreaDays[i])}
+        </DaysCellContainer>,
       );
     }
-    return <div className="days row">{days}</div>;
+    return <CalenderDaysContainer>{days}</CalenderDaysContainer>;
   };
 
   const renderCells = () => {
+    const getCellBackgroundColor = (day: Date) => {
+      const diary = diaryList.find((diary) =>
+        isSameDay(day, new Date(diary.createdAt)),
+      );
+      return diary ? '#36C2CC' : '';
+    };
     const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
     const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });
     const dateFormat = 'd';
@@ -92,41 +110,59 @@ const Calendar = ({ showDetailsHandle }: Props) => {
       for (let i = 0; i < 7; i++) {
         formattedDate = format(day, dateFormat);
         const cloneDay = day;
+
         days.push(
-          <div
-            className={`col cell ${
+          <DateCellContainer
+            className={`flex w-1/7 cell ${
               isSameDay(day, new Date())
                 ? 'today'
                 : isSameDay(day, selectedDate)
                 ? 'selected'
                 : ''
             }`}
+            style={{ backgroundColor: getCellBackgroundColor(day) }}
             key={day.getTime()}
             onClick={() => {
-              const dayStr = format(cloneDay, 'ccc dd MMM yy');
-              onDateClickHandle(cloneDay, dayStr);
+              console.log(cloneDay);
+              setSelectedDate(cloneDay);
+              onDateClickHandle(cloneDay);
             }}
           >
-            <span className="number">{formattedDate}</span>
-            <span className="bg">{formattedDate}</span>
-          </div>,
+            <span className="absolute text-sm font-bold top-4 right-[18px]">
+              {formattedDate}
+            </span>
+          </DateCellContainer>,
         );
         day = addDays(day, 1);
       }
 
       rows.push(
-        <div className="row" key={day.getTime()}>
+        <div className="flex w-[100%]" key={day.getTime()}>
           {days}
         </div>,
       );
       days = [];
     }
-    return <div className="body">{rows}</div>;
+    return (
+      <CalenderDateContainer className="body">{rows}</CalenderDateContainer>
+    );
   };
 
   return (
-    <CalenderContainer className="calendar">
-      {renderHeader()}
+    <CalenderContainer>
+      <CalenderHeader>
+        <img
+          src={PreviousVector}
+          onClick={() => changeWeekHandle('prev')}
+          alt="prev_icon"
+        />
+        <span>{format(currentMonth, dateFormat)}</span>
+        <img
+          src={NextVector}
+          onClick={() => changeWeekHandle('next')}
+          alt="next_icon"
+        />
+      </CalenderHeader>
       {renderDays()}
       {renderCells()}
     </CalenderContainer>
