@@ -9,6 +9,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,7 @@ public class DiaryController {
 			@RequestPart(value = "data") CreateDiaryReqDto data,
 			@RequestPart(required = false, value = "photo") MultipartFile photo
 			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException, ImageProcessingException, MetadataException {
+		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(data, photo));
 	}
 

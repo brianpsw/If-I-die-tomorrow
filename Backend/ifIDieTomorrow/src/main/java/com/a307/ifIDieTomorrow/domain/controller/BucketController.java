@@ -9,6 +9,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,7 +37,8 @@ public class BucketController {
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
 			@RequestPart CreateBucketDto data,
-			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
+		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 
