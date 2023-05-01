@@ -30,7 +30,11 @@ public class S3Upload {
 	private String bucket;
 	
 	public String upload(MultipartFile image, String folder) throws IOException, ImageProcessingException, MetadataException {
-		MultipartFile resizedImage = imageProcess.resizeImage(image, 620);
+		String content = image.getContentType().split("/")[0];
+		System.out.println(content);
+		MultipartFile resizedImage;
+		if ("image".equals(content)) resizedImage = imageProcess.resizeImage(image, 620);
+		else resizedImage = image;
 //		String originalName = image.getOriginalFilename(); // 파일 이름
 //		System.out.println("파일 이름 : " + originalName);
 		String uuid = UUID.randomUUID().toString();
@@ -50,12 +54,12 @@ public class S3Upload {
 		
 		// S3에 업로드
 		amazonS3Client.putObject(
-				new PutObjectRequest(bucket, folder + "/" + uuid, image.getInputStream(), objectMetaData)
+				new PutObjectRequest(bucket, folder + "/" + uuid, resizedImage.getInputStream(), objectMetaData)
 						.withCannedAcl(CannedAccessControlList.PublicRead)
 		);
 //		log.info("업로드 완료");
 		
-		String path = amazonS3Client.getUrl(bucket, folder + uuid).toString(); // 접근가능한 URL 가져오기
+		String path = amazonS3Client.getUrl(bucket, folder + "/" + uuid).toString(); // 접근가능한 URL 가져오기
 		log.info("객체 업로드 완료 : " + path);
 		
 		return path;
