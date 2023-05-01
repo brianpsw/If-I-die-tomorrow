@@ -136,24 +136,24 @@ function DiaryDetail() {
     setUpdatePhoto(true);
   };
 
-  useEffect(() => {
-    const fetchDiaryDetail = async () => {
-      try {
-        const response = await axios.get(
-          `${requests.base_url}/diary/${diaryId}`,
-          {
-            withCredentials: true,
-          },
-        );
-        if (response.status === 200) {
-          setDiaryDetail(response.data.diary);
-          setComments(response.data.comments);
-        }
-      } catch (error) {
-        console.error(error);
+  const fetchDiaryDetail = async () => {
+    try {
+      const response = await axios.get(
+        `${requests.base_url}/diary/${diaryId}`,
+        {
+          withCredentials: true,
+        },
+      );
+      if (response.status === 200) {
+        setDiaryDetail(response.data.diary);
+        setComments(response.data.comments);
       }
-    };
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchDiaryDetail();
   }, [diaryId]);
 
@@ -204,7 +204,11 @@ function DiaryDetail() {
           <CommentWrap>
             <CommentForm diaryId={diary.diaryId} />
             {comments.map((comment, index) => (
-              <Comment key={index} comment={comment} />
+              <Comment
+                key={index}
+                comment={comment}
+                onUpdate={() => fetchDiaryDetail()}
+              />
             ))}
           </CommentWrap>
         </Container>
@@ -248,8 +252,17 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   );
 }
 
-function Comment({ comment }: { comment: Comment }) {
+function Comment({
+  comment,
+  onUpdate,
+}: {
+  comment: Comment;
+  onUpdate: () => void;
+}) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
+  const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
+  const [content, setContent] = useState(comment.content);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -260,11 +273,46 @@ function Comment({ comment }: { comment: Comment }) {
   };
 
   const handleBucketEditModalOpen = () => {
-    // 여기에 버킷 수정 모달을 연 상태로 변경하는 로직을 추가하세요.
+    setEditing(true); // 추가: 댓글 수정 모드 활성화
+    handleModalClose(); // 추가: 수정/삭제 모달 닫기
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setContent(comment.content); // 원래 댓글 내용으로 되돌립니다.
   };
 
   const handleDeleteModalOpen = () => {
     // 여기에 삭제 모달을 연 상태로 변경하는 로직을 추가하세요.
+  };
+
+  const updateComment = async (commentId: bigint, content: string) => {
+    try {
+      const response = await axios.put(
+        `${requests.base_url}/board/comment`,
+        {
+          commentId,
+          content,
+        },
+        { withCredentials: true },
+      );
+      if (response.status === 200) {
+        setEditing(false);
+        setContent(content);
+        onUpdate(); // 댓글 목록을 업데이트하도록 함수 호출
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 폼의 기본 동작을 취소합니다.
+    updateComment(comment.commentId, content);
   };
 
   return (
@@ -282,7 +330,17 @@ function Comment({ comment }: { comment: Comment }) {
           <p>{comment.createdAt}</p>
         </div>
         <div>
-          <p>{comment.content}</p>
+          {editing ? (
+            <form onSubmit={handleEditSubmit}>
+              <input type="text" value={content} onChange={handleChange} />
+              <button type="submit">수정</button>
+              <button type="button" onClick={handleCancel}>
+                취소
+              </button>
+            </form>
+          ) : (
+            <p>{comment.content}</p>
+          )}
         </div>
         <DotIcon>
           <img src={TreeDot} alt="" onClick={handleModalOpen} />
