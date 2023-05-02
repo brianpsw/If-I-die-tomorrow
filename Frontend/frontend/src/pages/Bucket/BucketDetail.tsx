@@ -64,6 +64,10 @@ const Nickname = styled.p`
   font-size: 15px;
 `;
 
+const CreateDate = styled.div`
+  font-size: 12px;
+`;
+
 const BucketImg = styled.div`
   ${tw`mt-6 mb-6 flex flex-col mx-auto`}
   width: 100%;
@@ -103,6 +107,17 @@ const StyledInput = styled.input`
 
 const StyledButton = styled.button`
   ${tw`bg-blue-500 text-white px-4 py-2 rounded`}
+`;
+
+const CommentNick = styled.div`
+  ${tw``}
+  font-weight: bold;
+  font-size: 14px;
+`;
+
+const CommentDate = styled.div`
+  ${tw`mb-2`}
+  font-size: 12px;
 `;
 
 function BucketDetail() {
@@ -211,9 +226,9 @@ function BucketDetail() {
               <div>
                 <h2 className="text-h3">{bucket.title}</h2>
                 <Nickname>{bucket.nickname}</Nickname>
-                <div>
+                <CreateDate>
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
-                </div>
+                </CreateDate>
               </div>
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />
@@ -368,10 +383,11 @@ function Comment({
       )}
       <CommentBox>
         <div>
-          <b>{comment.nickname}</b>
-          <div>{new Date(comment.createdAt).toISOString().split('T')[0]}</div>
-        </div>
-        <div>
+          <CommentNick>{comment.nickname}</CommentNick>
+          <CommentDate>
+            {new Date(comment.createdAt).toISOString().split('T')[0]}
+          </CommentDate>
+
           {editing ? (
             <form onSubmit={handleEditSubmit}>
               <input type="text" value={content} onChange={handleChange} />
