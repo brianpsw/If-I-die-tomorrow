@@ -68,7 +68,7 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
       console.error(err);
     }
   };
-  const category_id = photoData?.category.categoryId;
+  const categoryId = photoData?.category.categoryId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
 
@@ -95,10 +95,12 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     try {
       const patch_category = await defaultApi.patch(
         requests.PATCH_CATEGORY(),
-        { categoryId: category_id, name: editTitle },
+        { categoryId, name: editTitle },
         { withCredentials: true },
       );
       console.log(patch_category);
+      // status 200이면
+      // props.setEditOrDeleteModalEpic({ titleEdit: false, contentEdit: false });
     } catch (err) {
       console.error(err);
     }
