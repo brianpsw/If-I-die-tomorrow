@@ -24,7 +24,7 @@ public interface DiaryService {
 
 	HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException;
 
-	Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException;
+	Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException, UnAuthorizedException;
 
 	CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException, ImageProcessingException, MetadataException;
 }

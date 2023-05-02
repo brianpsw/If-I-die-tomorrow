@@ -368,7 +368,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("사진이 있는 다이어리 삭제")
-			void deleteDiaryByDiaryIdWithImageUrl() throws NotFoundException {
+			void deleteDiaryByDiaryIdWithImageUrl() throws NotFoundException, UnAuthorizedException {
 				// given
 				Long diaryId = 1L;
 				String imageUrl = "https://example.com/test.jpg";
@@ -412,7 +412,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("사진이 없는 다이어리 삭제")
-			void deleteDiaryByDiaryIdWithNoImageUrl() throws NotFoundException {
+			void deleteDiaryByDiaryIdWithNoImageUrl() throws NotFoundException, UnAuthorizedException {
 				// given
 				Long diaryId = 1L;
 				String imageUrl = "";
