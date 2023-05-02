@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
-import { useParams } from 'react-router-dom';
+import { defaultApi } from '../../api/axios';
+import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
+import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
+import EditDiaryModal from '../../components/common/EditDiaryModal';
 
 interface Comment {
   commentId: bigint;
   content: string;
   nickname: string;
-  created: string;
-  updated: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Diary {
@@ -21,8 +24,8 @@ interface Diary {
   content: string;
   imageUrl: string;
   secret: boolean;
-  created: string;
-  updated: string;
+  createdAt: string;
+  updatedAt: string;
   nickname: string;
 }
 
@@ -75,12 +78,13 @@ const CommentWrap = styled.div`
   ${tw`mb-6 flex flex-col mx-auto`}
   max-width: calc(100% - 48px);
   border-radius: 10px;
-  color: white;
+  // color: white;
   // border: solid 1px white;
 `;
 
 const CommentBox = styled.div`
   ${tw`mb-2 p-6 flex`}
+  justify-content: space-between;
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
@@ -104,25 +108,72 @@ function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleEditModalOpen = () => {
+    setEditModalOpen(true);
+  };
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
+  };
+
+  const handleDeleteModalOpen = () => {
+    if (window.confirm('정말로 삭제하시겠습니까?')) {
+      // 확인/취소 버튼이 있는 모달을 띄움
+      if (diaryId) {
+        deleteDiary(parseInt(diaryId));
+      } else {
+        console.error('Diary ID is undefined');
+      }
+    }
+  };
+
+  const deleteDiary = async (diaryId: number) => {
+    try {
+      await defaultApi.delete(requests.DELETE_DIARY(diaryId), {
+        withCredentials: true,
+      });
+      navigate('/feed?tab=diary'); // 피드 페이지로 이동
+      setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
+      setComments([]); // 댓글도 함께 초기화
+      alert('다이어리가 삭제되었습니다.');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdate = (updatedDiary: Diary) => {
+    setDiaryDetail(updatedDiary);
+    setUpdatePhoto(true);
+  };
+
+  const fetchDiaryDetail = async () => {
+    try {
+      const response = await defaultApi.get(requests.GET_DIARY(diaryId), {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        setDiaryDetail(response.data.diary);
+        setComments(response.data.comments);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchDiaryDetail = async () => {
-      try {
-        const response = await axios.get(
-          `${requests.base_url}/diary/${diaryId}`,
-          {
-            withCredentials: true,
-          },
-        );
-        if (response.status === 200) {
-          setDiaryDetail(response.data.diary);
-          setComments(response.data.comments);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchDiaryDetail();
   }, [diaryId]);
 
@@ -133,33 +184,56 @@ function DiaryDetail() {
   const diary = diaryDetail;
 
   return (
-    <Background>
-      <Container>
-        <DiaryWrap>
-          <DiaryHeader>
-            <div>
-              <h2 className="text-h3">{diary.title}</h2>
-              <Nickname>{diary.nickname}</Nickname>
-            </div>
-            <DotIcon>
-              <img src={TreeDot} alt="" />
-            </DotIcon>
-          </DiaryHeader>
-          <DiaryImg>
-            {diary.imageUrl && diary.imageUrl !== '""' && (
-              <img src={diary.imageUrl} alt="Diary" />
-            )}
-          </DiaryImg>
-          <DiaryText>{diary.content}</DiaryText>
-        </DiaryWrap>
-        <CommentWrap>
-          <CommentForm diaryId={diary.diaryId} />
-          {comments.map((comment, index) => (
-            <Comment key={index} comment={comment} />
-          ))}
-        </CommentWrap>
-      </Container>
-    </Background>
+    <div>
+      {modalOpen && (
+        <EditOrDeleteModal
+          onClose={handleModalClose}
+          handleBucketEditModalOpen={handleEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+      {editModalOpen && diaryDetail && (
+        <EditDiaryModal
+          diaryId={diaryDetail.diaryId}
+          title={diaryDetail.title}
+          content={diaryDetail.content}
+          secret={diaryDetail.secret}
+          onClose={handleEditModalClose}
+          onUpdate={handleUpdate}
+        />
+      )}
+      <Background>
+        <Container>
+          <DiaryWrap>
+            <DiaryHeader>
+              <div>
+                <h2 className="text-h3">{diary.title}</h2>
+                <Nickname>{diary.nickname}</Nickname>
+              </div>
+              <DotIcon>
+                <img src={TreeDot} alt="" onClick={handleModalOpen} />
+              </DotIcon>
+            </DiaryHeader>
+            <DiaryImg>
+              {diary.imageUrl && diary.imageUrl !== '""' && (
+                <img src={diary.imageUrl} alt="Diary" />
+              )}
+            </DiaryImg>
+            <DiaryText>{diary.content}</DiaryText>
+          </DiaryWrap>
+          <CommentWrap>
+            <CommentForm diaryId={diary.diaryId} />
+            {comments.map((comment, index) => (
+              <Comment
+                key={index}
+                comment={comment}
+                onUpdate={() => fetchDiaryDetail()}
+              />
+            ))}
+          </CommentWrap>
+        </Container>
+      </Background>
+    </div>
   );
 }
 
@@ -169,8 +243,8 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${requests.base_url}/board/comment`, // 수정된 API 엔드포인트
+      const response = await defaultApi.post(
+        requests.POST_COMMENT(), // 수정된 API 엔드포인트
         {
           content,
           type: true, // type을 true로 설정
@@ -198,13 +272,118 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   );
 }
 
-function Comment({ comment }: { comment: Comment }) {
+function Comment({
+  comment,
+  onUpdate,
+}: {
+  comment: Comment;
+  onUpdate: () => void;
+}) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
+  // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
+  const [content, setContent] = useState(comment.content);
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleBucketEditModalOpen = () => {
+    setEditing(true); // 추가: 댓글 수정 모드 활성화
+    handleModalClose(); // 추가: 수정/삭제 모달 닫기
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
+
+  const handleCancel = () => {
+    setEditing(false);
+    setContent(comment.content); // 원래 댓글 내용으로 되돌립니다.
+  };
+
+  const handleDeleteModalOpen = () => {
+    deleteComment(comment.commentId);
+    handleModalClose();
+  };
+
+  const deleteComment = async (commentId: bigint) => {
+    try {
+      const response = await defaultApi.delete(
+        requests.DELETE_COMMENT(commentId),
+        {
+          withCredentials: true,
+        },
+      );
+      if (response.status === 200) {
+        onUpdate(); // 댓글 목록을 업데이트하도록 함수 호출
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const updateComment = async (commentId: bigint, content: string) => {
+    try {
+      const response = await defaultApi.put(
+        requests.PUT_COMMENT(),
+        {
+          commentId,
+          content,
+        },
+        { withCredentials: true },
+      );
+      if (response.status === 200) {
+        setEditing(false);
+        setContent(content);
+        onUpdate(); // 댓글 목록을 업데이트하도록 함수 호출
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEditSubmit = (e: React.FormEvent) => {
+    e.preventDefault(); // 폼의 기본 동작을 취소합니다.
+    updateComment(comment.commentId, content);
+  };
+
   return (
-    <CommentBox>
-      <b>{comment.nickname}</b>
-      <p>{comment.content}</p>
-      <p>{comment.created}</p>
-    </CommentBox>
+    <div>
+      {modalOpen && (
+        <EditOrDeleteModal
+          onClose={handleModalClose}
+          handleBucketEditModalOpen={handleBucketEditModalOpen}
+          handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+      <CommentBox>
+        <div>
+          <b>{comment.nickname}</b>
+          <p>{comment.createdAt}</p>
+        </div>
+        <div>
+          {editing ? (
+            <form onSubmit={handleEditSubmit}>
+              <input type="text" value={content} onChange={handleChange} />
+              <button type="submit">수정</button>
+              <button type="button" onClick={handleCancel}>
+                취소
+              </button>
+            </form>
+          ) : (
+            <p>{comment.content}</p>
+          )}
+        </div>
+        <DotIcon>
+          <img src={TreeDot} alt="" onClick={handleModalOpen} />
+        </DotIcon>
+      </CommentBox>
+    </div>
   );
 }
 
