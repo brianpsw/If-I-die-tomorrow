@@ -18,6 +18,7 @@ interface EditBucketModalProps {
   bucketId: number;
   title: string;
   content: string;
+  complete: boolean;
   secret: boolean;
   onClose?: () => void;
   onUpdate?: (updatedBucket: any) => void;
@@ -27,6 +28,7 @@ function EditBucketModal({
   bucketId,
   title,
   content,
+  complete,
   secret,
   onClose,
   onUpdate,
@@ -34,6 +36,7 @@ function EditBucketModal({
   const [newTitle, setNewTitle] = useState(title);
   const [newContent, setNewContent] = useState(content);
   const [newSecret, setNewSecret] = useState(secret);
+  const [newComplete, setNewComplete] = useState(complete);
   const [photo, setPhoto] = useState<File | null>(null);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
 
@@ -49,6 +52,7 @@ function EditBucketModal({
           title: newTitle,
           content: newContent,
           secret: newSecret,
+          complete: newComplete,
           updatePhoto, // updatePhoto 추가
         }),
       );

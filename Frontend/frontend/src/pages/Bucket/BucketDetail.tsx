@@ -23,6 +23,7 @@ interface Bucket {
   title: string;
   content: string;
   imageUrl: string;
+  complete: boolean;
   secret: boolean;
   createdAt: string;
   updatedAt: string;
@@ -198,6 +199,7 @@ function BucketDetail() {
           title={bucketDetail.title}
           content={bucketDetail.content}
           secret={bucketDetail.secret}
+          complete={bucketDetail.complete}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
         />
