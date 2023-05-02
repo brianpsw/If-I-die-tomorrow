@@ -39,8 +39,7 @@ function Nickname() {
         withCredentials: true,
       });
       setNickname(response.data);
-
-      return console.log(response);
+      console.log(response.data);
     } catch (error) {
       throw error;
     }
@@ -59,9 +58,12 @@ function Nickname() {
       try {
         const response = await defaultApi.patch(
           requests.PATCH_USERNICKNAME(),
-          { nickname },
+          nickname,
           {
-            withCredentials: true,
+            headers: {
+              withCredentials: true,
+              'Content-Type': 'application/json',
+            },
           },
         );
         return console.log(response);
@@ -69,6 +71,7 @@ function Nickname() {
         throw error;
       }
     };
+
     patch_usernickname();
     navigate('/home');
   };
