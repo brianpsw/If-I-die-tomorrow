@@ -58,12 +58,11 @@ function Nickname() {
       try {
         const response = await defaultApi.patch(
           requests.PATCH_USERNICKNAME(),
-          nickname,
           {
-            headers: {
-              withCredentials: true,
-              'Content-Type': 'application/json',
-            },
+            nickname,
+          },
+          {
+            withCredentials: true,
           },
         );
         return console.log(response);
