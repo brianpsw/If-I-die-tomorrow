@@ -26,11 +26,13 @@ pipeline {
                 echo 'BE Testing...'
                 sh """
                 git checkout ${env.gitlabTargetBranch}
+                git tag v1
                 git merge ${env.gitlabSourceBranch}
                 cd Backend/ifIDieTomorrow
                 chmod +x gradlew
                 ./gradlew clean test
-                git reset --hard HEAD~1
+                git reset --hard v1
+                git tag -d v1
                 """
             }
             post {
