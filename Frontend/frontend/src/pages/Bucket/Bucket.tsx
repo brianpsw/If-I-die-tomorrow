@@ -20,32 +20,19 @@ const LogoContainer = styled.img`
 interface Bucket {
   bucketId: number;
   title: string;
-  complete: boolean;
+  complete: string;
   secret: boolean;
 }
 function Bucket() {
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openBucketEditModal, setOpenBucketEditModal] = useState(false);
-  const [selectedBucketId, setSelectedBucketId] = useState('');
+  const [selectedBucketId, setSelectedBucketId] = useState<number | null>(null);
   const [selectedBucketContent, setSelectedBucketContent] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   // 수정, 삭제 모달 open
-  const test_buckets = [
-    {
-      bucketId: 1,
-      title: 'string',
-      complete: false,
-      secret: true,
-    },
-    {
-      bucketId: 2,
-      title: 'string',
-      complete: true,
-      secret: true,
-    },
-  ];
+
   const handleEditOrDeleteModalOpen = () => {
     setOpenEditOrDeleteModal(true);
   };
@@ -91,7 +78,7 @@ function Bucket() {
       }
     };
     get_user_bucket();
-  });
+  }, []);
   return (
     <div className="max-w-[390px]">
       {/* 수정, 삭제 모달 */}
@@ -103,82 +90,37 @@ function Bucket() {
         />
       ) : null}
       {/* 버킷 생성 모달 */}
-      {openCreateModal ? <CreateModal onClose={onCreateModalClose} /> : null}
+      {openCreateModal ? (
+        <CreateModal onClose={onCreateModalClose} setBuckets={setBuckets} />
+      ) : null}
       {/* 버킷 수정 모달 */}
       {openBucketEditModal ? (
         <BucketEditModal
           onClose={onBucketEditModalClose}
           selectedBucketId={selectedBucketId}
           selectedBucketContent={selectedBucketContent}
+          setBuckets={setBuckets}
         />
       ) : null}
       {deleteModalOpen ? (
         <DeleteModal
           onClose={onDeleteModalClose}
           selectedBucketId={selectedBucketId}
+          setBuckets={setBuckets}
         />
       ) : null}
       <Container>
         <LogoContainer src={IIDT} />
-        {test_buckets.map((bucket, index) => (
+        {buckets.map((bucket, index) => (
           <BucketListItem
             key={index}
             bucket={bucket}
             setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
             setSelectedBucketId={setSelectedBucketId}
             setSelectedBucketContent={setSelectedBucketContent}
+            setBuckets={setBuckets}
           />
         ))}
-        {/* <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        />
-        <BucketListItem
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedBucketId={setSelectedBucketId}
-          setSelectedBucketContent={setSelectedBucketContent}
-        /> */}
 
         <img
           onClick={handleCreateModalOpen}
