@@ -14,7 +14,7 @@ public class GetBucketByUserResDto {
 
 	private Long bucketId;
 	private String title;
-	private Boolean complete;
+	private String complete;
 	private Boolean secret;
 
 }
