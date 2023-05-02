@@ -30,6 +30,7 @@ pipeline {
                 cd Backend/ifIDieTomorrow
                 chmod +x gradlew
                 ./gradlew clean test
+                git reset --hard HEAD~1
                 """
             }
             post {
