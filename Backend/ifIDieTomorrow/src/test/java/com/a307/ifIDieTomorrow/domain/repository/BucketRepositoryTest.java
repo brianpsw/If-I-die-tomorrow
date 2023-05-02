@@ -48,7 +48,7 @@ public class BucketRepositoryTest {
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
-						.complete(true)
+						.complete("")
 						.secret(false)
 						.report(0)
 						.build()
@@ -64,7 +64,7 @@ public class BucketRepositoryTest {
 		
 		assertThat(bucket.getUserId()).isEqualTo(1L);
 		assertThat(bucket.getSecret()).isEqualTo(false);
-		assertThat(bucket.getComplete()).isEqualTo(true);
+		assertThat(bucket.getComplete()).isEqualTo("");
 		assertThat(bucket.getReport()).isEqualTo(0);
 		
 		assertThat(empty).isEmpty();
@@ -82,7 +82,7 @@ public class BucketRepositoryTest {
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
-						.complete(false)
+						.complete("")
 						.report(0)
 						.secret(false)
 						.build()
@@ -94,7 +94,7 @@ public class BucketRepositoryTest {
 						.title("1-2 title")
 						.content("1-2 content")
 						.imageUrl("")
-						.complete(true)
+						.complete("2023-04-04")
 						.report(0)
 						.secret(false)
 						.build()
@@ -106,7 +106,7 @@ public class BucketRepositoryTest {
 						.title("2-1 title")
 						.content("2-1 content")
 						.imageUrl("")
-						.complete(false)
+						.complete("")
 						.report(0)
 						.secret(true)
 						.build()
@@ -151,7 +151,7 @@ public class BucketRepositoryTest {
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
-						.complete(false)
+						.complete("")
 						.report(0)
 						.secret(false)
 						.build()
@@ -202,7 +202,7 @@ public class BucketRepositoryTest {
 						.title("1-1 title")
 						.content("1-1 content")
 						.imageUrl("")
-						.complete(false)
+						.complete("")
 						.report(0)
 						.secret(false)
 						.build()
@@ -214,7 +214,7 @@ public class BucketRepositoryTest {
 						.title("1-2 title")
 						.content("1-2 content")
 						.imageUrl("")
-						.complete(true)
+						.complete("2023-04-05")
 						.report(0)
 						.secret(false)
 						.build()
@@ -226,7 +226,7 @@ public class BucketRepositoryTest {
 						.title("2-1 title")
 						.content("2-1 content")
 						.imageUrl("")
-						.complete(false)
+						.complete("")
 						.report(0)
 						.secret(true)
 						.build()

@@ -21,9 +21,11 @@ public interface BucketService {
 	
 	CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws IOException, NotFoundException;
 	
-	Long deleteBucket (Long bucketId) throws NotFoundException;
+	Long deleteBucket (Long bucketId) throws NotFoundException, UnAuthorizedException;
 	
 	List<GetBucketByUserResDto> getBucketByUserId () throws NotFoundException;
 	
 	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException, UnAuthorizedException;
+	
+	CreateBucketResDto createBucketWithTitle (String title);
 }

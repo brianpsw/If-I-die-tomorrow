@@ -38,6 +38,20 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
+	public CreateBucketResDto createBucketWithTitle (String title) {
+		Bucket bucket = Bucket.builder().
+				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
+				title(title).
+				content("").
+				complete("").
+				imageUrl("").
+				secret(true).
+				build();
+		
+		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
+	
+	@Override
 	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
 //		사진 검증
 		if (data.getHasPhoto() && photo == null) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
@@ -100,9 +114,12 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public Long deleteBucket (Long bucketId) throws NotFoundException {
+	public Long deleteBucket (Long bucketId) throws NotFoundException, UnAuthorizedException {
 		Bucket bucket = bucketRepository.findByBucketId(bucketId)
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
+		
+		if (bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("삭제 권한이 없습니다.");
 		
 		// 사진이 있었다면 S3에서 사진을 삭제함
 		if (!"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());
