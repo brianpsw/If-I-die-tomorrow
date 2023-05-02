@@ -11,6 +11,7 @@ import {
 
 import threeDot from '../../assets/icons/three_dot.svg';
 import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
+import Button from '../../components/common/Button';
 
 interface Category {
   categoryId: number;
@@ -30,57 +31,128 @@ interface CategoryPhoto {
   photos: PhotoInfo[];
 }
 
+interface EditOrDeleteEpic {
+  titleEdit: boolean;
+  contentEdit: boolean;
+}
+
 interface PhotoCloudModalProps {
   setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPhotoId: React.Dispatch<React.SetStateAction<string>>;
   selectedCategory: string;
+  setEpic: React.Dispatch<React.SetStateAction<string>>;
+  setEditOrDeleteModalEpic: React.Dispatch<
+    React.SetStateAction<EditOrDeleteEpic>
+  >;
+  editOrDeleteModalEpic: EditOrDeleteEpic;
   // 사진 정보 가져오기
 }
 
 function PhotoCloudDetail(props: PhotoCloudModalProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
-
+  const [editTitle, setEditTitle] = useState<string>('');
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
-      const response = await defaultApi.get(
+      const get_photo = await defaultApi.get(
         requests.GET_PHOTO(props.selectedCategory),
         {
           withCredentials: true,
         },
       );
-      if (response.status === 200) {
-        const { data } = response;
+      if (get_photo.status === 200) {
+        const { data } = get_photo;
         setPhotoData(() => data);
       }
     } catch (err) {
       console.error(err);
     }
   };
-  const categoryId = photoData?.category.categoryId;
+  const category_id = photoData?.category.categoryId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
 
   useEffect(() => {
     fetchData();
+    setEditTitle(name!);
   }, [props.selectedCategory]);
 
-  const handleEditOrDeleteModalOpen = (id: number) => {
+  const handleEditOrDeleteModalOpen = () => {
     props.setOpenEditOrDeleteModal(true);
+  };
+
+  const handleEditTitle = (e: any) => {
+    const regExp = /^.{0,30}$/;
+    const expspaces = /  +/g;
+    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+      setEditTitle(e.target.value);
+    } else {
+      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+    }
+  };
+
+  const changeCategory = async () => {
+    try {
+      const patch_category = await defaultApi.patch(
+        requests.PATCH_CATEGORY(),
+        { categoryId: category_id, name: editTitle },
+        { withCredentials: true },
+      );
+      console.log(patch_category);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const sendResCategoryTitle = () => {
+    if (editTitle === '' || editTitle === ' ') {
+      alert('카테고리를 입력해주세요');
+    } else {
+      console.log(editTitle);
+      changeCategory();
+    }
   };
 
   return (
     <PhotoWrapper>
       {photoData ? (
         <div>
-          <div className="flex justify-evenly">
-            {name && <h3 className="text-h3 text-white text-center">{name}</h3>}
-            <img
-              src={whiteThreeDot}
-              alt="three dot button"
-              onClick={() => handleEditOrDeleteModalOpen(categoryId!)}
-            />
-          </div>
+          {props.editOrDeleteModalEpic.titleEdit ? (
+            <div className="flex flex-col items-center">
+              <input
+                style={{
+                  width: '342px',
+                  padding: '8px 16px',
+                  marginBottom: '24px',
+                  borderRadius: '10px',
+                }}
+                defaultValue={name}
+                onChange={(e: any) => handleEditTitle(e)}
+              />
+              <Button
+                color="#36C2CC"
+                size="sm"
+                style={{ color: '#04373B' }}
+                onClick={sendResCategoryTitle}
+              >
+                입력
+              </Button>
+            </div>
+          ) : (
+            <div className="flex justify-evenly">
+              {name && (
+                <h3 className="text-h3 text-white text-center">{name}</h3>
+              )}
+              <img
+                src={whiteThreeDot}
+                alt="three dot button"
+                onClick={() => {
+                  handleEditOrDeleteModalOpen();
+                  props.setEpic('제목');
+                }}
+              />
+            </div>
+          )}
 
           <div>
             {photos!.length > 0 ? (
@@ -94,7 +166,10 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
                     <img
                       src={threeDot}
                       alt="three dot button"
-                      onClick={() => handleEditOrDeleteModalOpen(photo.photoId)}
+                      onClick={() => {
+                        handleEditOrDeleteModalOpen();
+                        props.setEpic('내용');
+                      }}
                     />
                   </PhotoCardWrapper>
                 );

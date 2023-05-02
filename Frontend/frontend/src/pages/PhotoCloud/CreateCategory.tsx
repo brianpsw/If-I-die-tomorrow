@@ -48,7 +48,7 @@ function CreateCategory() {
 
   const sendCategory = async () => {
     try {
-      const res = await defaultApi.post(
+      const post_category = await defaultApi.post(
         requests.POST_CATEGORY(),
         {
           name: categoryTitle,
@@ -57,7 +57,7 @@ function CreateCategory() {
           withCredentials: true,
         },
       );
-      console.log(res);
+      console.log(post_category);
     } catch (err) {
       console.error(err);
     }
