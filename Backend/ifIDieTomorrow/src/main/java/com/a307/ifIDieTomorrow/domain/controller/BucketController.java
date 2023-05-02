@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.*;
 import com.a307.ifIDieTomorrow.domain.service.BucketService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -35,7 +32,7 @@ public class BucketController {
 	
 	@PostMapping("/title")
 	@Operation(summary = "버킷 리스트 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
-	public ResponseEntity<CreateBucketResDto> createBucket(
+	public ResponseEntity<CreateBucketResDto> createBucketWithTitle(
 			@RequestBody String title) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(title));
 	}
@@ -63,13 +60,20 @@ public class BucketController {
 
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByBucketId(bucketId));
 	}
-
+	
 	@PutMapping("")
 	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
+	}
+	
+	@PatchMapping("")
+	@Operation(summary = "버킷 제목 수정", description = "버킷 리스트를 수정합니다.")
+	public ResponseEntity<CreateBucketResDto> updateBucket(
+			@RequestBody UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException {
+		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucketTitle(data));
 	}
 
 	@DeleteMapping("/{bucketId}")
