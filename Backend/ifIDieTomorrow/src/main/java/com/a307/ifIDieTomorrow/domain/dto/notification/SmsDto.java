@@ -15,10 +15,6 @@ public class SmsDto {
 
     private String receiver;
     private String smsContent;
-<<<<<<< Updated upstream
-    private String refKey;
 
 }
-=======
-}
->>>>>>> Stashed changes
+
