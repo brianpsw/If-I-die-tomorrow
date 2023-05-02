@@ -32,7 +32,14 @@ import java.util.List;
 public class BucketController {
 
 	private final BucketService bucketService;
-
+	
+	@PostMapping("/title")
+	@Operation(summary = "버킷 리스트 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
+	public ResponseEntity<CreateBucketResDto> createBucket(
+			@RequestBody String title) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(title));
+	}
+	
 	@PostMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
@@ -68,7 +75,7 @@ public class BucketController {
 	@DeleteMapping("/{bucketId}")
 	@Operation(summary = "버킷 리스트 삭제", description = "버킷 리스트를 삭제합니다.")
 	public ResponseEntity<Long> deleteBucket(
-			@PathVariable Long bucketId) throws NotFoundException {
+			@PathVariable Long bucketId) throws NotFoundException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(bucketService.deleteBucket(bucketId));
 	}
 
