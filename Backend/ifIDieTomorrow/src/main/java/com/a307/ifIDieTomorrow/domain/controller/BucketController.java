@@ -65,7 +65,7 @@ public class BucketController {
 	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
-			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException {
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
 	
