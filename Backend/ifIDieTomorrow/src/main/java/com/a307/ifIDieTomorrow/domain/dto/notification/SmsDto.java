@@ -13,9 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 public class SmsDto {
 
-    private List<String> receivers;
-    private String callingNumber;
+    private String receiver;
     private String smsContent;
+<<<<<<< Updated upstream
     private String refKey;
 
 }
+=======
+}
+>>>>>>> Stashed changes
