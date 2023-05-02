@@ -9,7 +9,7 @@ public class UpdateBucketDto {
 	private Long bucketId;
 	private String title;
 	private String content;
-	private Boolean complete;
+	private String complete;
 	private Boolean secret;
 	private Boolean updatePhoto;
 	

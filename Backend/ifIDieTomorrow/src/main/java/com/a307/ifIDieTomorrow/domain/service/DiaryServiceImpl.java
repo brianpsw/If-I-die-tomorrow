@@ -78,11 +78,14 @@ public class DiaryServiceImpl implements DiaryService{
 
 	}
 	@Override
-	public Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException {
+	public Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException, UnAuthorizedException {
 
 		Diary diary = diaryRepository.findById(diaryId)
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
-
+		
+		if (diary.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("삭제 권한이 없습니다.");
+		
 //		사진 삭제
 		if (!"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 

@@ -18,7 +18,7 @@ public class GetBucketResDto {
 	private String nickname;
 	private String title;
 	private String content;
-	private Boolean complete;
+	private String complete;
 	private String imageUrl;
 	private Boolean secret;
 	private LocalDateTime createdAt;

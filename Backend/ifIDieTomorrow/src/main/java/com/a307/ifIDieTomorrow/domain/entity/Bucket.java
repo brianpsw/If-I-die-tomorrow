@@ -32,9 +32,7 @@ public class Bucket extends BaseEntity {
 	@Column(columnDefinition = "TEXT")
 	private String content;
 	
-	@Column(nullable = false)
-	@ColumnDefault("false")
-	private Boolean complete;
+	private String complete;
 	
 	@Column
 	private String imageUrl;
@@ -46,12 +44,16 @@ public class Bucket extends BaseEntity {
 	@ColumnDefault("0")
 	private Integer report;
 	
-	public void updateBucket (String title, String content, Boolean complete, String imageUrl, Boolean secret) {
+	public void updateBucket (String title, String content, String complete, String imageUrl, Boolean secret) {
 		this.title = title;
 		this.content = content;
 		this.complete = complete;
 		this.imageUrl = imageUrl;
 		this.secret = secret;
+	}
+	
+	public void updateTitle(String title) {
+		this.title = title;
 	}
 
 	public void reportBucket(){

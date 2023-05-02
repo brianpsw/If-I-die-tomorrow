@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.*;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -36,6 +33,20 @@ public class BucketServiceImpl implements BucketService {
 	private final BucketRepository bucketRepository;
 	
 	private final CommentRepository commentRepository;
+	
+	@Override
+	public CreateBucketResDto createBucketWithTitle (String title) {
+		Bucket bucket = Bucket.builder().
+				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
+				title(title).
+				content("").
+				complete("").
+				imageUrl("").
+				secret(true).
+				build();
+		
+		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
 	
 	@Override
 	public CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
@@ -100,9 +111,23 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public Long deleteBucket (Long bucketId) throws NotFoundException {
+	public CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException {
+		Bucket bucket = bucketRepository.findByBucketId(data.getBucketId()).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
+		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("해당 버킷에 접근하기 위한 권한이 없습니다.");
+		
+		bucket.updateTitle(data.getTitle());
+		
+		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
+	
+	@Override
+	public Long deleteBucket (Long bucketId) throws NotFoundException, UnAuthorizedException {
 		Bucket bucket = bucketRepository.findByBucketId(bucketId)
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
+		
+		if (bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("삭제 권한이 없습니다.");
 		
 		// 사진이 있었다면 S3에서 사진을 삭제함
 		if (!"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());

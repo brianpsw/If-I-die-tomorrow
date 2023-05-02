@@ -8,7 +8,7 @@ public class CreateBucketDto {
 	
 	private String title;
 	private String content;
-	private Boolean complete;
+	private String complete;
 	private Boolean secret;
 	private Boolean hasPhoto;
 	
