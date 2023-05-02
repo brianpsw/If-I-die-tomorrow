@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import {
   PhotoWrapper,
   PhotoCardWrapper,
@@ -67,9 +68,11 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        `${requests.base_url}/photo/${props.selectedCategory}`,
-        { withCredentials: true },
+      const response = await defaultApi.get(
+        requests.GET_PHOTO(props.selectedCategory),
+        {
+          withCredentials: true,
+        },
       );
       if (response.status === 200) {
         const { data } = response;

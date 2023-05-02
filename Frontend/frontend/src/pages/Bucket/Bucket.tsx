@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import BucketListItem from './BucketListItem';
 import CreateModal from '../../components/common/CreateModal';
 import DeleteModal from './DeleteModal';
@@ -16,7 +17,12 @@ const Container = styled.div`
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}
 `;
-
+interface Bucket {
+  bucketId: number;
+  title: string;
+  complete: boolean;
+  secret: boolean;
+}
 function Bucket() {
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] = useState(false);
   const [openCreateModal, setOpenCreateModal] = useState(false);
@@ -24,7 +30,22 @@ function Bucket() {
   const [selectedBucketId, setSelectedBucketId] = useState('');
   const [selectedBucketContent, setSelectedBucketContent] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [buckets, setBuckets] = useState<Bucket[]>([]);
   // 수정, 삭제 모달 open
+  const test_buckets = [
+    {
+      bucketId: 1,
+      title: 'string',
+      complete: false,
+      secret: true,
+    },
+    {
+      bucketId: 2,
+      title: 'string',
+      complete: true,
+      secret: true,
+    },
+  ];
   const handleEditOrDeleteModalOpen = () => {
     setOpenEditOrDeleteModal(true);
   };
@@ -57,7 +78,20 @@ function Bucket() {
   const onDeleteModalClose = () => {
     setDeleteModalOpen(false);
   };
-
+  useEffect(() => {
+    const get_user_bucket = async () => {
+      try {
+        const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
+          withCredentials: true,
+        });
+        setBuckets(response.data);
+        return console.log(response.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+    get_user_bucket();
+  });
   return (
     <div className="max-w-[390px]">
       {/* 수정, 삭제 모달 */}
@@ -86,7 +120,16 @@ function Bucket() {
       ) : null}
       <Container>
         <LogoContainer src={IIDT} />
-        <BucketListItem
+        {test_buckets.map((bucket, index) => (
+          <BucketListItem
+            key={index}
+            bucket={bucket}
+            setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+            setSelectedBucketId={setSelectedBucketId}
+            setSelectedBucketContent={setSelectedBucketContent}
+          />
+        ))}
+        {/* <BucketListItem
           setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
           setSelectedBucketId={setSelectedBucketId}
           setSelectedBucketContent={setSelectedBucketContent}
@@ -135,7 +178,7 @@ function Bucket() {
           setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
           setSelectedBucketId={setSelectedBucketId}
           setSelectedBucketContent={setSelectedBucketContent}
-        />
+        /> */}
 
         <img
           onClick={handleCreateModalOpen}
