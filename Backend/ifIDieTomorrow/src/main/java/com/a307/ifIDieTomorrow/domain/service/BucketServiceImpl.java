@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.*;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -109,6 +106,17 @@ public class BucketServiceImpl implements BucketService {
 		} catch (Exception e) {
 			log.error(e.getMessage());
 		}
+		
+		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
+	}
+	
+	@Override
+	public CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException {
+		Bucket bucket = bucketRepository.findByBucketId(data.getBucketId()).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
+		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("해당 버킷에 접근하기 위한 권한이 없습니다.");
+		
+		bucket.updateTitle(data.getTitle());
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
 	}

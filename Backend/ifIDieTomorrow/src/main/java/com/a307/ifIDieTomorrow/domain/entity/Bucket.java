@@ -51,6 +51,10 @@ public class Bucket extends BaseEntity {
 		this.imageUrl = imageUrl;
 		this.secret = secret;
 	}
+	
+	public void updateTitle(String title) {
+		this.title = title;
+	}
 
 	public void reportBucket(){
 		this.report ++;
