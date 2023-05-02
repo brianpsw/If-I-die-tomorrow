@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import axios from 'axios';
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -56,7 +57,7 @@ function EditDiaryModal({
         formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
       }
 
-      const response = await axios.put(`${requests.base_url}/diary`, formData, {
+      const response = await defaultApi.put(requests.POST_DIARY(), formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import BucketDetail from '../../pages/Bucket/BucketDetail';
 import { Link } from 'react-router-dom';
 import {
@@ -48,14 +49,13 @@ function BucketFeed() {
 
   const fetchData = async (page: number) => {
     try {
-      const response = await axios.get(`${requests.base_url}/board/bucket`, {
-        params: {
-          page,
-          size: 10,
-          // secret: true,
+      const response = await defaultApi.get(
+        requests.GET_BUCKET_FEED(page, 10),
+        {
+          withCredentials: true,
         },
-        withCredentials: true,
-      });
+      );
+
       if (response.status === 200) {
         const { data } = response.data;
         setItems((prevItems: BucketItem[]) => {

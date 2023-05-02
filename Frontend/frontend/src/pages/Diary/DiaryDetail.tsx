@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -141,7 +142,7 @@ function DiaryDetail() {
 
   const deleteDiary = async (diaryId: number) => {
     try {
-      await axios.delete(`${requests.base_url}/diary/${diaryId}`, {
+      await defaultApi.delete(requests.DELETE_DIARY(diaryId), {
         withCredentials: true,
       });
       navigate('/feed?tab=diary'); // 피드 페이지로 이동
@@ -160,12 +161,9 @@ function DiaryDetail() {
 
   const fetchDiaryDetail = async () => {
     try {
-      const response = await axios.get(
-        `${requests.base_url}/diary/${diaryId}`,
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await defaultApi.get(requests.GET_DIARY(diaryId), {
+        withCredentials: true,
+      });
       if (response.status === 200) {
         setDiaryDetail(response.data.diary);
         setComments(response.data.comments);
@@ -245,8 +243,8 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        `${requests.base_url}/board/comment`, // 수정된 API 엔드포인트
+      const response = await defaultApi.post(
+        requests.POST_COMMENT(), // 수정된 API 엔드포인트
         {
           content,
           type: true, // type을 true로 설정
@@ -315,9 +313,11 @@ function Comment({
 
   const deleteComment = async (commentId: bigint) => {
     try {
-      const response = await axios.delete(
-        `${requests.base_url}/board/comment/${commentId}`,
-        { withCredentials: true },
+      const response = await defaultApi.delete(
+        requests.DELETE_COMMENT(commentId),
+        {
+          withCredentials: true,
+        },
       );
       if (response.status === 200) {
         onUpdate(); // 댓글 목록을 업데이트하도록 함수 호출
@@ -329,8 +329,8 @@ function Comment({
 
   const updateComment = async (commentId: bigint, content: string) => {
     try {
-      const response = await axios.put(
-        `${requests.base_url}/board/comment`,
+      const response = await defaultApi.put(
+        requests.PUT_COMMENT(),
         {
           commentId,
           content,
