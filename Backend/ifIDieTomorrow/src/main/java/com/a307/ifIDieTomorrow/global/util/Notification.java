@@ -26,7 +26,8 @@ public class Notification {
     private String smsOAuth;
     @Value("${notification.sms.apikey}")
     private String smsApiKey;
-
+    @Value("${notification.sms.callback}")
+    private String smsCallback;
     private final OkHttpClient client = new OkHttpClient();
 
     private String getAccessToken() throws IOException {
@@ -64,10 +65,10 @@ public class Notification {
                         accessToken).getBytes(StandardCharsets.UTF_8)); // Authorization Header 에 입력할 값입니다.
 
         RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("phone", String.join(",", smsDto.getReceivers())) // 수신번호를 입력해 주세요. (수신번호가 두 개 이상인 경우 ',' 를 이용하여 입력합니다. ex) 01011112222,01033334444)
-                .addFormDataPart("callback", smsDto.getCallingNumber()) // 발신번호를 입력해 주세요.
+                .addFormDataPart("phone", smsDto.getReceiver()) // 수신번호를 입력해 주세요. (수신번호가 두 개 이상인 경우 ',' 를 이용하여 입력합니다. ex) 01011112222,01033334444)
+                .addFormDataPart("callback", smsCallback) // 발신번호를 입력해 주세요.
                 .addFormDataPart("message", smsDto.getSmsContent()) // SMS 내용을 입력해 주세요.
-                .addFormDataPart("refkey", smsDto.getRefKey()) // 발송 결과 조회를 위한 임의의 랜덤 키 값을 입력해 주세요.
+                .addFormDataPart("refkey", "abcdef") // 발송 결과 조회를 위한 임의의 랜덤 키 값을 입력해 주세요.
                 .build();
 
         Request request = new Request.Builder()
