@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -191,7 +193,6 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
               />
             </div>
           )}
-
           <div>
             {photos!.length > 0 ? (
               photos!.map((photo: PhotoInfo) => {
@@ -237,6 +238,13 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
             ) : (
               <p>사진이 없습니다.</p>
             )}
+            <Link to={`/photo-cloud/${categoryId}/upload-photo`}>
+              <Icon
+                icon="ph:plus-circle"
+                style={{ width: '40px', height: '40px' }}
+                className="text-pink_100"
+              />
+            </Link>
           </div>
         </div>
       ) : (
