@@ -283,7 +283,7 @@ function Comment({
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
-  const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
+  // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
 
   const handleModalOpen = () => {
