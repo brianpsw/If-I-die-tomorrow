@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Tag(name = "유저", description = "APIs for User")
 @Slf4j
@@ -42,9 +43,9 @@ public class UserController {
 
     @PatchMapping("/nickname")
     @Operation(summary = "유저의 닉네임 변경", description = "유저의 닉네임 변경합니다.")
-    public ResponseEntity<UserDto> getUser(@RequestBody String nickname) throws NotFoundException {
+    public ResponseEntity<UserDto> patchUser(@RequestBody Map<String, String> nicknameMap) throws NotFoundException {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nickname, principal.getUserId()));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nicknameMap.get("nickname"), principal.getUserId()));
     }
 
     @PatchMapping("/personality")
