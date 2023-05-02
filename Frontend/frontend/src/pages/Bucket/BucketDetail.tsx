@@ -211,7 +211,9 @@ function BucketDetail() {
               <div>
                 <h2 className="text-h3">{bucket.title}</h2>
                 <Nickname>{bucket.nickname}</Nickname>
-                <div>{bucket.createdAt}</div>
+                <div>
+                  {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                </div>
               </div>
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />
@@ -367,7 +369,7 @@ function Comment({
       <CommentBox>
         <div>
           <b>{comment.nickname}</b>
-          <p>{comment.createdAt}</p>
+          <div>{new Date(comment.createdAt).toISOString().split('T')[0]}</div>
         </div>
         <div>
           {editing ? (
