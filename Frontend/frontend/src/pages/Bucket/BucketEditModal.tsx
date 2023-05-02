@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
 
 const ModalOverlay = styled.div`
@@ -15,22 +17,68 @@ const ModalWrapper = styled.div`
 const ContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full pt-1 h-[33px] bg-white rounded border-black break-all my-4 px-[6px]`}
 `;
-
+interface Bucket {
+  bucketId: number;
+  title: string;
+  complete: string;
+  secret: boolean;
+}
 interface BucketEditModalProps {
-  selectedBucketId: string;
+  selectedBucketId: number | null;
   selectedBucketContent: string;
+  setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
   onClose?: () => void;
 }
 
-function BucketEditModal(props: BucketEditModalProps) {
+function BucketEditModal({
+  selectedBucketId,
+  selectedBucketContent,
+  setBuckets,
+  onClose,
+}: BucketEditModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [contentValue, setContentValue] = useState('');
+  useEffect(() => {
+    setContentValue(selectedBucketContent);
+  }, []);
   const handleEditSubmit = () => {
     //버킷리스트 수정 api 연결
-    props.onClose?.();
+    const get_user_bucket = async () => {
+      try {
+        const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
+          withCredentials: true,
+        });
+        setBuckets(response.data);
+        return console.log(response.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+    const patch_bucket = async () => {
+      try {
+        const response = await defaultApi.patch(
+          requests.PATCH_BUCKET(),
+          {
+            bucketId: selectedBucketId,
+            title: contentValue,
+          },
+
+          {
+            withCredentials: true,
+          },
+        );
+
+        console.log(response.data);
+        get_user_bucket();
+      } catch (error) {
+        throw error;
+      }
+    };
+    patch_bucket();
+    onClose?.();
   };
   const handleClose = () => {
-    props.onClose?.();
+    onClose?.();
   };
 
   //모달 외부 클릭시 모달창 꺼짐
@@ -56,7 +104,7 @@ function BucketEditModal(props: BucketEditModalProps) {
         <ContentInputContainer
           onChange={(e) => setContentValue(e.target.value)}
           value={contentValue}
-          placeholder={props.selectedBucketContent}
+          placeholder={selectedBucketContent}
         />
         <div className="flex w-full justify-center my-4">
           <Button onClick={handleEditSubmit} color="#B3E9EB" size="sm">
