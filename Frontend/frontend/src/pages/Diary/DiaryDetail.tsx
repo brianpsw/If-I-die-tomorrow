@@ -209,6 +209,7 @@ function DiaryDetail() {
               <div>
                 <h2 className="text-h3">{diary.title}</h2>
                 <Nickname>{diary.nickname}</Nickname>
+                <div>{diary.createdAt}</div>
               </div>
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />

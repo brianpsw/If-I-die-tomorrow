@@ -211,6 +211,7 @@ function BucketDetail() {
               <div>
                 <h2 className="text-h3">{bucket.title}</h2>
                 <Nickname>{bucket.nickname}</Nickname>
+                <div>{bucket.createdAt}</div>
               </div>
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />
