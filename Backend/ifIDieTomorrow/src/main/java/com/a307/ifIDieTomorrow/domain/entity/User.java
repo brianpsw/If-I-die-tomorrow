@@ -62,4 +62,8 @@ public class User extends BaseEntity{
 		this.personalityId = personalityId;
 	}
 
+	public void setPersonalPage (String personalPage){
+		this.personalPage = personalPage;
+	}
+
 }
