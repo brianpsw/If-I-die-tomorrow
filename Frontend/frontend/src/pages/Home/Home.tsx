@@ -9,7 +9,7 @@ import { Background, Logo, FeelingTxt } from './HomeEmotion';
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
-  // const userInfo = useRecoilState(userState);
+  const userInfo = useRecoilState(userState);
   useEffect(() => {
     const get_user = async () => {
       try {
@@ -36,7 +36,8 @@ function Home() {
       }
     };
     get_user();
-  });
+    console.log(userInfo[0]?.nickname);
+  }, []);
 
   return (
     <Background>

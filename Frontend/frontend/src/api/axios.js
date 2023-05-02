@@ -23,7 +23,7 @@ defaultApi.interceptors.response.use(
       response: { status },
     } = error;
     if (status === 302) {
-      window.location.href = '/';
+      window.location.href = '/login';
     }
   },
 );

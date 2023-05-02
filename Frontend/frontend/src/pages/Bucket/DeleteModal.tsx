@@ -3,6 +3,8 @@ import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Button from '../../components/common/Button';
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -14,19 +16,58 @@ const ModalWrapper = styled.div`
 const ContentContainer = styled.div`
   ${tw`flex flex-wrap w-full pt-1 h-[60px] bg-white rounded border-black my-4 px-[6px]`}
 `;
+interface Bucket {
+  bucketId: number;
+  title: string;
+  complete: string;
+  secret: boolean;
+}
 interface DeleteModalProps {
-  selectedBucketId: string;
+  setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
+  selectedBucketId: number | null;
   onClose?: () => void;
 }
 
-function DeleteModal(props: DeleteModalProps) {
+function DeleteModal({
+  selectedBucketId,
+  setBuckets,
+  onClose,
+}: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const handleDelete = () => {
     //버킷리스트 삭제 api 연결
-    props.onClose?.();
+    const get_user_bucket = async () => {
+      try {
+        const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
+          withCredentials: true,
+        });
+        setBuckets(response.data);
+        return console.log(response.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+    const delete_bucket = async () => {
+      try {
+        const response = await defaultApi.delete(
+          requests.DELETE_BUCKET(selectedBucketId),
+
+          {
+            withCredentials: true,
+          },
+        );
+
+        console.log(response.data);
+        get_user_bucket();
+      } catch (error) {
+        throw error;
+      }
+    };
+    delete_bucket();
+    onClose?.();
   };
   const handleClose = () => {
-    props.onClose?.();
+    onClose?.();
   };
 
   //모달 외부 클릭시 모달창 꺼짐

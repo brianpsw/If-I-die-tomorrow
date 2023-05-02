@@ -83,8 +83,11 @@ const requests = {
   DELETE_DIARY(diaryId) {
     return `/api/diary/${diaryId}`;
   },
-  POST_BUCKET() {
+  POST_BUCKET_COMPLETE() {
     return `/api/bucket`;
+  },
+  POST_BUCKET() {
+    return `/api/bucket/title`;
   },
   GET_USER_BUCKET() {
     return `/api/bucket`;
@@ -97,6 +100,9 @@ const requests = {
   },
   DELETE_BUCKET(bucketId) {
     return `/api/bucket/${bucketId}`;
+  },
+  PATCH_BUCKET() {
+    return `/api/bucket`;
   },
   GET_WILL() {
     return `/api/will`;
