@@ -17,9 +17,15 @@ pipeline {
 
         stage('BE Test') {
             when {
-                anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-be' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                anyOf {
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'master' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
                 }
             }
             steps {
@@ -46,21 +52,48 @@ pipeline {
 
         stage('FE Test') {
             when {
-                anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-fe' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                anyOf {
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'master' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
                 }
             }
             steps {
                 echo 'FE Testing...'
+                sh """
+                git checkout ${env.gitlabTargetBranch}
+                git tag v1
+                git merge ${env.gitlabSourceBranch}
+                cd Frontend/frontend
+                npm install --force && CI= npm run build
+                """
+            }
+            post {
+                always {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    """
+                }
             }
         }
 
         stage('Sonar Analysis-fe') {
             when {
-                anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-fe' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                anyOf {
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'master' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
                 }
             }
             environment {
@@ -72,8 +105,7 @@ pipeline {
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
-                    -Dsonar.sources=. \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.sources=Frontend/ \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN_FE}
                     '''
@@ -83,9 +115,15 @@ pipeline {
 
         stage('Sonar Analysis-be') {
             when {
-                anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-be' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                anyOf {
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'master' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
                 }
             }
             environment {
@@ -108,10 +146,19 @@ pipeline {
 
         stage('SonarQube Quality Gate'){
             when {
-                anyOf{
-                    expression { env.gitlabTargetBranch == 'develop-fe' }
-                    expression { env.gitlabTargetBranch == 'develop-be' }
-                    expression { env.gitlabTargetBranch == 'master' }
+                anyOf {
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-be' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'develop-fe' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
+                    allOf {
+                        expression { env.gitlabTargetBranch == 'master' }
+                        expression { env.gitlabActionType == 'MERGE' }
+                    }
                 }
             }
             steps{
