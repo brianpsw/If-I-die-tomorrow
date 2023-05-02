@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import { css } from 'styled-components';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 
-import requests from '../../api/config';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 import Button from '../../components/common/Button';
@@ -36,26 +38,33 @@ const FeedCheckContainer = styled.div`
 interface Bucket {
   bucketId: number;
   title: string;
-  complete: boolean;
+  complete: string;
   secret: boolean;
 }
 interface BucketListItemProps {
   bucket: Bucket;
+  setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
   setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedBucketId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedBucketId: React.Dispatch<React.SetStateAction<number | null>>;
   setSelectedBucketContent: React.Dispatch<React.SetStateAction<string>>;
   // 버킷 정보 가져오기
 }
 function BucketListItem({
   bucket,
+  setBuckets,
   setOpenEditOrDeleteModal,
   setSelectedBucketId,
   setSelectedBucketContent,
 }: BucketListItemProps) {
   //Bucket controller
+  const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
   const handleBucketClick = () => {
+    if (bucket.complete) {
+      navigate(`/bucket/${bucket.bucketId}`);
+    }
     setIsClicked(!isClicked);
   };
 
@@ -64,14 +73,68 @@ function BucketListItem({
   const [completeContent, setCompleteContent] = useState('');
   const [completeDate, setCompleteDate] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [isCompleteDateValid, setIsCompleteDateValid] = useState(false);
+  const [isCompleteContentValid, setIsCompleteContentValid] = useState(false);
+  useEffect(() => {
+    if (isCompleteContentValid && isCompleteDateValid) {
+      setIsValid(true);
+    }
+  }, [{ isCompleteDateValid, isCompleteContentValid }]);
   const handleSubmit = () => {
     //버킷 완료 api 연결
+    const formData = new FormData();
+    let updatePhoto = false;
+    if (photo) {
+      formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
+      updatePhoto = true;
+    }
+    formData.append(
+      'data',
+      JSON.stringify({
+        bucketId: bucket.bucketId, // 버킷 리스트 ID
+        title: bucket.title, // 제목
+        content: completeContent, // 내용
+        complete: completeDate, // 완료 여부
+        secret: !isChecked, // 공개/비공개 여부
+        updatePhoto: updatePhoto, // 사진을 바꿨다면 true로 보내주세요},
+      }),
+    );
+    const get_user_bucket = async () => {
+      try {
+        const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
+          withCredentials: true,
+        });
+        setBuckets(response.data);
+        return console.log(response.data);
+      } catch (error) {
+        throw error;
+      }
+    };
+    const put_bucket = async () => {
+      try {
+        const response = await defaultApi.put(requests.PUT_BUCKET(), formData, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        console.log(response);
+        get_user_bucket();
+      } catch (error) {
+        throw error;
+      }
+    };
+
+    put_bucket();
   };
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImageUrl(imageUrl);
+      setPhoto(file);
     }
   };
   const handleFeedCheckClick = () => {
@@ -86,14 +149,18 @@ function BucketListItem({
   const handleDateChange = (date: any) => {
     const transformedDate = dayjs(date).format('YYYY-MM-DD');
     setCompleteDate(transformedDate);
+    setIsCompleteDateValid(true);
   };
-
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setCompleteContent(e.currentTarget.value);
+    setIsCompleteContentValid(e.currentTarget.value.length > 0);
+  };
   const handleEditModalOpen = () => {
     setOpenEditOrDeleteModal(true);
     //해당 버킷 id 전달
-    setSelectedBucketId('');
+    setSelectedBucketId(bucket.bucketId);
     //해당 버킷 content 전달
-    setSelectedBucketContent('');
+    setSelectedBucketContent(bucket.title);
   };
 
   return (
@@ -116,14 +183,14 @@ function BucketListItem({
       {isClicked ? (
         <FormContainer>
           <DateTimePicker
-            label="챌린지 시작 일자 선택"
+            label="버킷 완료 일자 선택"
             value={completeDate}
             className="w-full"
             onChange={handleDateChange}
           />
           <form action="submit">
             <ContentInputContainer
-              onChange={(e) => setCompleteContent(e.target.value)}
+              onChange={handleContentChange}
               value={completeContent}
               placeholder="버킷리스트 달성 과정과 느낀점을 입력해주세요."
             />
@@ -165,7 +232,12 @@ function BucketListItem({
             <span className="text-p1 mx-2">피드 공개여부 체크</span>
           </FeedCheckContainer>
           <div className="flex w-full justify-center my-4">
-            <Button onClick={handleSubmit} color="#B3E9EB" size="sm">
+            <Button
+              onClick={handleSubmit}
+              color="#B3E9EB"
+              size="sm"
+              disabled={isValid ? false : true}
+            >
               작성 완료
             </Button>
           </div>
