@@ -31,12 +31,14 @@ pipeline {
                 cd Backend/ifIDieTomorrow
                 chmod +x gradlew
                 ./gradlew clean test
-                git reset --hard v1
-                git tag -d v1
                 """
             }
             post {
                 always {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    """
                     junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
                 }
             }
