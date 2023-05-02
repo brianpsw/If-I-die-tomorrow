@@ -1,9 +1,9 @@
 package com.a307.ifIDieTomorrow;
 
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(
 		exclude = {
@@ -13,7 +13,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 		}
 )
 @EnableJpaAuditing
-@EnableBatchProcessing
+@EnableScheduling
 public class IfIDieTomorrowApplication {
 
 	public static void main(String[] args) {
