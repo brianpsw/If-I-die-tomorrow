@@ -47,8 +47,8 @@ function PhotoCloud() {
       });
     } else if (epic === '내용') {
       setEditOrDeleteModalEpic({
-        titleEdit: true,
-        contentEdit: false,
+        titleEdit: false,
+        contentEdit: true,
       });
     }
   };
@@ -62,6 +62,8 @@ function PhotoCloud() {
     if (epic === '제목') {
       setTargetId(selectedCategory);
     } else if (epic === '내용') {
+      console.log(epic);
+      console.log(selectedPhotoId);
       setTargetId(selectedPhotoId);
     }
     setDeleteModalOpen(true);
@@ -93,6 +95,7 @@ function PhotoCloud() {
       <PhotoCloudDetail
         setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
         setSelectedPhotoId={setSelectedPhotoId}
+        selectedPhotoId={selectedPhotoId}
         selectedCategory={selectedCategory}
         setEpic={setEpic}
         setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}

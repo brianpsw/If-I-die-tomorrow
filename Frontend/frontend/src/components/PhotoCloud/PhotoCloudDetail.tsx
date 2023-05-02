@@ -39,6 +39,7 @@ interface EditOrDeleteEpic {
 interface PhotoCloudModalProps {
   setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPhotoId: React.Dispatch<React.SetStateAction<string>>;
+  selectedPhotoId: string;
   selectedCategory: string;
   setEpic: React.Dispatch<React.SetStateAction<string>>;
   setEditOrDeleteModalEpic: React.Dispatch<
@@ -51,6 +52,7 @@ interface PhotoCloudModalProps {
 function PhotoCloudDetail(props: PhotoCloudModalProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
+  const [editContent, setEditContent] = useState<string>('');
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
@@ -91,6 +93,16 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     }
   };
 
+  const handleEditContent = (e: any) => {
+    const regExp = /^.{0,300}$/;
+    const expspaces = /  +/g;
+    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+      setEditContent(e.target.value);
+    } else {
+      alert('내용은 연속된 공백을 제외한 300자이내여야합니다.');
+    }
+  };
+
   const changeCategory = async () => {
     try {
       const patch_category = await defaultApi.patch(
@@ -106,12 +118,36 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     }
   };
 
+  const changeContent = async () => {
+    try {
+      const patch_photo = await defaultApi.patch(
+        requests.PATCH_PHOTO(),
+        { photoId: props.selectedPhotoId, caption: editContent },
+        { withCredentials: true },
+      );
+      console.log(patch_photo);
+      // status 200이면
+      // props.setEditOrDeleteModalEpic({ titleEdit: false, contentEdit: false });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   const sendResCategoryTitle = () => {
     if (editTitle === '' || editTitle === ' ') {
-      alert('카테고리를 입력해주세요');
+      alert('내용을 입력해주세요');
     } else {
       console.log(editTitle);
       changeCategory();
+    }
+  };
+
+  const sendResContent = () => {
+    if (editContent === '' || editContent === ' ') {
+      alert('내용을 입력해주세요');
+    } else {
+      console.log(editContent);
+      changeContent();
     }
   };
 
@@ -162,17 +198,39 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
                 return (
                   <PhotoCardWrapper key={photo.photoId}>
                     <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
-                    <p className="text-p3 text-green_800 mb-6">
-                      {photo.caption}
-                    </p>
-                    <img
-                      src={threeDot}
-                      alt="three dot button"
-                      onClick={() => {
-                        handleEditOrDeleteModalOpen();
-                        props.setEpic('내용');
-                      }}
-                    />
+                    {props.editOrDeleteModalEpic.contentEdit === true &&
+                    props.selectedPhotoId == photo.photoId.toString() ? (
+                      <div>
+                        <textarea
+                          defaultValue={photo.caption}
+                          style={{ width: '310px', height: '180px' }}
+                          onChange={(e: any) => handleEditContent(e)}
+                        ></textarea>
+                        <Button
+                          color="#36C2CC"
+                          size="sm"
+                          style={{ color: '#04373B' }}
+                          onClick={sendResContent}
+                        >
+                          입력
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-p3 text-green_800 mb-6">
+                          {photo.caption}
+                        </p>
+                        <img
+                          src={threeDot}
+                          alt="three dot button"
+                          onClick={() => {
+                            handleEditOrDeleteModalOpen();
+                            props.setEpic('내용');
+                            props.setSelectedPhotoId(photo.photoId.toString());
+                          }}
+                        />
+                      </div>
+                    )}
                   </PhotoCardWrapper>
                 );
               })
