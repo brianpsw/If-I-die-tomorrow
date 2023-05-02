@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 import { Icon } from '@iconify/react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
@@ -22,14 +23,17 @@ const ContentWrapper = styled.div`
 `;
 
 function UploadPhoto() {
+  const navigate = useNavigate();
   const [imgUrl, setImgUrl] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [content, setContent] = useState<string>('');
-
+  const params = useParams();
   const handleInputPhoto = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImgUrl(imageUrl);
+      setPhotoFile(file);
     }
   };
 
@@ -47,6 +51,55 @@ function UploadPhoto() {
     }
   };
 
+  const submitPhoto = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+
+      const data = {
+        category: params.category,
+        caption: content,
+      };
+
+      formData.append('data', JSON.stringify(data));
+
+      // formData.append(
+      //   'data',
+      //   JSON.stringify({
+      //     category: params.category,
+      //     caption: content,
+      //   }),
+      // );
+
+      if (photoFile) {
+        formData.append('photo', photoFile);
+      }
+
+      const post_all_photo = await defaultApi.post(
+        requests.POST_ALL_PHOTO(),
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
+      // if (post_all_photo.status === 201) {
+      //   navigate(`/photo-cloud`);
+      // }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleSubmitPhoto = () => {
+    if (content === '' || photoFile === null) {
+      alert('사진과 텍스트를 모두 넣어주세요');
+    }
+  };
+
   return (
     <Background>
       <div style={{ padding: '16px 24px' }}>
@@ -59,52 +112,60 @@ function UploadPhoto() {
         <h2 className="text-h3 text-white text-center my-8">
           사진과 텍스트를 넣어주세요
         </h2>
-        <PhotoUploadWrapper onClick={handlePhotoUpload}>
-          <div
-            style={{
-              width: '100%',
-              minHeight: '192px',
-              border: '2px #111111',
-              borderStyle: 'dashed ',
-              borderRadius: '10px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
+        <form onSubmit={submitPhoto}>
+          <PhotoUploadWrapper onClick={handlePhotoUpload}>
+            <div
+              style={{
+                width: '100%',
+                minHeight: '192px',
+                border: '2px #111111',
+                borderStyle: 'dashed ',
+                borderRadius: '10px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              {imgUrl ? (
+                <img
+                  className="image-upload-preview w-full h-full bg-auto"
+                  src={imgUrl}
+                  alt="upload-preview"
+                />
+              ) : (
+                <Icon
+                  icon="ic:round-photo-camera"
+                  style={{ fontSize: '30px', color: '#111111' }}
+                />
+              )}
+            </div>
+            <input
+              id="photo-input"
+              type="file"
+              accept="image/*"
+              onChange={handleInputPhoto}
+              hidden
+            />
+          </PhotoUploadWrapper>
+          <ContentWrapper>
+            <textarea
+              rows={5}
+              maxLength={300}
+              className="w-full rounded-[10px] p-4"
+              placeholder="당신만의 이야기를 써보세요."
+              onChange={handleContent}
+            ></textarea>
+          </ContentWrapper>
+          <Button
+            color={'#36C2CC'}
+            size="lg"
+            style={{ color: '#04373B' }}
+            onClick={handleSubmitPhoto}
+            type="submit"
           >
-            {imgUrl ? (
-              <img
-                className="image-upload-preview w-full h-full bg-auto"
-                src={imgUrl}
-                alt="upload-preview"
-              />
-            ) : (
-              <Icon
-                icon="ic:round-photo-camera"
-                style={{ fontSize: '30px', color: '#111111' }}
-              />
-            )}
-          </div>
-          <input
-            id="photo-input"
-            type="file"
-            accept="image/*"
-            onChange={handleInputPhoto}
-            hidden
-          />
-        </PhotoUploadWrapper>
-        <ContentWrapper>
-          <textarea
-            rows={5}
-            maxLength={300}
-            className="w-full rounded-[10px] p-4"
-            placeholder="당신만의 이야기를 써보세요."
-            onChange={handleContent}
-          ></textarea>
-        </ContentWrapper>
-        <Button color="#36C2CC" size="lg" style={{ color: '#04373B' }}>
-          사진 올리기
-        </Button>
+            사진 올리기
+          </Button>
+        </form>
       </div>
     </Background>
   );

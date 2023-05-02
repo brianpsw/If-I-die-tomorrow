@@ -238,7 +238,7 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
             ) : (
               <p>사진이 없습니다.</p>
             )}
-            <Link to={`/photo-cloud/${categoryId}/upload-photo`}>
+            <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
               <Icon
                 icon="ph:plus-circle"
                 style={{ width: '40px', height: '40px' }}

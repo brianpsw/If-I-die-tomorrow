@@ -12,6 +12,7 @@ export const Background = styled.div`
   width: 100%;
   position: relative;
   background-attachment: fixed;
+  padding-bottom: 70px;
 `;
 
 export const PhotoWrapper = styled.div`

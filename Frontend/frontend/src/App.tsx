@@ -53,7 +53,7 @@ function App() {
               element={<CreateCategory />}
             />
             <Route
-              path="/photo-cloud/:category/upload-photo"
+              path="/photo-cloud/upload-photo/:category"
               element={<UploadPhoto />}
             />
             {/* <Route path="/*" element={<ErrorPage />} /> */}
