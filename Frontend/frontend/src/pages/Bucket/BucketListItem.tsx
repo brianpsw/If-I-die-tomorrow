@@ -33,13 +33,25 @@ const PhotoContainer = styled.div`
 const FeedCheckContainer = styled.div`
   ${tw`flex items-center w-full h-[24px] my-2`}
 `;
+interface Bucket {
+  bucketId: number;
+  title: string;
+  complete: boolean;
+  secret: boolean;
+}
 interface BucketListItemProps {
+  bucket: Bucket;
   setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedBucketId: React.Dispatch<React.SetStateAction<string>>;
   setSelectedBucketContent: React.Dispatch<React.SetStateAction<string>>;
   // 버킷 정보 가져오기
 }
-function BucketListItem(props: BucketListItemProps) {
+function BucketListItem({
+  bucket,
+  setOpenEditOrDeleteModal,
+  setSelectedBucketId,
+  setSelectedBucketContent,
+}: BucketListItemProps) {
   //Bucket controller
   const [isClicked, setIsClicked] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
@@ -77,27 +89,27 @@ function BucketListItem(props: BucketListItemProps) {
   };
 
   const handleEditModalOpen = () => {
-    props.setOpenEditOrDeleteModal(true);
+    setOpenEditOrDeleteModal(true);
     //해당 버킷 id 전달
-    props.setSelectedBucketId('');
+    setSelectedBucketId('');
     //해당 버킷 content 전달
-    props.setSelectedBucketContent('');
+    setSelectedBucketContent('');
   };
 
   return (
     <Container>
       {/* <BucketContainer state={BucketState}> isClicked={isClicked}*/}
       <BucketContainer>
-        {isCompleted ? (
+        {bucket.complete ? (
           <img onClick={handleBucketClick} src={CheckedIcon} alt="" />
         ) : (
           <img onClick={handleBucketClick} src={UnCheckedIcon} alt="" />
         )}
         <ContentContainer onClick={handleBucketClick}>
-          <span className="text-p1">청담스케쥴 김치볶음밥</span>
+          <span className="text-p1">{bucket.title}</span>
         </ContentContainer>
         <div onClick={handleEditModalOpen}>
-          <img src={TreeDot} alt="" />
+          <img className="cursor-pointer" src={TreeDot} alt="" />
         </div>
       </BucketContainer>
 
