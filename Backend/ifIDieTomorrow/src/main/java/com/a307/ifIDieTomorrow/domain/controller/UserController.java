@@ -1,10 +1,12 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
-import com.a307.ifIDieTomorrow.domain.dto.UserDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
 import com.a307.ifIDieTomorrow.domain.service.UserService;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.opencsv.exceptions.CsvException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,18 +50,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nicknameMap.get("nickname"), principal.getUserId()));
     }
 
-    @PatchMapping("/phone")
-    @Operation(summary = "유저의 전화번호 변경", description = "유저의 전화번호 변경합니다.")
-    public ResponseEntity<UserDto> patchPhone(@RequestBody Map<String, String> phoneMap) throws NotFoundException {
+    @PatchMapping("/after")
+    @Operation(summary = "사후 전송 서비스 동의 여부 수정", description = "사후 전송 서비스 동의 여부를 수정합니다.")
+    public ResponseEntity<UserDto> patchUserAfter(@RequestBody PatchUserAfterDto data) throws NotFoundException, IllegalArgumentException {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(userService.changePhone(phoneMap.get("phone"), principal.getUserId()));
-    }
-
-    @PatchMapping("/sendAgree")
-    @Operation(summary = "유저의 수신 동의 변경", description = "유저의 수신 동의를 토글합니다.")
-    public ResponseEntity<UserDto> patchSendAgree() throws NotFoundException {
-        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return ResponseEntity.status(HttpStatus.OK).body(userService.patchSendAgree(principal.getUserId()));
+        return ResponseEntity.status(HttpStatus.OK).body(userService.patchUserAfter(data, principal.getUserId()));
     }
 
     @PatchMapping("/personality")
