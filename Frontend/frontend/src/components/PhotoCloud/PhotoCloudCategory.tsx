@@ -11,7 +11,12 @@ interface CategoryInfo {
   name: string;
 }
 
-function PhotoCloudCategory() {
+interface PhotoCloudProps {
+  setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteCategory: boolean;
+}
+
+function PhotoCloudCategory(props: PhotoCloudProps) {
   const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
@@ -23,6 +28,7 @@ function PhotoCloudCategory() {
       if (response.status === 200) {
         const { data } = response;
         setCategoryData(() => data);
+        props.setDeleteCategory(false);
       }
     } catch (err) {
       console.error(err);
@@ -32,6 +38,10 @@ function PhotoCloudCategory() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (props.deleteCategory) fetchData();
+  }, [props.deleteCategory]);
 
   const handleCategory = (id: number) => {
     navigate(`/photo-cloud/${id}`);

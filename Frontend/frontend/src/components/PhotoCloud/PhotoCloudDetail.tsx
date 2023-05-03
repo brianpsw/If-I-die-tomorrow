@@ -38,7 +38,7 @@ interface EditOrDeleteEpic {
   contentEdit: boolean;
 }
 
-interface PhotoCloudModalProps {
+interface PhotoCloudProps {
   setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
   setSelectedPhotoId: React.Dispatch<React.SetStateAction<string>>;
   selectedPhotoId: string;
@@ -48,10 +48,11 @@ interface PhotoCloudModalProps {
     React.SetStateAction<EditOrDeleteEpic>
   >;
   editOrDeleteModalEpic: EditOrDeleteEpic;
-  // 사진 정보 가져오기
+  setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteContent: boolean;
 }
 
-function PhotoCloudDetail(props: PhotoCloudModalProps) {
+function PhotoCloudDetail(props: PhotoCloudProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
@@ -67,6 +68,7 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
       if (get_photo.status === 200) {
         const { data } = get_photo;
         setPhotoData(() => data);
+        props.setDeleteContent(false);
       }
     } catch (err) {
       console.error(err);
@@ -80,6 +82,10 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     fetchData();
     setEditTitle(name!);
   }, [props.selectedCategory]);
+
+  useEffect(() => {
+    if (props.deleteContent) fetchData();
+  }, [props.deleteContent]);
 
   const handleEditOrDeleteModalOpen = () => {
     props.setOpenEditOrDeleteModal(true);
@@ -112,9 +118,14 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
         { categoryId, name: editTitle },
         { withCredentials: true },
       );
-      console.log(patch_category);
-      // status 200이면
-      // props.setEditOrDeleteModalEpic({ titleEdit: false, contentEdit: false });
+      if (patch_category.status === 200) {
+        setEditTitle(patch_category.data.name);
+        fetchData();
+        props.setEditOrDeleteModalEpic({
+          titleEdit: false,
+          contentEdit: false,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -127,9 +138,13 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
         { photoId: props.selectedPhotoId, caption: editContent },
         { withCredentials: true },
       );
-      console.log(patch_photo);
-      // status 200이면
-      // props.setEditOrDeleteModalEpic({ titleEdit: false, contentEdit: false });
+      if (patch_photo.status === 200) {
+        fetchData();
+        props.setEditOrDeleteModalEpic({
+          titleEdit: false,
+          contentEdit: false,
+        });
+      }
     } catch (err) {
       console.error(err);
     }
@@ -139,7 +154,6 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     if (editTitle === '' || editTitle === ' ') {
       alert('내용을 입력해주세요');
     } else {
-      console.log(editTitle);
       changeCategory();
     }
   };
@@ -148,7 +162,6 @@ function PhotoCloudDetail(props: PhotoCloudModalProps) {
     if (editContent === '' || editContent === ' ') {
       alert('내용을 입력해주세요');
     } else {
-      console.log(editContent);
       changeContent();
     }
   };

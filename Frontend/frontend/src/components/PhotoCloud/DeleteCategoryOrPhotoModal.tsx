@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -21,9 +22,13 @@ interface DeleteModalProps {
   targetId: string;
   epic: string;
   onClose?: () => void;
+  setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
+  setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
+  const params = useParams();
+  const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
 
   const deleteCategory = async (id: string) => {
@@ -32,7 +37,11 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
         requests.DELETE_CATEGORY(id),
         { withCredentials: true },
       );
-      console.log(delete_category);
+      if (delete_category.status === 204) {
+        navigate(`/photo-cloud/1`);
+        props.setDeleteCategory(true);
+        props.onClose?.();
+      }
     } catch (err) {
       console.error(err);
     }
@@ -43,7 +52,10 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
       const delete_photo = await defaultApi.delete(requests.DELETE_PHOTO(id), {
         withCredentials: true,
       });
-      console.log(delete_photo);
+      if (delete_photo.status === 204) {
+        props.setDeleteContent(true);
+        props.onClose?.();
+      }
     } catch (err) {
       console.error(err);
     }

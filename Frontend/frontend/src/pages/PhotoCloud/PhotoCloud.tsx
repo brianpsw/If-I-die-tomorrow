@@ -30,6 +30,8 @@ function PhotoCloud() {
       titleEdit: false,
       contentEdit: false,
     });
+  const [deleteCategory, setDeleteCategory] = useState<boolean>(false);
+  const [deleteContent, setDeleteContent] = useState<boolean>(false);
 
   const params = useParams();
 
@@ -94,9 +96,14 @@ function PhotoCloud() {
           onClose={onDeleteModalClose}
           targetId={targetId}
           epic={epic}
+          setDeleteCategory={setDeleteCategory}
+          setDeleteContent={setDeleteContent}
         />
       ) : null}
-      <PhotoCloudCategory></PhotoCloudCategory>
+      <PhotoCloudCategory
+        setDeleteCategory={setDeleteCategory}
+        deleteCategory={deleteCategory}
+      ></PhotoCloudCategory>
       {selectedCategory && (
         <PhotoCloudDetail
           setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
@@ -106,6 +113,8 @@ function PhotoCloud() {
           setEpic={setEpic}
           setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
           editOrDeleteModalEpic={editOrDeleteModalEpic}
+          setDeleteContent={setDeleteContent}
+          deleteContent={deleteContent}
         ></PhotoCloudDetail>
       )}
     </Background>
