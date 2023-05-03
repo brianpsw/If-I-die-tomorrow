@@ -30,7 +30,7 @@ import {
   DateWrap,
 } from '../../components/feed/FeedEmotion';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[90vh] overflow-auto`}
+  ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}
@@ -178,7 +178,7 @@ function Diary() {
   };
 
   return (
-    <div className="max-w-[390px]">
+    <div className="w-full">
       <Container>
         <LogoContainer src={IIDT} />
         <Calendar
