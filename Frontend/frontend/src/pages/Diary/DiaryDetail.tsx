@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -281,9 +281,16 @@ function DiaryDetail() {
 
 function CommentForm({ diaryId }: { diaryId: number }) {
   const [content, setContent] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (content.trim().length === 0) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      return;
+    }
     try {
       const response = await defaultApi.post(
         requests.POST_COMMENT(), // 수정된 API 엔드포인트
@@ -305,6 +312,7 @@ function CommentForm({ diaryId }: { diaryId: number }) {
   return (
     <StyledCommentForm onSubmit={handleSubmit}>
       <StyledInput
+        ref={inputRef}
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}

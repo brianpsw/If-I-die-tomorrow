@@ -10,8 +10,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
-  bottom: 0;
+  ${tw`bg-white flex flex-col items-center border-solid rounded-xl h-[380px] w-[380px] shadow font-sans`}
 `;
 
 interface EditBucketModalProps {
@@ -107,35 +106,48 @@ function EditBucketModal({
   return (
     <ModalOverlay>
       <ModalWrapper>
-        <h3>일기 수정</h3>
+        <h3>버킷리스트 수정</h3>
         <form onSubmit={handleSubmit}>
-          <label htmlFor="title">제목</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={newTitle}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="photo">사진</label>
-          <input type="file" id="photo" onChange={handleFileChange} />
-          <label htmlFor="content">내용</label>
-          <textarea
-            id="content"
-            name="content"
-            value={newContent}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="secret">비밀</label>
-          <input
-            type="checkbox"
-            id="secret"
-            checked={newSecret}
-            onChange={handleCheckboxChange}
-          />
-          <button type="submit">수정하기</button>
+          <div>
+            <label htmlFor="title">제목</label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={newTitle}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="photo">사진</label>
+            <input type="file" id="photo" onChange={handleFileChange} />
+          </div>
+
+          <div>
+            <label htmlFor="content">내용</label>
+            <textarea
+              id="content"
+              name="content"
+              value={newContent}
+              onChange={handleInputChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="secret">비밀</label>
+            <input
+              type="checkbox"
+              id="secret"
+              checked={newSecret}
+              onChange={handleCheckboxChange}
+            />
+          </div>
+          <div>
+            <button type="submit">수정하기</button>
+            <button onClick={onClose}>닫기</button>
+          </div>
         </form>
-        <button onClick={onClose}>닫기</button>
       </ModalWrapper>
     </ModalOverlay>
   );
