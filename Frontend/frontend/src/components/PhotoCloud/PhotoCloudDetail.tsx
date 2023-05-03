@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -10,6 +12,8 @@ import {
 } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 
 import threeDot from '../../assets/icons/three_dot.svg';
+import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
+import Button from '../../components/common/Button';
 
 interface Category {
   categoryId: number;
@@ -29,95 +33,231 @@ interface CategoryPhoto {
   photos: PhotoInfo[];
 }
 
-interface PhotoCloudModalProps {
-  setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedPhotoId: React.Dispatch<React.SetStateAction<string>>;
-  selectedCategory: string;
-  // 사진 정보 가져오기
+interface EditOrDeleteEpic {
+  titleEdit: boolean;
+  contentEdit: boolean;
 }
 
-function PhotoCloudDetail(props: PhotoCloudModalProps) {
+interface PhotoCloudProps {
+  setOpenEditOrDeleteModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedPhotoId: React.Dispatch<React.SetStateAction<string>>;
+  selectedPhotoId: string;
+  selectedCategory: string;
+  setEpic: React.Dispatch<React.SetStateAction<string>>;
+  setEditOrDeleteModalEpic: React.Dispatch<
+    React.SetStateAction<EditOrDeleteEpic>
+  >;
+  editOrDeleteModalEpic: EditOrDeleteEpic;
+  setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
+  deleteContent: boolean;
+}
+
+function PhotoCloudDetail(props: PhotoCloudProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
-
-  // const photoData: CategoryPhoto = {
-  //   category: {
-  //     categoryId: 1,
-  //     name: '가장 행복했던 순간',
-  //   },
-  //   photos: [
-  //     {
-  //       photoId: 1,
-  //       imageUrl: 'https://cdn.imweb.me/thumbnail/20230308/6e8091381c157.jpg',
-  //       caption:
-  //         '이 피자로 말할 것 같으면 내가 가장 힘들었던 순간 나의 친구 홀롤룰루가 사준 피자이다. 나는 이 피자를 먹는 순간 눈물이 너무 났다. 진한 치즈의 풍미가 예술이었기때문이다. 눈이 오던 추운 날이었는데 나에게 피자를 먹이고 싶어서 눈발을 뚫고 나를 찾아온 홀롤룰루의 마음씨와 피자의 맛이 나를 다시 일으켜 세웠다.',
-  //       createdAt: '2023-04-28',
-  //       updatedAt: '2023-04-28',
-  //     },
-  //     {
-  //       photoId: 2,
-  //       imageUrl:
-  //         'https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/361/a0ca1bf285383d038f3521f3e19bd7f9_res.jpeg',
-  //       caption:
-  //         '춘식이는 나에게 전부라고 할 수 있다. 춘식이와 함께한 시간들은 모두 소중하고 행복한 시간이였다.',
-  //       createdAt: '2023-04-28',
-  //       updatedAt: '2023-04-28',
-  //     },
-  //   ],
-  // };
-
+  const [editTitle, setEditTitle] = useState<string>('');
+  const [editContent, setEditContent] = useState<string>('');
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
-      const response = await defaultApi.get(
+      const get_photo = await defaultApi.get(
         requests.GET_PHOTO(props.selectedCategory),
         {
           withCredentials: true,
         },
       );
-      if (response.status === 200) {
-        const { data } = response;
+      if (get_photo.status === 200) {
+        const { data } = get_photo;
         setPhotoData(() => data);
+        props.setDeleteContent(false);
       }
     } catch (err) {
       console.error(err);
     }
   };
+  const categoryId = photoData?.category.categoryId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
 
   useEffect(() => {
     fetchData();
+    setEditTitle(name!);
   }, [props.selectedCategory]);
 
-  const handleEditOrDeleteModalOpen = (id: number) => {
+  useEffect(() => {
+    if (props.deleteContent) fetchData();
+  }, [props.deleteContent]);
+
+  const handleEditOrDeleteModalOpen = () => {
     props.setOpenEditOrDeleteModal(true);
+  };
+
+  const handleEditTitle = (e: any) => {
+    const regExp = /^.{0,30}$/;
+    const expspaces = /  +/g;
+    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+      setEditTitle(e.target.value);
+    } else {
+      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+    }
+  };
+
+  const handleEditContent = (e: any) => {
+    const regExp = /^.{0,300}$/;
+    const expspaces = /  +/g;
+    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+      setEditContent(e.target.value);
+    } else {
+      alert('내용은 연속된 공백을 제외한 300자이내여야합니다.');
+    }
+  };
+
+  const changeCategory = async () => {
+    try {
+      const patch_category = await defaultApi.patch(
+        requests.PATCH_CATEGORY(),
+        { categoryId, name: editTitle },
+        { withCredentials: true },
+      );
+      if (patch_category.status === 200) {
+        setEditTitle(patch_category.data.name);
+        fetchData();
+        props.setEditOrDeleteModalEpic({
+          titleEdit: false,
+          contentEdit: false,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const changeContent = async () => {
+    try {
+      const patch_photo = await defaultApi.patch(
+        requests.PATCH_PHOTO(),
+        { photoId: props.selectedPhotoId, caption: editContent },
+        { withCredentials: true },
+      );
+      if (patch_photo.status === 200) {
+        fetchData();
+        props.setEditOrDeleteModalEpic({
+          titleEdit: false,
+          contentEdit: false,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const sendResCategoryTitle = () => {
+    if (editTitle === '' || editTitle === ' ') {
+      alert('내용을 입력해주세요');
+    } else {
+      changeCategory();
+    }
+  };
+
+  const sendResContent = () => {
+    if (editContent === '' || editContent === ' ') {
+      alert('내용을 입력해주세요');
+    } else {
+      changeContent();
+    }
   };
 
   return (
     <PhotoWrapper>
       {photoData ? (
         <div>
-          {name && <h3 className="text-h3 text-white text-center">{name}</h3>}
+          {props.editOrDeleteModalEpic.titleEdit ? (
+            <div className="flex flex-col items-center">
+              <input
+                style={{
+                  width: '342px',
+                  padding: '8px 16px',
+                  marginBottom: '24px',
+                  borderRadius: '10px',
+                }}
+                defaultValue={name}
+                onChange={(e: any) => handleEditTitle(e)}
+              />
+              <Button
+                color="#36C2CC"
+                size="sm"
+                style={{ color: '#04373B' }}
+                onClick={sendResCategoryTitle}
+              >
+                입력
+              </Button>
+            </div>
+          ) : (
+            <div className="flex justify-evenly">
+              {name && (
+                <h3 className="text-h3 text-white text-center">{name}</h3>
+              )}
+              <img
+                src={whiteThreeDot}
+                alt="three dot button"
+                onClick={() => {
+                  handleEditOrDeleteModalOpen();
+                  props.setEpic('제목');
+                }}
+              />
+            </div>
+          )}
           <div>
             {photos!.length > 0 ? (
               photos!.map((photo: PhotoInfo) => {
                 return (
                   <PhotoCardWrapper key={photo.photoId}>
                     <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
-                    <p className="text-p3 text-green_800 mb-6">
-                      {photo.caption}
-                    </p>
-                    <img
-                      src={threeDot}
-                      alt="three dot button"
-                      onClick={() => handleEditOrDeleteModalOpen(photo.photoId)}
-                    />
+                    {props.editOrDeleteModalEpic.contentEdit === true &&
+                    props.selectedPhotoId == photo.photoId.toString() ? (
+                      <div>
+                        <textarea
+                          defaultValue={photo.caption}
+                          style={{ width: '310px', height: '180px' }}
+                          onChange={(e: any) => handleEditContent(e)}
+                        ></textarea>
+                        <Button
+                          color="#36C2CC"
+                          size="sm"
+                          style={{ color: '#04373B' }}
+                          onClick={sendResContent}
+                        >
+                          입력
+                        </Button>
+                      </div>
+                    ) : (
+                      <div>
+                        <p className="text-p3 text-green_800 mb-6">
+                          {photo.caption}
+                        </p>
+                        <img
+                          src={threeDot}
+                          alt="three dot button"
+                          onClick={() => {
+                            handleEditOrDeleteModalOpen();
+                            props.setEpic('내용');
+                            props.setSelectedPhotoId(photo.photoId.toString());
+                          }}
+                        />
+                      </div>
+                    )}
                   </PhotoCardWrapper>
                 );
               })
             ) : (
               <p>사진이 없습니다.</p>
             )}
+            <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
+              <Icon
+                icon="ph:plus-circle"
+                style={{ width: '40px', height: '40px' }}
+                className="text-pink_100"
+              />
+            </Link>
           </div>
         </div>
       ) : (

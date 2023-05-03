@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -10,6 +10,7 @@ import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
 
 function CreateCategory() {
+  const navigate = useNavigate();
   const [categoryTitle, setCategoryTitle] = useState<string>('');
   const [isCustom, setIsCustom] = useState<boolean>(false);
   const [customTitle, setCustomTitle] = useState<string>('');
@@ -34,21 +35,26 @@ function CreateCategory() {
 
   const handleTitle = (e: any) => {
     const regExp = /^.{0,30}$/;
-    const expspaces = /  +/g;
-    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+
+    if (regExp.test(e.target.value)) {
       setCustomTitle(e.target.value);
     } else {
-      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+      alert('카테고리는 30자이내여야합니다.');
     }
   };
 
   const changeTitle = () => {
-    setCategoryTitle(customTitle);
+    const expspaces = /  +/g;
+    if (!expspaces.test(customTitle)) {
+      setCategoryTitle(customTitle);
+    } else {
+      alert('카테고리는 연속된 공백이 있으면 안됩니다.');
+    }
   };
 
   const sendCategory = async () => {
     try {
-      const res = await defaultApi.post(
+      const post_category = await defaultApi.post(
         requests.POST_CATEGORY(),
         {
           name: categoryTitle,
@@ -57,7 +63,9 @@ function CreateCategory() {
           withCredentials: true,
         },
       );
-      console.log(res);
+      if (post_category.status === 201) {
+        navigate(`/photo-cloud/${post_category.data.categoryId}`);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +75,6 @@ function CreateCategory() {
     if (categoryTitle === '' || categoryTitle === ' ') {
       alert('카테고리를 입력해주세요');
     } else {
-      console.log(categoryTitle);
       sendCategory();
     }
   };
@@ -75,12 +82,14 @@ function CreateCategory() {
   return (
     <Background>
       <div style={{ padding: '16px 24px' }}>
-        <Link to="/photo-cloud">
-          <Icon
-            icon="ph:x-bold"
-            style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
-          />
-        </Link>
+        <Icon
+          icon="ph:x-bold"
+          style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+
         <h2 className="text-h3 text-white text-center">
           사진 카테고리를 선택하세요
         </h2>
@@ -106,8 +115,8 @@ function CreateCategory() {
           })}
         </div>
         <p className="text-white text-center">
-          마음에 드는 테마가 없나요?
-          <br /> 직접 테마를 만들어보세요!
+          마음에 드는 카테고리가 없나요?
+          <br /> 직접 카테고리를 만들어보세요!
         </p>
         {isCustom ? (
           <div
@@ -123,6 +132,7 @@ function CreateCategory() {
                 borderRadius: '10px',
                 padding: '0 16px',
               }}
+              maxLength={30}
               onChange={(e: any) => handleTitle(e)}
             />
             <div className="flex justify-evenly w-[310px] mt-4">

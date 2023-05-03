@@ -85,10 +85,29 @@ function NavBar() {
     navigate(`/mypage`);
   };
 
+  const onlyMovePage = (page: string) => {
+    if (page === 'diary') {
+      navigate(`/diary`);
+    } else if (page === 'bucket') {
+      navigate(`/bucket`);
+    } else if (page === 'home') {
+      navigate(`/home`);
+    } else if (page === 'feed') {
+      navigate(`/feed`);
+    } else {
+      navigate(`/mypage`);
+    }
+  };
+
   return (
     <Navbar>
       {isDiary ? (
-        <img src={diaryActive} alt="active diary button" width="36px" />
+        <img
+          src={diaryActive}
+          alt="active diary button"
+          width="36px"
+          onClick={() => onlyMovePage('diary')}
+        />
       ) : (
         <img
           src={diaryInactive}
@@ -99,7 +118,12 @@ function NavBar() {
       )}
 
       {isBucket ? (
-        <img src={bucketActive} alt="active bucket button" width="36px" />
+        <img
+          src={bucketActive}
+          alt="active bucket button"
+          width="36px"
+          onClick={() => onlyMovePage('bucket')}
+        />
       ) : (
         <img
           src={bucketInactive}
@@ -110,7 +134,12 @@ function NavBar() {
       )}
 
       {isHome ? (
-        <img src={homeActive} alt="active home button" width="36px" />
+        <img
+          src={homeActive}
+          alt="active home button"
+          width="36px"
+          onClick={() => onlyMovePage('home')}
+        />
       ) : (
         <img
           src={homeInactive}
@@ -121,7 +150,12 @@ function NavBar() {
       )}
 
       {isFeed ? (
-        <img src={feedActive} alt="active feed button" width="36px" />
+        <img
+          src={feedActive}
+          alt="active feed button"
+          width="36px"
+          onClick={() => onlyMovePage('feed')}
+        />
       ) : (
         <img
           src={feedInactive}
@@ -132,7 +166,12 @@ function NavBar() {
       )}
 
       {isMypage ? (
-        <img src={mypageActive} alt="active mypage button" width="36px" />
+        <img
+          src={mypageActive}
+          alt="active mypage button"
+          width="36px"
+          onClick={() => onlyMovePage('mypage')}
+        />
       ) : (
         <img
           src={mypageInactive}

@@ -15,38 +15,14 @@ function HomeSemiRoom() {
   const mouse = new THREE.Vector2();
   const raycaster = new THREE.Raycaster();
 
-  const clickRoom = () => {
-    console.log('Room click');
-    // navigate('/photo-cloud/create-category');
+  const clickRoom = (e: any) => {
+    navigate('/photo-cloud/1');
+    e?.stopPropagation();
   };
 
-  const clickHeart = () => {
-    // console.log('포토로 가자');
-    navigate('/photo-cloud');
-  };
-
-  // 카메라랑 마우스랑 교차되서 제일 위에 있는 물체만 선택되도록 하고 싶은데..안돼
-  // const checkIntersects = () => {
-  // raycaster.setFromCamera(mouse, camera);
-
-  //   const intersects = raycaster.intersectObjects(meshes, true);
-  //   console.log('inter', intersects);
-  //   for (const item of intersects) {
-  //     console.log(item.object.name);
-  //     if (item.object.name === 'Marble_Marble_0') {
-  //       clickRoom();
-  //     } else if (item.object.name === 'Heart_heart_0') {
-  //       clickHeart();
-  //     }
-  //     break;
-  //   }
-  // };
-
-  const clickCanvas = (e: any) => {
-    mouse.x = (e.clientX / 390) * 2 - 1;
-    mouse.y = -((e.clientY / 770) * 2 - 1);
-
-    // checkIntersects();
+  const clickHeart = (e: any) => {
+    navigate('/photo-cloud/4');
+    e?.stopPropagation();
   };
 
   return (
@@ -63,13 +39,13 @@ function HomeSemiRoom() {
         <primitive
           object={heart.scene}
           scale={[0.3, 0.3, 0.3]}
-          onClick={clickHeart}
+          onClick={(e: any) => clickHeart(e)}
         />
         <primitive
           object={room3d.scene}
           scale={[0.6, 0.8, 0.6]}
           position={[0, -200, 0]}
-          onClick={clickRoom}
+          onClick={(e: any) => clickRoom(e)}
         />
 
         <OrbitControls />
