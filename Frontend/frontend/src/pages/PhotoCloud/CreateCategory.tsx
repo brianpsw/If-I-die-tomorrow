@@ -35,16 +35,21 @@ function CreateCategory() {
 
   const handleTitle = (e: any) => {
     const regExp = /^.{0,30}$/;
-    const expspaces = /  +/g;
-    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+
+    if (regExp.test(e.target.value)) {
       setCustomTitle(e.target.value);
     } else {
-      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+      alert('카테고리는 30자이내여야합니다.');
     }
   };
 
   const changeTitle = () => {
-    setCategoryTitle(customTitle);
+    const expspaces = /  +/g;
+    if (!expspaces.test(customTitle)) {
+      setCategoryTitle(customTitle);
+    } else {
+      alert('카테고리는 연속된 공백이 있으면 안됩니다.');
+    }
   };
 
   const sendCategory = async () => {
@@ -58,7 +63,9 @@ function CreateCategory() {
           withCredentials: true,
         },
       );
-      console.log(post_category);
+      if (post_category.status === 201) {
+        navigate(`/photo-cloud/${post_category.data.categoryId}`);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -68,7 +75,6 @@ function CreateCategory() {
     if (categoryTitle === '' || categoryTitle === ' ') {
       alert('카테고리를 입력해주세요');
     } else {
-      console.log(categoryTitle);
       sendCategory();
     }
   };
@@ -109,8 +115,8 @@ function CreateCategory() {
           })}
         </div>
         <p className="text-white text-center">
-          마음에 드는 테마가 없나요?
-          <br /> 직접 테마를 만들어보세요!
+          마음에 드는 카테고리가 없나요?
+          <br /> 직접 카테고리를 만들어보세요!
         </p>
         {isCustom ? (
           <div
@@ -126,6 +132,7 @@ function CreateCategory() {
                 borderRadius: '10px',
                 padding: '0 16px',
               }}
+              maxLength={30}
               onChange={(e: any) => handleTitle(e)}
             />
             <div className="flex justify-evenly w-[310px] mt-4">
