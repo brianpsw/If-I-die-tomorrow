@@ -95,6 +95,12 @@ notification:
     webhook-url: ${MATTERMOST_URL}
     pretext: Web-BackEnd
     enabled: 'true'
+  sms:
+    url: 'https://sms.gabia.com/api/send/sms'
+    oauth: 'https://sms.gabia.com/oauth/token'
+    id: ${SMS_ID}
+    apikey: ${SMS_APIKEY}
+    callback: ${SMS_CALLBACK}
 
 # cors 설정
 cors:
@@ -119,3 +125,5 @@ server:
 # admin 설정
 admin:
   email: ${ADMIN_EMAIL}
+
+
