@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
@@ -21,7 +22,7 @@ function PhotoCloud() {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('1');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [epic, setEpic] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
   const [editOrDeleteModalEpic, setEditOrDeleteModalEpic] =
@@ -29,6 +30,12 @@ function PhotoCloud() {
       titleEdit: false,
       contentEdit: false,
     });
+
+  const params = useParams();
+
+  useEffect(() => {
+    setSelectedCategory(params.categoryId!);
+  }, [params.categoryId]);
 
   const handleEditOrDeleteModalOpen = () => {
     setOpenEditOrDeleteModal(true);
@@ -89,18 +96,18 @@ function PhotoCloud() {
           epic={epic}
         />
       ) : null}
-      <PhotoCloudCategory
-        setSelectedCategory={setSelectedCategory}
-      ></PhotoCloudCategory>
-      <PhotoCloudDetail
-        setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-        setSelectedPhotoId={setSelectedPhotoId}
-        selectedPhotoId={selectedPhotoId}
-        selectedCategory={selectedCategory}
-        setEpic={setEpic}
-        setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
-        editOrDeleteModalEpic={editOrDeleteModalEpic}
-      ></PhotoCloudDetail>
+      <PhotoCloudCategory></PhotoCloudCategory>
+      {selectedCategory && (
+        <PhotoCloudDetail
+          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+          setSelectedPhotoId={setSelectedPhotoId}
+          selectedPhotoId={selectedPhotoId}
+          selectedCategory={selectedCategory}
+          setEpic={setEpic}
+          setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
+          editOrDeleteModalEpic={editOrDeleteModalEpic}
+        ></PhotoCloudDetail>
+      )}
     </Background>
   );
 }

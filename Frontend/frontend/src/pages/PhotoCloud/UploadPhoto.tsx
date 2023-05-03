@@ -60,7 +60,7 @@ function UploadPhoto() {
       formData.append(
         'data',
         JSON.stringify({
-          categoryId: params.category,
+          categoryId: params.categoryId,
           caption: content,
         }),
       );
@@ -79,9 +79,9 @@ function UploadPhoto() {
           },
         },
       );
-
+      console.log(post_all_photo);
       if (post_all_photo.status === 201) {
-        navigate(`/photo-cloud`);
+        navigate(`/photo-cloud/${params.categoryId}`);
       }
     } catch (err) {
       console.error(err);
@@ -97,12 +97,14 @@ function UploadPhoto() {
   return (
     <Background>
       <div style={{ padding: '16px 24px' }}>
-        <Link to="/photo-cloud">
-          <Icon
-            icon="ph:x-bold"
-            style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
-          />
-        </Link>
+        <Icon
+          icon="ph:x-bold"
+          style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+
         <h2 className="text-h3 text-white text-center my-8">
           사진과 텍스트를 넣어주세요
         </h2>
@@ -151,11 +153,10 @@ function UploadPhoto() {
             ></textarea>
           </ContentWrapper>
           <Button
-            color={'#36C2CC'}
+            color="#36C2CC"
             size="lg"
             style={{ color: '#04373B' }}
             onClick={handleSubmitPhoto}
-            type="submit"
           >
             사진 올리기
           </Button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -10,6 +10,7 @@ import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
 
 function CreateCategory() {
+  const navigate = useNavigate();
   const [categoryTitle, setCategoryTitle] = useState<string>('');
   const [isCustom, setIsCustom] = useState<boolean>(false);
   const [customTitle, setCustomTitle] = useState<string>('');
@@ -75,12 +76,14 @@ function CreateCategory() {
   return (
     <Background>
       <div style={{ padding: '16px 24px' }}>
-        <Link to="/photo-cloud">
-          <Icon
-            icon="ph:x-bold"
-            style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
-          />
-        </Link>
+        <Icon
+          icon="ph:x-bold"
+          style={{ fontSize: '24px', color: 'white', cursor: 'pointer' }}
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
+
         <h2 className="text-h3 text-white text-center">
           사진 카테고리를 선택하세요
         </h2>

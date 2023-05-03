@@ -47,13 +47,13 @@ function App() {
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/survey" element={<Survey />} />
-            <Route path="/photo-cloud" element={<PhotoCloud />} />
+            <Route path="/photo-cloud/:categoryId" element={<PhotoCloud />} />
             <Route
               path="/photo-cloud/create-category"
               element={<CreateCategory />}
             />
             <Route
-              path="/photo-cloud/upload-photo/:category"
+              path="/photo-cloud/upload-photo/:categoryId"
               element={<UploadPhoto />}
             />
             {/* <Route path="/*" element={<ErrorPage />} /> */}

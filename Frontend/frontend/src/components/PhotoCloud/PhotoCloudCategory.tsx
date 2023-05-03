@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -11,11 +11,8 @@ interface CategoryInfo {
   name: string;
 }
 
-interface PhotoCloudCategoryProps {
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
-}
-
-function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
+function PhotoCloudCategory() {
+  const navigate = useNavigate();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
   const fetchData = async () => {
@@ -37,7 +34,7 @@ function PhotoCloudCategory(props: PhotoCloudCategoryProps) {
   }, []);
 
   const handleCategory = (id: number) => {
-    props.setSelectedCategory(id.toString());
+    navigate(`/photo-cloud/${id}`);
   };
 
   return (
