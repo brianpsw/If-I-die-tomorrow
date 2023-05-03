@@ -35,10 +35,10 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
-	public CreateBucketResDto createBucketWithTitle (String title) {
+	public CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data) {
 		Bucket bucket = Bucket.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
-				title(title).
+				title(data.getTitle()).
 				content("").
 				complete("").
 				imageUrl("").
