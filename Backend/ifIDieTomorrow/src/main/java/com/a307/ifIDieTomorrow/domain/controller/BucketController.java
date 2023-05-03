@@ -33,8 +33,8 @@ public class BucketController {
 	@PostMapping("/title")
 	@Operation(summary = "버킷 리스트 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucketWithTitle(
-			@RequestBody String title) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(title));
+			@RequestBody CreateBucketWithTitleDto data) {
+		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(data));
 	}
 	
 	@PostMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

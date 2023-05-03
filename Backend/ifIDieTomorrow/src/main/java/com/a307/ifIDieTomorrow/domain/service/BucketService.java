@@ -1,7 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.*;
-import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
@@ -24,7 +23,7 @@ public interface BucketService {
 	
 	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException, UnAuthorizedException;
 	
-	CreateBucketResDto createBucketWithTitle (String title);
+	CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data);
 	
 	CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException;
 }
