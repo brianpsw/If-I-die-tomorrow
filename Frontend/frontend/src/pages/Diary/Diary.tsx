@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { userState } from '../../states/UserState';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
@@ -27,7 +30,7 @@ import {
   DateWrap,
 } from '../../components/feed/FeedEmotion';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
+  ${tw`flex items-center flex-col px-[24px] w-full h-[90vh] overflow-auto`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}
@@ -62,6 +65,8 @@ interface Diary {
 }
 
 function Diary() {
+  const navigate = useNavigate();
+  const userInfo = useRecoilState(userState);
   const [data, setData] = useState<Diary | null>();
   const [diarys, setDiarys] = useState<Diary[]>([]);
   const [sameDay, setSameDay] = useState<boolean>(false);
@@ -137,6 +142,9 @@ function Diary() {
       setPhoto(file);
     }
   };
+  const handleClickDiary = () => {
+    navigate(`/diary/${data?.diaryId}`);
+  };
   const handleFeedCheckClick = () => {
     setIsChecked(!isChecked);
   };
@@ -180,34 +188,35 @@ function Diary() {
         />
         {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
         {data ? (
-          <Link to={`/diarys/${data.diaryId}`}>
-            <CardWrap className="flex flex-col w-[340px] mt-6">
-              <NickDateWrap>
-                <Nickname>username</Nickname>
-                <DateWrap>{data.createdAt}</DateWrap>
-              </NickDateWrap>
-              <ContentImg>
-                <TitleContent
-                  hasImage={Boolean(data.imageUrl && data.imageUrl !== '""')}
-                >
-                  <Title>{data.title}</Title>
-                  <Content>
-                    {data.content.length > 40
-                      ? data.content.substring(0, 40) + '⋯'
-                      : data.content}
-                  </Content>
-                </TitleContent>
-                <div>
-                  {data.imageUrl && data.imageUrl !== '""' && (
-                    <Image src={data.imageUrl} alt="Diary" />
-                  )}
-                </div>
-              </ContentImg>
-              <Meta>
-                <Comments>댓글 {data.commentCount}개</Comments>
-              </Meta>
-            </CardWrap>
-          </Link>
+          <CardWrap
+            className="flex flex-col w-[340px] mt-6"
+            onClick={handleClickDiary}
+          >
+            <NickDateWrap>
+              <Nickname>{userInfo[0]?.nickname}</Nickname>
+              <DateWrap>{data.createdAt}</DateWrap>
+            </NickDateWrap>
+            <ContentImg>
+              <TitleContent
+                hasImage={Boolean(data.imageUrl && data.imageUrl !== '""')}
+              >
+                <Title>{data.title}</Title>
+                <Content>
+                  {data.content.length > 40
+                    ? data.content.substring(0, 40) + '⋯'
+                    : data.content}
+                </Content>
+              </TitleContent>
+              <div>
+                {data.imageUrl && data.imageUrl !== '""' && (
+                  <Image src={data.imageUrl} alt="Diary" />
+                )}
+              </div>
+            </ContentImg>
+            <Meta>
+              <Comments>댓글 {data.commentCount}개</Comments>
+            </Meta>
+          </CardWrap>
         ) : (
           ''
         )}
