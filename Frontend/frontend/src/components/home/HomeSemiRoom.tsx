@@ -16,14 +16,12 @@ function HomeSemiRoom() {
   const raycaster = new THREE.Raycaster();
 
   const clickRoom = (e: any) => {
-    console.log('Room click');
     navigate('/photo-cloud/1');
     e?.stopPropagation();
   };
 
   const clickHeart = (e: any) => {
-    console.log('포토로 가자');
-    navigate('/photo-cloud/7');
+    navigate('/photo-cloud/4');
     e?.stopPropagation();
   };
 
