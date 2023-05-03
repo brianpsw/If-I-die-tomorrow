@@ -148,14 +148,16 @@ public class PhotoServiceImpl implements PhotoService {
 	public GetPhotoByCategoryResDto getPhotoByCategory (Long categoryId) throws NotFoundException, UnAuthorizedException {
 		Category category = categoryRepository.findByCategoryId(categoryId).
 				orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
-		 
+		
+		Long userId = ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId();
+		
 		// 공용 카테고리가 아니면서 다른 유저가 만든 카테고리에 접근하려 할 때
-		if (category.getUserId() != 0 && !category.getUserId().equals(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()))
+		if (category.getUserId() != 0 && !category.getUserId().equals(userId))
 			throw new UnAuthorizedException("접근할 수 없는 카테고리 ID 입니다.");
 		
 		return new GetPhotoByCategoryResDto(
 				CreateCategoryResDto.toDto(category),
-				photoRepository.findAllPhotoByCategory_CategoryId(categoryId)
+				photoRepository.findAllPhotoByCategory_CategoryId(categoryId, userId)
 		);
 	}
 	
@@ -169,7 +171,7 @@ public class PhotoServiceImpl implements PhotoService {
 		List<CreateCategoryResDto> categories = categoryRepository.findAllByUserId(userId);
 		List<GetPhotoByCategoryResDto> list = new ArrayList<>();
 		categories.forEach(x -> list.add(
-				new GetPhotoByCategoryResDto(x, photoRepository.findAllPhotoByCategory_CategoryId(x.getCategoryId())))
+				new GetPhotoByCategoryResDto(x, photoRepository.findAllPhotoByCategory_CategoryId(x.getCategoryId(), userId)))
 		);
 
 		return list;

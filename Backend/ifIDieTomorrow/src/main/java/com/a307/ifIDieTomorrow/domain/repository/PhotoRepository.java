@@ -17,15 +17,15 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoResDto" +
 			"(photoId, imageUrl, caption, createdAt, updatedAt) " +
 			"FROM Photo " +
-			"WHERE category.categoryId = :categoryId " +
+			"WHERE category.categoryId = :categoryId AND userId = :userId " +
 			"ORDER BY createdAt DESC")
-	List<GetPhotoResDto> findAllPhotoByCategory_CategoryId (@Param("categoryId") Long categoryId);
+	List<GetPhotoResDto> findAllPhotoByCategory_CategoryId (@Param("categoryId") Long categoryId,@Param("userId") Long userId);
 	
 	@Modifying
 	@Transactional
 	@Query("DELETE " +
 			"FROM Photo " +
-			"WHERE category.categoryId IN :categoryId ")
+			"WHERE category.categoryId = :categoryId ")
 	void deleteAllByCategory_CategoryId (@Param("categoryId") Long categoryId);
 	
 	Optional<Photo> findByPhotoId (Long photoId);
