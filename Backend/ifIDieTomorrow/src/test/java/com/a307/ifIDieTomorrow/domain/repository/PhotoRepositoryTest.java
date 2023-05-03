@@ -70,8 +70,8 @@ public class PhotoRepositoryTest {
 		);
 		
 		// When
-		List<GetPhotoResDto> list1 = photoRepository.findAllPhotoByCategory_CategoryId(category1.getCategoryId());
-		List<GetPhotoResDto> list2 = photoRepository.findAllPhotoByCategory_CategoryId(category2.getCategoryId());
+		List<GetPhotoResDto> list1 = photoRepository.findAllPhotoByCategory_CategoryId(category1.getCategoryId(), 1L);
+		List<GetPhotoResDto> list2 = photoRepository.findAllPhotoByCategory_CategoryId(category2.getCategoryId(), 1L);
 		
 		// Then
 		assertThat(list1).hasSize(2);
@@ -110,7 +110,7 @@ public class PhotoRepositoryTest {
 		
 		// When
 		photoRepository.deleteAllByCategory_CategoryId(category1.getCategoryId());
-		List<GetPhotoResDto> list = photoRepository.findAllPhotoByCategory_CategoryId(category1.getCategoryId());
+		List<GetPhotoResDto> list = photoRepository.findAllPhotoByCategory_CategoryId(category1.getCategoryId(), 1L);
 		
 		
 		// Then
