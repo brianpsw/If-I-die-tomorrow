@@ -22,11 +22,11 @@ const InfoText = styled.span`
 
 function Login() {
   const kakaoLogin = () => {
-    window.location.href = requests.KAKAO_LOGIN;
+    window.location.href = requests.KAKAO_LOGIN!;
   };
 
   const naverLogin = () => {
-    window.location.href = requests.NAVER_LOGIN;
+    window.location.href = requests.NAVER_LOGIN!;
   };
   return (
     <Container>
