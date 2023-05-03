@@ -43,9 +43,23 @@ public class UserController {
 
     @PatchMapping("/nickname")
     @Operation(summary = "유저의 닉네임 변경", description = "유저의 닉네임 변경합니다.")
-    public ResponseEntity<UserDto> patchUser(@RequestBody Map<String, String> nicknameMap) throws NotFoundException {
+    public ResponseEntity<UserDto> patchNickname(@RequestBody Map<String, String> nicknameMap) throws NotFoundException {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.OK).body(userService.changeNickname(nicknameMap.get("nickname"), principal.getUserId()));
+    }
+
+    @PatchMapping("/phone")
+    @Operation(summary = "유저의 전화번호 변경", description = "유저의 전화번호 변경합니다.")
+    public ResponseEntity<UserDto> patchPhone(@RequestBody Map<String, String> phoneMap) throws NotFoundException {
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.changePhone(phoneMap.get("phone"), principal.getUserId()));
+    }
+
+    @PatchMapping("/sendAgree")
+    @Operation(summary = "유저의 수신 동의 변경", description = "유저의 수신 동의를 토글합니다.")
+    public ResponseEntity<UserDto> patchSendAgree() throws NotFoundException {
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.patchSendAgree(principal.getUserId()));
     }
 
     @PatchMapping("/personality")
