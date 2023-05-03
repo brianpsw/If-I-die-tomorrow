@@ -48,7 +48,7 @@ spring:
             user-name-attribute: id
   batch:
     job:
-      enabled: true
+      enabled: false
 
 
 file:
