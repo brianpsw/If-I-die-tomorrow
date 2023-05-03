@@ -53,7 +53,9 @@ function CreateModal({ onClose, setBuckets }: ModalProps) {
       try {
         const response = await defaultApi.post(
           requests.POST_BUCKET(),
-          contentValue,
+          {
+            title: contentValue,
+          },
           {
             withCredentials: true,
           },
