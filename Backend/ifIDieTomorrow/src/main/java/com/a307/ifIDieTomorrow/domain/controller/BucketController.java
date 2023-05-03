@@ -61,11 +61,12 @@ public class BucketController {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.getBucketByBucketId(bucketId));
 	}
 	
-	@PutMapping("")
+	@PutMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
-			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException {
+			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
 	
