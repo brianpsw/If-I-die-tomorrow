@@ -10,6 +10,7 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +27,10 @@ public class JobScheduler {
 	
 	@Autowired
 	private JobConfiguration jobConfiguration;
+
 	
 	// cron = "0 0 8 * * *" -> 매일 오전 8시에 스케줄러 작동
-	@Scheduled(cron = "0 0 8 * * *")
+	@Scheduled(cron = "${SMS_TIME}")
 	public void runJob() throws JobInstanceAlreadyCompleteException, JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
 		
 		log.info("스케줄러 작동, 현재 시간 : " + LocalDateTime.now());

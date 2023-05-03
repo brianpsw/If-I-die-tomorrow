@@ -96,7 +96,7 @@ notification:
     pretext: Web-BackEnd
     enabled: 'true'
   sms:
-    url: 'https://sms.gabia.com/api/send/sms'
+    url: 'https://sms.gabia.com/api/send/lms'
     oauth: 'https://sms.gabia.com/oauth/token'
     id: ${SMS_ID}
     apikey: ${SMS_APIKEY}
