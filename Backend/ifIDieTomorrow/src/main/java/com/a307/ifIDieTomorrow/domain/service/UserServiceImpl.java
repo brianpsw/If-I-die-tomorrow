@@ -151,4 +151,20 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
                 .build();
 
     }
+
+    @Override
+    public UserDto changePhone(String phone, Long userId) throws NotFoundException {
+        Optional<User> temp = userRepository.findById(userId);
+        User user = temp.orElseThrow(() -> new NotFoundException("존재하지 않는 유저 ID입니다."));
+        user.setPhone(phone);
+        return new UserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto patchSendAgree(Long userId) throws NotFoundException {
+        Optional<User> temp = userRepository.findById(userId);
+        User user = temp.orElseThrow(() -> new NotFoundException("존재하지 않는 유저 ID입니다."));
+        user.setSendAgree(!user.getSendAgree());
+        return new UserDto(userRepository.save(user));
+    }
 }

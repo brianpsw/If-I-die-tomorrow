@@ -1,7 +1,9 @@
 package com.a307.ifIDieTomorrow.global.config;
 
+import com.a307.ifIDieTomorrow.domain.dto.notification.SmsDto;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
+import com.a307.ifIDieTomorrow.global.util.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
@@ -14,6 +16,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +31,7 @@ public class JobConfiguration {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final UserRepository userRepository;
+	private final Notification notification;
 
 	@Bean
 	public Job job(){
@@ -91,8 +96,21 @@ public class JobConfiguration {
 				}).build();
 	}
 
-	private void sendNotice(User user){
+	private void sendNotice(User user)  {
 		// 알림을 보내는 뭔가
+		StringBuilder content = new StringBuilder();
+		content.append("[If I Die Tomorrow]").append("\n");
+		content.append(user.getName()).append("님, ").append("\n");
+		content.append("접속하신지 ").append( Duration.between(user.getUpdatedAt(), LocalDateTime.now()).toDays()).append("일 지났습니다.").append("\n");
+		content.append("미접속 6개월 이상 지속시 사망으로 간주하여 등록된 수신자에게 사후전송 페이지가 전송됩니다.").append("\n");
+		content.append("www.ifidietomorrow.co.kr/login").append(" 에 ").append("KAKAO".equals(user.getProviderType().toString()) ? "카카오" : "네이버").append(" 계정으로 로그인 해주세요.").append("\n");
+
+
+		try {
+			notification.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(user.getPhone()).build());
+		} catch (IOException e) {
+			log.error(e.getMessage());
+		}
 		log.info("send Notice to {}", user.getNickname());
 	}
 

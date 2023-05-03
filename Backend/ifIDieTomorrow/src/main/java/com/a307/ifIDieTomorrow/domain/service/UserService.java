@@ -28,4 +28,8 @@ public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2
     UserDto changeNickname(String nickname, Long userId) throws NotFoundException;
 
 	PersonalityResDto insertPersonality(PersonalityReqDto req) throws NotFoundException;
+
+    UserDto changePhone(String phone, Long userId) throws NotFoundException;
+
+    UserDto patchSendAgree(Long userId) throws NotFoundException;
 }

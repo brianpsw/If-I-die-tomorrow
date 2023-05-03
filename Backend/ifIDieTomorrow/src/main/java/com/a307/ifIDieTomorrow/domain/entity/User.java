@@ -57,6 +57,9 @@ public class User extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	private ProviderType providerType;
 
+	@Column(name = "phone")
+	private String phone;
+
 
 	public void setPersonality(Long personalityId){
 		this.personalityId = personalityId;
