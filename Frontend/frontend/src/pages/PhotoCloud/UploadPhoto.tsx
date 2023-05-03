@@ -57,20 +57,13 @@ function UploadPhoto() {
     try {
       const formData = new FormData();
 
-      const data = {
-        category: params.category,
-        caption: content,
-      };
-
-      formData.append('data', JSON.stringify(data));
-
-      // formData.append(
-      //   'data',
-      //   JSON.stringify({
-      //     category: params.category,
-      //     caption: content,
-      //   }),
-      // );
+      formData.append(
+        'data',
+        JSON.stringify({
+          categoryId: params.category,
+          caption: content,
+        }),
+      );
 
       if (photoFile) {
         formData.append('photo', photoFile);
@@ -86,9 +79,10 @@ function UploadPhoto() {
           },
         },
       );
-      // if (post_all_photo.status === 201) {
-      //   navigate(`/photo-cloud`);
-      // }
+
+      if (post_all_photo.status === 201) {
+        navigate(`/photo-cloud`);
+      }
     } catch (err) {
       console.error(err);
     }
