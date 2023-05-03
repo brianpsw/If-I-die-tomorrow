@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -64,6 +64,10 @@ const Nickname = styled.p`
   font-size: 15px;
 `;
 
+const CreateDate = styled.div`
+  font-size: 12px;
+`;
+
 const BucketImg = styled.div`
   ${tw`mt-6 mb-6 flex flex-col mx-auto`}
   width: 100%;
@@ -99,10 +103,46 @@ const StyledCommentForm = styled.form`
 const StyledInput = styled.input`
   ${tw`flex-1 mr-2`}
   color: black;
+  border-radius: 10px;
 `;
 
 const StyledButton = styled.button`
-  ${tw`bg-blue-500 text-white px-4 py-2 rounded`}
+  ${tw`text-white px-4 py-2 rounded`}
+`;
+
+const CommentNick = styled.div`
+  ${tw``}
+  font-weight: bold;
+  font-size: 14px;
+`;
+
+const CommentDate = styled.div`
+  ${tw`mb-2`}
+  font-size: 12px;
+`;
+
+const CommentContent = styled.div`
+  ${tw``}
+  width: 280px;
+  font-size: 15px;
+`;
+
+const EditContentForm = styled.form`
+  ${tw`flex flex-col`}
+  align-items: flex-end;
+`;
+
+const EditContentInput = styled.textarea`
+  ${tw`p-1`}
+  width: 270px;
+  font-size: 15px;
+  height: auto;
+  border-radius: 5px;
+`;
+
+const EditButton = styled.button`
+  ${tw`ml-2`}
+  font-size: 14px;
 `;
 
 function BucketDetail() {
@@ -211,7 +251,9 @@ function BucketDetail() {
               <div>
                 <h2 className="text-h3">{bucket.title}</h2>
                 <Nickname>{bucket.nickname}</Nickname>
-                <div>{bucket.createdAt}</div>
+                <CreateDate>
+                  {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                </CreateDate>
               </div>
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />
@@ -242,9 +284,16 @@ function BucketDetail() {
 
 function CommentForm({ bucketId }: { bucketId: number }) {
   const [content, setContent] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (content.trim().length === 0) {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+      return;
+    }
     try {
       const response = await defaultApi.post(
         requests.POST_COMMENT(), // 수정된 API 엔드포인트
@@ -266,6 +315,7 @@ function CommentForm({ bucketId }: { bucketId: number }) {
   return (
     <StyledCommentForm onSubmit={handleSubmit}>
       <StyledInput
+        ref={inputRef}
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -300,7 +350,7 @@ function Comment({
     handleModalClose(); // 추가: 수정/삭제 모달 닫기
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
 
@@ -366,20 +416,23 @@ function Comment({
       )}
       <CommentBox>
         <div>
-          <b>{comment.nickname}</b>
-          <p>{comment.createdAt}</p>
-        </div>
-        <div>
+          <CommentNick>{comment.nickname}</CommentNick>
+          <CommentDate>
+            {new Date(comment.createdAt).toISOString().split('T')[0]}
+          </CommentDate>
+
           {editing ? (
-            <form onSubmit={handleEditSubmit}>
-              <input type="text" value={content} onChange={handleChange} />
-              <button type="submit">수정</button>
-              <button type="button" onClick={handleCancel}>
-                취소
-              </button>
-            </form>
+            <EditContentForm onSubmit={handleEditSubmit}>
+              <EditContentInput value={content} onChange={handleChange} />
+              <div>
+                <EditButton type="submit">수정</EditButton>
+                <EditButton type="button" onClick={handleCancel}>
+                  취소
+                </EditButton>
+              </div>
+            </EditContentForm>
           ) : (
-            <p>{comment.content}</p>
+            <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
         <DotIcon>

@@ -4,6 +4,7 @@ import tw from 'twin.macro';
 interface ButtonProps {
   color: string;
   size: 'sm' | 'md' | 'lg';
+  type?: 'button' | 'submit' | 'reset';
 }
 
 const Button = styled.button<ButtonProps>`
