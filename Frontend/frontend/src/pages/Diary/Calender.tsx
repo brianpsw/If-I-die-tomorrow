@@ -140,7 +140,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
               onDateClickHandle(cloneDay);
             }}
           >
-            <span className="absolute text-sm font-bold top-4 right-[18px]">
+            <span className="absolute text-sm font-bold top-4 self-center">
               {formattedDate}
             </span>
           </DateCellContainer>,

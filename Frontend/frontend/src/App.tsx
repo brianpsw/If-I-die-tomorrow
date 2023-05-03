@@ -30,9 +30,9 @@ import NavBar from './components/common/NavBar';
 
 function App() {
   return (
-    <div className="App min-w-[390px] max-w-[390px]">
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <BrowserRouter>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <BrowserRouter>
+        <div className="App min-w-[300px]">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
@@ -59,9 +59,9 @@ function App() {
             {/* <Route path="/*" element={<ErrorPage />} /> */}
           </Routes>
           <NavBar />
-        </BrowserRouter>
-      </LocalizationProvider>
-    </div>
+        </div>
+      </BrowserRouter>
+    </LocalizationProvider>
   );
 }
 
