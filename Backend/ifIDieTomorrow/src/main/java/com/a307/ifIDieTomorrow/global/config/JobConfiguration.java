@@ -36,7 +36,6 @@ public class JobConfiguration {
 				.build();
 	}
 
-
 	@Bean
 	public Step processUser(){
 		TaskletStep processUser = stepBuilderFactory.get("processUser")
@@ -83,7 +82,6 @@ public class JobConfiguration {
 		return processUser;
 	}
 
-
 	@Bean
 	public Step finished(){
 		return stepBuilderFactory.get("finished")
@@ -93,12 +91,10 @@ public class JobConfiguration {
 				}).build();
 	}
 
-
 	private void sendNotice(User user){
 		// 알림을 보내는 뭔가
 		log.info("send Notice to {}", user.getNickname());
 	}
-
 
 	private void sendPage(User user){
 		// 페이지를 발송하는 뭔가
