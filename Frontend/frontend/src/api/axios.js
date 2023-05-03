@@ -17,16 +17,19 @@ const axiosApi = (url, options) => {
 export const defaultApi = axiosApi(BASE_URL);
 
 const handleResponse = (response) => {
-  if (response.headers['content-type'].includes('text/html')) {
+  if (
+    response &&
+    response.headers &&
+    response.headers['content-type'] &&
+    response.headers['content-type'].includes('text/html')
+  ) {
     window.location.href = '/login';
   }
   return response;
 };
 
 const handleError = (error) => {
-  const {
-    response: { status },
-  } = error;
+  const status = error.response && error.response.status;
   if (status === 302) {
     window.location.href = '/login';
   }
