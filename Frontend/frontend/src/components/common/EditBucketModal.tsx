@@ -4,20 +4,67 @@ import tw from 'twin.macro';
 import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+import uploadIcon from '../../assets/icons/camera_alt.svg';
+import Button from './Button';
+import { Icon } from '@iconify/react';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center border-solid rounded-xl h-[380px] w-[380px] shadow font-sans`}
+  ${tw`p-6 bg-white flex flex-col border-solid rounded-xl w-[380px] shadow font-sans justify-between`}
+  height: 70%;
+  overflow-y: auto;
+  position: relative;
+`;
+
+const ContentEditForm = styled.form`
+  ${tw`flex flex-col`}
+  justify-content: space-around;
+  // border: solid 1px black;
+`;
+
+const EditSection = styled.div`
+  ${tw`flex flex-col mb-4`}
+`;
+
+const EditLabel = styled.label`
+  ${tw`mb-2 flex flex-col`}
+  font-weight: bold;
+`;
+
+const TitleEditInput = styled.input`
+  ${tw``}
+  border: 1px solid #ccc;
+  width: 100%;
+  border-radius: 4px;
+  padding: 6px 12px;
+`;
+
+const PhotoContainer = styled.div`
+  ${tw`items-center self-end w-full min-h-[93px] my-2 rounded border border-dashed border-black overflow-hidden`}
+`;
+
+const ContentEditInput = styled.textarea`
+  ${tw``}
+  border: 1px solid #ccc;
+  width: 100%;
+  border-radius: 4px;
+  padding: 6px 12px;
+`;
+
+const ButtonWrap = styled.div`
+  ${tw`flex`}
+  justify-content: center;
+  // border-top: solid 1px black;
 `;
 
 interface EditBucketModalProps {
   bucketId: number;
   title: string;
-  content: string;
   complete: boolean;
+  content: string;
   secret: boolean;
   onClose?: () => void;
   onUpdate?: (updatedBucket: any) => void;
@@ -38,6 +85,7 @@ function EditBucketModal({
   const [newComplete, setNewComplete] = useState(complete);
   const [photo, setPhoto] = useState<File | null>(null);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,9 +97,9 @@ function EditBucketModal({
         JSON.stringify({
           bucketId,
           title: newTitle,
+          complete: newComplete,
           content: newContent,
           secret: newSecret,
-          complete: newComplete,
           updatePhoto, // updatePhoto 추가
         }),
       );
@@ -82,8 +130,22 @@ function EditBucketModal({
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setPhoto(e.target.files[0]);
+      const file = e.target.files[0];
+      setPhoto(file);
       setUpdatePhoto(true);
+
+      // 이미지 미리보기 설정
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setImageUrl(event.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+  const handleClick = () => {
+    const fileInput = document.getElementById('file-input');
+    if (fileInput) {
+      fileInput.click();
     }
   };
 
@@ -106,48 +168,79 @@ function EditBucketModal({
   return (
     <ModalOverlay>
       <ModalWrapper>
-        <h3>버킷리스트 수정</h3>
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="title">제목</label>
-            <input
+        <h2 className="text-h3 text-center">다이어리 수정</h2>
+        <Icon
+          icon="line-md:remove"
+          onClick={onClose}
+          className="absolute right-6 top-7"
+        />
+        <ContentEditForm onSubmit={handleSubmit}>
+          <EditSection>
+            <EditLabel htmlFor="title">제목</EditLabel>
+            <TitleEditInput
               type="text"
               id="title"
               name="title"
               value={newTitle}
               onChange={handleInputChange}
             />
-          </div>
-
-          <div>
-            <label htmlFor="photo">사진</label>
-            <input type="file" id="photo" onChange={handleFileChange} />
-          </div>
-
-          <div>
-            <label htmlFor="content">내용</label>
-            <textarea
+          </EditSection>
+          <EditSection>
+            <EditLabel htmlFor="photo">사진 선택</EditLabel>
+            <PhotoContainer>
+              {/* <div className="image-upload-container w-full h-auto overflow-hidden"> */}
+              {imageUrl ? (
+                <img
+                  className="image-upload-preview w-auto h-full bg-auto "
+                  src={imageUrl}
+                  alt="upload-preview"
+                  onClick={handleClick}
+                />
+              ) : (
+                <label
+                  htmlFor="photo"
+                  className="flex flex-col justify-center items-center w-full h-full cursor-pointer"
+                >
+                  <img src={uploadIcon} alt="" />
+                </label>
+              )}
+              <input
+                type="file"
+                id="photo"
+                onChange={handleFileChange}
+                accept="image/*"
+                hidden
+              />
+              {/* </div> */}
+            </PhotoContainer>
+          </EditSection>
+          <EditSection>
+            <EditLabel htmlFor="content">내용</EditLabel>
+            <ContentEditInput
               id="content"
               name="content"
               value={newContent}
               onChange={handleInputChange}
             />
+          </EditSection>
+          <div className="flex justify-start items-center">
+            <EditSection>
+              <EditLabel htmlFor="secret">나만보기</EditLabel>
+              <input
+                className="text-left"
+                type="checkbox"
+                id="secret"
+                checked={newSecret}
+                onChange={handleCheckboxChange}
+              />
+            </EditSection>
           </div>
-
-          <div>
-            <label htmlFor="secret">비밀</label>
-            <input
-              type="checkbox"
-              id="secret"
-              checked={newSecret}
-              onChange={handleCheckboxChange}
-            />
-          </div>
-          <div>
-            <button type="submit">수정하기</button>
-            <button onClick={onClose}>닫기</button>
-          </div>
-        </form>
+          <ButtonWrap>
+            <Button color="#36C2CC" size="md">
+              수정하기
+            </Button>
+          </ButtonWrap>
+        </ContentEditForm>
       </ModalWrapper>
     </ModalOverlay>
   );

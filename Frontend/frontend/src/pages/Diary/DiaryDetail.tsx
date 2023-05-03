@@ -102,6 +102,7 @@ const StyledCommentForm = styled.form`
 const StyledInput = styled.input`
   ${tw`flex-1 mr-2`}
   color: black;
+  border-radius: 10px;
 `;
 
 const StyledButton = styled.button`
