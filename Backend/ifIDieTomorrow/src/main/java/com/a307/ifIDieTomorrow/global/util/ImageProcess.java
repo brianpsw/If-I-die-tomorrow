@@ -48,27 +48,29 @@ public class ImageProcess {
 		
 		// JPG 파일 회전 처리 부분
 		if ("jpg".equals(fileFormat) || "jpeg".equals(fileFormat) || "JPG".equals(fileFormat) || "JPEG".equals(fileFormat)) {
-			int rotate = 1;
 			// 회전 정보를 알아내기 위해 사진의 Metadata 를 가져옴
 			// IOException, ImageProcessingException 발생 가능
 			Metadata metadata = ImageMetadataReader.readMetadata(multipartFile.getInputStream());
 			Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-			// MetadataException 발생 가능
-			rotate = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 			
-			// Metadata 기반으로 사진을 회전시킴
-			switch (rotate) {
-				case 1:
-					break;
-				case 3:
-					newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_180, null);
-					break;
-				case 6:
-					newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_90, null);
-					break;
-				case 8:
-					newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_270, null);
-					break;
+			if (metadata != null && directory != null) {
+				int rotate = 1;
+				rotate = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+				
+				// Metadata 기반으로 사진을 회전시킴
+				switch (rotate) {
+					case 1:
+						break;
+					case 3:
+						newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_180, null);
+						break;
+					case 6:
+						newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_90, null);
+						break;
+					case 8:
+						newImage = Scalr.rotate(newImage, Scalr.Rotation.CW_270, null);
+						break;
+				}
 			}
 		}
 		
