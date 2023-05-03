@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.UserDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Personality;
@@ -12,6 +13,7 @@ import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfoFactory;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.config.AdminProperties;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.OAuthProviderMisMatchException;
 import com.a307.ifIDieTomorrow.global.util.NicknameGenerator;
@@ -151,20 +153,18 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
                 .build();
 
     }
-
+    
     @Override
-    public UserDto changePhone(String phone, Long userId) throws NotFoundException {
-        Optional<User> temp = userRepository.findById(userId);
-        User user = temp.orElseThrow(() -> new NotFoundException("존재하지 않는 유저 ID입니다."));
-        user.setPhone(phone);
+    public UserDto patchUserAfter (PatchUserAfterDto data, Long userId) throws IllegalArgumentException, NotFoundException {
+        if (data.getAgree() && ("".equals(data.getPhone()) || data.getPhone() == null))
+            throw new IllegalArgumentException("동의 시 전화번호 입력은 필수입니다.");
+        
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+        
+        user.setSendAgree(data.getAgree());
+        user.setPhone(data.getPhone());
+        
         return new UserDto(userRepository.save(user));
     }
-
-    @Override
-    public UserDto patchSendAgree(Long userId) throws NotFoundException {
-        Optional<User> temp = userRepository.findById(userId);
-        User user = temp.orElseThrow(() -> new NotFoundException("존재하지 않는 유저 ID입니다."));
-        user.setSendAgree(!user.getSendAgree());
-        return new UserDto(userRepository.save(user));
-    }
+    
 }

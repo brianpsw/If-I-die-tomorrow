@@ -1,4 +1,4 @@
-package com.a307.ifIDieTomorrow.domain.dto;
+package com.a307.ifIDieTomorrow.domain.dto.user;
 
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
