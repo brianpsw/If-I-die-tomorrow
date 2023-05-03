@@ -12,7 +12,7 @@ import BucketEditModal from './BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh]`}
+  ${tw`flex items-center flex-col px-[24px] w-full h-[90vh] overflow-auto`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}
