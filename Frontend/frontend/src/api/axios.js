@@ -16,14 +16,21 @@ const axiosApi = (url, options) => {
 
 export const defaultApi = axiosApi(BASE_URL);
 
-defaultApi.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    const {
-      response: { status },
-    } = error;
-    if (status === 302) {
-      window.location.href = '/login';
-    }
-  },
-);
+const handleResponse = (response) => {
+  if (response.headers['content-type'].includes('text/html')) {
+    window.location.href = '/login';
+  }
+  return response;
+};
+
+const handleError = (error) => {
+  const {
+    response: { status },
+  } = error;
+  if (status === 302) {
+    window.location.href = '/login';
+  }
+  return Promise.reject(error);
+};
+
+defaultApi.interceptors.response.use(handleResponse, handleError);

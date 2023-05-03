@@ -30,7 +30,7 @@ function Home() {
           providerType: response.data.providerType,
         };
         setUser(userSave);
-        return console.log(response.data);
+        return console.log(response);
       } catch (error) {
         throw error;
       }
