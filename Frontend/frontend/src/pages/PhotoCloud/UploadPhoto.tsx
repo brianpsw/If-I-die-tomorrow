@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { Icon } from '@iconify/react';
 import tw from 'twin.macro';
@@ -79,7 +78,7 @@ function UploadPhoto() {
           },
         },
       );
-      console.log(post_all_photo);
+
       if (post_all_photo.status === 201) {
         navigate(`/photo-cloud/${params.categoryId}`);
       }
