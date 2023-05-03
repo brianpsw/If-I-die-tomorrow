@@ -268,13 +268,14 @@ function BucketDetail() {
           </BucketWrap>
           <CommentWrap>
             <CommentForm bucketId={bucket.bucketId} />
-            {comments.map((comment, index) => (
-              <Comment
-                key={index}
-                comment={comment}
-                onUpdate={() => fetchBucketDetail()}
-              />
-            ))}
+            {comments &&
+              comments.map((comment, index) => (
+                <Comment
+                  key={index}
+                  comment={comment}
+                  onUpdate={() => fetchBucketDetail()}
+                />
+              ))}
           </CommentWrap>
         </Container>
       </Background>

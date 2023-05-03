@@ -94,25 +94,26 @@ function CreateCategory() {
           사진 카테고리를 선택하세요
         </h2>
         <div className="flex flex-wrap justify-center">
-          {recommendCategory?.map((rec, idx) => {
-            return (
-              <div
-                key={idx}
-                style={{
-                  display: 'inline-block',
-                  backgroundColor: 'rgba(246, 246, 246, 0.7)',
-                  padding: '8px 16px',
-                  borderRadius: '10px',
-                  margin: '8px',
-                }}
-                onClick={() => handleCategory(rec)}
-              >
-                <p className="text-center text-gray_500" style={{}}>
-                  {rec}
-                </p>
-              </div>
-            );
-          })}
+          {recommendCategory &&
+            recommendCategory?.map((rec, idx) => {
+              return (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'inline-block',
+                    backgroundColor: 'rgba(246, 246, 246, 0.7)',
+                    padding: '8px 16px',
+                    borderRadius: '10px',
+                    margin: '8px',
+                  }}
+                  onClick={() => handleCategory(rec)}
+                >
+                  <p className="text-center text-gray_500" style={{}}>
+                    {rec}
+                  </p>
+                </div>
+              );
+            })}
         </div>
         <p className="text-white text-center">
           마음에 드는 카테고리가 없나요?

@@ -111,16 +111,17 @@ function Bucket() {
       ) : null}
       <Container>
         <LogoContainer src={IIDT} />
-        {buckets.map((bucket, index) => (
-          <BucketListItem
-            key={index}
-            bucket={bucket}
-            setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-            setSelectedBucketId={setSelectedBucketId}
-            setSelectedBucketContent={setSelectedBucketContent}
-            setBuckets={setBuckets}
-          />
-        ))}
+        {buckets &&
+          buckets.map((bucket) => (
+            <BucketListItem
+              key={bucket.bucketId} // 고유 식별자 사용
+              bucket={bucket}
+              setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+              setSelectedBucketId={setSelectedBucketId}
+              setSelectedBucketContent={setSelectedBucketContent}
+              setBuckets={setBuckets}
+            />
+          ))}
 
         <img
           onClick={handleCreateModalOpen}
