@@ -119,6 +119,30 @@ const CommentDate = styled.div`
   font-size: 12px;
 `;
 
+const CommentContent = styled.div`
+  ${tw``}
+  width: 280px;
+  font-size: 15px;
+`;
+
+const EditContentForm = styled.form`
+  ${tw`flex flex-col`}
+  align-items: flex-end;
+`;
+
+const EditContentInput = styled.textarea`
+  ${tw`p-1`}
+  width: 270px;
+  font-size: 15px;
+  height: auto;
+  border-radius: 5px;
+`;
+
+const EditButton = styled.button`
+  ${tw`ml-2`}
+  font-size: 14px;
+`;
+
 function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
@@ -315,7 +339,7 @@ function Comment({
     handleModalClose(); // 추가: 수정/삭제 모달 닫기
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
   };
 
@@ -387,15 +411,17 @@ function Comment({
           </CommentDate>
 
           {editing ? (
-            <form onSubmit={handleEditSubmit}>
-              <input type="text" value={content} onChange={handleChange} />
-              <button type="submit">수정</button>
-              <button type="button" onClick={handleCancel}>
-                취소
-              </button>
-            </form>
+            <EditContentForm onSubmit={handleEditSubmit}>
+              <EditContentInput value={content} onChange={handleChange} />
+              <div>
+                <EditButton type="submit">수정</EditButton>
+                <EditButton type="button" onClick={handleCancel}>
+                  취소
+                </EditButton>
+              </div>
+            </EditContentForm>
           ) : (
-            <p>{comment.content}</p>
+            <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
         <DotIcon>

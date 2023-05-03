@@ -10,8 +10,8 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
-  bottom: 0;
+  ${tw`bg-white flex flex-col items-center border-solid rounded-xl h-[380px] w-[380px] shadow font-sans`}
+  justify-content: space-between;
 `;
 
 interface EditDiaryModalProps {
