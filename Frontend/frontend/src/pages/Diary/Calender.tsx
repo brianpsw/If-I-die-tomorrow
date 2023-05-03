@@ -31,7 +31,7 @@ const CalenderDateContainer = styled.div`
 const DateCellContainer = styled.div`
   ${tw`flex text-center justify-center flex-grow max-w-[90vw]`}
 `;
-interface DiaryList {
+interface Diary {
   diaryId: number;
   title: string;
   content: string;
@@ -43,12 +43,12 @@ interface DiaryList {
 }
 
 interface Props {
-  showDetailsHandle: (diaryData: DiaryList | null) => void;
-  diaryList: DiaryList[];
+  showDetailsHandle: (diaryData: Diary | null) => void;
+  diarys: Diary[];
   setSameDay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
+const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   let koreaDays = ['월', '화', '수', '목', '금', '토', '일'];
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -56,7 +56,7 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
 
   useEffect(() => {
     const today = new Date();
-    const diary = diaryList.find((diary) =>
+    const diary = diarys.find((diary) =>
       isSameDay(today, new Date(diary.createdAt)),
     );
     setSameDay(true);
@@ -66,7 +66,7 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
     } else {
       showDetailsHandle(null);
     }
-  }, [diaryList]);
+  }, [diarys]);
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
@@ -78,7 +78,7 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
 
   const onDateClickHandle = (day: Date) => {
     setSelectedDate(day);
-    const diary = diaryList.find((diary) => {
+    const diary = diarys.find((diary) => {
       const createdAtDate: Date = new Date(diary.createdAt);
       return isSameDay(day, createdAtDate);
     });
@@ -107,7 +107,7 @@ const Calendar = ({ showDetailsHandle, diaryList, setSameDay }: Props) => {
 
   const renderCells = () => {
     const getCellBackgroundColor = (day: Date) => {
-      const diary = diaryList.find((diary) =>
+      const diary = diarys.find((diary) =>
         isSameDay(day, new Date(diary.createdAt)),
       );
       return diary ? '#36C2CC' : '';
