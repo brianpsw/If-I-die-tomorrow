@@ -18,7 +18,9 @@ import java.io.IOException;
 
 public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user);
+    
     User createUser(OAuth2UserInfo userInfo, ProviderType providerType);
+    
     User updateUser(User user, OAuth2UserInfo userInfo);
 
     String generateNickname();
