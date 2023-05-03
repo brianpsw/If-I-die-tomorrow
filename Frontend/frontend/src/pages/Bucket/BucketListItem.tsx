@@ -60,7 +60,6 @@ function BucketListItem({
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
-  const [photo, setPhoto] = useState<File | null>(null);
   const handleBucketClick = () => {
     if (bucket.complete) {
       navigate(`/bucket/${bucket.bucketId}`);
@@ -72,6 +71,7 @@ function BucketListItem({
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
   const [completeDate, setCompleteDate] = useState('');
+  const [photo, setPhoto] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState('');
   const [isValid, setIsValid] = useState(false);
   const [isCompleteDateValid, setIsCompleteDateValid] = useState(false);
