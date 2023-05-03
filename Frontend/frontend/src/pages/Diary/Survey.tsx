@@ -66,14 +66,15 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
           추천 버킷리스트를 받아보세요
         </SurveyText>
         <QuestionWrapper>
-          {questions.map((title, index) => (
-            <Question
-              key={index}
-              id={index + 1}
-              title={title}
-              onChange={handleChange}
-            />
-          ))}
+          {questions &&
+            questions.map((title, index) => (
+              <Question
+                key={index}
+                id={index + 1}
+                title={title}
+                onChange={handleChange}
+              />
+            ))}
         </QuestionWrapper>
         <StyledButton color="#FFA9A9" size="md">
           선택완료

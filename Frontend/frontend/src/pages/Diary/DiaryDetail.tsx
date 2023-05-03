@@ -266,13 +266,14 @@ function DiaryDetail() {
           </DiaryWrap>
           <CommentWrap>
             <CommentForm diaryId={diary.diaryId} />
-            {comments.map((comment, index) => (
-              <Comment
-                key={index}
-                comment={comment}
-                onUpdate={() => fetchDiaryDetail()}
-              />
-            ))}
+            {comments &&
+              comments.map((comment, index) => (
+                <Comment
+                  key={index}
+                  comment={comment}
+                  onUpdate={() => fetchDiaryDetail()}
+                />
+              ))}
           </CommentWrap>
         </Container>
       </Background>

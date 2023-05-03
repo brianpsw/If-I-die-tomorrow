@@ -186,51 +186,57 @@ function MyPage() {
                 onClick={openBottomModal}
               />
             </IconWithText>
-            {receivers.map(
-              (receiver, index) =>
-                receiverTexts.length < 3 && (
-                  <InputRow key={index}>
-                    <input
-                      type="text"
-                      placeholder="이름"
-                      ref={inputRefs[index].name}
-                      value={receiver.name}
-                      onChange={(e) => handleReceiverChange(index, 'name', e)}
-                      disabled={!serviceEnabled}
-                    />
-                    <input
-                      type="email"
-                      placeholder="이메일"
-                      ref={inputRefs[index].email}
-                      value={receiver.email}
-                      onChange={(e) => handleReceiverChange(index, 'email', e)}
-                      disabled={!serviceEnabled}
-                    />
-                    <input
-                      type="tel"
-                      placeholder="전화번호"
-                      ref={inputRefs[index].phone}
-                      value={receiver.phone}
-                      onChange={(e) => handleReceiverChange(index, 'phone', e)}
-                      disabled={!serviceEnabled}
-                    />
-                  </InputRow>
-                ),
-            )}
-            {receiverTexts.map((text, index) => (
-              <Receiver key={index}>
-                <div>
-                  <p>{text.name}</p>
-                  <p>{text.email}</p>
-                  <p>{text.phone}</p>
-                </div>
-                <Icon
-                  icon="line-md:remove"
-                  onClick={() => handleDelete(index)}
-                  style={{ cursor: 'pointer' }}
-                />
-              </Receiver>
-            ))}
+            {receivers &&
+              receivers.map(
+                (receiver, index) =>
+                  receiverTexts.length < 3 && (
+                    <InputRow key={index}>
+                      <input
+                        type="text"
+                        placeholder="이름"
+                        ref={inputRefs[index].name}
+                        value={receiver.name}
+                        onChange={(e) => handleReceiverChange(index, 'name', e)}
+                        disabled={!serviceEnabled}
+                      />
+                      <input
+                        type="email"
+                        placeholder="이메일"
+                        ref={inputRefs[index].email}
+                        value={receiver.email}
+                        onChange={(e) =>
+                          handleReceiverChange(index, 'email', e)
+                        }
+                        disabled={!serviceEnabled}
+                      />
+                      <input
+                        type="tel"
+                        placeholder="전화번호"
+                        ref={inputRefs[index].phone}
+                        value={receiver.phone}
+                        onChange={(e) =>
+                          handleReceiverChange(index, 'phone', e)
+                        }
+                        disabled={!serviceEnabled}
+                      />
+                    </InputRow>
+                  ),
+              )}
+            {receiverTexts &&
+              receiverTexts.map((text, index) => (
+                <Receiver key={index}>
+                  <div>
+                    <p>{text.name}</p>
+                    <p>{text.email}</p>
+                    <p>{text.phone}</p>
+                  </div>
+                  <Icon
+                    icon="line-md:remove"
+                    onClick={() => handleDelete(index)}
+                    style={{ cursor: 'pointer' }}
+                  />
+                </Receiver>
+              ))}
             {receivers.length < 3 && receiverTexts.length < 3 && (
               <IconContainer>
                 <Icon icon="line-md:plus-circle" onClick={addReceiver} />
