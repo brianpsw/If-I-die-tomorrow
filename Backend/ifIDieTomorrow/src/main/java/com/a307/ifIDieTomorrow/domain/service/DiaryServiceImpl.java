@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.*;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -68,20 +65,13 @@ public class DiaryServiceImpl implements DiaryService{
 	public HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException, UnAuthorizedException {
 
 
-		Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("잘못된 다이어리 ID 입니다!"));
-		if (diary.getSecret() && diary.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
-			throw new UnAuthorizedException("해당 다이어리에 접근하기 위한 권한이 없습니다.");
-		return diaryRepository.findByIdWithUserNickName(diaryId)
-				.map(dto -> {
+		GetDiaryResDto diary = diaryRepository.findByIdWithUserNickName(diaryId).orElseThrow(() -> new NotFoundException("잘못된 다이어리 ID 입니다!"));
+		HashMap<String, Object> result  = new HashMap<>();
+		result.put("diary", diary);
+		result.put("comments", commentRepository.findCommentsByTypeId(diaryId, true));
 
-//					다이어리 내용과 댓글을 해쉬맵 형태로 반환합니다.
-					HashMap<String, Object> result  = new HashMap<>();
-					result.put("diary", dto);
-					result.put("comments", commentRepository.findCommentsByTypeId(diaryId, true));
+		return result;
 
-					return result;
-				})
-				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다!"));
 
 	}
 	@Override
