@@ -181,7 +181,7 @@ function Diary() {
         {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
         {data ? (
           <CardWrap
-            className="flex flex-col w-[340px] mt-6"
+            className="flex flex-col w-full mt-6"
             onClick={handleClickDiary}
           >
             <NickDateWrap>

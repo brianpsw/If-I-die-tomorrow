@@ -19,7 +19,7 @@ import Feed from './pages/Feed/Feed';
 import DiaryDetail from './pages/Diary/DiaryDetail';
 import BucketDetail from './pages/Bucket/BucketDetail';
 import MyPage from './pages/Profile/MyPage';
-import Will from './pages/Profile/Will';
+import Will from './pages/Will/Will';
 import Survey from './pages/Diary/Survey';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import CreateCategory from './pages/PhotoCloud/CreateCategory';
@@ -44,6 +44,7 @@ function App() {
             <Route path="/diary/:diaryId" element={<DiaryDetail />} />
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/will" element={<Will />} />
             <Route path="/survey" element={<Survey />} />
             <Route path="/photo-cloud/:categoryId" element={<PhotoCloud />} />
             <Route
