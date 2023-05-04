@@ -213,7 +213,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           ) : (
             <div className="w-5/6 m-auto relative">
               {name && (
-                <h3 className="text-h3 text-white text-center">{name}</h3>
+                <h4 className="text-h4 text-white text-center">{name}</h4>
               )}
               <img
                 className="absolute"
@@ -290,7 +290,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
                 <Icon
                   icon="ph:plus-circle"
-                  className="text-pink_100 w-[6em] h-[6em] mx-auto mt-4"
+                  className="text-pink_100 w-[55px] h-[55px] mx-auto mt-4"
                 />
               </Link>
             ) : null}

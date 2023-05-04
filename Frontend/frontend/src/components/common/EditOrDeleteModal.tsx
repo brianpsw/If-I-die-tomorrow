@@ -16,7 +16,7 @@ const ModalWrapper = styled.div`
   bottom: 0;
 `;
 const ContentContainer = styled.div`
-  ${tw`m-4 flex space-x-2`}
+  ${tw`m-8 flex space-x-2`}
 `;
 
 interface EditOrDeleteModalProps {

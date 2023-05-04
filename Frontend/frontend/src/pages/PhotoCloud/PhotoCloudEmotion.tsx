@@ -4,6 +4,7 @@ import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/main_bg.png';
 
 export const Background = styled.div`
+  ${tw`text-p2`}
   background-image: url(${backgroundImg});
   background-size: cover;
   background-position: center;
