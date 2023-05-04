@@ -17,22 +17,25 @@ const Container = styled.div`
 `;
 
 const BucketContainer = styled.div`
-  ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-4 my-1 border-l-8`}
+  ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-[16px] my-[4px] border-l-[8px]`}
 `;
 const FormContainer = styled.div`
-  ${tw`flex flex-col w-full bg-gray-100/80 mt-4 pt-4 px-4`}
+  ${tw`flex flex-col w-full bg-gray-100/80 mt-[16px] pt-[16px] px-[16px]`}
 `;
 const ContentContainer = styled.div`
   ${tw`flex items-center justify-between border-b border-black w-full h-[33px] px-[6px]`}
 `;
 const ContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full h-[86px] rounded border-black break-all my-4`}
+  ${tw`flex flex-wrap w-full text-p2 h-[86px] rounded border-black break-all my-[16px]`}
+`;
+const TitleContainer = styled.textarea`
+  ${tw`flex flex-wrap w-full text-p2 rounded border-black break-all my-[8px]`}
 `;
 const PhotoContainer = styled.div`
-  ${tw`items-center self-end w-full min-h-[93px] my-2 rounded border border-dashed border-black`}
+  ${tw`items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
 `;
 const FeedCheckContainer = styled.div`
-  ${tw`flex items-center w-full h-[24px] my-2`}
+  ${tw`flex items-center w-full h-[24px] my-[8px]`}
 `;
 interface Bucket {
   bucketId: number;
@@ -74,6 +77,17 @@ function BucketListItem({
   const [isValid, setIsValid] = useState(false);
   const [isCompleteDateValid, setIsCompleteDateValid] = useState(false);
   const [isCompleteContentValid, setIsCompleteContentValid] = useState(false);
+  const [bucketTitle, setBucketTitle] = useState(bucket.title);
+  useEffect(() => {
+    const title = bucket.title;
+    const maxLength = 18;
+    if (title.length > maxLength) {
+      const truncatedString = title.slice(0, maxLength) + '...';
+      setBucketTitle(truncatedString);
+    } else {
+      setBucketTitle(title);
+    }
+  }, []);
   useEffect(() => {
     if (isCompleteContentValid && isCompleteDateValid) {
       setIsValid(true);
@@ -169,7 +183,7 @@ function BucketListItem({
           <img onClick={handleBucketClick} src={UnCheckedIcon} alt="" />
         )}
         <ContentContainer onClick={handleBucketClick}>
-          <span className="text-p1">{bucket.title}</span>
+          <span className="text-p1">{bucketTitle}</span>
         </ContentContainer>
         <div onClick={handleEditModalOpen}>
           <img className="cursor-pointer" src={TreeDot} alt="" />
@@ -178,10 +192,11 @@ function BucketListItem({
 
       {isClicked ? (
         <FormContainer>
+          <TitleContainer value={bucket.title} disabled />
           <DateTimePicker
             label="버킷 완료 일자 선택"
             value={completeDate}
-            className="w-full"
+            className="flex w-full"
             onChange={handleDateChange}
           />
           <form action="submit">

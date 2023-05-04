@@ -11,11 +11,11 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-gray-100 flex flex-col w-full mx-4 px-[16px] items-center border-solid rounded-xl shadow `}
+  ${tw`bg-gray-100 flex flex-col w-full mx-[16px] px-[16px] items-center border-solid rounded-xl shadow `}
 `;
 
 const ContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full pt-1 h-[33px] bg-white rounded border-black break-all my-4 px-[6px]`}
+  ${tw`flex flex-wrap w-full pt-[4px] h-[33px] text-p2 bg-white rounded border-black break-all my-[16px] px-[6px]`}
 `;
 interface Bucket {
   bucketId: number;
@@ -104,7 +104,7 @@ function CreateModal({ onClose, setBuckets }: ModalProps) {
         ) : (
           ''
         )}
-        <div className="flex w-full justify-center my-4">
+        <div className="flex w-full justify-center my-[16px]">
           <Button
             onClick={handleSubmit}
             color="#B3E9EB"

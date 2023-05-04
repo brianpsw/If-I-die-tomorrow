@@ -7,9 +7,20 @@ import BucketListItem from '../../components/bucket/BucketListItem';
 import CreateModal from '../../components/bucket/CreateModal';
 import DeleteModal from '../../components/bucket/DeleteModal';
 import IIDT from '../../assets/icons/IIDT.svg';
+import backgroundImg from '../../assets/images/bucket_bg.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
+
+const Background = styled.div`
+  background-image: url(${backgroundImg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  background-attachment: fixed;
+`;
 
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
@@ -109,27 +120,29 @@ function Bucket() {
           setBuckets={setBuckets}
         />
       ) : null}
-      <Container>
-        <LogoContainer src={IIDT} />
-        {buckets &&
-          buckets.map((bucket) => (
-            <BucketListItem
-              key={bucket.bucketId} // 고유 식별자 사용
-              bucket={bucket}
-              setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-              setSelectedBucketId={setSelectedBucketId}
-              setSelectedBucketContent={setSelectedBucketContent}
-              setBuckets={setBuckets}
-            />
-          ))}
+      <Background>
+        <Container>
+          <LogoContainer src={IIDT} />
+          {buckets &&
+            buckets.map((bucket) => (
+              <BucketListItem
+                key={bucket.bucketId} // 고유 식별자 사용
+                bucket={bucket}
+                setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+                setSelectedBucketId={setSelectedBucketId}
+                setSelectedBucketContent={setSelectedBucketContent}
+                setBuckets={setBuckets}
+              />
+            ))}
 
-        <img
-          onClick={handleCreateModalOpen}
-          className="fixed bottom-[78px] right-[10px]"
-          src={AddButtonIcon}
-          alt=""
-        />
-      </Container>
+          <img
+            onClick={handleCreateModalOpen}
+            className="fixed bottom-[78px] right-[10px]"
+            src={AddButtonIcon}
+            alt=""
+          />
+        </Container>
+      </Background>
     </div>
   );
 }

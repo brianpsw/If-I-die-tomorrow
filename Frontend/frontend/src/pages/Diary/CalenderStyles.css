@@ -10,10 +10,10 @@
 .cell {
   border-left: 2px solid transparent;
   position: relative;
-  height: 2em;
+  height: 40px;
   cursor: pointer;
   transition: 0.25s ease-out;
-  font-size: 1.5em;
+  font-size: 16px;
 }
 
 .selected {
