@@ -46,10 +46,14 @@ public class PhotoServiceImpl implements PhotoService {
 	///////////////////////
 	
 	@Override
-	public CreateCategoryResDto createCategory (CreateCategoryDto data) {
+	public CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException {
+		if (categoryRepository.findByUserIdAndObjectId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId(), data.getObjectId()) != null)
+			throw new UnAuthorizedException("이미 사용중인 오브젝트입니다.");
+		
 		Category category = Category.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				name(data.getName()).
+				objectId(data.getObjectId()).
 				build();
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
