@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import { css } from 'styled-components';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import dayjs from 'dayjs';
 
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
-import Button from '../../components/common/Button';
+import Button from '../common/Button';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 const Container = styled.div`
@@ -59,7 +58,6 @@ function BucketListItem({
   //Bucket controller
   const navigate = useNavigate();
   const [isClicked, setIsClicked] = useState(false);
-  const [isCompleted, setIsCompleted] = useState(false);
   const handleBucketClick = () => {
     if (bucket.complete) {
       navigate(`/bucket/${bucket.bucketId}`);
@@ -80,7 +78,7 @@ function BucketListItem({
     if (isCompleteContentValid && isCompleteDateValid) {
       setIsValid(true);
     }
-  }, [{ isCompleteDateValid, isCompleteContentValid }]);
+  }, [isCompleteDateValid, isCompleteContentValid]);
   const handleSubmit = () => {
     //버킷 완료 api 연결
     const formData = new FormData();
@@ -106,21 +104,19 @@ function BucketListItem({
           withCredentials: true,
         });
         setBuckets(response.data);
-        return console.log(response.data);
       } catch (error) {
         throw error;
       }
     };
     const put_bucket = async () => {
       try {
-        const response = await defaultApi.put(requests.PUT_BUCKET(), formData, {
+        await defaultApi.put(requests.PUT_BUCKET(), formData, {
           withCredentials: true,
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
 
-        console.log(response);
         get_user_bucket();
       } catch (error) {
         throw error;

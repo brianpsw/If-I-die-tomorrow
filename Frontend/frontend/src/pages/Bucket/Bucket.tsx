@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import BucketListItem from './BucketListItem';
-import CreateModal from '../../components/common/CreateModal';
-import DeleteModal from './DeleteModal';
+import BucketListItem from '../../components/bucket/BucketListItem';
+import CreateModal from '../../components/bucket/CreateModal';
+import DeleteModal from '../../components/bucket/DeleteModal';
 import IIDT from '../../assets/icons/IIDT.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
-import BucketEditModal from './BucketEditModal';
+import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 
 const Container = styled.div`

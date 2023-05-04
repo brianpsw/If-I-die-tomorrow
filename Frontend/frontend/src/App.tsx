@@ -1,8 +1,6 @@
 import React from 'react';
 // import { useState, useEffect } from 'react';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
-import styled from 'styled-components';
-import tw from 'twin.macro';
 // import { RecoilRoot } from 'recoil';
 // import styled from 'styled-components';
 // import tw from 'tailwind-styled-components';
