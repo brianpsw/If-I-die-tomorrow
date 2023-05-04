@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import Button from '../../components/common/Button';
+import Button from '../common/Button';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -23,58 +23,49 @@ interface Bucket {
   complete: string;
   secret: boolean;
 }
-interface BucketEditModalProps {
-  selectedBucketId: number | null;
-  selectedBucketContent: string;
+interface ModalProps {
   setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
   onClose?: () => void;
 }
 
-function BucketEditModal({
-  selectedBucketId,
-  selectedBucketContent,
-  setBuckets,
-  onClose,
-}: BucketEditModalProps) {
+function CreateModal({ onClose, setBuckets }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [contentValue, setContentValue] = useState('');
-  useEffect(() => {
-    setContentValue(selectedBucketContent);
-  }, []);
-  const handleEditSubmit = () => {
-    //버킷리스트 수정 api 연결
+  const [isValid, setIsValid] = useState(false);
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContentValue(e.currentTarget.value);
+    setIsValid(e.currentTarget.value.length > 0);
+  };
+  const handleSubmit = () => {
+    //버킷리스트 추가 api 연결
     const get_user_bucket = async () => {
       try {
         const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
           withCredentials: true,
         });
         setBuckets(response.data);
-        return console.log(response.data);
       } catch (error) {
         throw error;
       }
     };
-    const patch_bucket = async () => {
+    const post_bucket = async () => {
       try {
-        const response = await defaultApi.patch(
-          requests.PATCH_BUCKET(),
+        await defaultApi.post(
+          requests.POST_BUCKET(),
           {
-            bucketId: selectedBucketId,
             title: contentValue,
           },
-
           {
             withCredentials: true,
           },
         );
 
-        console.log(response.data);
         get_user_bucket();
       } catch (error) {
         throw error;
       }
     };
-    patch_bucket();
+    post_bucket();
     onClose?.();
   };
   const handleClose = () => {
@@ -102,13 +93,25 @@ function BucketEditModal({
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
         <ContentInputContainer
-          onChange={(e) => setContentValue(e.target.value)}
+          onChange={handleContentChange}
           value={contentValue}
-          placeholder={selectedBucketContent}
+          placeholder="버킷리스트 내용을 작성해주세요."
         />
+        {!isValid ? (
+          <span className="text-yellow-500 text-p2">
+            버킷리스트 내용을 입력해주세요.
+          </span>
+        ) : (
+          ''
+        )}
         <div className="flex w-full justify-center my-4">
-          <Button onClick={handleEditSubmit} color="#B3E9EB" size="sm">
-            수정 완료
+          <Button
+            onClick={handleSubmit}
+            color="#B3E9EB"
+            size="sm"
+            disabled={isValid ? false : true}
+          >
+            작성 완료
           </Button>
         </div>
       </ModalWrapper>
@@ -116,4 +119,4 @@ function BucketEditModal({
   );
 }
 
-export default BucketEditModal;
+export default CreateModal;

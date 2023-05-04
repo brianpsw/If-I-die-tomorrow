@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Button from '../../components/common/Button';
+import Button from '../common/Button';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
@@ -42,14 +42,13 @@ function DeleteModal({
           withCredentials: true,
         });
         setBuckets(response.data);
-        return console.log(response.data);
       } catch (error) {
         throw error;
       }
     };
     const delete_bucket = async () => {
       try {
-        const response = await defaultApi.delete(
+        await defaultApi.delete(
           requests.DELETE_BUCKET(selectedBucketId),
 
           {
@@ -57,7 +56,6 @@ function DeleteModal({
           },
         );
 
-        console.log(response.data);
         get_user_bucket();
       } catch (error) {
         throw error;

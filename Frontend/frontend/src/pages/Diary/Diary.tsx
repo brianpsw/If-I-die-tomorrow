@@ -7,14 +7,12 @@ import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import './CalenderStyles.css';
-import Calendar from './Calender';
-import DiaryDetail from './DiaryDetail';
+import Calendar from '../../components/diary/Calender';
 import IIDT from '../../assets/icons/IIDT.svg';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
-import { Link } from 'react-router-dom';
 
 import {
   CardWrap,
@@ -83,14 +81,13 @@ function Diary() {
     if (isCompleteContentValid && isCompleteTitleValid) {
       setIsValid(true);
     }
-  }, [{ isCompleteTitleValid, isCompleteContentValid }]);
+  }, [isCompleteTitleValid, isCompleteContentValid]);
   const get_user_diary = async () => {
     try {
       const response = await defaultApi.get(requests.GET_USER_DIARY(), {
         withCredentials: true,
       });
       setDiarys(response.data);
-      return console.log(response.data);
     } catch (error) {
       throw error;
     }
@@ -115,18 +112,13 @@ function Diary() {
 
     const post_diary = async () => {
       try {
-        const response = await defaultApi.post(
-          requests.POST_DIARY(),
-          formData,
-          {
-            withCredentials: true,
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
+        await defaultApi.post(requests.POST_DIARY(), formData, {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
           },
-        );
+        });
 
-        console.log(response);
         get_user_diary();
       } catch (error) {
         throw error;
