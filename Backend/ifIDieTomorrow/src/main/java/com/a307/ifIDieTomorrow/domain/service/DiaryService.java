@@ -22,7 +22,7 @@ public interface DiaryService {
 
 	List<GetDiaryByUserResDto> getDiaryByUserId();
 
-	HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException;
+	HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException, UnAuthorizedException;
 
 	Long deleteDiaryByDiaryId(Long diaryId) throws NotFoundException, UnAuthorizedException;
 

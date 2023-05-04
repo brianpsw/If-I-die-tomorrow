@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
+import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
@@ -35,8 +36,10 @@ public class DiaryServiceImpl implements DiaryService{
 	private final CommentRepository commentRepository;
 
 	@Override
-	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
+	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
 
+		if(req.getContent() == null || "".equals(req.getContent())) throw new IllegalArgumentException("내용이 없습니다.");
+		if(req.getTitle() == null || "".equals(req.getTitle())) throw new IllegalArgumentException("제목이 없습니다.");
 //
 //		사진 검증
 		if (req.getHasPhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
@@ -62,8 +65,12 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException {
+	public HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException, UnAuthorizedException {
 
+
+		Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
+		if (diary.getSecret() && diary.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("해당 다이어리에 접근하기 위한 권한이 없습니다.");
 		return diaryRepository.findByIdWithUserNickName(diaryId)
 				.map(dto -> {
 
@@ -99,7 +106,7 @@ public class DiaryServiceImpl implements DiaryService{
 	}
 
 	@Override
-	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, UnAuthorizedException, ImageProcessingException, MetadataException {
+	public CreateDiaryResDto updateDiary(UpdateDiaryReqDto req, MultipartFile photo) throws NotFoundException, IOException, UnAuthorizedException, ImageProcessingException, MetadataException, IllegalArgumentException {
 		Diary diary = diaryRepository.findById(req.getDiaryId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 id 입니다!"));
 
@@ -109,6 +116,8 @@ public class DiaryServiceImpl implements DiaryService{
 
 		if (!userId.equals(diary.getUserId())) throw new UnAuthorizedException("내가 작성한 다이어리가 아닙니다");
 
+		if(req.getContent() == null || "".equals(req.getContent())) throw new IllegalArgumentException("내용이 없습니다.");
+		if(req.getTitle() == null || "".equals(req.getTitle())) throw new IllegalArgumentException("제목이 없습니다.");
 
 //		기존 사진 삭제
 		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
