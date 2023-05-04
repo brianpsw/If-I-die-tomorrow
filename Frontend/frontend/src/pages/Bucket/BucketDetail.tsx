@@ -51,15 +51,25 @@ const BucketWrap = styled.div`
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const BucketHeader = styled.div`
-  ${tw`flex`}
-  justify-content: space-between;
+  ${tw`flex`}// justify-content: space-between;
 `;
 
 const DotIcon = styled.div`
   ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 18%;
+`;
+
+const CommentDotIcon = styled.div`
+  ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 40%;
 `;
 
 const ContentTitle = styled.div`
@@ -101,6 +111,7 @@ const CommentBox = styled.div`
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const StyledCommentForm = styled.form`
@@ -477,9 +488,9 @@ function Comment({
             <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
-        <DotIcon>
+        <CommentDotIcon>
           <img src={TreeDot} alt="" onClick={handleModalOpen} />
-        </DotIcon>
+        </CommentDotIcon>
       </CommentBox>
     </div>
   );

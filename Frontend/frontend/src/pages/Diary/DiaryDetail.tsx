@@ -49,16 +49,27 @@ const DiaryWrap = styled.div`
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const DiaryHeader = styled.div`
-  ${tw`flex`}
-  justify-content: space-between;
+  ${tw`flex`}// justify-content: space-between;
 `;
 
 const DotIcon = styled.div`
   ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 7%;
 `;
+
+const CommentDotIcon = styled.div`
+  ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 40%;
+`;
+
 const ContentTitle = styled.div`
   ${tw``}
   width: 280px;
@@ -97,6 +108,7 @@ const CommentBox = styled.div`
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const StyledCommentForm = styled.form`
@@ -267,10 +279,10 @@ function DiaryDetail() {
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
             </DiaryHeader>
+            <DotIcon>
+              <img src={TreeDot} alt="" onClick={handleModalOpen} />
+            </DotIcon>
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (
                 <img src={diary.imageUrl} alt="Diary" />
@@ -458,9 +470,9 @@ function Comment({
             <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
-        <DotIcon>
+        <CommentDotIcon>
           <img src={TreeDot} alt="" onClick={handleModalOpen} />
-        </DotIcon>
+        </CommentDotIcon>
       </CommentBox>
     </div>
   );
