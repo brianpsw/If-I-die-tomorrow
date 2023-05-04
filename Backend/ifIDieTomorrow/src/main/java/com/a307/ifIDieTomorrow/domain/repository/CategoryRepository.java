@@ -20,5 +20,5 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 			"OR userId = 0")
 	List<CreateCategoryResDto> findAllByUserId(@Param("userId") Long userId);
 	
-	Category findByUserIdAndObjectId (Long userId, Long Object);
+	Category findByUserIdAndObjectId (Long userId, Long objectId);
 }
