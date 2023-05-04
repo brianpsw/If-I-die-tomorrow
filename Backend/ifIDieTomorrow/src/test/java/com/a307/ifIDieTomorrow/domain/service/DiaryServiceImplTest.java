@@ -93,7 +93,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("이미지 포함 다이어리 생성")
-			void createDiaryWithPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
+			void createDiaryWithPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
 
 				// given
 				CreateDiaryReqDto req = new CreateDiaryReqDto("Test Title", "Test Content", true, true);
@@ -150,7 +150,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("이미지 없이 다이어리 생성")
-			void createDiaryWithOutPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException {
+			void createDiaryWithOutPhoto() throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
 
 				// given
 
@@ -288,7 +288,7 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("다이어리 아이디로 다이어리 조회 성공")
-			void getDiaryById() throws NotFoundException {
+			void getDiaryById() throws NotFoundException, UnAuthorizedException {
 
 				// given
 				Long diaryId = 1L;
@@ -343,7 +343,7 @@ class DiaryServiceImplTest {
 				 */
 				BDDAssertions.thenThrownBy(() -> diaryService.getDiaryById(1L))
 						.isInstanceOf(NotFoundException.class)
-						.hasMessage("잘못된 다이어리 아이디입니다!");
+						.hasMessage("잘못된 다이어리 ID 입니다!");
 
 				/**
 				 * 동작 검증

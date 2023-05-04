@@ -82,7 +82,7 @@ public class BucketServiceImpl implements BucketService {
 //					버킷 리스트의 내용과 댓글을 해쉬맵 형태로 반환합니다.
 					HashMap<String, Object> result = new HashMap<>();
 					result.put(BUCKET, dto);
-					result.put("comments", commentRepository.findCommentsByTypeId(bucketId, true));
+					result.put("comments", commentRepository.findCommentsByTypeId(bucketId, false));
 					
 					return result;
 				})
