@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 10px;
+}
+
 body {
   margin: 0;
   font-family: S-CoreDream, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -21,4 +25,28 @@ code {
     format('woff');
   font-weight: normal;
   font-style: normal;
+}
+
+@media (max-width: 390px) {
+  html {
+    font-size: 10px;
+  }
+}
+
+@media (min-width: 640px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1024px) {
+  html {
+    font-size: 16px;
+  }
 }
