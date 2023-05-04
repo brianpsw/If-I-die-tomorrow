@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Question from './Question';
+import Question from '../../components/diary/Question';
 import Button from '../../components/common/Button';
 import backgroundImg from '../../assets/images/diary_bg.png';
 

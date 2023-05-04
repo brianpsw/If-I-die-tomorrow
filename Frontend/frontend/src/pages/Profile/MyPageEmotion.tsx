@@ -86,6 +86,8 @@ export const IconWithText = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 8px;
+  margin-top: 4px;
+  font-size: 14px;
   svg {
     margin-right: 8px;
     margin-left: 8px;

@@ -3,12 +3,16 @@ import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/bucket_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
+import DeleteConfirmModal from '../../components/bucket/BucketDeleteModal';
+import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 
 interface Comment {
   commentId: bigint;
@@ -49,21 +53,33 @@ const BucketWrap = styled.div`
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const BucketHeader = styled.div`
-  ${tw`flex`}
-  justify-content: space-between;
+  ${tw`flex`}// justify-content: space-between;
 `;
 
 const DotIcon = styled.div`
   ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 18%;
+`;
+
+const CommentDotIcon = styled.div`
+  ${tw`flex`}
+  position: absolute;
+  right: 5%;
+  top: 40%;
 `;
 
 const ContentTitle = styled.div`
   ${tw``}
   width: 280px;
   word-break: break-all;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 `;
 
 const Nickname = styled.p`
@@ -99,6 +115,7 @@ const CommentBox = styled.div`
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  position: relative;
 `;
 
 const StyledCommentForm = styled.form`
@@ -158,6 +175,9 @@ function BucketDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
@@ -176,26 +196,28 @@ function BucketDetail() {
     setEditModalOpen(false);
   };
 
-  const handleDeleteModalOpen = () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
-      // 확인/취소 버튼이 있는 모달을 띄움
-      if (bucketId) {
-        deleteBucket(parseInt(bucketId));
-      } else {
-        console.error('Bucket ID is undefined');
-      }
-    }
+  const openDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(true);
   };
 
-  const deleteBucket = async (bucketId: number) => {
+  const closeDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (typeof bucketId === 'undefined') {
+      console.error('Bucket ID is undefined');
+      return;
+    }
+
     try {
-      await defaultApi.delete(requests.DELETE_BUCKET(bucketId), {
+      await defaultApi.delete(requests.DELETE_BUCKET(parseInt(bucketId)), {
         withCredentials: true,
       });
-      navigate('/feed?tab=bucket'); // 피드 페이지로 이동
-      setBucketDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
-      setComments([]); // 댓글도 함께 초기화
-      alert('다이어리가 삭제되었습니다.');
+      navigate('/feed?tab=bucket');
+      setBucketDetail(null);
+      setComments([]);
+      alert('버킷리스트가 삭제되었습니다.');
     } catch (error) {
       console.error(error);
     }
@@ -236,7 +258,7 @@ function BucketDetail() {
         <EditOrDeleteModal
           onClose={handleModalClose}
           handleBucketEditModalOpen={handleEditModalOpen}
-          handleDeleteModalOpen={handleDeleteModalOpen}
+          handleDeleteModalOpen={openDeleteConfirmModal}
         />
       )}
       {editModalOpen && bucketDetail && (
@@ -250,6 +272,12 @@ function BucketDetail() {
           onUpdate={handleUpdate}
         />
       )}
+      {deleteConfirmModalOpen && (
+        <DeleteConfirmModal
+          onClose={closeDeleteConfirmModal}
+          onDelete={handleDelete}
+        />
+      )}
       <Background>
         <Container>
           <BucketWrap>
@@ -261,9 +289,11 @@ function BucketDetail() {
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
+              {loggedInUserNickname === bucket.nickname && (
+                <DotIcon>
+                  <img src={TreeDot} alt="" onClick={handleModalOpen} />
+                </DotIcon>
+              )}
             </BucketHeader>
             <BucketImg>
               {bucket.imageUrl && bucket.imageUrl !== '""' && (
@@ -273,7 +303,11 @@ function BucketDetail() {
             <BucketText>{bucket.content}</BucketText>
           </BucketWrap>
           <CommentWrap>
-            <CommentForm bucketId={bucket.bucketId} />
+            <CommentForm
+              bucketId={bucket.bucketId}
+              type={false}
+              onUpdate={() => fetchBucketDetail()}
+            />
             {comments &&
               comments.map((comment, index) => (
                 <Comment
@@ -289,7 +323,15 @@ function BucketDetail() {
   );
 }
 
-function CommentForm({ bucketId }: { bucketId: number }) {
+function CommentForm({
+  bucketId,
+  type,
+  onUpdate,
+}: {
+  bucketId: number;
+  type: boolean;
+  onUpdate: () => void;
+}) {
   const [content, setContent] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -306,13 +348,15 @@ function CommentForm({ bucketId }: { bucketId: number }) {
         requests.POST_COMMENT(), // 수정된 API 엔드포인트
         {
           content,
-          type: true, // type을 true로 설정
+          type, // type을 true로 설정
           typeId: bucketId, // typeId를 bucketId로 설정
         },
         { withCredentials: true },
       );
       if (response.status === 201) {
-        window.location.reload();
+        // window.location.reload();
+        setContent(''); // 입력란을 초기화합니다.
+        onUpdate(); // 댓글이 추가되었음을 상위 컴포넌트에 알립니다.
       }
     } catch (error) {
       console.error(error);
@@ -343,6 +387,9 @@ function Comment({
   const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
   // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -367,8 +414,11 @@ function Comment({
   };
 
   const handleDeleteModalOpen = () => {
-    deleteComment(comment.commentId);
-    handleModalClose();
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
   };
 
   const deleteComment = async (commentId: bigint) => {
@@ -421,6 +471,12 @@ function Comment({
           handleDeleteModalOpen={handleDeleteModalOpen}
         />
       )}
+      {deleteModalOpen && (
+        <CommentConfirmModal
+          onClose={handleDeleteModalClose}
+          onDelete={() => deleteComment(comment.commentId)}
+        />
+      )}
       <CommentBox>
         <div>
           <CommentNick>{comment.nickname}</CommentNick>
@@ -442,9 +498,11 @@ function Comment({
             <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
-        <DotIcon>
-          <img src={TreeDot} alt="" onClick={handleModalOpen} />
-        </DotIcon>
+        {loggedInUserNickname === comment.nickname && (
+          <CommentDotIcon>
+            <img src={TreeDot} alt="" onClick={handleModalOpen} />
+          </CommentDotIcon>
+        )}
       </CommentBox>
     </div>
   );
