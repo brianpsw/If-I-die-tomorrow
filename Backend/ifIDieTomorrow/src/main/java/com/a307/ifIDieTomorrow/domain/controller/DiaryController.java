@@ -52,7 +52,7 @@ public class DiaryController {
 
 	@GetMapping("/{diaryId}")
 	@Operation(summary = "다이어리 하나 불러오기", description = "다이어리 아이디로 특정 다이어리 하나만 불러옵니다. 작성자 아이디와 닉네임이 같이 가며 댓글 리스트도 같이 갑니다")
-	public ResponseEntity<HashMap<String, Object>> getDiaryByDiaryId(@PathVariable Long diaryId) throws NotFoundException {
+	public ResponseEntity<HashMap<String, Object>> getDiaryByDiaryId(@PathVariable Long diaryId) throws NotFoundException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getDiaryById(diaryId));
 	}
 
