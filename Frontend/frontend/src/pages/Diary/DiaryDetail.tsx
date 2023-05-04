@@ -3,6 +3,8 @@ import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
@@ -74,6 +76,8 @@ const ContentTitle = styled.div`
   ${tw``}
   width: 280px;
   word-break: break-all;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 `;
 const Nickname = styled.p`
   font-size: 15px;
@@ -362,6 +366,8 @@ function Comment({
   // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -470,9 +476,11 @@ function Comment({
             <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
-        <CommentDotIcon>
-          <img src={TreeDot} alt="" onClick={handleModalOpen} />
-        </CommentDotIcon>
+        {loggedInUserNickname === comment.nickname && (
+          <CommentDotIcon>
+            <img src={TreeDot} alt="" onClick={handleModalOpen} />
+          </CommentDotIcon>
+        )}
       </CommentBox>
     </div>
   );
