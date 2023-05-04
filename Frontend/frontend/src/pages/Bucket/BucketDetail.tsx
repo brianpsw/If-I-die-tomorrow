@@ -303,7 +303,11 @@ function BucketDetail() {
             <BucketText>{bucket.content}</BucketText>
           </BucketWrap>
           <CommentWrap>
-            <CommentForm bucketId={bucket.bucketId} />
+            <CommentForm
+              bucketId={bucket.bucketId}
+              type={false}
+              onUpdate={() => fetchBucketDetail()}
+            />
             {comments &&
               comments.map((comment, index) => (
                 <Comment
@@ -319,7 +323,15 @@ function BucketDetail() {
   );
 }
 
-function CommentForm({ bucketId }: { bucketId: number }) {
+function CommentForm({
+  bucketId,
+  type,
+  onUpdate,
+}: {
+  bucketId: number;
+  type: boolean;
+  onUpdate: () => void;
+}) {
   const [content, setContent] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -336,13 +348,15 @@ function CommentForm({ bucketId }: { bucketId: number }) {
         requests.POST_COMMENT(), // 수정된 API 엔드포인트
         {
           content,
-          type: true, // type을 true로 설정
+          type, // type을 true로 설정
           typeId: bucketId, // typeId를 bucketId로 설정
         },
         { withCredentials: true },
       );
       if (response.status === 201) {
-        window.location.reload();
+        // window.location.reload();
+        setContent(''); // 입력란을 초기화합니다.
+        onUpdate(); // 댓글이 추가되었음을 상위 컴포넌트에 알립니다.
       }
     } catch (error) {
       console.error(error);

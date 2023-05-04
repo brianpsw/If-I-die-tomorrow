@@ -300,7 +300,7 @@ function DiaryDetail() {
             <DiaryText>{diary.content}</DiaryText>
           </DiaryWrap>
           <CommentWrap>
-            <CommentForm diaryId={diary.diaryId} />
+            <CommentForm diaryId={diary.diaryId} type={true} />
             {comments &&
               comments.map((comment, index) => (
                 <Comment
@@ -316,7 +316,7 @@ function DiaryDetail() {
   );
 }
 
-function CommentForm({ diaryId }: { diaryId: number }) {
+function CommentForm({ diaryId, type }: { diaryId: number; type: boolean }) {
   const [content, setContent] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -333,7 +333,7 @@ function CommentForm({ diaryId }: { diaryId: number }) {
         requests.POST_COMMENT(), // 수정된 API 엔드포인트
         {
           content,
-          type: true, // type을 true로 설정
+          type, // type을 true로 설정
           typeId: diaryId, // typeId를 diaryId로 설정
         },
         { withCredentials: true },
