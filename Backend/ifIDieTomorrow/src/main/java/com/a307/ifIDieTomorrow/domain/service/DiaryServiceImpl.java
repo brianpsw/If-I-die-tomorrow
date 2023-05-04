@@ -68,7 +68,7 @@ public class DiaryServiceImpl implements DiaryService{
 	public HashMap<String, Object> getDiaryById(Long diaryId) throws NotFoundException, UnAuthorizedException {
 
 
-		Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
+		Diary diary = diaryRepository.findById(diaryId).orElseThrow(() -> new NotFoundException("잘못된 다이어리 ID 입니다!"));
 		if (diary.getSecret() && diary.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new UnAuthorizedException("해당 다이어리에 접근하기 위한 권한이 없습니다.");
 		return diaryRepository.findByIdWithUserNickName(diaryId)
