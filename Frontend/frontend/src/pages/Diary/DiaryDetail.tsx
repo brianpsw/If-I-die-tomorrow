@@ -95,7 +95,7 @@ const CommentBox = styled.div`
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`mb-6 flex mx-auto`}
+  ${tw`mb-6 flex w-full mx-auto`}
   color: white;
 `;
 
