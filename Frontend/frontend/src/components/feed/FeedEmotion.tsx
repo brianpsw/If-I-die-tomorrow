@@ -12,20 +12,20 @@ export const CardWrap = styled.div`
 `;
 
 export const NickDateWrap = styled.div`
-  ${tw`text-sm flex justify-between mb-2`}
+  ${tw`text-p2 flex justify-between mb-[8px]`}
 `;
 
 export const Title = styled.h3`
-  ${tw` font-bold mb-2`}
+  ${tw` text-p1 font-bold mb-[8px]`}
 `;
 
 export const Content = styled.p`
-  ${tw`text-sm`}
+  ${tw`text-p2`}
   width: 100%;
 `;
 
 export const Image = styled.img`
-  ${tw`w-full mb-2`}
+  ${tw`w-full mb-[8px]`}
   width: 70px;
 `;
 

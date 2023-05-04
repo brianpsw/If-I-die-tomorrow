@@ -14,7 +14,7 @@ import {
 import NextVector from '../../assets/icons/next_vector.svg';
 import PreviousVector from '../../assets/icons/previous_vector.svg';
 const CalenderContainer = styled.div`
-  ${tw`flex flex-col w-full rounded-lg bg-gray-100/80 mt-4 py-4 px-4`}
+  ${tw`flex flex-col w-full text-p1 rounded-lg bg-gray-100/80 mt-[16px] py-[16px] px-[16px]`}
 `;
 const CalenderHeader = styled.div`
   ${tw`flex items-center justify-between`}
@@ -140,7 +140,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
               onDateClickHandle(cloneDay);
             }}
           >
-            <span className="absolute text-sm font-bold top-4 self-center">
+            <span className="absolute text-p4 font-bold top-[10px] self-center">
               {formattedDate}
             </span>
           </DateCellContainer>,

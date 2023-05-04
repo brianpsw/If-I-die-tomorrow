@@ -5,7 +5,7 @@ import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/diary_bg.png';
+import backgroundImg from '../../assets/images/bucket_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
