@@ -21,7 +21,7 @@ import java.util.List;
 public interface PhotoService {
 	CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException;
 	
-	CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException;
+	CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException;
 	
 	Long deleteCategory (Long categoryId) throws NotFoundException;
 	
