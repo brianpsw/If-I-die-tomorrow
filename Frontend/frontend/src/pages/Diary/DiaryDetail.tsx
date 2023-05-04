@@ -9,7 +9,8 @@ import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
-
+import DeleteConfirmModal from './ConfirmDeleteModal';
+import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 interface Comment {
   commentId: bigint;
   content: string;
@@ -58,7 +59,11 @@ const DiaryHeader = styled.div`
 const DotIcon = styled.div`
   ${tw`flex`}
 `;
-
+const ContentTitle = styled.div`
+  ${tw``}
+  width: 280px;
+  word-break: break-all;
+`;
 const Nickname = styled.p`
   font-size: 15px;
 `;
@@ -151,6 +156,7 @@ function DiaryDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
@@ -169,18 +175,20 @@ function DiaryDetail() {
     setEditModalOpen(false);
   };
 
-  const handleDeleteModalOpen = () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
-      // 확인/취소 버튼이 있는 모달을 띄움
-      if (diaryId) {
-        deleteDiary(parseInt(diaryId));
-      } else {
-        console.error('Diary ID is undefined');
-      }
-    }
+  const openDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(true);
   };
 
-  const deleteDiary = async (diaryId: number) => {
+  const closeDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (typeof diaryId === 'undefined') {
+      console.error('Diary ID is undefined');
+      return;
+    }
+
     try {
       await defaultApi.delete(requests.DELETE_DIARY(diaryId), {
         withCredentials: true,
@@ -229,7 +237,7 @@ function DiaryDetail() {
         <EditOrDeleteModal
           onClose={handleModalClose}
           handleBucketEditModalOpen={handleEditModalOpen}
-          handleDeleteModalOpen={handleDeleteModalOpen}
+          handleDeleteModalOpen={openDeleteConfirmModal}
         />
       )}
       {editModalOpen && diaryDetail && (
@@ -242,12 +250,18 @@ function DiaryDetail() {
           onUpdate={handleUpdate}
         />
       )}
+      {deleteConfirmModalOpen && (
+        <DeleteConfirmModal
+          onClose={closeDeleteConfirmModal}
+          onDelete={handleDelete}
+        />
+      )}
       <Background>
         <Container>
           <DiaryWrap>
             <DiaryHeader>
               <div>
-                <h2 className="text-h3">{diary.title}</h2>
+                <ContentTitle className="text-h3">{diary.title}</ContentTitle>
                 <Nickname>{diary.nickname}</Nickname>
                 <CreateDate>
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
@@ -335,6 +349,7 @@ function Comment({
   const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
   // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -359,8 +374,11 @@ function Comment({
   };
 
   const handleDeleteModalOpen = () => {
-    deleteComment(comment.commentId);
-    handleModalClose();
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
   };
 
   const deleteComment = async (commentId: bigint) => {
@@ -411,6 +429,12 @@ function Comment({
           onClose={handleModalClose}
           handleBucketEditModalOpen={handleBucketEditModalOpen}
           handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+      {deleteModalOpen && (
+        <CommentConfirmModal
+          onClose={handleDeleteModalClose}
+          onDelete={() => deleteComment(comment.commentId)}
         />
       )}
       <CommentBox>

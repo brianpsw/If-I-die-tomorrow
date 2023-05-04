@@ -9,6 +9,8 @@ import backgroundImg from '../../assets/images/bucket_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
+import DeleteConfirmModal from './ConfirmDeleteModal';
+import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 
 interface Comment {
   commentId: bigint;
@@ -158,6 +160,7 @@ function BucketDetail() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
+  const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
@@ -176,26 +179,42 @@ function BucketDetail() {
     setEditModalOpen(false);
   };
 
-  const handleDeleteModalOpen = () => {
-    if (window.confirm('정말로 삭제하시겠습니까?')) {
-      // 확인/취소 버튼이 있는 모달을 띄움
-      if (bucketId) {
-        deleteBucket(parseInt(bucketId));
-      } else {
-        console.error('Bucket ID is undefined');
-      }
-    }
+  // const deleteBucket = async (bucketId: number) => {
+  //   try {
+  //     await defaultApi.delete(requests.DELETE_BUCKET(bucketId), {
+  //       withCredentials: true,
+  //     });
+  //     navigate('/feed?tab=bucket'); // 피드 페이지로 이동
+  //     setBucketDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
+  //     setComments([]); // 댓글도 함께 초기화
+  //     alert('다이어리가 삭제되었습니다.');
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const openDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(true);
   };
 
-  const deleteBucket = async (bucketId: number) => {
+  const closeDeleteConfirmModal = () => {
+    setDeleteConfirmModalOpen(false);
+  };
+
+  const handleDelete = async () => {
+    if (typeof bucketId === 'undefined') {
+      console.error('Bucket ID is undefined');
+      return;
+    }
+
     try {
-      await defaultApi.delete(requests.DELETE_BUCKET(bucketId), {
+      await defaultApi.delete(requests.DELETE_BUCKET(parseInt(bucketId)), {
         withCredentials: true,
       });
-      navigate('/feed?tab=bucket'); // 피드 페이지로 이동
-      setBucketDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
-      setComments([]); // 댓글도 함께 초기화
-      alert('다이어리가 삭제되었습니다.');
+      navigate('/feed?tab=bucket');
+      setBucketDetail(null);
+      setComments([]);
+      alert('버킷리스트가 삭제되었습니다.');
     } catch (error) {
       console.error(error);
     }
@@ -236,7 +255,7 @@ function BucketDetail() {
         <EditOrDeleteModal
           onClose={handleModalClose}
           handleBucketEditModalOpen={handleEditModalOpen}
-          handleDeleteModalOpen={handleDeleteModalOpen}
+          handleDeleteModalOpen={openDeleteConfirmModal}
         />
       )}
       {editModalOpen && bucketDetail && (
@@ -248,6 +267,12 @@ function BucketDetail() {
           complete={bucketDetail.complete}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
+        />
+      )}
+      {deleteConfirmModalOpen && (
+        <DeleteConfirmModal
+          onClose={closeDeleteConfirmModal}
+          onDelete={handleDelete}
         />
       )}
       <Background>
@@ -343,6 +368,7 @@ function Comment({
   const [editing, setEditing] = useState(false); // 추가: 댓글 수정 상태
   // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -367,8 +393,11 @@ function Comment({
   };
 
   const handleDeleteModalOpen = () => {
-    deleteComment(comment.commentId);
-    handleModalClose();
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
   };
 
   const deleteComment = async (commentId: bigint) => {
@@ -419,6 +448,12 @@ function Comment({
           onClose={handleModalClose}
           handleBucketEditModalOpen={handleBucketEditModalOpen}
           handleDeleteModalOpen={handleDeleteModalOpen}
+        />
+      )}
+      {deleteModalOpen && (
+        <CommentConfirmModal
+          onClose={handleDeleteModalClose}
+          onDelete={() => deleteComment(comment.commentId)}
         />
       )}
       <CommentBox>
