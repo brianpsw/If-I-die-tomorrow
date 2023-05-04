@@ -26,6 +26,8 @@ public class Category extends BaseEntity {
 	@Column(length = 100, nullable = false)
 	private String name;
 	
+	private Long objectId;
+	
 	public void updateCategory (String name) {
 		this.name = name;
 	}
