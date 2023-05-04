@@ -8,11 +8,10 @@ import { defaultApi } from '../../api/axios';
 
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
+import { fontSize } from '@mui/system';
 
 function CreateCategory() {
   const navigate = useNavigate();
-  const [categoryTitle, setCategoryTitle] = useState<string>('');
-  const [isCustom, setIsCustom] = useState<boolean>(false);
   const [customTitle, setCustomTitle] = useState<string>('');
   const recommendCategory: string[] = [
     '가장 사랑하는 사람',
@@ -24,13 +23,7 @@ function CreateCategory() {
   ];
 
   const handleCategory = (category: string) => {
-    setCategoryTitle(category);
-  };
-
-  const handleCustom = () => {
-    setIsCustom((prev: boolean) => !prev);
-    setCustomTitle('');
-    setCategoryTitle('');
+    setCustomTitle(category);
   };
 
   const handleTitle = (e: any) => {
@@ -43,12 +36,14 @@ function CreateCategory() {
     }
   };
 
-  const changeTitle = () => {
+  const checkBeforeSend = () => {
     const expspaces = /  +/g;
-    if (!expspaces.test(customTitle)) {
-      setCategoryTitle(customTitle);
-    } else {
+    if (customTitle === '') {
+      alert('카테고리를 입력해주세요.');
+    } else if (expspaces.test(customTitle)) {
       alert('카테고리는 연속된 공백이 있으면 안됩니다.');
+    } else {
+      sendCategory();
     }
   };
 
@@ -57,7 +52,8 @@ function CreateCategory() {
       const post_category = await defaultApi.post(
         requests.POST_CATEGORY(),
         {
-          name: categoryTitle,
+          name: customTitle,
+          // objectId: objectNumber넣어줍시다 일단 1-10으로 넣기
         },
         {
           withCredentials: true,
@@ -68,14 +64,6 @@ function CreateCategory() {
       }
     } catch (err) {
       console.error(err);
-    }
-  };
-
-  const createCategory = () => {
-    if (categoryTitle === '' || categoryTitle === ' ') {
-      alert('카테고리를 입력해주세요');
-    } else {
-      sendCategory();
     }
   };
 
@@ -90,98 +78,42 @@ function CreateCategory() {
           }}
         />
 
-        <h2 className="text-h3 text-white text-center">
+        <p className="text-h4 text-white text-center my-6">
           사진 카테고리를 선택하세요
-        </h2>
-        <div className="flex flex-wrap justify-center">
+        </p>
+        <div className="flex flex-wrap justify-center ">
           {recommendCategory &&
             recommendCategory?.map((rec, idx) => {
               return (
                 <div
                   key={idx}
-                  style={{
-                    display: 'inline-block',
-                    backgroundColor: 'rgba(246, 246, 246, 0.7)',
-                    padding: '8px 16px',
-                    borderRadius: '10px',
-                    margin: '8px',
-                  }}
+                  className="inline-block bg-[#f6f6f6b3] px-8 py-4 rounded-[10px] m-3"
                   onClick={() => handleCategory(rec)}
                 >
-                  <p className="text-center text-gray_500" style={{}}>
-                    {rec}
-                  </p>
+                  <p className="text-center text-green_800">{rec}</p>
                 </div>
               );
             })}
         </div>
-        <p className="text-white text-center">
+        <p className="text-white text-center my-6">
           마음에 드는 카테고리가 없나요?
           <br /> 직접 카테고리를 만들어보세요!
         </p>
-        {isCustom ? (
-          <div
-            className="w-full p-4 rounded-[10px]"
-            style={{
-              backgroundColor: 'rgba(246, 246, 246, 0.7)',
-            }}
-          >
-            <input
-              style={{
-                width: '310px',
-                height: '35px',
-                borderRadius: '10px',
-                padding: '0 16px',
-              }}
-              maxLength={30}
-              onChange={(e: any) => handleTitle(e)}
-            />
-            <div className="flex justify-evenly w-[310px] mt-4">
-              <Button color={'#B4B4B4'} size={'sm'} onClick={handleCustom}>
-                접기
-              </Button>
-              <Button
-                color={'#36C2CC'}
-                size={'sm'}
-                style={{ color: '#04373B' }}
-                onClick={changeTitle}
-              >
-                입력
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <Button
-            color={'#36C2CC'}
-            size={'sm'}
-            style={{ color: '#04373B' }}
-            onClick={handleCustom}
-          >
-            더보기
-          </Button>
-        )}
 
-        <div
-          style={{
-            display: 'inline-block',
-            backgroundColor: 'rgba(246, 246, 246, 0.7)',
-            padding: '8px 16px',
-            borderRadius: '10px',
-            marginTop: '16px',
-            width: '342px',
-            marginBottom: '32px',
-          }}
-        >
-          <p className="text-h4 text-green_800 text-center h-[54px]">
-            {categoryTitle}
-          </p>
+        <div className="flex justify-center">
+          <input
+            className="text-green_800 text-center w-full md:max-w-[60%] sm:max-w-[80%] bg-[#f6f6f6b3] px-4 py-8 my-10 rounded-[10px]"
+            defaultValue={customTitle}
+            placeholder="나만의 카테고리를 넣어주세요."
+            onChange={(e: any) => handleTitle(e)}
+          />
         </div>
 
         <Button
           color={'#36C2CC'}
           size={'lg'}
-          style={{ color: '#04373B' }}
-          onClick={createCategory}
+          style={{ color: '#04373B', margin: '0 auto' }}
+          onClick={checkBeforeSend}
         >
           테마 생성하기
         </Button>
