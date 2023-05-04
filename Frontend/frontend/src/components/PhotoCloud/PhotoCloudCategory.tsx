@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -14,10 +14,12 @@ interface CategoryInfo {
 interface PhotoCloudProps {
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   deleteCategory: boolean;
+  cancelEdit: () => void;
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
   const navigate = useNavigate();
+  const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
   const fetchData = async () => {
@@ -44,6 +46,9 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   }, [props.deleteCategory]);
 
   const handleCategory = (id: number) => {
+    if (categoryId !== id.toString()) {
+      props.cancelEdit?.();
+    }
     navigate(`/photo-cloud/${id}`);
   };
 
@@ -56,53 +61,53 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
         padding: '16px 24px',
       }}
     >
-      {categoryData ? (
-        categoryData.map((category: CategoryInfo) => {
-          return (
-            <div
-              style={{
-                flex: '0 0 auto',
-                width: '60px',
-                height: '60px',
-                backgroundColor: 'white',
-                borderRadius: '30px',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: '10px',
-              }}
-              key={category.categoryId}
-              onClick={() => handleCategory(category.categoryId)}
-            >
-              <p className="text-h3">{category.categoryId}</p>
-            </div>
-          );
-        })
-      ) : (
-        <p>null</p>
-      )}
-      <div
-        style={{
-          flex: '0 0 auto',
-          width: '55px',
-          height: '55px',
-          borderRadius: '30px',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginRight: '10px',
-        }}
-      >
-        <Link to="/photo-cloud/create-category">
-          <Icon
-            icon="ph:plus-circle"
-            style={{ width: '40px', height: '40px' }}
-            className="text-pink_100"
-          />
-        </Link>
-      </div>
+      {categoryData
+        ? categoryData.map((category: CategoryInfo) => {
+            return (
+              <div
+                style={{
+                  flex: '0 0 auto',
+                  width: '60px',
+                  height: '60px',
+                  backgroundColor: 'white',
+                  borderRadius: '30px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px',
+                }}
+                key={category.categoryId}
+                onClick={() => handleCategory(category.categoryId)}
+              >
+                <p className="text-h3">{category.categoryId}</p>
+              </div>
+            );
+          })
+        : null}
+      {categoryData && categoryData!.length < 10 ? (
+        <div
+          style={{
+            flex: '0 0 auto',
+            width: '55px',
+            height: '55px',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: '10px',
+          }}
+        >
+          <Link to="/photo-cloud/create-category">
+            <Icon
+              icon="ph:plus-circle"
+              style={{ width: '40px', height: '40px' }}
+              className="text-pink_100"
+            />
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

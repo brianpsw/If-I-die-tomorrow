@@ -16,20 +16,14 @@ export const Background = styled.div`
 `;
 
 export const PhotoWrapper = styled.div`
-  padding-bottom: 70px;
+  ${tw`pb-[10px]`}
 `;
 
 export const PhotoCardWrapper = styled.div`
-  width: 342px;
-  padding: 16px;
-  margin: 16px auto;
-  background-color: #f6f6f6b3;
-  border-radius: 10px;
+  ${tw`md:max-w-[40%] sm:max-w-[60%] my-4 mx-auto p-6 rounded-[10px] bg-[#f6f6f6b3] relative`}
+  width: calc(100% - 48px);
 `;
 
 export const Photo = styled.img`
-  width: 310px;
-  object-fit: contain;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;

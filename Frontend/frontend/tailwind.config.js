@@ -28,15 +28,16 @@ module.exports = {
       },
       fontSize: {
         // headings
-        h1: ['32px', { fontWeight: '600' }],
-        h2: ['24px', { fontWeight: '600' }],
-        h3: ['20px', { fontWeight: '600' }],
-        h4: ['18px', { fontWeight: '600' }],
+        h1: ['3.5em', { fontWeight: '600' }],
+        h2: ['2.8em', { fontWeight: '600' }],
+        h3: ['2.5em', { fontWeight: '600' }],
+        h4: ['2.2em', { fontWeight: '600' }],
+
         // paragraphs
-        p1: ['16px', { fontWeight: '400' }],
-        p2: ['14px', { fontWeight: '400' }],
-        p3: ['14px', { fontWeight: '300', lineHeight: '1.6' }],
-        smT: ['12px', { fontWeight: '400' }],
+        p1: ['1.8em', { fontWeight: '400' }],
+        p2: ['1.4em', { fontWeight: '400' }],
+        p3: ['1.4em', { fontWeight: '300', lineHeight: '1.6' }],
+        smT: ['1.2em', { fontWeight: '400' }],
       },
     },
   },
