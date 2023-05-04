@@ -55,7 +55,7 @@ public class PhotoController {
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
 	public ResponseEntity<CreateCategoryResDto> updateCategory(
-			@RequestBody UpdateCategoryDto data) throws NotFoundException {
+			@RequestBody UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategory(data));
 	}
 	

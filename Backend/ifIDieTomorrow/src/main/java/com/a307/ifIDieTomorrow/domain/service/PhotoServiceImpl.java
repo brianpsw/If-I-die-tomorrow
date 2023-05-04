@@ -12,6 +12,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.PhotoRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
@@ -65,9 +66,12 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException {
+	public CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
 		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
+		
+		if (data.getName() == null || "".equals(data.getName()))
+			throw new IllegalArgumentException("카테고리 이름이 없습니다.");
 		
 		category.updateCategory(data.getName());
 		
