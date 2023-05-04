@@ -66,6 +66,8 @@ public class DiaryServiceImpl implements DiaryService{
 
 
 		GetDiaryResDto diary = diaryRepository.findByIdWithUserNickName(diaryId).orElseThrow(() -> new NotFoundException("잘못된 다이어리 ID 입니다!"));
+		if (diary.getSecret() && diary.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new UnAuthorizedException("해당 다이어리에 접근하기 위한 권한이 없습니다.");
 		HashMap<String, Object> result  = new HashMap<>();
 		result.put("diary", diary);
 		result.put("comments", commentRepository.findCommentsByTypeId(diaryId, true));
