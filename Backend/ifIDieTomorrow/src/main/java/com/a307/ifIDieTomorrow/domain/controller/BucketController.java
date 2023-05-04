@@ -73,7 +73,7 @@ public class BucketController {
 	@PatchMapping("")
 	@Operation(summary = "버킷 제목 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
-			@RequestBody UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException {
+			@RequestBody UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucketTitle(data));
 	}
 

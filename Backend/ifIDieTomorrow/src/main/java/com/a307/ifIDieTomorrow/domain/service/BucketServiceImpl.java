@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
@@ -110,10 +111,12 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException {
+	public CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
 		Bucket bucket = bucketRepository.findByBucketId(data.getBucketId()).orElseThrow(() -> new NotFoundException("잘못된 버킷 리스트 ID 입니다!"));
 		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new UnAuthorizedException("해당 버킷에 접근하기 위한 권한이 없습니다.");
+		if (data.getTitle() == null || "".equals(data.getTitle()))
+			throw new IllegalArgumentException("제목이 없습니다.");
 		
 		bucket.updateTitle(data.getTitle());
 		
