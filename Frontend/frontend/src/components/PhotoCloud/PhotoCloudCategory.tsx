@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Icon } from '@iconify/react';
 
@@ -14,10 +14,12 @@ interface CategoryInfo {
 interface PhotoCloudProps {
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   deleteCategory: boolean;
+  cancelEdit: () => void;
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
   const navigate = useNavigate();
+  const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
   const fetchData = async () => {
@@ -44,6 +46,9 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   }, [props.deleteCategory]);
 
   const handleCategory = (id: number) => {
+    if (categoryId !== id.toString()) {
+      props.cancelEdit?.();
+    }
     navigate(`/photo-cloud/${id}`);
   };
 

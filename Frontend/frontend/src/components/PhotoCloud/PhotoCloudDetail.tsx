@@ -44,18 +44,23 @@ interface PhotoCloudProps {
   selectedPhotoId: string;
   selectedCategory: string;
   setEpic: React.Dispatch<React.SetStateAction<string>>;
+  epic: string;
   setEditOrDeleteModalEpic: React.Dispatch<
     React.SetStateAction<EditOrDeleteEpic>
   >;
   editOrDeleteModalEpic: EditOrDeleteEpic;
   setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
   deleteContent: boolean;
+  setSelectedPhotoCaption: React.Dispatch<React.SetStateAction<string>>;
+  selectedPhotoCaption: string;
+  cancelEdit: () => void;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
+
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
@@ -67,6 +72,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       );
       if (get_photo.status === 200) {
         const { data } = get_photo;
+        console.log(data);
         setPhotoData(() => data);
         props.setDeleteContent(false);
       }
@@ -84,6 +90,10 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   }, [props.selectedCategory]);
 
   useEffect(() => {
+    setEditContent(props.selectedPhotoCaption);
+  }, [props.selectedPhotoId]);
+
+  useEffect(() => {
     if (props.deleteContent) fetchData();
   }, [props.deleteContent]);
 
@@ -93,21 +103,21 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
 
   const handleEditTitle = (e: any) => {
     const regExp = /^.{0,30}$/;
-    const expspaces = /  +/g;
-    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+
+    if (regExp.test(e.target.value)) {
       setEditTitle(e.target.value);
     } else {
-      alert('카테고리는 연속된 공백을 제외한 30자이내여야합니다.');
+      alert('카테고리는 30자이내여야합니다.');
     }
   };
 
   const handleEditContent = (e: any) => {
     const regExp = /^.{0,300}$/;
-    const expspaces = /  +/g;
-    if (regExp.test(e.target.value) && !expspaces.test(e.target.value)) {
+
+    if (regExp.test(e.target.value)) {
       setEditContent(e.target.value);
     } else {
-      alert('내용은 연속된 공백을 제외한 300자이내여야합니다.');
+      alert('내용은 300자이내여야합니다.');
     }
   };
 
@@ -150,20 +160,23 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     }
   };
 
-  const sendResCategoryTitle = () => {
-    if (editTitle === '' || editTitle === ' ') {
+  const checkBeforeSend = (targetContent: string) => {
+    const expspaces = /  +/g;
+    if (targetContent === '') {
       alert('내용을 입력해주세요');
+    } else if (expspaces.test(targetContent)) {
+      alert('연속된 공백이 있으면 안됩니다.');
     } else {
-      changeCategory();
+      if (props.epic === '제목') {
+        changeCategory();
+      } else {
+        changeContent();
+      }
     }
   };
 
-  const sendResContent = () => {
-    if (editContent === '' || editContent === ' ') {
-      alert('내용을 입력해주세요');
-    } else {
-      changeContent();
-    }
+  const handleCancelEdit = () => {
+    props.cancelEdit?.();
   };
 
   return (
@@ -180,19 +193,30 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                   borderRadius: '10px',
                 }}
                 defaultValue={name}
+                maxLength={30}
                 onChange={(e: any) => handleEditTitle(e)}
               />
-              <Button
-                color="#36C2CC"
-                size="sm"
-                style={{ color: '#04373B' }}
-                onClick={sendResCategoryTitle}
-              >
-                입력
-              </Button>
+              <div className="w-full flex justify-center">
+                <Button
+                  color="#36C2CC"
+                  size="sm"
+                  style={{ color: '#04373B', marginRight: '16px' }}
+                  onClick={() => checkBeforeSend(editTitle)}
+                >
+                  입력
+                </Button>
+                <Button
+                  color="#eeeeee"
+                  size="sm"
+                  style={{ color: '#04373B' }}
+                  onClick={() => handleCancelEdit()}
+                >
+                  취소
+                </Button>
+              </div>
             </div>
           ) : (
-            <div className="flex justify-evenly">
+            <div className="flex justify-evenly w-5/6">
               {name && (
                 <h3 className="text-h3 text-white text-center">{name}</h3>
               )}
@@ -217,17 +241,27 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                       <div>
                         <textarea
                           defaultValue={photo.caption}
-                          style={{ width: '310px', height: '180px' }}
+                          className="w-full min-h-[180px] rounded-[10px] p-4"
                           onChange={(e: any) => handleEditContent(e)}
                         ></textarea>
-                        <Button
-                          color="#36C2CC"
-                          size="sm"
-                          style={{ color: '#04373B' }}
-                          onClick={sendResContent}
-                        >
-                          입력
-                        </Button>
+                        <div className="w-full flex justify-center">
+                          <Button
+                            color="#36C2CC"
+                            size="sm"
+                            style={{ color: '#04373B', marginRight: '16px' }}
+                            onClick={() => checkBeforeSend(editContent)}
+                          >
+                            입력
+                          </Button>
+                          <Button
+                            color="#eeeeee"
+                            size="sm"
+                            style={{ color: '#04373B' }}
+                            onClick={() => handleCancelEdit()}
+                          >
+                            취소
+                          </Button>
+                        </div>
                       </div>
                     ) : (
                       <div>
@@ -241,6 +275,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                             handleEditOrDeleteModalOpen();
                             props.setEpic('내용');
                             props.setSelectedPhotoId(photo.photoId.toString());
+                            props.setSelectedPhotoCaption(photo.caption);
                           }}
                         />
                       </div>

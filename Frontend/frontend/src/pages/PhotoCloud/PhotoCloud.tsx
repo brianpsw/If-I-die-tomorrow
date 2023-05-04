@@ -22,6 +22,7 @@ function PhotoCloud() {
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
+  const [selectedPhotoCaption, setSelectedPhotoCaption] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [epic, setEpic] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
@@ -47,8 +48,8 @@ function PhotoCloud() {
     setOpenEditOrDeleteModal(false);
   };
 
-  // 수정 모달 open
-  const handleEditModalOpen = () => {
+  // 수정으로가기
+  const handleEdit = () => {
     if (epic === '제목') {
       setEditOrDeleteModalEpic({
         titleEdit: true,
@@ -61,9 +62,21 @@ function PhotoCloud() {
       });
     }
   };
-  // 수정 모달 close
-  const onEditModalClose = () => {
-    setOpenEditModal(false);
+
+  // 수정 취소
+
+  const cancelEdit = () => {
+    if (epic === '제목') {
+      setEditOrDeleteModalEpic({
+        titleEdit: false,
+        contentEdit: false,
+      });
+    } else if (epic === '내용') {
+      setEditOrDeleteModalEpic({
+        titleEdit: false,
+        contentEdit: false,
+      });
+    }
   };
 
   //삭제 모달 open
@@ -71,8 +84,6 @@ function PhotoCloud() {
     if (epic === '제목') {
       setTargetId(selectedCategory);
     } else if (epic === '내용') {
-      console.log(epic);
-      console.log(selectedPhotoId);
       setTargetId(selectedPhotoId);
     }
     setDeleteModalOpen(true);
@@ -87,7 +98,7 @@ function PhotoCloud() {
       {openEditOrDeleteModal ? (
         <EditOrDeleteModal
           onClose={onEditOrDeleteModalClose}
-          handleBucketEditModalOpen={handleEditModalOpen}
+          handleBucketEditModalOpen={handleEdit}
           handleDeleteModalOpen={handleDeleteModalOpen}
         />
       ) : null}
@@ -103,6 +114,7 @@ function PhotoCloud() {
       <PhotoCloudCategory
         setDeleteCategory={setDeleteCategory}
         deleteCategory={deleteCategory}
+        cancelEdit={cancelEdit}
       ></PhotoCloudCategory>
       {selectedCategory && (
         <PhotoCloudDetail
@@ -111,10 +123,14 @@ function PhotoCloud() {
           selectedPhotoId={selectedPhotoId}
           selectedCategory={selectedCategory}
           setEpic={setEpic}
+          epic={epic}
           setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
           editOrDeleteModalEpic={editOrDeleteModalEpic}
           setDeleteContent={setDeleteContent}
           deleteContent={deleteContent}
+          setSelectedPhotoCaption={setSelectedPhotoCaption}
+          selectedPhotoCaption={selectedPhotoCaption}
+          cancelEdit={cancelEdit}
         ></PhotoCloudDetail>
       )}
     </Background>
