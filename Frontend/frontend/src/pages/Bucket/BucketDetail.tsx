@@ -3,6 +3,8 @@ import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/bucket_bg.png';
@@ -76,6 +78,8 @@ const ContentTitle = styled.div`
   ${tw``}
   width: 280px;
   word-break: break-all;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
 `;
 
 const Nickname = styled.p`
@@ -172,6 +176,8 @@ function BucketDetail() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
@@ -189,20 +195,6 @@ function BucketDetail() {
   const handleEditModalClose = () => {
     setEditModalOpen(false);
   };
-
-  // const deleteBucket = async (bucketId: number) => {
-  //   try {
-  //     await defaultApi.delete(requests.DELETE_BUCKET(bucketId), {
-  //       withCredentials: true,
-  //     });
-  //     navigate('/feed?tab=bucket'); // 피드 페이지로 이동
-  //     setBucketDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
-  //     setComments([]); // 댓글도 함께 초기화
-  //     alert('다이어리가 삭제되었습니다.');
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const openDeleteConfirmModal = () => {
     setDeleteConfirmModalOpen(true);
@@ -297,9 +289,11 @@ function BucketDetail() {
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
+              {loggedInUserNickname === bucket.nickname && (
+                <DotIcon>
+                  <img src={TreeDot} alt="" onClick={handleModalOpen} />
+                </DotIcon>
+              )}
             </BucketHeader>
             <BucketImg>
               {bucket.imageUrl && bucket.imageUrl !== '""' && (
@@ -380,6 +374,8 @@ function Comment({
   // const [editedContent, setEditedContent] = useState(comment.content); // 추가: 수정된 댓글 내용
   const [content, setContent] = useState(comment.content);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -488,9 +484,11 @@ function Comment({
             <CommentContent>{comment.content}</CommentContent>
           )}
         </div>
-        <CommentDotIcon>
-          <img src={TreeDot} alt="" onClick={handleModalOpen} />
-        </CommentDotIcon>
+        {loggedInUserNickname === comment.nickname && (
+          <CommentDotIcon>
+            <img src={TreeDot} alt="" onClick={handleModalOpen} />
+          </CommentDotIcon>
+        )}
       </CommentBox>
     </div>
   );

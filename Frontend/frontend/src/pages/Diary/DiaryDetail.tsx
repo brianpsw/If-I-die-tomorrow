@@ -173,6 +173,8 @@ function DiaryDetail() {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserNickname = user ? user.nickname : null;
   const navigate = useNavigate();
 
   const handleModalOpen = () => {
@@ -284,9 +286,12 @@ function DiaryDetail() {
                 </CreateDate>
               </div>
             </DiaryHeader>
-            <DotIcon>
-              <img src={TreeDot} alt="" onClick={handleModalOpen} />
-            </DotIcon>
+            {loggedInUserNickname === diary.nickname && (
+              <DotIcon>
+                <img src={TreeDot} alt="" onClick={handleModalOpen} />
+              </DotIcon>
+            )}
+
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (
                 <img src={diary.imageUrl} alt="Diary" />
