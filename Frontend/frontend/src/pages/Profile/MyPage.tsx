@@ -1,6 +1,8 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 import BottomModal from './MyPageModal';
 import {
   Background,
@@ -22,6 +24,10 @@ function MyPage() {
   const [consent, setConsent] = useState<string | null>(null);
   const [serviceEnabled, setServiceEnabled] = useState(false);
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
+  const user = useRecoilValue(userState);
+  const loggedInUserName = user ? user.name : null;
+  const loggedInUserEmail = user ? user.email : null;
+  const loggedInUserNickname = user ? user.nickname : null;
   const openBottomModal = () => {
     setIsBottomModalOpen(true);
   };
@@ -119,14 +125,29 @@ function MyPage() {
 
   return (
     <div>
-      {isBottomModalOpen ? (
+      {/* {isBottomModalOpen ? (
         <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
-      ) : null}
+      ) : null} */}
       <Background>
         <Container>
-          <HeadText>마이페이지</HeadText>
           <MyProfile>
-            <h2 className="text-h2">Nickname님, 환영합니다.</h2>
+            <h3 className="text-h3">{loggedInUserNickname}님, 환영합니다</h3>
+            <Link to="/will">
+              <IconWithText>
+                <Icon icon="line-md:clipboard-list" />
+                <span>유언장 작성하러 가기</span>
+              </IconWithText>
+            </Link>
+          </MyProfile>
+          <SettingBox>
+            <h3 className="text-h3">내 정보</h3>
+            <br />
+            <div>이름: {loggedInUserName}</div>
+            <div>이메일: {loggedInUserEmail}</div>
+          </SettingBox>
+          {/* <HeadText>마이페이지</HeadText>
+          <MyProfile>
+            <h3 className="text-h3">{loggedInUserNickname}님, 환영합니다</h3>
             <Link to="/will">
               <IconWithText>
                 <Icon icon="line-md:clipboard-list" />
@@ -245,7 +266,7 @@ function MyPage() {
             <StyledButton color="#FFA9A9" size="sm" onClick={handleSave}>
               저장
             </StyledButton>
-          </SettingBox>
+          </SettingBox> */}
         </Container>
       </Background>
     </div>
