@@ -14,9 +14,11 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	Optional<Category> findByCategoryId (Long categoryId);
 	
-	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name) " +
+	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name, objectId) " +
 			"FROM Category " +
 			"WHERE userId = :userId " +
 			"OR userId = 0")
 	List<CreateCategoryResDto> findAllByUserId(@Param("userId") Long userId);
+	
+	Category findByUserIdAndObjectId (Long userId, Long Object);
 }
