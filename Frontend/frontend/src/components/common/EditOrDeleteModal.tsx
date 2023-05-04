@@ -12,7 +12,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
+  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-full shadow mt-[50%] font-sans`}
   bottom: 0;
 `;
 const ContentContainer = styled.div`
@@ -63,11 +63,11 @@ function EditOrDeleteModal({
       <ModalWrapper ref={modalRef}>
         <ContentContainer onClick={handleEditClick}>
           <img src={EditIcon} alt="edit_icon" />
-          <span>수정</span>
+          <span className="text-p2">수정</span>
         </ContentContainer>
         <ContentContainer onClick={handleDeleteClick}>
           <img src={DeleteIcon} alt="delete_icon" />
-          <span>삭제</span>
+          <span className="text-p2">삭제</span>
         </ContentContainer>
       </ModalWrapper>
     </ModalOverlay>

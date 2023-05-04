@@ -95,9 +95,13 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
         {props.epic === '제목' ? (
-          <p>삭제하시겠습니까? 삭제된 카테고리는 되돌릴 수 없습니다.</p>
+          <p className="text-p2">
+            삭제하시겠습니까? 삭제된 카테고리는 되돌릴 수 없습니다.
+          </p>
         ) : (
-          <p>삭제하시겠습니까? 삭제된 사진은 되돌릴 수 없습니다.</p>
+          <p className="text-p2">
+            삭제하시겠습니까? 삭제된 사진은 되돌릴 수 없습니다.
+          </p>
         )}
 
         <div className="flex w-full justify-center my-4">

@@ -61,53 +61,53 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
         padding: '16px 24px',
       }}
     >
-      {categoryData ? (
-        categoryData.map((category: CategoryInfo) => {
-          return (
-            <div
-              style={{
-                flex: '0 0 auto',
-                width: '60px',
-                height: '60px',
-                backgroundColor: 'white',
-                borderRadius: '30px',
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginRight: '10px',
-              }}
-              key={category.categoryId}
-              onClick={() => handleCategory(category.categoryId)}
-            >
-              <p className="text-h3">{category.categoryId}</p>
-            </div>
-          );
-        })
-      ) : (
-        <p>null</p>
-      )}
-      <div
-        style={{
-          flex: '0 0 auto',
-          width: '55px',
-          height: '55px',
-          borderRadius: '30px',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginRight: '10px',
-        }}
-      >
-        <Link to="/photo-cloud/create-category">
-          <Icon
-            icon="ph:plus-circle"
-            style={{ width: '40px', height: '40px' }}
-            className="text-pink_100"
-          />
-        </Link>
-      </div>
+      {categoryData
+        ? categoryData.map((category: CategoryInfo) => {
+            return (
+              <div
+                style={{
+                  flex: '0 0 auto',
+                  width: '60px',
+                  height: '60px',
+                  backgroundColor: 'white',
+                  borderRadius: '30px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginRight: '10px',
+                }}
+                key={category.categoryId}
+                onClick={() => handleCategory(category.categoryId)}
+              >
+                <p className="text-h3">{category.categoryId}</p>
+              </div>
+            );
+          })
+        : null}
+      {categoryData && categoryData!.length < 10 ? (
+        <div
+          style={{
+            flex: '0 0 auto',
+            width: '55px',
+            height: '55px',
+            borderRadius: '30px',
+            cursor: 'pointer',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginRight: '10px',
+          }}
+        >
+          <Link to="/photo-cloud/create-category">
+            <Icon
+              icon="ph:plus-circle"
+              style={{ width: '40px', height: '40px' }}
+              className="text-pink_100"
+            />
+          </Link>
+        </div>
+      ) : null}
     </div>
   );
 }

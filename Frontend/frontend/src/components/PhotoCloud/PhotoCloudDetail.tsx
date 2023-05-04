@@ -186,12 +186,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           {props.editOrDeleteModalEpic.titleEdit ? (
             <div className="flex flex-col items-center">
               <input
-                style={{
-                  width: '342px',
-                  padding: '8px 16px',
-                  marginBottom: '24px',
-                  borderRadius: '10px',
-                }}
+                className="w-5/6 px-4 py-2 mb-6 rounded-[10px] text-p1"
                 defaultValue={name}
                 maxLength={30}
                 onChange={(e: any) => handleEditTitle(e)}
@@ -216,11 +211,13 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               </div>
             </div>
           ) : (
-            <div className="flex justify-evenly w-5/6">
+            <div className="w-5/6 m-auto relative">
               {name && (
                 <h3 className="text-h3 text-white text-center">{name}</h3>
               )}
               <img
+                className="absolute"
+                style={{ top: '35%', right: '-5%' }}
                 src={whiteThreeDot}
                 alt="three dot button"
                 onClick={() => {
@@ -237,14 +234,14 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                   <PhotoCardWrapper key={photo.photoId}>
                     <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
                     {props.editOrDeleteModalEpic.contentEdit === true &&
-                    props.selectedPhotoId == photo.photoId.toString() ? (
+                    props.selectedPhotoId === photo.photoId.toString() ? (
                       <div>
                         <textarea
                           defaultValue={photo.caption}
-                          className="w-full min-h-[180px] rounded-[10px] p-4"
+                          className="w-full min-h-[180px] rounded-[10px] p-4 text-p1"
                           onChange={(e: any) => handleEditContent(e)}
                         ></textarea>
-                        <div className="w-full flex justify-center">
+                        <div className="w-full flex justify-center mt-4">
                           <Button
                             color="#36C2CC"
                             size="sm"
@@ -265,10 +262,11 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                       </div>
                     ) : (
                       <div>
-                        <p className="text-p3 text-green_800 mb-6">
+                        <p className="text-p3 text-green_800 mb-[20px]">
                           {photo.caption}
                         </p>
                         <img
+                          className="absolute bottom-6 right-6"
                           src={threeDot}
                           alt="three dot button"
                           onClick={() => {
@@ -284,15 +282,18 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 );
               })
             ) : (
-              <p>사진이 없습니다.</p>
+              <p className="text-h3 text-white text-center mt-12">
+                사진이 없습니다.
+              </p>
             )}
-            <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
-              <Icon
-                icon="ph:plus-circle"
-                style={{ width: '40px', height: '40px' }}
-                className="text-pink_100"
-              />
-            </Link>
+            {photos!.length < 3 ? (
+              <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
+                <Icon
+                  icon="ph:plus-circle"
+                  className="text-pink_100 w-[6em] h-[6em] mx-auto mt-4"
+                />
+              </Link>
+            ) : null}
           </div>
         </div>
       ) : (
