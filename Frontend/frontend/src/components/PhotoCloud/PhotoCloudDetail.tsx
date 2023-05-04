@@ -213,7 +213,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           ) : (
             <div className="w-5/6 m-auto relative">
               {name && (
-                <h3 className="text-h3 text-white text-center">{name}</h3>
+                <h4 className="text-h4 text-white text-center">{name}</h4>
               )}
               <img
                 className="absolute"
