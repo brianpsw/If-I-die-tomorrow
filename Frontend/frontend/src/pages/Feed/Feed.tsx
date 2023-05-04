@@ -32,6 +32,7 @@ const FeedTab = styled.div`
   ${tw`flex`}
   justify-content: space-evenly;
   color: white;
+  font-size: 16px;
 `;
 
 const Tab = styled.span<{ isSelected: boolean }>`

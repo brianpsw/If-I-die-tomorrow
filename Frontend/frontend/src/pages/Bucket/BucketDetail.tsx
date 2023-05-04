@@ -11,7 +11,7 @@ import backgroundImg from '../../assets/images/bucket_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
-import DeleteConfirmModal from './ConfirmDeleteModal';
+import DeleteConfirmModal from '../../components/bucket/BucketDeleteModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 
 interface Comment {

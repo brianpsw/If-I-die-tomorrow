@@ -11,7 +11,7 @@ import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
-import DeleteConfirmModal from './ConfirmDeleteModal';
+import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 interface Comment {
   commentId: bigint;

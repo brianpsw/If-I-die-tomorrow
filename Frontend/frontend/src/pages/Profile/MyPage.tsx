@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
-import BottomModal from './MyPageModal';
+import BottomModal from '../../components/profile/MyPageModal';
 import {
   Background,
   Container,
@@ -142,8 +142,8 @@ function MyPage() {
           <SettingBox>
             <h3 className="text-h3">내 정보</h3>
             <br />
-            <div>이름: {loggedInUserName}</div>
-            <div>이메일: {loggedInUserEmail}</div>
+            <p className="text-p1">이름: {loggedInUserName}</p>
+            <p className="text-p1">이메일: {loggedInUserEmail}</p>
           </SettingBox>
           {/* <HeadText>마이페이지</HeadText>
           <MyProfile>

@@ -3,7 +3,9 @@ import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/mypage_bg.jpg';
 import Button from '../../components/common/Button';
 
-export const Container = styled.div``;
+export const Container = styled.div`
+  ${tw`text-p1`}
+`;
 
 export const CardWrap = styled.div`
   ${tw`mb-4 p-4 bg-white shadow rounded`}
@@ -34,7 +36,7 @@ export const ContentImg = styled.div`
 `;
 
 export const TitleContent = styled.div<{ hasImage: boolean }>`
-  ${tw`flex flex-col`}
+  ${tw`flex flex-col text-smT`}
   text-align: start;
   justify-content: center;
   width: ${(props) => (props.hasImage ? '70%' : '100%')};
@@ -47,16 +49,18 @@ export const TitleContent = styled.div<{ hasImage: boolean }>`
 // `;
 
 export const Meta = styled.div`
-  ${tw`text-xs mt-2`}
+  ${tw`text-smT mt-2`}
   text-align: end;
 `;
 
 export const Nickname = styled.span`
-  ${tw`font-medium`}
+  ${tw`text-smT`}
 `;
 
-export const Comments = styled.span``;
+export const Comments = styled.span`
+  ${tw`text-smT`}
+`;
 
 export const DateWrap = styled.span`
-  ${tw`text-gray-500`}
+  ${tw`text-smT text-gray-500`}
 `;
