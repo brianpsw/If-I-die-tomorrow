@@ -290,7 +290,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
                 <Icon
                   icon="ph:plus-circle"
-                  className="text-pink_100 w-[6em] h-[6em] mx-auto mt-4"
+                  className="text-pink_100 w-[55px] h-[55px] mx-auto mt-4"
                 />
               </Link>
             ) : null}

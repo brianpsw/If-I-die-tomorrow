@@ -12,13 +12,13 @@ import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
 
 const PhotoUploadWrapper = styled.div`
-  ${tw`w-[342px] p-4 rounded-[10px] cursor-pointer mb-8`}
-  background-color: rgba(246, 246, 246, 0.7);
+  ${tw`md:max-w-[40%] sm:max-w-[60%] p-4 rounded-[10px] cursor-pointer mb-8 bg-[#f6f6f6b3] mx-auto `}
+  width: 100%;
 `;
 
 const ContentWrapper = styled.div`
-  ${tw`w-[342px]  p-4 rounded-[10px] mb-8`}
-  background-color: rgba(246, 246, 246, 0.7);
+  ${tw`md:max-w-[40%] sm:max-w-[60%] p-4 rounded-[10px] mb-8 bg-[#f6f6f6b3] mx-auto `}
+  width: 100%;
 `;
 
 function UploadPhoto() {
@@ -146,7 +146,7 @@ function UploadPhoto() {
             <textarea
               rows={5}
               maxLength={300}
-              className="w-full rounded-[10px] p-4"
+              className="w-full rounded-[10px] p-4 text-p2"
               placeholder="당신만의 이야기를 써보세요."
               onChange={handleContent}
             ></textarea>
@@ -154,7 +154,7 @@ function UploadPhoto() {
           <Button
             color="#36C2CC"
             size="lg"
-            style={{ color: '#04373B' }}
+            style={{ color: '#04373B', margin: '0 auto' }}
             onClick={handleSubmitPhoto}
           >
             사진 올리기

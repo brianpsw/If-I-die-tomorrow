@@ -15,7 +15,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-gray-100 flex flex-col w-full mx-4 px-[16px] items-center border-solid rounded-xl shadow `}
+  ${tw`bg-gray-100 flex flex-col w-full mx-4 p-[16px] items-center border-solid rounded-xl shadow `}
 `;
 
 interface DeleteModalProps {
@@ -95,17 +95,24 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
         {props.epic === '제목' ? (
-          <p className="text-p2">
-            삭제하시겠습니까? 삭제된 카테고리는 되돌릴 수 없습니다.
+          <p className="text-p2 text-center">
+            삭제하시겠습니까? <br />
+            삭제된 카테고리는 되돌릴 수 없습니다.
           </p>
         ) : (
-          <p className="text-p2">
-            삭제하시겠습니까? 삭제된 사진은 되돌릴 수 없습니다.
+          <p className="text-p2 text-center">
+            삭제하시겠습니까? <br />
+            삭제된 사진은 되돌릴 수 없습니다.
           </p>
         )}
 
         <div className="flex w-full justify-center my-4">
-          <Button onClick={handleDelete} color="#B3E9EB" size="sm">
+          <Button
+            onClick={handleDelete}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
             삭제하기
           </Button>
         </div>
