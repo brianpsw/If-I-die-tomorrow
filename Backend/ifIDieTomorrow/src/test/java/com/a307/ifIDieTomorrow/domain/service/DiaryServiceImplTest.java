@@ -343,7 +343,7 @@ class DiaryServiceImplTest {
 				 */
 				BDDAssertions.thenThrownBy(() -> diaryService.getDiaryById(1L))
 						.isInstanceOf(NotFoundException.class)
-						.hasMessage("잘못된 다이어리 아이디입니다!");
+						.hasMessage("잘못된 다이어리 ID 입니다!");
 
 				/**
 				 * 동작 검증
