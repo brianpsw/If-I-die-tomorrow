@@ -117,7 +117,11 @@ function DiaryFeed() {
                         diary.imageUrl && diary.imageUrl !== '""',
                       )}
                     >
-                      <Title>{diary.title}</Title>
+                      <Title>
+                        {diary.title.length > 18
+                          ? diary.title.substring(0, 18) + '⋯'
+                          : diary.title}
+                      </Title>
                       <Content>
                         {diary.content.length > 40
                           ? diary.content.substring(0, 40) + '⋯'

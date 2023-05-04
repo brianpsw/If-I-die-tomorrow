@@ -120,7 +120,11 @@ function BucketFeed() {
                         bucket.imageUrl && bucket.imageUrl !== '""',
                       )}
                     >
-                      <Title>{bucket.title}</Title>
+                      <Title>
+                        {bucket.title.length > 18
+                          ? bucket.title.substring(0, 18) + '⋯'
+                          : bucket.title}
+                      </Title>
                       <Content>
                         {bucket.content.length > 40
                           ? bucket.content.substring(0, 40) + '⋯'

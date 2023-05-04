@@ -60,6 +60,12 @@ const DotIcon = styled.div`
   ${tw`flex`}
 `;
 
+const ContentTitle = styled.div`
+  ${tw``}
+  width: 280px;
+  word-break: break-all;
+`;
+
 const Nickname = styled.p`
   font-size: 15px;
 `;
@@ -249,7 +255,7 @@ function BucketDetail() {
           <BucketWrap>
             <BucketHeader>
               <div>
-                <h2 className="text-h3">{bucket.title}</h2>
+                <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
                 <Nickname>{bucket.nickname}</Nickname>
                 <CreateDate>
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
