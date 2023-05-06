@@ -60,7 +60,11 @@ function MyPage() {
   };
 
   const [receiverTexts, setReceiverTexts] = useState<
-    Array<{ name: string; phone: string }>
+    Array<{
+      receiverId: number;
+      name: string;
+      phone: string;
+    }>
   >([]);
 
   // 리시버 추가하기
@@ -96,17 +100,21 @@ function MyPage() {
         setReceiverTexts([
           ...receiverTexts,
           {
+            receiverId: addedReceiver.receiverId,
             name: `이름: ${addedReceiver.name}`,
             phone: `전화번호: ${addedReceiver.phoneNumber}`,
           },
         ]);
-        setReceivers([...receivers, { name: '', phone: '' }]);
+        setReceivers([
+          ...receivers.slice(0, lastIndex),
+          { name: '', phone: '' },
+        ]);
       }
     } else {
       alert('이름, 이메일, 전화번호를 모두 입력해주세요.');
     }
 
-    handleSave(); // handleSave 함수 호출
+    // handleSave(); // handleSave 함수 호출
   };
 
   // 추가된 리시버 조회
@@ -133,6 +141,7 @@ function MyPage() {
       if (fetchedReceivers) {
         setReceiverTexts(
           fetchedReceivers.map((receiver) => ({
+            receiverId: receiver.receiverId,
             name: `이름: ${receiver.name}`,
             phone: `전화번호: ${receiver.phoneNumber}`,
           })),
@@ -144,6 +153,20 @@ function MyPage() {
   }, []);
 
   // 리시버 삭제하기
+  const deleteReceiverFromAPI = async (receiverId: number) => {
+    try {
+      const response = await defaultApi.delete(
+        requests.DELETE_RECEIVER(receiverId),
+        {
+          withCredentials: true,
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Failed to delete receiver:', error);
+      throw error;
+    }
+  };
 
   const inputRefs = receivers.map(() => ({
     name: React.createRef<HTMLInputElement>(),
@@ -151,22 +174,31 @@ function MyPage() {
   }));
   const handleSave = () => {
     let invalidIndex = -1;
-    const validReceivers: typeof receivers = [];
+    const validReceivers: Array<{
+      receiverId: number;
+      name: string;
+      phone: string;
+    }> = [];
 
     for (let index = 0; index < receivers.length; index++) {
       const receiver = receivers[index];
-      const isValid = Object.values(receiver).every(
-        (value) => value.trim() !== '',
-      );
+      const isValid = Object.values(receiver)
+        .filter((value) => typeof value === 'string')
+        .every((value) => (value as string).trim() !== '');
 
       if (isValid) {
-        validReceivers.push(receiver);
+        validReceivers.push({
+          receiverId: receiverTexts[index].receiverId,
+          name: receiver.name,
+          phone: receiver.phone,
+        });
       } else if (invalidIndex === -1) {
         invalidIndex = index;
       }
     }
 
     const newReceiverTexts = validReceivers.map((receiver) => ({
+      receiverId: receiver.receiverId,
       name: `이름: ${receiver.name}`,
 
       phone: `전화번호: ${receiver.phone}`,
@@ -190,17 +222,35 @@ function MyPage() {
       }
     }
 
-    const newReceivers = receivers.filter(
-      (_, index) => !validReceivers.includes(receivers[index]),
-    );
+    const newReceivers = receivers
+      .map((receiver, index) => ({
+        receiverId: receiverTexts[index].receiverId,
+        ...receiver,
+      }))
+      .filter((receiver, index) => !validReceivers.includes(receiver));
     if (newReceivers.length === 0) {
-      newReceivers.push({ name: '', phone: '' });
+      newReceivers.push({
+        receiverId: receiverTexts.length,
+        name: '',
+        phone: '',
+      });
     }
     setReceivers(newReceivers);
   };
 
-  const handleDelete = (index: number) => {
-    setReceiverTexts(receiverTexts.filter((_, i) => i !== index));
+  const handleDelete = async (index: number) => {
+    const receiverToDelete = receiverTexts[index];
+    try {
+      const deletedReceiver = await deleteReceiverFromAPI(
+        receiverToDelete.receiverId,
+      );
+      if (deletedReceiver) {
+        setReceiverTexts(receiverTexts.filter((_, i) => i !== index));
+      }
+    } catch (error) {
+      console.error('Failed to delete receiver');
+    }
+    handleSave();
   };
 
   return (
