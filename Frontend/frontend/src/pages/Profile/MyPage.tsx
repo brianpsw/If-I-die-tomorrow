@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import requests from '../../api/config';
@@ -108,6 +108,42 @@ function MyPage() {
 
     handleSave(); // handleSave 함수 호출
   };
+
+  // 추가된 리시버 조회
+  const getReceiversFromAPI = async (): Promise<Array<{
+    receiverId: number;
+    name: string;
+    phoneNumber: string;
+  }> | null> => {
+    try {
+      const response = await defaultApi.get(requests.GET_RECEIVER(), {
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Failed to get receivers:', error);
+      return null;
+    }
+  };
+
+  // 컴포넌트가 마운트될 때 리시버 목록을 가져옵니다.
+  useEffect(() => {
+    const fetchReceivers = async () => {
+      const fetchedReceivers = await getReceiversFromAPI();
+      if (fetchedReceivers) {
+        setReceiverTexts(
+          fetchedReceivers.map((receiver) => ({
+            name: `이름: ${receiver.name}`,
+            phone: `전화번호: ${receiver.phoneNumber}`,
+          })),
+        );
+      }
+    };
+
+    fetchReceivers();
+  }, []);
+
+  // 리시버 삭제하기
 
   const inputRefs = receivers.map(() => ({
     name: React.createRef<HTMLInputElement>(),
