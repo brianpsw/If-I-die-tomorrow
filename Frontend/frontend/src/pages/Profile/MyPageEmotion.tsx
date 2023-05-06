@@ -19,7 +19,7 @@ const BtModal = styled.div`
 `;
 
 export const Container = styled.div`
-  ${tw`flex flex-col mx-auto pb-12`}
+  ${tw`text-p2 flex flex-col mx-auto pb-12`}
   max-width: calc(100% - 48px);
   // border: solid 1px white;
 `;
@@ -35,13 +35,13 @@ export const MyProfile = styled.div`
 `;
 
 export const SettingBox = styled.div`
-  ${tw`mb-12 mt-6 p-6`}
+  ${tw`mb-4 p-4 bg-white shadow rounded`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
-  width: 342px;
-  height: auto;
-  display: flex;
-  flex-direction: column;
+  // width: 342px;
+  // height: auto;
+  // display: flex;
+  // flex-direction: column;
   // justify-content: space-between;
 `;
 
