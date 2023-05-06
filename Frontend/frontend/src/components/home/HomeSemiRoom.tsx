@@ -8,6 +8,7 @@ import { useGLTF, OrbitControls } from '@react-three/drei';
 
 interface PreventDragClick {
   preventDragClick: boolean;
+  setPreventDragClick: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function Scene(props: PreventDragClick) {
@@ -16,19 +17,19 @@ function Scene(props: PreventDragClick) {
   const heart = useGLTF('models/heart.glb', true);
 
   const clickRoom = (e: any) => {
-    if (!props.preventDragClick) navigate('/room');
+    if (props.preventDragClick) navigate('/room');
     e?.stopPropagation();
   };
 
   const clickHeart = (e: any) => {
-    if (!props.preventDragClick) navigate('/photo-cloud/4');
+    if (props.preventDragClick) navigate('/photo-cloud/4');
     e?.stopPropagation();
   };
 
   return (
     <Suspense fallback={<div>loading...</div>}>
-      <directionalLight position={[30, 50, 100]} intensity={1.2} />
-
+      {/* <directionalLight position={[30, 50, 100]} intensity={1.2} /> */}
+      <ambientLight></ambientLight>
       <primitive
         object={heart.scene}
         scale={[0.3, 0.3, 0.3]}
@@ -51,12 +52,13 @@ function HomeSemiRoom() {
   const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('home에서 prevent', preventDragClick);
     let nowCanvas = canvas.current;
     let clickStartX: number;
     let clickStartY: number;
     let clickStartTime: number;
 
-    nowCanvas?.addEventListener('mousemove', (e) => {
+    nowCanvas?.addEventListener('mousedown', (e) => {
       clickStartX = e.clientX;
       clickStartY = e.clientY;
       clickStartTime = Date.now();
@@ -67,13 +69,13 @@ function HomeSemiRoom() {
       const yGap = Math.abs(e.clientY - clickStartY);
       const timeGap = Date.now() - clickStartTime;
 
-      if (xGap > 5 || yGap > 5 || timeGap > 300) {
-        setPreventDragClick(true);
+      if (xGap > 1 || yGap > 1 || timeGap > 100) {
+        setPreventDragClick(() => true);
       } else {
-        setPreventDragClick(false);
+        setPreventDragClick(() => false);
       }
     });
-  }, []);
+  });
 
   return (
     <Canvas
@@ -84,7 +86,10 @@ function HomeSemiRoom() {
         position: [500, 300, 500],
       }}
     >
-      <Scene preventDragClick={preventDragClick} />
+      <Scene
+        preventDragClick={preventDragClick}
+        setPreventDragClick={setPreventDragClick}
+      />
     </Canvas>
   );
 }
