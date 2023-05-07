@@ -3,8 +3,8 @@ import React, { useState, Suspense, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import * as THREE from 'three';
-import { Canvas } from '@react-three/fiber';
-import { useGLTF, OrbitControls } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { useGLTF, OrbitControls, useAnimations } from '@react-three/drei';
 
 interface PreventDragClick {
   preventDragClick: boolean;
@@ -24,6 +24,17 @@ function Scene(props: PreventDragClick) {
   const sofa = useGLTF('models/sofa.glb', true);
   const wallShelf = useGLTF('models/wallshelf.glb', true);
   // const cat = useGLTF('models/cat.gltf', true);
+  const group = useRef();
+  const { scene, animations } = useGLTF('models/fox_ani.glb', true);
+  // const { actions, mixer } = useAnimations(animations, group);
+  let mixer = new THREE.AnimationMixer(scene);
+
+  const action = mixer.clipAction(animations[0]);
+  action.play();
+
+  useFrame((state, delta) => {
+    mixer.update(delta);
+  });
 
   const clickRoom = (e: any) => {
     if (props.preventDragClick) navigate('/room');
@@ -63,13 +74,13 @@ function Scene(props: PreventDragClick) {
       <primitive
         object={carpet.scene}
         scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        position={[130, -200, 220]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={coffeetable.scene}
         scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        position={[130, -200, 220]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
@@ -95,6 +106,14 @@ function Scene(props: PreventDragClick) {
         scale={[50, 50, 50]}
         position={[200, -200, 200]}
         rotation={[0, -Math.PI / 2, 0]}
+      />
+      <primitive
+        ref={group}
+        object={scene}
+        scale={[40, 40, 40]}
+        position={[300, -145, 300]}
+        rotation={[0, -Math.PI / 4, 0]}
+        onClick={(e: any) => clickRoom(e)}
       />
       <OrbitControls />
     </Suspense>
