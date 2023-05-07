@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, OrbitControls, useAnimations } from '@react-three/drei';
+import { useGLTF, OrbitControls } from '@react-three/drei';
 
 interface PreventDragClick {
   preventDragClick: boolean;
@@ -24,12 +24,12 @@ function Scene(props: PreventDragClick) {
   const sofa = useGLTF('models/sofa.glb', true);
   const wallShelf = useGLTF('models/wallshelf.glb', true);
   // const cat = useGLTF('models/cat.gltf', true);
-  const group = useRef();
-  const { scene, animations } = useGLTF('models/fox_ani.glb', true);
-  // const { actions, mixer } = useAnimations(animations, group);
-  let mixer = new THREE.AnimationMixer(scene);
 
-  const action = mixer.clipAction(animations[0]);
+  const fox = useGLTF('models/fox_ani.glb', true);
+
+  let mixer = new THREE.AnimationMixer(fox.scene);
+
+  const action = mixer.clipAction(fox.animations[0]);
   action.play();
 
   useFrame((state, delta) => {
@@ -108,8 +108,7 @@ function Scene(props: PreventDragClick) {
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
-        ref={group}
-        object={scene}
+        object={fox.scene}
         scale={[8, 8, 8]}
         position={[20, -19.5, 20]}
         rotation={[0, -Math.PI / 4, 0]}
