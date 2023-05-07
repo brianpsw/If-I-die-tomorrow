@@ -48,70 +48,70 @@ function Scene(props: PreventDragClick) {
 
       <primitive
         object={roomFrame.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         onClick={(e: any) => clickRoom(e)}
       />
       <primitive
         object={bed.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={board.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={bookShelf.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={carpet.scene}
-        scale={[50, 50, 50]}
-        position={[130, -200, 220]}
+        scale={[10, 10, 10]}
+        position={[-10, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={coffeetable.scene}
-        scale={[50, 50, 50]}
-        position={[130, -200, 220]}
+        scale={[10, 10, 10]}
+        position={[-10, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={deskChair.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={pc.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={sofa.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         object={wallShelf.scene}
-        scale={[50, 50, 50]}
-        position={[200, -200, 200]}
+        scale={[10, 10, 10]}
+        position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
       />
       <primitive
         ref={group}
         object={scene}
-        scale={[40, 40, 40]}
-        position={[300, -145, 300]}
+        scale={[8, 8, 8]}
+        position={[20, -19.5, 20]}
         rotation={[0, -Math.PI / 4, 0]}
         onClick={(e: any) => clickRoom(e)}
       />
@@ -153,12 +153,13 @@ function HomeSemiRoom() {
   return (
     <Canvas
       ref={canvas}
-      style={{ width: '100vw', height: '92vh' }}
+      style={{ width: '100vw', height: '94vh' }}
       orthographic
       camera={{
-        position: [500, 300, 500],
-        near: 0.01,
+        position: [10, 5, 10],
+        near: -1000,
         far: 1000,
+        zoom: 5,
       }}
     >
       <Scene
