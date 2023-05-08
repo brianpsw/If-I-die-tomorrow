@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
 import BottomModal from '../../components/profile/MyPageModal';
 import UserInfo from '../../components/profile/UserInfo';
 import ServiceAgreeModal from '../../components/profile/ServiceAgreeModal';
-import axios from 'axios';
 import {
   Background,
   Container,
@@ -41,6 +41,7 @@ function MyPage() {
   }) => {
     setPhone(submittedData.phone);
     setServiceConsent(submittedData.serviceConsent);
+    setConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
     setSubmitted(true);
     // PATCH_AGREEMENT API 호출
     if (submittedData.serviceConsent && userId) {
@@ -250,7 +251,7 @@ function MyPage() {
     name: React.createRef<HTMLInputElement>(),
     phone: React.createRef<HTMLInputElement>(),
   }));
-  const handleSave = () => {
+  const handleSave = async () => {
     let invalidIndex = -1;
     const validReceivers: Array<{
       receiverId: number;
@@ -314,6 +315,27 @@ function MyPage() {
       });
     }
     setReceivers(newReceivers);
+
+    if (consent === 'agree') {
+      // 조건 추가
+      // 동의 상태이고 모달에서 확인을 눌렀을 때 호출되는 경우
+      const patchData = {
+        agree: true,
+        phone,
+      };
+
+      try {
+        await defaultApi.patch(
+          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
+          patchData,
+          {
+            withCredentials: true,
+          },
+        );
+      } catch (error) {
+        console.error('Failed to update agreement:', error);
+      }
+    }
   };
 
   const handleDelete = async (index: number) => {
