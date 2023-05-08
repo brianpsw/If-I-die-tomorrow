@@ -2,15 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { useRecoilValue } from 'recoil';
-import { userState } from '../../states/UserState';
 
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
 
-import Button from '../../components/common/Button';
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 
 interface EditOrDeleteEpic {
@@ -19,7 +16,6 @@ interface EditOrDeleteEpic {
 }
 
 function PhotoCloud() {
-  const user = useRecoilValue(userState);
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
