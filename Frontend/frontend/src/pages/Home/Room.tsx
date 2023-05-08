@@ -40,12 +40,12 @@ function RoomScene(props: RoomProps) {
   floorMesh.receiveShadow = true;
   scene.add(floorMesh);
 
-  const fox = useGLTF('models/fox_ani.glb', true);
+  const fox = useGLTF('models/fox.glb', true);
   const foxModelMesh = fox.scene.children[0];
   let mixer = new THREE.AnimationMixer(fox.scene);
 
   const action1 = mixer.clipAction(fox.animations[0]);
-  const walk = mixer.clipAction(fox.animations[1]); // 애니가 없네..?
+  const walk = mixer.clipAction(fox.animations[2]); // 애니가 없네..?
   action1.play();
   // walk.play();
 
@@ -56,8 +56,6 @@ function RoomScene(props: RoomProps) {
       if (item.object.name === 'floor') {
         setDestinationPoint(new THREE.Vector3(item.point.x, 0.3, item.point.z));
         foxModelMesh.lookAt(destinationPoint);
-
-        console.log(item.point);
 
         setFoxMoving(() => true);
         setPointer(
@@ -92,8 +90,9 @@ function RoomScene(props: RoomProps) {
               foxPointer.z + Math.sin(angle) * 0.5,
             ),
         );
-        action1.stop();
-        walk.play();
+        console.log('움직임');
+        // action1.stop();
+        // walk.play();
 
         if (
           Math.abs(destinationPoint.x - foxPointer.x) < 0.03 &&
@@ -135,8 +134,8 @@ function RoomScene(props: RoomProps) {
         //   }
       } else {
         // 서 있는 상태
-        walk.stop();
-        action1.play();
+        // walk.stop();
+        // action1.play();
       }
     }
   });
