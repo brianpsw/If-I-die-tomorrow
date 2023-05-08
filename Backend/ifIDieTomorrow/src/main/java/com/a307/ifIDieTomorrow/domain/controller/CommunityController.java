@@ -8,6 +8,7 @@ import com.a307.ifIDieTomorrow.domain.dto.community.ReportReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.ReportResDto;
 import com.a307.ifIDieTomorrow.domain.service.CommunityService;
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -55,7 +56,7 @@ public class CommunityController {
 	@Operation(summary = "댓글 수정", description = "댓글 수정입니다")
 	public ResponseEntity<CreateCommentResDto> updateComment(
 			@RequestBody UpdateCommentReqDto data
-	) throws NotFoundException, UnAuthorizedException {
+	) throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(communityService.updateComment(data));
 	}
 

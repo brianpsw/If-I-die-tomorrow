@@ -10,6 +10,7 @@ import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
@@ -127,11 +128,13 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 
 	@Override
-	public CreateCommentResDto updateComment(UpdateCommentReqDto req) throws NotFoundException, UnAuthorizedException {
+	public CreateCommentResDto updateComment(UpdateCommentReqDto req) throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
 
 		//		댓글
 		Comment comment = commentRepository.findById(req.getCommentId())
 				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+		
+		if ("".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
 
 		//		유저 정보 파싱
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
