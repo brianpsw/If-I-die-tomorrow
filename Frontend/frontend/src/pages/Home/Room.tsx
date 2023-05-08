@@ -9,6 +9,7 @@ import gsap from 'gsap';
 
 interface RoomProps {
   setCameraPosition: React.Dispatch<React.SetStateAction<THREE.Vector3>>;
+  canvas: HTMLCanvasElement | null;
 }
 
 function RoomScene(props: RoomProps) {
@@ -16,13 +17,16 @@ function RoomScene(props: RoomProps) {
     new THREE.Vector3(20, 9, 20),
   );
   const [foxMoving, setFoxMoving] = useState<boolean>(false);
-  const [pointer, setPointer] = useState<THREE.Vector3>(new THREE.Vector3());
+  const [pointer, setPointer] = useState<THREE.Vector3>(
+    new THREE.Vector3(20, 0.1, 20),
+  );
   const [destinationPoint, setDestinationPoint] = useState<THREE.Vector3>(
     new THREE.Vector3(),
   );
   const [angle, setAngle] = useState<number>(0);
   const [isPressed, setIsPressed] = useState<boolean>(false); // 마우스를 누르고 있는 상태
   const { scene, camera, raycaster, mouse } = useThree();
+  const { setCameraPosition, canvas } = props;
   const floorTexture = useTexture('images/example.png');
   floorTexture.wrapS = THREE.RepeatWrapping;
   floorTexture.wrapT = THREE.RepeatWrapping;
@@ -54,12 +58,14 @@ function RoomScene(props: RoomProps) {
     const intersects = raycaster.intersectObjects(meshes);
     for (const item of intersects) {
       if (item.object.name === 'floor') {
-        setDestinationPoint(new THREE.Vector3(item.point.x, 0.3, item.point.z));
+        setDestinationPoint(
+          () => new THREE.Vector3(item.point.x, 0.3, item.point.z),
+        );
         foxModelMesh.lookAt(destinationPoint);
 
         setFoxMoving(() => true);
         setPointer(
-          new THREE.Vector3(destinationPoint.x, 0, destinationPoint.z),
+          () => new THREE.Vector3(destinationPoint.x, 0.1, destinationPoint.z),
         );
       }
       break;
@@ -85,18 +91,18 @@ function RoomScene(props: RoomProps) {
         setFoxPointer(
           () =>
             new THREE.Vector3(
-              foxPointer.x + Math.cos(angle) * 0.5,
+              foxPointer.x + Math.cos(angle) * 1.2,
               foxPointer.y,
-              foxPointer.z + Math.sin(angle) * 0.5,
+              foxPointer.z + Math.sin(angle) * 1.2,
             ),
         );
         console.log('움직임');
-        // action1.stop();
-        // walk.play();
+        action1.stop();
+        walk.play();
 
         if (
-          Math.abs(destinationPoint.x - foxPointer.x) < 0.03 &&
-          Math.abs(destinationPoint.z - foxPointer.z) < 0.03
+          Math.abs(destinationPoint.x - foxPointer.x) < 0.5 &&
+          Math.abs(destinationPoint.z - foxPointer.z) < 0.5
         ) {
           setFoxMoving(() => false);
           console.log('멈춤');
@@ -134,8 +140,8 @@ function RoomScene(props: RoomProps) {
         //   }
       } else {
         // 서 있는 상태
-        // walk.stop();
-        // action1.play();
+        walk.stop();
+        action1.play();
       }
     }
   });
@@ -151,12 +157,12 @@ function RoomScene(props: RoomProps) {
   };
 
   window.addEventListener('mousedown', (e) => {
-    setIsPressed(() => true);
+    setIsPressed((prev) => !prev);
     calculateMousePosition(e);
   });
 
   window.addEventListener('mouseup', (e) => {
-    setIsPressed(() => false);
+    setIsPressed((prev) => !prev);
   });
 
   window.addEventListener('mousemove', (e) => {
@@ -178,7 +184,6 @@ function RoomScene(props: RoomProps) {
         />
       </directionalLight>
       <ambientLight intensity={0.7} />
-
       <mesh
         rotation={[-Math.PI / 2, 0.01, 0]}
         receiveShadow={true}
@@ -200,13 +205,15 @@ function RoomScene(props: RoomProps) {
         scale={[8, 8, 8]}
         position={foxPointer}
         rotation={[0, -Math.PI / 2, 0]}
+        receiveShadow={true}
       />
-      <OrbitControls />
+      // <OrbitControls />
     </Suspense>
   );
 }
 
 function Room() {
+  const nowCanvas = useRef<HTMLCanvasElement | null>(null);
   const [cameraPosition, setCameraPosition] = useState<THREE.Vector3>(
     new THREE.Vector3(1, 5, 5),
   );
@@ -215,6 +222,7 @@ function Room() {
 
   return (
     <Canvas
+      ref={nowCanvas}
       style={{ width: '100vw', height: '94vh' }}
       orthographic
       camera={{
@@ -225,7 +233,10 @@ function Room() {
       }}
       shadows={true}
     >
-      <RoomScene setCameraPosition={setCameraPosition} />
+      <RoomScene
+        setCameraPosition={setCameraPosition}
+        canvas={nowCanvas.current}
+      />
     </Canvas>
   );
 }
