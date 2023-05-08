@@ -42,7 +42,7 @@ public class PhotoController {
 	@PostMapping("/category")
 	@Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
 	public ResponseEntity<CreateCategoryResDto> createCategory(
-			@RequestBody CreateCategoryDto data) throws UnAuthorizedException {
+			@RequestBody CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data));
 	}
 	

@@ -47,9 +47,11 @@ public class PhotoServiceImpl implements PhotoService {
 	///////////////////////
 	
 	@Override
-	public CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException {
+	public CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException {
 		if (categoryRepository.findByUserIdAndObjectId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId(), data.getObjectId()) != null)
 			throw new UnAuthorizedException("이미 사용중인 오브젝트입니다.");
+		
+		if ("".equals(data.getName().trim())) throw new IllegalArgumentException("이름이 없습니다.");
 		
 		Category category = Category.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
@@ -73,7 +75,7 @@ public class PhotoServiceImpl implements PhotoService {
 		if (category.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new IllegalArgumentException("카테고리 수정 권한이 없습니다.");
 		
-		if (data.getName() == null || "".equals(data.getName()))
+		if (data.getName() == null || "".equals(data.getName().trim()))
 			throw new IllegalArgumentException("카테고리 이름이 없습니다.");
 		
 		category.updateCategory(data.getName());
