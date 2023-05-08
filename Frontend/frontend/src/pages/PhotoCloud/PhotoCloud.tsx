@@ -8,7 +8,6 @@ import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
 
-import Button from '../../components/common/Button';
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 
 interface EditOrDeleteEpic {
@@ -24,6 +23,7 @@ function PhotoCloud() {
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
   const [selectedPhotoCaption, setSelectedPhotoCaption] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [categoryOwner, setCategoryOwner] = useState<number | null>(null);
   const [epic, setEpic] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
   const [editOrDeleteModalEpic, setEditOrDeleteModalEpic] =
@@ -109,6 +109,7 @@ function PhotoCloud() {
           epic={epic}
           setDeleteCategory={setDeleteCategory}
           setDeleteContent={setDeleteContent}
+          categoryOwner={categoryOwner!}
         />
       ) : null}
       <PhotoCloudCategory
@@ -131,6 +132,7 @@ function PhotoCloud() {
           setSelectedPhotoCaption={setSelectedPhotoCaption}
           selectedPhotoCaption={selectedPhotoCaption}
           cancelEdit={cancelEdit}
+          setCategoryOwner={setCategoryOwner}
         ></PhotoCloudDetail>
       )}
     </Background>
