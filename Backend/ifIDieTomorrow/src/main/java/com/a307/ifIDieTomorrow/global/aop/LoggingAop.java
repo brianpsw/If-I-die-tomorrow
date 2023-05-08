@@ -46,7 +46,7 @@ public class LoggingAop {
 
 
 	@Around("cut()")
-	public void logAround (ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+	public Object logAround (ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 
 		log.info("******************************LOG STARTS******************************");
 
@@ -60,6 +60,7 @@ public class LoggingAop {
 
 
 		log.info("*******************************LOG ENDS*******************************");
+		return result;
 
 	}
 
