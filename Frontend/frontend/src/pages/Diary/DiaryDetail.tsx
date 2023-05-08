@@ -13,6 +13,7 @@ import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
 import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
+import TopBar from '../../components/common/TopBar';
 interface Comment {
   commentId: bigint;
   content: string;
@@ -275,6 +276,7 @@ function DiaryDetail() {
         />
       )}
       <Background>
+        <TopBar title="" />
         <Container>
           <DiaryWrap>
             <DiaryHeader>

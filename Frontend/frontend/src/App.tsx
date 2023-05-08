@@ -25,6 +25,9 @@ import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import CreateCategory from './pages/PhotoCloud/CreateCategory';
 import UploadPhoto from './pages/PhotoCloud/UploadPhoto';
 import NavBar from './components/common/NavBar';
+import WillText from './pages/Will/WillText';
+import WillSign from './pages/Will/WillSign';
+import WillVideo from './pages/Will/WillVideo';
 
 function App() {
   return (
@@ -44,7 +47,11 @@ function App() {
             <Route path="/diary/:diaryId" element={<DiaryDetail />} />
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/will" element={<Will />} />
+            <Route path="/will" element={<Will />} />
+            <Route path="/will/text" element={<WillText />} />
+            <Route path="/will/sign" element={<WillSign />} />
+            <Route path="/will/video" element={<WillVideo />} />
+
             <Route path="/survey" element={<Survey />} />
             <Route path="/photo-cloud/:categoryId" element={<PhotoCloud />} />
             <Route

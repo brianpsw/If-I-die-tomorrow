@@ -13,6 +13,7 @@ import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
 import DeleteConfirmModal from '../../components/bucket/BucketDeleteModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
+import TopBar from '../../components/common/TopBar';
 
 interface Comment {
   commentId: bigint;
@@ -279,6 +280,7 @@ function BucketDetail() {
         />
       )}
       <Background>
+        <TopBar title="" />
         <Container>
           <BucketWrap>
             <BucketHeader>
