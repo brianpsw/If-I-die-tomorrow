@@ -4,6 +4,9 @@ import RecordRTC from 'recordrtc';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import TopBar from '../../components/common/TopBar';
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
+import Button from '../../components/common/Button';
 
 const Container = styled.div`
   ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
