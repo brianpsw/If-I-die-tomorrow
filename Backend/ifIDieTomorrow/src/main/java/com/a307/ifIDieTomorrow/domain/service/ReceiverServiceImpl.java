@@ -5,6 +5,7 @@ import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Receiver;
 import com.a307.ifIDieTomorrow.domain.repository.ReceiverRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,9 @@ public class ReceiverServiceImpl implements ReceiverService {
 	private final ReceiverRepository receiverRepository;
 	
 	@Override
-	public CreateReceiverResDto createReceiver (CreateReceiverDto data) {
+	public CreateReceiverResDto createReceiver (CreateReceiverDto data) throws IllegalArgumentException {
+		if ("".equals(data.getName().trim()) || "".equals(data.getPhoneNumber().trim())) throw new IllegalArgumentException("내용이 없습니다.");
+		
 		Receiver receiver = Receiver.builder()
 				.userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 				.name(data.getName())
