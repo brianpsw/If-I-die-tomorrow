@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import arrow_back from '../../assets/icons/previous_vector.svg';
 
 const Container = styled.div`
-  ${tw`flex justify-between items-center p-[16px] border-b h-[60px] w-full`}
+  ${tw`flex justify-between items-center p-[16px] h-[60px] w-full`}
 `;
 interface TopBarProps {
   title: string;
