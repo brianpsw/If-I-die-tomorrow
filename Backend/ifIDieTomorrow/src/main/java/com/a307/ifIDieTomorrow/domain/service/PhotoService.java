@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PhotoService {
-	CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException;
+	CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException;
 	
 	CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException;
 	
