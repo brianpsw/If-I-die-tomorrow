@@ -35,8 +35,8 @@ public class DiaryServiceImpl implements DiaryService{
 	@Override
 	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
 
-		if(req.getContent() == null || "".equals(req.getContent())) throw new IllegalArgumentException("내용이 없습니다.");
-		if(req.getTitle() == null || "".equals(req.getTitle())) throw new IllegalArgumentException("제목이 없습니다.");
+		if(req.getContent() == null || "".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
+		if(req.getTitle() == null || "".equals(req.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
 //
 //		사진 검증
 		if (req.getHasPhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
@@ -108,8 +108,8 @@ public class DiaryServiceImpl implements DiaryService{
 
 		if (!userId.equals(diary.getUserId())) throw new UnAuthorizedException("내가 작성한 다이어리가 아닙니다");
 
-		if(req.getContent() == null || "".equals(req.getContent())) throw new IllegalArgumentException("내용이 없습니다.");
-		if(req.getTitle() == null || "".equals(req.getTitle())) throw new IllegalArgumentException("제목이 없습니다.");
+		if(req.getContent() == null || "".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
+		if(req.getTitle() == null || "".equals(req.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
 
 //		기존 사진 삭제
 		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
