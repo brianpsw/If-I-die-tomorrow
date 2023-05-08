@@ -5,7 +5,7 @@ import Button from '../common/Button';
 
 interface SubmitConfirmModalProps {
   onClose: () => void;
-  onSubmit: (submittedData: { phone: string; consent: boolean }) => void;
+  onSubmit: (submittedData: { phone: string; serviceConsent: boolean }) => void;
 }
 
 const ModalOverlay = styled.div`
@@ -28,7 +28,7 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   // };
 
   const [phone, setPhone] = useState('');
-  const [consent, setConsent] = useState(false);
+  const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handlePhoneChange = (e: any) => {
@@ -36,13 +36,13 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   };
 
   const handleConsentChange = (e: any) => {
-    setConsent(e.target.checked);
+    setServiceConsent(e.target.checked);
   };
 
   const handleSubmit = () => {
-    if (consent) {
+    if (serviceConsent) {
       setSubmitted(true);
-      onSubmit({ phone, consent });
+      onSubmit({ phone, serviceConsent });
       onClose();
     } else {
       alert('개인정보 수집 및 이용에 동의해주세요.');
@@ -52,16 +52,17 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   return (
     <ModalOverlay>
       <ModalWrapper>
+        <h2>서비스 이용 및 개인정보 수집 및 이용 동의</h2>
         {submitted ? (
-          <>
+          <div>
             <p className="text-p1">전화번호: {phone}</p>
             <p className="text-p1" style={{ fontSize: '0.8rem' }}>
               개인정보 이용 및 수집에 동의하셨습니다.
             </p>
-          </>
+          </div>
         ) : (
-          <>
-            <p className="text-p1">전화번호 :</p>
+          <div>
+            <p className="text-p2">전화번호 :</p>
             <input
               type="text"
               value={phone}
@@ -71,13 +72,14 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
             <br />
             <input
               type="checkbox"
-              checked={consent}
+              checked={serviceConsent}
               onChange={handleConsentChange}
             />
             <label>개인정보 수집 및 이용에 동의합니다.</label>
             <br />
             <button onClick={handleSubmit}>저장</button>
-          </>
+            <button onClick={onClose}>취소</button>
+          </div>
         )}
       </ModalWrapper>
     </ModalOverlay>

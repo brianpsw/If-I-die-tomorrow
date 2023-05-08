@@ -17,28 +17,20 @@ function UserInfo() {
   const loggedInUserNickname = user ? user.nickname : null;
   const [showModal, setShowModal] = useState(false);
   const [phone, setPhone] = useState('');
-  const [consent, setConsent] = useState(false);
+  const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmitFromModal = (submittedData: {
     phone: string;
-    consent: boolean;
+    serviceConsent: boolean;
   }) => {
     setPhone(submittedData.phone);
-    setConsent(submittedData.consent);
+    setServiceConsent(submittedData.serviceConsent);
     setSubmitted(true);
   };
 
-  const handlePhoneChange = (e: any) => {
-    setPhone(e.target.value);
-  };
-
-  const handleConsentChange = (e: any) => {
-    setConsent(e.target.checked);
-  };
-
   const handleSubmit = () => {
-    if (consent) {
+    if (serviceConsent) {
       setSubmitted(true);
     } else {
       alert('개인정보 수집 및 이용에 동의해주세요.');
@@ -67,23 +59,6 @@ function UserInfo() {
         <br />
         <p className="text-p1">이름: {loggedInUserName}</p>
         <p className="text-p1">이메일: {loggedInUserEmail}</p>
-        <br />
-        <h3 className="text-h3">개인정보 수집 동의</h3>
-        <br />
-        {submitted ? (
-          <div>
-            <p className="text-p1">전화번호: {phone}</p>
-            <p className="text-p1" style={{ fontSize: '0.8rem' }}>
-              개인정보 이용 및 수집에 동의하셨습니다.
-            </p>
-          </div>
-        ) : (
-          <div>
-            <p onClick={() => setShowModal(true)}>
-              개인정보 수집 동의하러 가기 ▷{' '}
-            </p>
-          </div>
-        )}
       </SettingBox>
     </div>
   );

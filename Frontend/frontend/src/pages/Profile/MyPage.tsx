@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
 import BottomModal from '../../components/profile/MyPageModal';
 import UserInfo from '../../components/profile/UserInfo';
+import ServiceAgreeModal from '../../components/profile/ServiceAgreeModal';
 import axios from 'axios';
 import {
   Background,
@@ -27,7 +28,40 @@ function MyPage() {
   const [serviceEnabled, setServiceEnabled] = useState(true);
   const [receiverDisabled, setReceiverDisabled] = useState(false);
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [phone, setPhone] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [serviceConsent, setServiceConsent] = useState(false);
   const user = useRecoilValue(userState);
+  const [userId, setUserId] = useState<number | null>(null);
+
+  const handleSubmitFromModal = async (submittedData: {
+    phone: string;
+    serviceConsent: boolean;
+  }) => {
+    setPhone(submittedData.phone);
+    setServiceConsent(submittedData.serviceConsent);
+    setSubmitted(true);
+    // PATCH_AGREEMENT API 호출
+    if (submittedData.serviceConsent && userId) {
+      const patchData = {
+        agree: true,
+        phone: submittedData.phone,
+      };
+
+      try {
+        await defaultApi.patch(
+          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
+          patchData,
+          {
+            withCredentials: true,
+          },
+        );
+      } catch (error) {
+        console.error('Failed to update agreement:', error);
+      }
+    }
+  };
 
   const openBottomModal = () => {
     setIsBottomModalOpen(true);
@@ -40,14 +74,60 @@ function MyPage() {
     setServiceEnabled(!serviceEnabled);
   };
 
-  const handleConsentChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleConsentChange = async (event: ChangeEvent<HTMLInputElement>) => {
     setConsent(event.target.value);
     if (event.target.value === 'disagree') {
       setReceiverDisabled(true);
     } else {
       setReceiverDisabled(false);
     }
+
+    // 조건문으로 동의와 비동의 상황을 나누어 처리
+    if (event.target.value === 'agree' && submitted) {
+      // 동의 상태이고 모달에서 확인을 눌렀을 때 호출되는 경우
+      const patchData = {
+        agree: true,
+        phone,
+      };
+
+      try {
+        await defaultApi.patch(
+          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
+          patchData,
+          {
+            withCredentials: true,
+          },
+        );
+      } catch (error) {
+        console.error('Failed to update agreement:', error);
+      }
+    } else if (event.target.value === 'disagree') {
+      // 비동의 상태일 때 호출되는 경우
+      const patchData = {
+        agree: false,
+        phone,
+      };
+
+      try {
+        await defaultApi.patch(
+          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
+          patchData,
+          {
+            withCredentials: true,
+          },
+        );
+      } catch (error) {
+        console.error('Failed to update agreement:', error);
+      }
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      setUserId(user.userId);
+    }
+  }, [user]);
+
   const [receivers, setReceivers] = useState([{ name: '', phone: '' }]);
   const handleReceiverChange = (
     index: number,
@@ -254,6 +334,12 @@ function MyPage() {
 
   return (
     <div>
+      {showModal && (
+        <ServiceAgreeModal
+          onClose={() => setShowModal(false)}
+          onSubmit={handleSubmitFromModal}
+        />
+      )}
       {isBottomModalOpen ? (
         <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
       ) : null}
@@ -279,6 +365,7 @@ function MyPage() {
                   value="agree"
                   checked={consent === 'agree'}
                   onChange={handleConsentChange}
+                  onClick={() => setShowModal(true)}
                   disabled={!serviceEnabled}
                 />
               </RadioButtonLabel>
@@ -293,6 +380,19 @@ function MyPage() {
                 />
               </RadioButtonLabel>
             </RadioContainer>
+            {submitted && (
+              <div
+                style={{
+                  color: receiverDisabled ? '#A9A9A9' : 'inherit',
+                }}
+              >
+                <p className="text-p1">전화번호: {phone}</p>
+                <p className="text-p1" style={{ fontSize: '0.8rem' }}>
+                  개인정보 이용 및 수집에 동의하셨습니다.
+                </p>
+                <br />
+              </div>
+            )}
             <IconWithText>
               <h4>내 기록 받아볼 사람</h4>
               <Icon
