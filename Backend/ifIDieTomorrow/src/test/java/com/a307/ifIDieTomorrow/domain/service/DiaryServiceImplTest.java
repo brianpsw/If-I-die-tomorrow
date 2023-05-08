@@ -65,7 +65,6 @@ class DiaryServiceImplTest {
 				.name("tom")
 				.nickname("tommy")
 				.email("tom@email.com")
-				.age(23)
 				.sendAgree(false)
 				.newCheck(true)
 				.deleted(false)
