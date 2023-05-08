@@ -27,6 +27,9 @@ const requests = {
   GET_USER() {
     return `/api/user`;
   },
+  PATCH_AGREEMENT() {
+    return `/api/user/after`;
+  },
   POST_LOGOUT() {
     return `/api/logout`;
   },
