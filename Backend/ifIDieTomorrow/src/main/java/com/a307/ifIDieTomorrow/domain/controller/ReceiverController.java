@@ -3,6 +3,7 @@ package com.a307.ifIDieTomorrow.domain.controller;
 import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverDto;
 import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto;
 import com.a307.ifIDieTomorrow.domain.service.ReceiverService;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,7 +27,7 @@ public class ReceiverController {
 	
 	@PostMapping("")
 	@Operation(summary = "리시버 추가", description = "사후 전송 페이지를 전달받을 사람을 추가합니다.")
-	public ResponseEntity<CreateReceiverResDto> createReceiver(@RequestBody CreateReceiverDto data) {
+	public ResponseEntity<CreateReceiverResDto> createReceiver(@RequestBody CreateReceiverDto data) throws IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(receiverService.createReceiver(data));
 	}
 	
