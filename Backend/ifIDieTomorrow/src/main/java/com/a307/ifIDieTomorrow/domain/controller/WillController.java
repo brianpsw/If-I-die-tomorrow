@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.will.UpdateWillContentDto;
 import com.a307.ifIDieTomorrow.domain.service.WillService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -43,8 +44,8 @@ public class WillController {
 	@PatchMapping("/text")
 	@Operation(summary = "유언장 텍스트 수정", description = "유저의 텍스트를 수정합니다.")
 	public ResponseEntity<Long> updateContent(
-			@RequestBody String content) {
-		return ResponseEntity.status(HttpStatus.OK).body(willService.updateContent(content));
+			@RequestBody UpdateWillContentDto data) {
+		return ResponseEntity.status(HttpStatus.OK).body(willService.updateContent(data));
 	}
 	
 	@PatchMapping(value = "/video", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })

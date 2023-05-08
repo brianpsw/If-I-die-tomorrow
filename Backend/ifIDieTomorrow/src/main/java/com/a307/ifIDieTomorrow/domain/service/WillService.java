@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.will.UpdateWillContentDto;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
@@ -17,7 +18,7 @@ public interface WillService {
 	
 	Long createSign (MultipartFile photo) throws NoPhotoException, IOException, IllegalArgumentException, ImageProcessingException, MetadataException;
 	
-	Long updateContent (String content);
+	Long updateContent (UpdateWillContentDto data);
 	
 	Long updateVideo (MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException, ImageProcessingException, MetadataException;
 	

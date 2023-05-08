@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
+import com.a307.ifIDieTomorrow.domain.dto.will.UpdateWillContentDto;
 import com.a307.ifIDieTomorrow.domain.entity.Will;
 import com.a307.ifIDieTomorrow.domain.repository.WillRepository;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
@@ -49,9 +50,9 @@ public class WillServiceImpl implements WillService {
 	}
 	
 	@Override
-	public Long updateContent (String content) {
+	public Long updateContent (UpdateWillContentDto data) {
 		Will will = willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
-		will.updateContent(content);
+		will.updateContent(data.getContent());
 		
 		willRepository.save(will);
 		
