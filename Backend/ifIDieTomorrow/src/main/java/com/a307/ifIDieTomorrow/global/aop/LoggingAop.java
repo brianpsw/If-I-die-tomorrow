@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -40,7 +41,17 @@ public class LoggingAop {
 	public void logAfterReturn(JoinPoint joinPoint, Object returnObj){
 
 		log.info("=========================Response Info=========================");
-		log.info("Response: {}", returnObj.toString());
+
+		if (returnObj instanceof ResponseEntity){
+			ResponseEntity response = (ResponseEntity) returnObj;
+			log.info("status: {}", response.getStatusCode());
+			if (response.hasBody()){
+				log.info("body: {}", response.getBody().toString());
+			}
+		}
+		else {
+			log.info("Response: {}", returnObj.toString());
+		}
 	}
 
 
