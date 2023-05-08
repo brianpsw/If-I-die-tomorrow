@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
@@ -17,6 +19,7 @@ interface EditOrDeleteEpic {
 }
 
 function PhotoCloud() {
+  const user = useRecoilValue(userState);
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
   const [openEditModal, setOpenEditModal] = useState<boolean>(false);
@@ -24,6 +27,7 @@ function PhotoCloud() {
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
   const [selectedPhotoCaption, setSelectedPhotoCaption] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [categoryOwner, setCategoryOwner] = useState<number | null>(null);
   const [epic, setEpic] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
   const [editOrDeleteModalEpic, setEditOrDeleteModalEpic] =
@@ -109,6 +113,7 @@ function PhotoCloud() {
           epic={epic}
           setDeleteCategory={setDeleteCategory}
           setDeleteContent={setDeleteContent}
+          categoryOwner={categoryOwner!}
         />
       ) : null}
       <PhotoCloudCategory
@@ -131,6 +136,7 @@ function PhotoCloud() {
           setSelectedPhotoCaption={setSelectedPhotoCaption}
           selectedPhotoCaption={selectedPhotoCaption}
           cancelEdit={cancelEdit}
+          setCategoryOwner={setCategoryOwner}
         ></PhotoCloudDetail>
       )}
     </Background>

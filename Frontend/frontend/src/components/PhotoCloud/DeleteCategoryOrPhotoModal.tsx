@@ -3,7 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import axios from 'axios';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -24,26 +25,31 @@ interface DeleteModalProps {
   onClose?: () => void;
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
+  categoryOwner: number;
 }
 
 function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
-  const params = useParams();
+  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
 
   const deleteCategory = async (id: string) => {
-    try {
-      const delete_category = await defaultApi.delete(
-        requests.DELETE_CATEGORY(id),
-        { withCredentials: true },
-      );
-      if (delete_category.status === 204) {
-        navigate(`/photo-cloud/1`);
-        props.setDeleteCategory(true);
-        props.onClose?.();
+    if (user?.userId === props.categoryOwner) {
+      try {
+        const delete_category = await defaultApi.delete(
+          requests.DELETE_CATEGORY(id),
+          { withCredentials: true },
+        );
+        if (delete_category.status === 204) {
+          navigate(`/photo-cloud/1`);
+          props.setDeleteCategory(true);
+          props.onClose?.();
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
+    } else {
+      alert('기본 카테고리는 삭제할 수 없습니다.');
     }
   };
 

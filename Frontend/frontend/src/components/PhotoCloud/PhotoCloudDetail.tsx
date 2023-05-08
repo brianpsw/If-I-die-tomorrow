@@ -16,8 +16,10 @@ import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
 import Button from '../../components/common/Button';
 
 interface Category {
+  userId: number;
   categoryId: number;
   name: string;
+  objectId: number;
 }
 
 interface PhotoInfo {
@@ -54,6 +56,7 @@ interface PhotoCloudProps {
   setSelectedPhotoCaption: React.Dispatch<React.SetStateAction<string>>;
   selectedPhotoCaption: string;
   cancelEdit: () => void;
+  setCategoryOwner: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
@@ -72,7 +75,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       );
       if (get_photo.status === 200) {
         const { data } = get_photo;
-        console.log(data);
         setPhotoData(() => data);
         props.setDeleteContent(false);
       }
@@ -81,6 +83,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     }
   };
   const categoryId = photoData?.category.categoryId;
+  const categoryUser = photoData?.category.userId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
 
@@ -223,6 +226,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 onClick={() => {
                   handleEditOrDeleteModalOpen();
                   props.setEpic('제목');
+                  props.setCategoryOwner(categoryUser ? categoryUser : null);
                 }}
               />
             </div>
