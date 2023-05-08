@@ -92,7 +92,6 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     public User createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
         log.debug("createUser 메서드가 CustomOAuth2UserService에서 실행됨");
         User user = userRepository.save(User.builder()
-                .age(userInfo.getAge())
                 .email(userInfo.getEmail())
                 .name(userInfo.getName())
                 .nickname(generateNickname())
@@ -105,7 +104,6 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     @Override
     public User updateUser(User user, OAuth2UserInfo userInfo) {
         log.debug("updateUser 메서드가 CustomOAuth2UserService에서 실행됨");
-        if(userInfo.getAge() != null && !userInfo.getAge().equals(user.getAge())){user.setAge(userInfo.getAge());}
         if(userInfo.getName() != null && !userInfo.getName().equals(user.getName())){user.setName(userInfo.getName());}
         user.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(user);

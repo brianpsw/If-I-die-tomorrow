@@ -1,6 +1,5 @@
 package com.a307.ifIDieTomorrow.global.auth;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 public class NaverOAuth2UserInfo extends OAuth2UserInfo{
@@ -24,8 +23,5 @@ public class NaverOAuth2UserInfo extends OAuth2UserInfo{
         return (String) attributes.get("email");
     }
 
-    @Override
-    public Integer getAge() {
-        return LocalDateTime.now().getYear() - Integer.parseInt((String)attributes.get("birthyear"));
-    }
+
 }

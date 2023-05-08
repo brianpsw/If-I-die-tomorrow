@@ -22,9 +22,5 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo{
         return (String) ((Map<String, Object>) attributes.get("kakao_account")).get("email");
     }
 
-    @Override
-    public Integer getAge() {
-        String age = (String) ((Map<String, Object>) attributes.get("kakao_account")).getOrDefault("age_range", null);
-        return age == null ? 0 : Integer.parseInt(age.substring(0, age.indexOf("~")));
-    }
+
 }

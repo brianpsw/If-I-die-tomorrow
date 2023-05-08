@@ -16,7 +16,6 @@ public class UserDto {
     private Long userId;
     private String name;
     private String email;
-    private Integer age;
     private String nickname;
     private Boolean sendAgree;
     private String personalPage;
@@ -29,7 +28,6 @@ public class UserDto {
         this.userId = user.getUserId();
         this.name = user.getName();
         this.email = user.getEmail();
-        this.age = user.getAge();
         this.nickname = user.getNickname();
         this.sendAgree = user.getSendAgree();
         this.personalPage = user.getPersonalPage();
