@@ -31,9 +31,6 @@ public class Will extends BaseEntity{
 	@Column
 	private String videoUrl;
 	
-	@Column
-	private String voiceUrl;
-	
 	// 일단 null 열어뒀습니다.
 	@Column
 	private String signUrl;
@@ -48,10 +45,6 @@ public class Will extends BaseEntity{
 	
 	public void updateVideo (String videoUrl) {
 		this.videoUrl = videoUrl;
-	}
-	
-	public void updateVoice (String voiceUrl) {
-		this.voiceUrl = voiceUrl;
 	}
 	
 }
