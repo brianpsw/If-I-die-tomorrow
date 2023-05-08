@@ -12,7 +12,7 @@ const Container = styled.div`
   ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
 const WillContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full h-[86px] text-p1 rounded border-black break-all my-[16px]`}
+  ${tw`flex flex-wrap w-full h-[500px] text-p1 rounded border-black break-all mb-[16px]`}
 `;
 function WillText(): JSX.Element {
   const [content, setContent] = useState('');
@@ -39,11 +39,11 @@ function WillText(): JSX.Element {
       const response = await defaultApi.get(requests.GET_WILL(), {
         withCredentials: true,
       });
-      if (response.data.content) {
-        setContent(response.data.content);
-        setDefaultContent(response.data.content);
-      }
-      console.log(response.data.content);
+
+      setContent(response.data.content);
+      setDefaultContent(response.data.content);
+
+      console.log(response);
     } catch (error) {
       throw error;
     }
