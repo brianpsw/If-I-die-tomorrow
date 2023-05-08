@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 import { Icon } from '@iconify/react';
+import { useRecoilValue } from 'recoil';
+import { exchangeCategoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -9,6 +10,7 @@ import { defaultApi } from '../../api/axios';
 interface CategoryInfo {
   categoryId: number;
   name: string;
+  objectId: number;
 }
 
 interface PhotoCloudProps {
@@ -21,6 +23,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
+  const exchange = useRecoilValue(exchangeCategoryState);
 
   const fetchData = async () => {
     try {
@@ -80,7 +83,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
                 key={category.categoryId}
                 onClick={() => handleCategory(category.categoryId)}
               >
-                <p className="text-h3">{category.categoryId}</p>
+                <p className="text-smT">{exchange[category.objectId]}</p>
               </div>
             );
           })
