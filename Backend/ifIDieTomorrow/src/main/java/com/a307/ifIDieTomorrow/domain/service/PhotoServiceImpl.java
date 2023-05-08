@@ -70,6 +70,9 @@ public class PhotoServiceImpl implements PhotoService {
 		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
 		
+		if (category.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new IllegalArgumentException("카테고리 수정 권한이 없습니다.");
+		
 		if (data.getName() == null || "".equals(data.getName()))
 			throw new IllegalArgumentException("카테고리 이름이 없습니다.");
 		
