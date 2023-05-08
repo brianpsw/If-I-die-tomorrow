@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import * as THREE from 'three';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
+import { style } from '@mui/system';
 
 interface PreventDragClick {
   preventDragClick: boolean;
@@ -25,12 +26,12 @@ function Scene(props: PreventDragClick) {
   const wallShelf = useGLTF('models/wallshelf.glb', true);
   // const cat = useGLTF('models/cat.gltf', true);
 
-  const fox = useGLTF('models/fox_ani.glb', true);
+  const fox = useGLTF('models/fox.glb', true);
 
   let mixer = new THREE.AnimationMixer(fox.scene);
 
-  const action = mixer.clipAction(fox.animations[0]);
-  action.play();
+  const default1 = mixer.clipAction(fox.animations[0]);
+  default1.play();
 
   useFrame((state, delta) => {
     mixer.update(delta);
@@ -38,6 +39,19 @@ function Scene(props: PreventDragClick) {
 
   const clickRoom = (e: any) => {
     if (props.preventDragClick) navigate('/room');
+    e?.stopPropagation();
+  };
+
+  const clickFox = (e: any) => {
+    console.log('클릭 여우');
+    const earMove = mixer.clipAction(fox.animations[1]);
+    default1.stop();
+    earMove.loop = THREE.LoopOnce;
+    earMove.play();
+    setTimeout(() => {
+      earMove.stop();
+      default1.play();
+    }, 1200);
     e?.stopPropagation();
   };
 
@@ -112,7 +126,7 @@ function Scene(props: PreventDragClick) {
         scale={[8, 8, 8]}
         position={[20, -19.5, 20]}
         rotation={[0, -Math.PI / 4, 0]}
-        onClick={(e: any) => clickRoom(e)}
+        onClick={(e: any) => clickFox(e)}
       />
       <OrbitControls />
     </Suspense>
