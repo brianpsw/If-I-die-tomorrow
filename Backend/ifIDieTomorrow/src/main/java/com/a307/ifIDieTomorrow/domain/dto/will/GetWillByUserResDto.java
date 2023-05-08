@@ -14,7 +14,6 @@ public class GetWillByUserResDto {
 	private Long willId;
 	private String content;
 	private String videoUrl;
-	private String voiceUrl;
 	private String signUrl;
 	
 }
