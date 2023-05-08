@@ -113,8 +113,6 @@ function MyPage() {
     } else {
       alert('이름, 이메일, 전화번호를 모두 입력해주세요.');
     }
-
-    // handleSave(); // handleSave 함수 호출
   };
 
   // 추가된 리시버 조회
@@ -245,12 +243,13 @@ function MyPage() {
         receiverToDelete.receiverId,
       );
       if (deletedReceiver) {
-        setReceiverTexts(receiverTexts.filter((_, i) => i !== index));
+        const newReceiverTexts = [...receiverTexts];
+        newReceiverTexts.splice(index, 1);
+        setReceiverTexts(newReceiverTexts);
       }
     } catch (error) {
       console.error('Failed to delete receiver');
     }
-    handleSave();
   };
 
   return (

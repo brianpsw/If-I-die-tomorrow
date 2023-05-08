@@ -3,6 +3,7 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
+import ServiceAgreeModal from './ServiceAgreeModal';
 import {
   MyProfile,
   SettingBox,
@@ -14,10 +15,19 @@ function UserInfo() {
   const loggedInUserName = user ? user.name : null;
   const loggedInUserEmail = user ? user.email : null;
   const loggedInUserNickname = user ? user.nickname : null;
-
+  const [showModal, setShowModal] = useState(false);
   const [phone, setPhone] = useState('');
   const [consent, setConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmitFromModal = (submittedData: {
+    phone: string;
+    consent: boolean;
+  }) => {
+    setPhone(submittedData.phone);
+    setConsent(submittedData.consent);
+    setSubmitted(true);
+  };
 
   const handlePhoneChange = (e: any) => {
     setPhone(e.target.value);
@@ -37,6 +47,12 @@ function UserInfo() {
 
   return (
     <div>
+      {showModal && (
+        <ServiceAgreeModal
+          onClose={() => setShowModal(false)}
+          onSubmit={handleSubmitFromModal}
+        />
+      )}
       <MyProfile>
         <h3 className="text-h3">{loggedInUserNickname}님, 환영합니다</h3>
         <Link to="/will">
@@ -55,31 +71,18 @@ function UserInfo() {
         <h3 className="text-h3">개인정보 수집 동의</h3>
         <br />
         {submitted ? (
-          <>
+          <div>
             <p className="text-p1">전화번호: {phone}</p>
             <p className="text-p1" style={{ fontSize: '0.8rem' }}>
               개인정보 이용 및 수집에 동의하셨습니다.
             </p>
-          </>
+          </div>
         ) : (
-          <>
-            <p className="text-p1">전화번호 :</p>
-            <input
-              type="text"
-              value={phone}
-              onChange={handlePhoneChange}
-              placeholder="전화번호를 입력하세요."
-            />
-            <br />
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={handleConsentChange}
-            />
-            <label>개인정보 수집 및 이용에 동의합니다.</label>
-            <br />
-            <button onClick={handleSubmit}>저장</button>
-          </>
+          <div>
+            <p onClick={() => setShowModal(true)}>
+              개인정보 수집 동의하러 가기 ▷{' '}
+            </p>
+          </div>
         )}
       </SettingBox>
     </div>
