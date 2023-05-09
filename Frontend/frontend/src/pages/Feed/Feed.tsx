@@ -22,17 +22,18 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
-  ${tw`flex flex-col mx-auto pt-12  pb-24`}
+  ${tw`flex flex-col mx-auto pt-12`}
   max-width: calc(100% - 48px);
   text-align: center;
   justify-content: center;
+  padding-bottom: 70px;
 `;
 
-const FeedTab = styled.div`
-  ${tw`flex`}
+const FeedTab = styled.p`
+  ${tw`flex text-p1`}
   justify-content: space-evenly;
   color: white;
-  font-size: 16px;
+  // font-size: 16px;
 `;
 
 const Tab = styled.span<{ isSelected: boolean }>`

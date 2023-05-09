@@ -4,7 +4,7 @@ import backgroundImg from '../../assets/images/mypage_bg.jpg';
 import Button from '../../components/common/Button';
 
 export const Container = styled.div`
-  ${tw`text-p1`}
+  ${tw`text-p3`}
 `;
 
 export const CardWrap = styled.div`
