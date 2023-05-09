@@ -57,22 +57,33 @@ function MyPage() {
     setSubmitted(true);
     // PATCH_AGREEMENT API 호출
     if (submittedData.serviceConsent && userId) {
-      const patchData = {
-        agree: true,
-        phone: submittedData.phone,
-      };
+      await updateAgreementAndLocalStorage(true, submittedData.phone);
+    }
+  };
 
-      try {
-        await defaultApi.patch(
-          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
-          patchData,
-          {
-            withCredentials: true,
-          },
-        );
-      } catch (error) {
-        console.error('Failed to update agreement:', error);
-      }
+  const updateAgreementAndLocalStorage = async (
+    agree: boolean,
+    phone?: string,
+  ) => {
+    const patchData = {
+      agree: agree,
+      ...(phone && { phone }),
+    };
+
+    try {
+      await defaultApi.patch(
+        `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
+        patchData,
+        {
+          withCredentials: true,
+        },
+      );
+      // 로컬 스토리지 업데이트
+      const updatedUser = { ...user, sendAgree: agree };
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      console.log(updatedUser.sendAgree);
+    } catch (error) {
+      console.error('Failed to update agreement:', error);
     }
   };
 
@@ -81,55 +92,9 @@ function MyPage() {
     setConsent(event.target.value);
     if (event.target.value === 'disagree') {
       setReceiverDisabled(true);
+      await updateAgreementAndLocalStorage(false);
     } else {
       setReceiverDisabled(false);
-    }
-
-    // 조건문으로 동의와 비동의 상황을 나누어 처리
-    if (event.target.value === 'agree' && submitted) {
-      // 동의 상태이고 모달에서 확인을 눌렀을 때 호출되는 경우
-      const patchData = {
-        agree: true,
-        phone,
-      };
-
-      try {
-        await defaultApi.patch(
-          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
-          patchData,
-          {
-            withCredentials: true,
-          },
-        );
-        // 로컬 스토리지 업데이트
-        const updatedUser = { ...user, sendAgree: true };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        console.log(user?.sendAgree);
-      } catch (error) {
-        console.error('Failed to update agreement:', error);
-      }
-    } else if (event.target.value === 'disagree') {
-      // 비동의 상태일 때 호출되는 경우
-      const patchData = {
-        agree: false,
-        phone,
-      };
-
-      try {
-        await defaultApi.patch(
-          `${requests.PATCH_AGREEMENT()}?userId=${userId}`,
-          patchData,
-          {
-            withCredentials: true,
-          },
-        );
-        // 로컬 스토리지 업데이트
-        const updatedUser = { ...user, sendAgree: false };
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        console.log(user?.sendAgree);
-      } catch (error) {
-        console.error('Failed to update agreement:', error);
-      }
     }
   };
 
