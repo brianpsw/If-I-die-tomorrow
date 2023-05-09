@@ -1,13 +1,70 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { atom, useRecoilState } from 'recoil';
 
+interface Bucket {
+  bucketId: number;
+  title: string;
+  content: string;
+  imageUrl: string;
+  secret: boolean;
+  complete: string;
+  created: string;
+  updated: string;
+};
 
-const userDataState = atom<any>({
+interface Category {
+  userId: number;
+  categoryId: number;
+  name: string;
+  objectId: number;
+};
+
+interface Photo {
+  photoId: number;
+  imageUrl: string;
+  caption: string;
+  created: string;
+  updated: string;
+};
+
+interface PhotoCategory{
+  category: Category;
+  photos: Photo[];
+}
+interface Diary {
+  diaryId: number;
+  title: string;
+  nickname: string;
+  imageUrl: string;
+  content: string;
+  secret: boolean;
+  created: string;
+  updated: string;
+};
+
+interface Will {
+  willId: number;
+  content: string;
+  voiceUrl: string;
+  signUrl: string;
+  created: string;
+  updated: string;
+};
+			
+
+interface Data {
+ 
+  buckets: Bucket[];
+  diaries: Diary[];
+  photos: PhotoCategory[];
+  will: Will;
+}
+
+export const userDataState = atom<Data>({
   key: 'userDataState',
-  default: {},
+  // default: {},
 });
 
 
@@ -21,7 +78,7 @@ function LoginForm({setIsLogin} : any) {
     const password = passwordRef.current?.value;
 
     // Send password to backend server
-    fetch('/api/after', {
+    fetch('https://ifidietomorrow.co.kr/api/after', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -49,7 +106,6 @@ function LoginForm({setIsLogin} : any) {
 }
 
 export default function Home() {
-  const router = useRouter();
   const [userData, setUserData] = useRecoilState(userDataState);
 
   
