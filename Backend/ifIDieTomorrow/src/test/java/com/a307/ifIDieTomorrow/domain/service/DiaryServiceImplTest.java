@@ -792,7 +792,44 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("다이어리 아이디 잘못된 경우")
-			void wrongDiaryId() {
+			void wrongDiaryId() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(2L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+
+				// when
+
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> diaryService.updateDiary(req, null))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 다이어리 id 입니다!");
+
+				then(diaryRepository).should(never()).save(any(Diary.class));
+				then(s3Upload).shouldHaveNoInteractions();
 
 			}
 
