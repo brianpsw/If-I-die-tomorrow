@@ -37,6 +37,7 @@ public class BucketController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(data));
 	}
 	
+	@Deprecated
 	@PostMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "버킷 리스트 작성", description = "버킷 리스트를 작성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucket(
