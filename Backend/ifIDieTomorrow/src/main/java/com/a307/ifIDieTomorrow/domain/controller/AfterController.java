@@ -24,7 +24,7 @@ public class AfterController {
     @PostMapping()
     @Operation(summary = "사후 페이지 전송", description = "사후 페이지 데이터를 전송받음.")
     public ResponseEntity<Map<String, Object>> getData(
-            @RequestBody String pwd) throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(afterService.getData(pwd));
+            @RequestBody Map<String, String> passwordMap) throws NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(afterService.getData(passwordMap.get("pwd")));
     }
 }
