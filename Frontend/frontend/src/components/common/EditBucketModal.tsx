@@ -60,12 +60,18 @@ const ButtonWrap = styled.div`
   // border-top: solid 1px black;
 `;
 
+const DeleteImageButton = styled.button`
+  ${tw`px-2 py-1 text-xs rounded mt-2`}
+  color: black;
+`;
+
 interface EditBucketModalProps {
   bucketId: number;
   title: string;
   complete: boolean;
   content: string;
   secret: boolean;
+  image: string;
   onClose?: () => void;
   onUpdate?: (updatedBucket: any) => void;
 }
@@ -76,6 +82,7 @@ function EditBucketModal({
   content,
   complete,
   secret,
+  image,
   onClose,
   onUpdate,
 }: EditBucketModalProps) {
@@ -85,10 +92,20 @@ function EditBucketModal({
   const [newComplete, setNewComplete] = useState(complete);
   const [photo, setPhoto] = useState<File | null>(null);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(image);
+
+  const removeImage = () => {
+    setPhoto(null);
+    setUpdatePhoto(true);
+    setImageUrl(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newTitle.trim() === '' || newContent.trim() === '') {
+      alert('제목과 내용을 모두 입력해주세요.');
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -108,7 +125,7 @@ function EditBucketModal({
         formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
       }
 
-      const response = await defaultApi.put(requests.POST_BUCKET(), formData, {
+      const response = await defaultApi.put(requests.PUT_BUCKET(), formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -168,7 +185,7 @@ function EditBucketModal({
   return (
     <ModalOverlay>
       <ModalWrapper>
-        <h2 className="text-h3 text-center">다이어리 수정</h2>
+        <h2 className="text-h3 text-center">버킷리스트 수정</h2>
         <Icon
           icon="line-md:remove"
           onClick={onClose}
@@ -190,12 +207,17 @@ function EditBucketModal({
             <PhotoContainer>
               {/* <div className="image-upload-container w-full h-auto overflow-hidden"> */}
               {imageUrl ? (
-                <img
-                  className="image-upload-preview w-auto h-full bg-auto "
-                  src={imageUrl}
-                  alt="upload-preview"
-                  onClick={handleClick}
-                />
+                <div className="relative">
+                  <img
+                    className="image-upload-preview w-auto h-full bg-auto "
+                    src={imageUrl}
+                    alt="upload-preview"
+                    onClick={handleClick}
+                  />
+                  <DeleteImageButton onClick={removeImage}>
+                    삭제
+                  </DeleteImageButton>
+                </div>
               ) : (
                 <label
                   htmlFor="photo"

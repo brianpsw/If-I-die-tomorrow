@@ -212,7 +212,7 @@ function DiaryDetail() {
       await defaultApi.delete(requests.DELETE_DIARY(diaryId), {
         withCredentials: true,
       });
-      navigate('/feed?tab=diary'); // 피드 페이지로 이동
+      navigate(-1);
       setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
       setComments([]); // 댓글도 함께 초기화
       alert('다이어리가 삭제되었습니다.');
@@ -224,6 +224,7 @@ function DiaryDetail() {
   const handleUpdate = (updatedDiary: Diary) => {
     setDiaryDetail(updatedDiary);
     setUpdatePhoto(true);
+    fetchDiaryDetail();
   };
 
   const fetchDiaryDetail = async () => {
@@ -265,6 +266,7 @@ function DiaryDetail() {
           title={diaryDetail.title}
           content={diaryDetail.content}
           secret={diaryDetail.secret}
+          image={diaryDetail.imageUrl}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
         />
@@ -283,16 +285,19 @@ function DiaryDetail() {
               <div>
                 <ContentTitle className="text-h3">{diary.title}</ContentTitle>
                 <Nickname>{diary.nickname}</Nickname>
+                <div>
+                  {diary.secret ? '비공개 다이어리' : '공개된 다이어리'}
+                </div>
                 <CreateDate>
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
+              {loggedInUserNickname === diary.nickname && (
+                <DotIcon>
+                  <img src={TreeDot} alt="" onClick={handleModalOpen} />
+                </DotIcon>
+              )}
             </DiaryHeader>
-            {loggedInUserNickname === diary.nickname && (
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
-            )}
 
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (
@@ -302,7 +307,11 @@ function DiaryDetail() {
             <DiaryText>{diary.content}</DiaryText>
           </DiaryWrap>
           <CommentWrap>
-            <CommentForm diaryId={diary.diaryId} type={true} />
+            <CommentForm
+              diaryId={diary.diaryId}
+              type={true}
+              onUpdate={() => fetchDiaryDetail()}
+            />
             {comments &&
               comments.map((comment, index) => (
                 <Comment
@@ -318,7 +327,15 @@ function DiaryDetail() {
   );
 }
 
-function CommentForm({ diaryId, type }: { diaryId: number; type: boolean }) {
+function CommentForm({
+  diaryId,
+  type,
+  onUpdate,
+}: {
+  diaryId: number;
+  type: boolean;
+  onUpdate: () => void;
+}) {
   const [content, setContent] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -341,7 +358,9 @@ function CommentForm({ diaryId, type }: { diaryId: number; type: boolean }) {
         { withCredentials: true },
       );
       if (response.status === 201) {
-        window.location.reload();
+        // window.location.reload();
+        setContent(''); // 입력란을 초기화합니다.
+        onUpdate(); // 댓글이 추가되었음을 상위 컴포넌트에 알립니다.
       }
     } catch (error) {
       console.error(error);
@@ -423,6 +442,10 @@ function Comment({
   };
 
   const updateComment = async (commentId: bigint, content: string) => {
+    if (content.trim().length === 0) {
+      alert('댓글 내용이 없습니다. 내용을 입력해주세요.');
+      return;
+    }
     try {
       const response = await defaultApi.put(
         requests.PUT_COMMENT(),
