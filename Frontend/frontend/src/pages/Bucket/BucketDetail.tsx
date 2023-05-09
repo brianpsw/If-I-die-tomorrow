@@ -288,6 +288,9 @@ function BucketDetail() {
               <div>
                 <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
                 <Nickname>{bucket.nickname}</Nickname>
+                <div>
+                  {bucket.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
+                </div>
                 <CreateDate>
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
@@ -441,6 +444,10 @@ function Comment({
   };
 
   const updateComment = async (commentId: bigint, content: string) => {
+    if (content.trim().length === 0) {
+      alert('댓글 내용이 없습니다. 내용을 입력해주세요.');
+      return;
+    }
     try {
       const response = await defaultApi.put(
         requests.PUT_COMMENT(),

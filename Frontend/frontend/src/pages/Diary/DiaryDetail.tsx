@@ -284,6 +284,9 @@ function DiaryDetail() {
               <div>
                 <ContentTitle className="text-h3">{diary.title}</ContentTitle>
                 <Nickname>{diary.nickname}</Nickname>
+                <div>
+                  {diary.secret ? '비공개 다이어리' : '공개된 다이어리'}
+                </div>
                 <CreateDate>
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
@@ -438,6 +441,10 @@ function Comment({
   };
 
   const updateComment = async (commentId: bigint, content: string) => {
+    if (content.trim().length === 0) {
+      alert('댓글 내용이 없습니다. 내용을 입력해주세요.');
+      return;
+    }
     try {
       const response = await defaultApi.put(
         requests.PUT_COMMENT(),

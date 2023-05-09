@@ -98,6 +98,10 @@ function EditDiaryModal({
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (newTitle.trim() === '' || newContent.trim() === '') {
+      alert('제목과 내용을 모두 입력해주세요.');
+      return;
+    }
 
     try {
       const formData = new FormData();
