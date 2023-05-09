@@ -120,7 +120,7 @@ function EditDiaryModal({
         formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
       }
 
-      const response = await defaultApi.put(requests.POST_DIARY(), formData, {
+      const response = await defaultApi.put(requests.PUT_DIARY(), formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

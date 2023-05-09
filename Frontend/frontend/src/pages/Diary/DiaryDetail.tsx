@@ -224,6 +224,7 @@ function DiaryDetail() {
   const handleUpdate = (updatedDiary: Diary) => {
     setDiaryDetail(updatedDiary);
     setUpdatePhoto(true);
+    fetchDiaryDetail();
   };
 
   const fetchDiaryDetail = async () => {
