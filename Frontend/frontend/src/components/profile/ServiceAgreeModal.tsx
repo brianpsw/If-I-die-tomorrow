@@ -22,11 +22,6 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   onClose,
   onSubmit,
 }) => {
-  // const handleConfirm = () => {
-  //   onDelete();
-  //   onClose();
-  // };
-
   const [phone, setPhone] = useState('');
   const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);

@@ -38,6 +38,14 @@ function MyPage() {
     sendAgree ? 'agree' : 'disagree',
   );
 
+  // bottom 모달 열고 닫기
+  const openBottomModal = () => {
+    setIsBottomModalOpen(true);
+  };
+  const onLogoutClose = () => {
+    setIsBottomModalOpen(false);
+  };
+
   // 서비스 동의 모달에서 제출된 데이터 처리하는 함수
   const handleSubmitFromModal = async (submittedData: {
     phone: string;
@@ -62,21 +70,10 @@ function MyPage() {
             withCredentials: true,
           },
         );
-        if (user) {
-          user.sendAgree = true;
-        }
       } catch (error) {
         console.error('Failed to update agreement:', error);
       }
     }
-  };
-
-  // 모달 열고 닫기
-  const openBottomModal = () => {
-    setIsBottomModalOpen(true);
-  };
-  const onLogoutClose = () => {
-    setIsBottomModalOpen(false);
   };
 
   // 동의 여부 변경에 대한 처리
@@ -104,6 +101,10 @@ function MyPage() {
             withCredentials: true,
           },
         );
+        // 로컬 스토리지 업데이트
+        const updatedUser = { ...user, sendAgree: true };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log(user?.sendAgree);
       } catch (error) {
         console.error('Failed to update agreement:', error);
       }
@@ -122,6 +123,10 @@ function MyPage() {
             withCredentials: true,
           },
         );
+        // 로컬 스토리지 업데이트
+        const updatedUser = { ...user, sendAgree: false };
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        console.log(user?.sendAgree);
       } catch (error) {
         console.error('Failed to update agreement:', error);
       }
@@ -132,13 +137,19 @@ function MyPage() {
   useEffect(() => {
     if (user) {
       setUserId(user.userId);
-      setConsent(user.sendAgree ? 'agree' : 'disagree');
+      const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+      const storedSendAgree = storedUser.hasOwnProperty('sendAgree')
+        ? storedUser.sendAgree
+        : user.sendAgree;
+      setConsent(storedSendAgree ? 'agree' : 'disagree');
     }
     console.log('sendAgree:', sendAgree);
-  }, [user, sendAgree]);
+  }, [user]);
 
   // 리시버 관련 state 정의
   const [receivers, setReceivers] = useState([{ name: '', phone: '' }]);
+
+  // 리시버의 정보가 변경될 때 호출
   const handleReceiverChange = (
     index: number,
     field: keyof { name: string; phone: string },
@@ -149,6 +160,7 @@ function MyPage() {
     setReceivers(newReceivers);
   };
 
+  // 추가된 리시버를 텍스트 형식으로 관리
   const [receiverTexts, setReceiverTexts] = useState<
     Array<{
       receiverId: number;
@@ -370,7 +382,7 @@ function MyPage() {
       ...receiverTexts,
       ...newReceiverTexts.slice(0, 3 - receiverTexts.length),
     ]);
-    window.location.reload();
+
     focusOnInvalidReceiver(invalidIndex);
     updateReceivers(validReceivers);
     await updateUserAgreement();
