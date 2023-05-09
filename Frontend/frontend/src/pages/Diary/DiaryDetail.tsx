@@ -288,12 +288,12 @@ function DiaryDetail() {
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
+              {loggedInUserNickname === diary.nickname && (
+                <DotIcon>
+                  <img src={TreeDot} alt="" onClick={handleModalOpen} />
+                </DotIcon>
+              )}
             </DiaryHeader>
-            {loggedInUserNickname === diary.nickname && (
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
-            )}
 
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (
@@ -303,7 +303,11 @@ function DiaryDetail() {
             <DiaryText>{diary.content}</DiaryText>
           </DiaryWrap>
           <CommentWrap>
-            <CommentForm diaryId={diary.diaryId} type={true} />
+            <CommentForm
+              diaryId={diary.diaryId}
+              type={true}
+              onUpdate={() => fetchDiaryDetail()}
+            />
             {comments &&
               comments.map((comment, index) => (
                 <Comment
@@ -319,7 +323,15 @@ function DiaryDetail() {
   );
 }
 
-function CommentForm({ diaryId, type }: { diaryId: number; type: boolean }) {
+function CommentForm({
+  diaryId,
+  type,
+  onUpdate,
+}: {
+  diaryId: number;
+  type: boolean;
+  onUpdate: () => void;
+}) {
   const [content, setContent] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -342,7 +354,9 @@ function CommentForm({ diaryId, type }: { diaryId: number; type: boolean }) {
         { withCredentials: true },
       );
       if (response.status === 201) {
-        window.location.reload();
+        // window.location.reload();
+        setContent(''); // 입력란을 초기화합니다.
+        onUpdate(); // 댓글이 추가되었음을 상위 컴포넌트에 알립니다.
       }
     } catch (error) {
       console.error(error);
