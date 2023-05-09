@@ -491,7 +491,75 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("기존 사진 수정 + 내용 수정")
-			void updateAndReplacePhoto(){
+			void updateAndReplacePhoto() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(1L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(true)
+						.build();
+
+				MultipartFile photo = new MockMultipartFile("file", "new_test.jpg", "image/jpeg", "new_test".getBytes());
+
+				/**
+				 * 수정된 다이어리 (expected)
+				 */
+				Diary updatedDiary = Diary.builder()
+						.diaryId(1L)
+						.title(req.getTitle())
+						.userId(1L)
+						.content(req.getContent())
+						.secret(req.getSecret())
+						.report(0)
+						.imageUrl("https://example.com/new_test.jpg")
+						.build();
+
+				/**
+				 * 스터빙
+				 */
+				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
+				given(s3Upload.upload(photo, "diary")).willReturn("https://example.com/new_test.jpg");
+				given(diaryRepository.save(any(Diary.class))).willReturn(updatedDiary);
+
+				// when
+				CreateDiaryResDto result = diaryService.updateDiary(req, photo);
+
+				// then
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 기존 사진 삭제
+				 * 신규 사진 업로드
+				 */
+				then(diaryRepository).should().findById(req.getDiaryId());
+				then(s3Upload).should().delete(any(String.class));
+				then(s3Upload).should().upload(photo, "diary");
+
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updatedDiary.getTitle());
+				BDDAssertions.then(result.getContent()).isEqualTo(updatedDiary.getContent());
+				BDDAssertions.then(result.getSecret()).isEqualTo(updatedDiary.getSecret());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedDiary.getImageUrl());
 
 			}
 
