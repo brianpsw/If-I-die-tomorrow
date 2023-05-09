@@ -882,11 +882,89 @@ class DiaryServiceImplTest {
 			@DisplayName("제목이 없는 경우")
 			void noTitle(){
 
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(1L)
+						.title("")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+
+				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
+
+				// when
+
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> diaryService.updateDiary(req, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("제목이 없습니다.");
+
+				then(diaryRepository).should(never()).save(any(Diary.class));
+				then(s3Upload).shouldHaveNoInteractions();
+
 			}
 
 			@Test
 			@DisplayName("내용이 없는 경우")
 			void noContent(){
+
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(1L)
+						.title("updated Title")
+						.content("")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+
+				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
+
+				// when
+
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> diaryService.updateDiary(req, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용이 없습니다.");
+
+				then(diaryRepository).should(never()).save(any(Diary.class));
+				then(s3Upload).shouldHaveNoInteractions();
 
 			}
 
