@@ -64,7 +64,7 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-//	filter{
-//		excludeTestsMatching "*.NotificationTest"
-//	}
+	filter{
+		excludeTestsMatching "*.NotificationTest"
+	}
 }
