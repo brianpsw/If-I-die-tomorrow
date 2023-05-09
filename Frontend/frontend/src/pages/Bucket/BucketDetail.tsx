@@ -215,7 +215,7 @@ function BucketDetail() {
       await defaultApi.delete(requests.DELETE_BUCKET(parseInt(bucketId)), {
         withCredentials: true,
       });
-      navigate('/feed?tab=bucket');
+      navigate(-1);
       setBucketDetail(null);
       setComments([]);
       alert('버킷리스트가 삭제되었습니다.');

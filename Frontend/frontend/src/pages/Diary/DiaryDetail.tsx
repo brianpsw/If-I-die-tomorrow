@@ -212,7 +212,7 @@ function DiaryDetail() {
       await defaultApi.delete(requests.DELETE_DIARY(diaryId), {
         withCredentials: true,
       });
-      navigate('/feed?tab=diary'); // 피드 페이지로 이동
+      navigate(-1);
       setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
       setComments([]); // 댓글도 함께 초기화
       alert('다이어리가 삭제되었습니다.');
