@@ -179,7 +179,7 @@ function WillSign(): JSX.Element {
               className="mx-[8px]"
               disabled={isValid ? false : true}
             >
-              작성완료
+              등록완료
             </Button>
           ) : (
             ''
