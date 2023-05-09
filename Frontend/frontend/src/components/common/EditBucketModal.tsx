@@ -125,7 +125,7 @@ function EditBucketModal({
         formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
       }
 
-      const response = await defaultApi.put(requests.POST_BUCKET(), formData, {
+      const response = await defaultApi.put(requests.PUT_BUCKET(), formData, {
         withCredentials: true,
         headers: {
           'Content-Type': 'multipart/form-data',

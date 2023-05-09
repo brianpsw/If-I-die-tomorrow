@@ -227,6 +227,7 @@ function BucketDetail() {
   const handleUpdate = (updatedBucket: Bucket) => {
     setBucketDetail(updatedBucket);
     setUpdatePhoto(true);
+    fetchBucketDetail();
   };
 
   const fetchBucketDetail = async () => {
