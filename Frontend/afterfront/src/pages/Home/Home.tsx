@@ -1,91 +1,33 @@
 import { useRef } from 'react';
-import { atom, useRecoilState } from 'recoil';
-
-interface Bucket {
-  bucketId: number;
-  title: string;
-  content: string;
-  imageUrl: string;
-  secret: boolean;
-  complete: string;
-  created: string;
-  updated: string;
-}
-
-interface Category {
-  userId: number;
-  categoryId: number;
-  name: string;
-  objectId: number;
-}
-
-interface Photo {
-  photoId: number;
-  imageUrl: string;
-  caption: string;
-  created: string;
-  updated: string;
-}
-
-interface PhotoCategory {
-  category: Category;
-  photos: Photo[];
-}
-
-interface Diary {
-  diaryId: number;
-  title: string;
-  nickname: string;
-  imageUrl: string;
-  content: string;
-  secret: boolean;
-  created: string;
-  updated: string;
-}
-
-interface Will {
-  willId: number;
-  content: string;
-  voiceUrl: string;
-  signUrl: string;
-  created: string;
-  updated: string;
-}
-
-interface Data {
-  buckets: Bucket[];
-  diaries: Diary[];
-  photos: PhotoCategory[];
-  will: Will;
-}
-
-const userDataState = atom<Data | {}>({
-  key: 'userDataState',
-  default: {},
-});
+import { useRecoilState } from 'recoil';
+import { userDataState } from '../../states/UserDataState';
 
 function LoginForm({ setIsLogin }: any) {
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const pwd = passwordRef.current?.value;
 
     // Send password to backend server
-    fetch('https://ifidietomorrow.duckdns.org/api/after', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ pwd }),
-    })
-      .then((response) => {
-        setIsLogin(response.json);
-      })
-      .catch((error) => {
-        window.alert('로그인 실패!');
-      });
+    try {
+      const response = await fetch(
+        'https://ifidietomorrow.duckdns.org/api/after',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ pwd }),
+        },
+      );
+      const jsonData = await response.json();
+      console.log(jsonData);
+      setIsLogin(jsonData);
+    } catch (error) {
+      window.alert('로그인 실패!');
+    }
   }
 
   return (

@@ -11,7 +11,6 @@ import Will from './pages/Will/Will';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 
 function App() {
-  console.log('abc');
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
