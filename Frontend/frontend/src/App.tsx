@@ -9,7 +9,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Home from './pages/Home/Home';
-import Room from './pages/Home/Room';
+import CanvasRoomJs from './pages/Home/RoomJs';
 import Bucket from './pages/Bucket/Bucket';
 import Diary from './pages/Diary/Diary';
 import Login from './pages/LogIn/Login';
@@ -37,7 +37,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/room" element={<Room />} />
+            <Route path="/room" element={<CanvasRoomJs />} />
             <Route path="/bucket" element={<Bucket />} />
             <Route path="/diary" element={<Diary />} />
             <Route path="/login" element={<Login />} />
