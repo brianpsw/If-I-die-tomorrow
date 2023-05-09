@@ -143,7 +143,7 @@ function WillSign(): JSX.Element {
           ''
         )}
         <div className="flex mt-[16px]">
-          {!editSign ? (
+          {!editSign && defaultSign ? (
             <Button
               onClick={handleEdit}
               color={editSign ? '#B3E9EB' : '#0E848A'}
@@ -152,6 +152,19 @@ function WillSign(): JSX.Element {
               className="mx-[8px]"
             >
               서명 다시하기
+            </Button>
+          ) : (
+            ''
+          )}
+          {!editSign && !defaultSign ? (
+            <Button
+              onClick={handleEdit}
+              color={editSign ? '#B3E9EB' : '#0E848A'}
+              size="sm"
+              disabled={editSign ? true : false}
+              className="mx-[8px] mb-[16px]"
+            >
+              서명 등록하기
             </Button>
           ) : (
             ''
