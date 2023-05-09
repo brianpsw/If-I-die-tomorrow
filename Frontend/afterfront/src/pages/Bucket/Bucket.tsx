@@ -1,5 +1,4 @@
-function Bucket(){
-
-    return(<></>);
+function Bucket() {
+  return <></>;
 }
 export default Bucket;

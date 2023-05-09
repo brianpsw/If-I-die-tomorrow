@@ -70,7 +70,7 @@ function LoginForm({ setIsLogin }: any) {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const password = passwordRef.current?.value;
+    const pwd = passwordRef.current?.value;
 
     // Send password to backend server
     fetch('https://ifidietomorrow.duckdns.org/api/after', {
@@ -78,7 +78,7 @@ function LoginForm({ setIsLogin }: any) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ password }),
+      body: JSON.stringify({ pwd }),
     })
       .then((response) => {
         setIsLogin(response.json);

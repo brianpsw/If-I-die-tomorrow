@@ -1,5 +1,4 @@
-function PhotoCloud(){
-
-    return(<></>);
+function PhotoCloud() {
+  return <></>;
 }
 export default PhotoCloud;

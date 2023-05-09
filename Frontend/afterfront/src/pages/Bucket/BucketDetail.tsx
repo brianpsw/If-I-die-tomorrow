@@ -1,5 +1,4 @@
-function BucketDetail(){
-
-    return(<></>);
+function BucketDetail() {
+  return <></>;
 }
 export default BucketDetail;

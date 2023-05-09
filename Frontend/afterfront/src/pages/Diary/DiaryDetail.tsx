@@ -1,5 +1,4 @@
-function DiaryDetail(){
-
-    return(<></>);
+function DiaryDetail() {
+  return <></>;
 }
 export default DiaryDetail;
