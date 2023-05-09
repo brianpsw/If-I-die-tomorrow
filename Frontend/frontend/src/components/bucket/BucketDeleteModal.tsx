@@ -34,7 +34,7 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
         <ContentContainer>
           정말 삭제하시겠습니까?
           <br />
-          삭제된 다이어리는 되돌릴 수 없습니다.
+          삭제된 버킷리스트는 되돌릴 수 없습니다.
         </ContentContainer>
         <div className="flex w-full justify-center my-4">
           <Button onClick={handleConfirm} color="#B3E9EB" size="sm">
