@@ -60,11 +60,17 @@ const ButtonWrap = styled.div`
   // border-top: solid 1px black;
 `;
 
+const DeleteImageButton = styled.button`
+  ${tw`px-2 py-1 text-xs rounded mt-2`}
+  color: black;
+`;
+
 interface EditDiaryModalProps {
   diaryId: number;
   title: string;
   content: string;
   secret: boolean;
+  image: string;
   onClose?: () => void;
   onUpdate?: (updatedDiary: any) => void;
 }
@@ -74,6 +80,7 @@ function EditDiaryModal({
   title,
   content,
   secret,
+  image,
   onClose,
   onUpdate,
 }: EditDiaryModalProps) {
@@ -82,8 +89,13 @@ function EditDiaryModal({
   const [newSecret, setNewSecret] = useState(secret);
   const [photo, setPhoto] = useState<File | null>(null);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(image);
 
+  const removeImage = () => {
+    setPhoto(null);
+    setUpdatePhoto(true);
+    setImageUrl(null);
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -186,12 +198,17 @@ function EditDiaryModal({
             <PhotoContainer>
               {/* <div className="image-upload-container w-full h-auto overflow-hidden"> */}
               {imageUrl ? (
-                <img
-                  className="image-upload-preview w-auto h-full bg-auto "
-                  src={imageUrl}
-                  alt="upload-preview"
-                  onClick={handleClick}
-                />
+                <div className="relative">
+                  <img
+                    className="image-upload-preview w-auto h-full bg-auto "
+                    src={imageUrl}
+                    alt="upload-preview"
+                    onClick={handleClick}
+                  />
+                  <DeleteImageButton onClick={removeImage}>
+                    삭제
+                  </DeleteImageButton>
+                </div>
               ) : (
                 <label
                   htmlFor="photo"

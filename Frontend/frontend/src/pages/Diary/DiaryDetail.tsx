@@ -265,6 +265,7 @@ function DiaryDetail() {
           title={diaryDetail.title}
           content={diaryDetail.content}
           secret={diaryDetail.secret}
+          image={diaryDetail.imageUrl}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
         />
