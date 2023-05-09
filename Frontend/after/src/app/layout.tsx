@@ -1,7 +1,8 @@
 'use client';
-import { RecoilRoot } from 'recoil'
-import './globals.css'
-import { Inter } from 'next/font/google'
+import { RecoilRoot } from 'recoil';
+import './globals.css';
+import { Inter } from 'next/font/google';
+import StyledComponentsRegistry from './lib/registry';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,10 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <RecoilRoot>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className}><StyledComponentsRegistry><RecoilRoot>{children}</RecoilRoot></StyledComponentsRegistry></body>
       </html>
-    </RecoilRoot>
   )
 }
