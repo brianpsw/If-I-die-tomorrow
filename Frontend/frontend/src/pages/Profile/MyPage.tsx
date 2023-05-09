@@ -384,17 +384,10 @@ function MyPage() {
         receiverToDelete.receiverId,
       );
       if (deletedReceiver) {
-        const fetchedReceivers = await getReceiversFromAPI();
-        if (fetchedReceivers) {
-          setReceiverTexts(
-            fetchedReceivers.map((receiver) => ({
-              receiverId: receiver.receiverId,
-              name: `이름: ${receiver.name}`,
-              phone: `전화번호: ${receiver.phoneNumber}`,
-            })),
-          );
-        }
-        window.location.reload();
+        const newReceiverTexts = receiverTexts.filter(
+          (receiver, idx) => idx !== index,
+        );
+        setReceiverTexts(newReceiverTexts);
       }
     } catch (error) {
       console.error('Failed to delete receiver');
