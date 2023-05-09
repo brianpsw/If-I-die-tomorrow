@@ -5,10 +5,10 @@ export default function DashboardLayout({
   }: {
     children: React.ReactNode;
   }) {
-    const navLinks = ["/bucket", "/photo"];
+    const navLinks = [{href: "/content/bucket", name: "bucket"}, {href: "/content/photo", name: "photo"}, {href: "/content/diary", name: "diary"}, {href: "/content/will", name: "will"}];
     return (
       <section>
-        {/* <Navigation navLinks={navLinks}/> */}
+        <Navigation navLinks={navLinks}/>
         {children}
       </section>
     );
