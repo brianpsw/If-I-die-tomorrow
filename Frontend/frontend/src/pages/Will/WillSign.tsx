@@ -26,7 +26,8 @@ function WillSign(): JSX.Element {
   const userInfo = useRecoilState(userState);
   const [sign, setSign] = useState<File | null>(null);
   const [defaultSign, setDefaultSign] = useState('');
-
+  const [editSign, setEditSign] = useState<Boolean>(false);
+  const [isValid, setIsValid] = useState<Boolean>(false);
   // useRef로 DOM에 접근 (SignatureCanvas 라는 캔버스 태그에 접근)
   const signCanvas = useRef() as React.MutableRefObject<any>;
   const get_will = async () => {
@@ -59,6 +60,9 @@ function WillSign(): JSX.Element {
             withCredentials: true,
           },
         );
+        get_will();
+        setEditSign(false);
+        setIsValid(false);
         console.log(response);
       } catch (error) {
         throw error;
@@ -66,26 +70,40 @@ function WillSign(): JSX.Element {
     };
     patch_will_sign();
   };
+  const handleEdit = () => {
+    setEditSign(true);
+  };
   const clear = () => {
     signCanvas.current.clear();
+    setIsValid(false);
   };
 
   // 이미지 저장
   const save = () => {
     if (signCanvas.current) {
-      const canvasData = signCanvas.current.toDataURL('image/png');
-      fetch(canvasData)
-        .then((res) => res.blob())
-        .then((blob) => {
-          const file = new File([blob], `${userInfo[0]?.nickname}의 서명.png`, {
-            type: 'image/png',
+      const isSignatureEmpty = signCanvas.current.isEmpty();
+      if (isSignatureEmpty) {
+        console.log('서명이 존재하지 않습니다.');
+      } else {
+        const canvasData = signCanvas.current.toDataURL('image/png');
+        fetch(canvasData)
+          .then((res) => res.blob())
+          .then((blob) => {
+            const file = new File(
+              [blob],
+              `${userInfo[0]?.nickname}의 서명.png`,
+              {
+                type: 'image/png',
+              },
+            );
+            setSign(file);
+            console.log('저장완료');
+            setIsValid(true);
+          })
+          .catch((error) => {
+            console.error(error);
           });
-          setSign(file);
-          console.log('저장완료');
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+      }
     }
   };
 
@@ -93,32 +111,81 @@ function WillSign(): JSX.Element {
     <div>
       <TopBar title="유언장 서명 등록" />
       <Container>
-        <SignatureCanvasContainer>
-          <SignatureCanvas
-            ref={signCanvas}
-            canvasProps={{
-              width: '250',
-              height: '200',
-              className: 'sigCanvas',
-            }}
-            backgroundColor="rgb(255, 255, 255)"
-          />
-        </SignatureCanvasContainer>
-        <CanvasButtonContainer>
-          <CanvasButton onClick={clear}>clear</CanvasButton>
-          <CanvasButton onClick={save}>save</CanvasButton>
-        </CanvasButtonContainer>
-        <Button
-          onClick={handleSubmit}
-          // color={isValid ? '#0E848A' : '#B3E9EB'}
-          color="#0E848A"
-          size="sm"
-          // disabled={isValid ? false : true}
-        >
-          작성완료
-        </Button>
+        {editSign ? '' : <img src={defaultSign} alt="" />}
+        {editSign ? (
+          <SignatureCanvasContainer>
+            <SignatureCanvas
+              ref={signCanvas}
+              canvasProps={{
+                width: '250',
+                height: '200',
+                className: 'sigCanvas',
+              }}
+              backgroundColor="rgb(255, 255, 255)"
+            />
+          </SignatureCanvasContainer>
+        ) : (
+          ''
+        )}
+        {editSign ? (
+          <CanvasButtonContainer>
+            <CanvasButton onClick={clear}>clear</CanvasButton>
+            <CanvasButton onClick={save}>save</CanvasButton>
+          </CanvasButtonContainer>
+        ) : (
+          ''
+        )}
+        {!isValid && editSign ? (
+          <span className="text-yellow-500 text-p2 mt-[16px]">
+            서명이 존재하지 않습니다.
+          </span>
+        ) : (
+          ''
+        )}
+        <div className="flex mt-[16px]">
+          {!editSign && defaultSign ? (
+            <Button
+              onClick={handleEdit}
+              color={editSign ? '#B3E9EB' : '#0E848A'}
+              size="sm"
+              disabled={editSign ? true : false}
+              className="mx-[8px]"
+            >
+              서명 다시하기
+            </Button>
+          ) : (
+            ''
+          )}
+          {!editSign && !defaultSign ? (
+            <Button
+              onClick={handleEdit}
+              color={editSign ? '#B3E9EB' : '#0E848A'}
+              size="sm"
+              disabled={editSign ? true : false}
+              className="mx-[8px] mb-[16px]"
+            >
+              서명 등록하기
+            </Button>
+          ) : (
+            ''
+          )}
+
+          {editSign ? (
+            <Button
+              onClick={handleSubmit}
+              color={isValid ? '#0E848A' : '#B3E9EB'}
+              // color="#0E848A"
+              size="sm"
+              className="mx-[8px]"
+              disabled={isValid ? false : true}
+            >
+              등록완료
+            </Button>
+          ) : (
+            ''
+          )}
+        </div>
         {/* {sign ? <img src={URL.createObjectURL(sign)} alt="" /> : ''} */}
-        <img src={defaultSign} alt="" />
       </Container>
     </div>
   );
