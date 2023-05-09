@@ -6,16 +6,18 @@ const requests = {
   base_url: process.env.REACT_APP_BASE_URL,
   // base_url: 'https://70.12.246.220:8443/api',
   //카카오 소셜로그인 URL
-  KAKAO_LOGIN: process.env.REACT_APP_KAKAO_LOGIN, //개발용
-  // process.env.REACT_APP_KAKAO_LOCAL_LOGIN, //로컬용
+  KAKAO_LOGIN:
+    // process.env.REACT_APP_KAKAO_LOGIN, //개발용
+    process.env.REACT_APP_KAKAO_LOCAL_LOGIN, //로컬용
 
   // 'https://70.12.246.220:8443/api/login/oauth2/code/kakao?redirect_uri=https://ifidietomorrow.co.kr/',
   // 'https://ifidietomorrow.co.kr/api/oauth2/authorization/kakao?redirect_uri=https://ifidietomorrow.co.kr/',
   // 'https://ifidietomorrow.co.kr/api/oauth2/authorization/kakao?redirect_uri=http://localhost:3000/',
 
   //네이버 소셜로그인 URL
-  NAVER_LOGIN: process.env.REACT_APP_NAVER_LOGIN, //개발용
-  // process.env.REACT_APP_NAVER_LOCAL_LOGIN, //로컬용
+  NAVER_LOGIN:
+    // process.env.REACT_APP_NAVER_LOGIN, //개발용
+    process.env.REACT_APP_NAVER_LOCAL_LOGIN, //로컬용
   // 'https://70.12.246.220:8443/api/login/oauth2/code/naver?redirect_uri=https://ifidietomorrow.co.kr/',
   // 'https://ifidietomorrow.co.kr/api/oauth2/authorization/naver?redirect_uri=https://ifidietomorrow.co.kr/',
   // 'https://ifidietomorrow.co.kr/api/oauth2/authorization/naver?redirect_uri=http://localhost:3000/',

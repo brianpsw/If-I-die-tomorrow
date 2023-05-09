@@ -24,7 +24,6 @@ import {
 } from './MyPageEmotion';
 
 function MyPage() {
-  const [consent, setConsent] = useState<string | null>(null);
   const [serviceEnabled, setServiceEnabled] = useState(true);
   const [receiverDisabled, setReceiverDisabled] = useState(false);
   const [isBottomModalOpen, setIsBottomModalOpen] = useState(false);
@@ -34,7 +33,12 @@ function MyPage() {
   const [serviceConsent, setServiceConsent] = useState(false);
   const user = useRecoilValue(userState);
   const [userId, setUserId] = useState<number | null>(null);
+  const sendAgree = user?.sendAgree;
+  const [consent, setConsent] = useState<string | null>(
+    sendAgree ? 'agree' : 'disagree',
+  );
 
+  // 서비스 동의 모달에서 제출된 데이터 처리하는 함수
   const handleSubmitFromModal = async (submittedData: {
     phone: string;
     serviceConsent: boolean;
@@ -58,12 +62,16 @@ function MyPage() {
             withCredentials: true,
           },
         );
+        if (user) {
+          user.sendAgree = true;
+        }
       } catch (error) {
         console.error('Failed to update agreement:', error);
       }
     }
   };
 
+  // 모달 열고 닫기
   const openBottomModal = () => {
     setIsBottomModalOpen(true);
   };
@@ -71,10 +79,7 @@ function MyPage() {
     setIsBottomModalOpen(false);
   };
 
-  const toggleService = () => {
-    setServiceEnabled(!serviceEnabled);
-  };
-
+  // 동의 여부 변경에 대한 처리
   const handleConsentChange = async (event: ChangeEvent<HTMLInputElement>) => {
     setConsent(event.target.value);
     if (event.target.value === 'disagree') {
@@ -123,12 +128,16 @@ function MyPage() {
     }
   };
 
+  // userId, sendAgree값이 변경되면 실행되는 useEffect
   useEffect(() => {
     if (user) {
       setUserId(user.userId);
+      setConsent(user.sendAgree ? 'agree' : 'disagree');
     }
-  }, [user]);
+    console.log('sendAgree:', sendAgree);
+  }, [user, sendAgree]);
 
+  // 리시버 관련 state 정의
   const [receivers, setReceivers] = useState([{ name: '', phone: '' }]);
   const handleReceiverChange = (
     index: number,
@@ -148,7 +157,8 @@ function MyPage() {
     }>
   >([]);
 
-  // 리시버 추가하기
+  // 리시버 추가 및 조회 관련 API 호출 함수 정의
+  // 리시버 추가 API
   const addReceiverToAPI = async (receiver: {
     name: string;
     phone: string;
@@ -161,7 +171,7 @@ function MyPage() {
           phoneNumber: receiver.phone,
         },
         {
-          withCredentials: true, // 여기에 withCredentials 추가
+          withCredentials: true,
         },
       );
       return response.data;
@@ -171,6 +181,7 @@ function MyPage() {
     }
   };
 
+  // 새 리시버를 추가하고 API에 저장
   const addReceiver = async () => {
     const lastIndex = receivers.length - 1;
     const lastReceiver = receivers[lastIndex];
@@ -213,7 +224,7 @@ function MyPage() {
     }
   };
 
-  // 컴포넌트가 마운트될 때 리시버 목록을 가져옵니다.
+  // 컴포넌트가 마운트될 때 리시버 목록을 가져오기
   useEffect(() => {
     const fetchReceivers = async () => {
       const fetchedReceivers = await getReceiversFromAPI();
@@ -240,24 +251,36 @@ function MyPage() {
           withCredentials: true,
         },
       );
-      return response.data;
+      const deletedReceiver = response.data;
+
+      // 삭제된 리시버를 제외한 새로운 리시버 목록 가져오기
+      const newReceivers = await getReceiversFromAPI();
+      if (newReceivers) {
+        setReceiverTexts(
+          newReceivers.map((receiver) => ({
+            receiverId: receiver.receiverId,
+            name: `이름: ${receiver.name}`,
+            phone: `전화번호: ${receiver.phoneNumber}`,
+          })),
+        );
+      }
+      return deletedReceiver;
     } catch (error) {
       console.error('Failed to delete receiver:', error);
       throw error;
     }
   };
 
+  // 각 리시버 입력 필드에 대한 참조를 생성
   const inputRefs = receivers.map(() => ({
     name: React.createRef<HTMLInputElement>(),
     phone: React.createRef<HTMLInputElement>(),
   }));
-  const handleSave = async () => {
+
+  // 입력된 리시버를 저장하고 유효하지 않은 리시버가 있는 경우 입력에 초점
+  const validateReceivers = () => {
     let invalidIndex = -1;
-    const validReceivers: Array<{
-      receiverId: number;
-      name: string;
-      phone: string;
-    }> = [];
+    const validReceivers = [];
 
     for (let index = 0; index < receivers.length; index++) {
       const receiver = receivers[index];
@@ -275,19 +298,17 @@ function MyPage() {
         invalidIndex = index;
       }
     }
+    return { validReceivers, invalidIndex };
+  };
 
-    const newReceiverTexts = validReceivers.map((receiver) => ({
+  const createNewReceiverTexts = (validReceivers: any) =>
+    validReceivers.map((receiver: any) => ({
       receiverId: receiver.receiverId,
       name: `이름: ${receiver.name}`,
-
       phone: `전화번호: ${receiver.phone}`,
     }));
 
-    setReceiverTexts([
-      ...receiverTexts,
-      ...newReceiverTexts.slice(0, 3 - receiverTexts.length),
-    ]);
-
+  const focusOnInvalidReceiver = (invalidIndex: any) => {
     if (invalidIndex !== -1) {
       const invalidReceiver = receivers[invalidIndex];
       const emptyField = Object.keys(invalidReceiver).find(
@@ -300,13 +321,16 @@ function MyPage() {
         ].current?.focus();
       }
     }
+  };
 
+  const updateReceivers = (validReceivers: any) => {
     const newReceivers = receivers
       .map((receiver, index) => ({
         receiverId: receiverTexts[index].receiverId,
         ...receiver,
       }))
       .filter((receiver, index) => !validReceivers.includes(receiver));
+
     if (newReceivers.length === 0) {
       newReceivers.push({
         receiverId: receiverTexts.length,
@@ -315,10 +339,10 @@ function MyPage() {
       });
     }
     setReceivers(newReceivers);
+  };
 
+  const updateUserAgreement = async () => {
     if (consent === 'agree') {
-      // 조건 추가
-      // 동의 상태이고 모달에서 확인을 눌렀을 때 호출되는 경우
       const patchData = {
         agree: true,
         phone,
@@ -338,6 +362,21 @@ function MyPage() {
     }
   };
 
+  // 입력된 리시버를 저장하고 유효하지 않은 리시버가 있는 경우 입력에 초점
+  const handleSave = async () => {
+    const { validReceivers, invalidIndex } = validateReceivers();
+    const newReceiverTexts = createNewReceiverTexts(validReceivers);
+    setReceiverTexts([
+      ...receiverTexts,
+      ...newReceiverTexts.slice(0, 3 - receiverTexts.length),
+    ]);
+    window.location.reload();
+    focusOnInvalidReceiver(invalidIndex);
+    updateReceivers(validReceivers);
+    await updateUserAgreement();
+  };
+
+  // 인덱스에 해당하는 리시버를 삭제하고 API 요청을 실행하는 함수
   const handleDelete = async (index: number) => {
     const receiverToDelete = receiverTexts[index];
     try {
@@ -345,9 +384,17 @@ function MyPage() {
         receiverToDelete.receiverId,
       );
       if (deletedReceiver) {
-        const newReceiverTexts = [...receiverTexts];
-        newReceiverTexts.splice(index, 1);
-        setReceiverTexts(newReceiverTexts);
+        const fetchedReceivers = await getReceiversFromAPI();
+        if (fetchedReceivers) {
+          setReceiverTexts(
+            fetchedReceivers.map((receiver) => ({
+              receiverId: receiver.receiverId,
+              name: `이름: ${receiver.name}`,
+              phone: `전화번호: ${receiver.phoneNumber}`,
+            })),
+          );
+        }
+        window.location.reload();
       }
     } catch (error) {
       console.error('Failed to delete receiver');
