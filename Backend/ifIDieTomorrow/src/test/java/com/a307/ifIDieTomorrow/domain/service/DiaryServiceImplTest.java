@@ -574,7 +574,72 @@ class DiaryServiceImplTest {
 
 			@Test
 			@DisplayName("사진 없이 내용 수정만")
-			void updatedWithNoPhoto(){
+			void updatedWithNoPhoto() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+				// given
+
+				/**
+				 * 기존 다이어리
+				 */
+				Diary existingDiary = Diary.builder()
+						.diaryId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("")
+						.build();
+
+				/**
+				 * 수정 내역
+				 */
+				UpdateDiaryReqDto req = UpdateDiaryReqDto.builder()
+						.diaryId(1L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+
+				/**
+				 * 수정된 다이어리 (expected)
+				 */
+				Diary updatedDiary = Diary.builder()
+						.diaryId(1L)
+						.title(req.getTitle())
+						.userId(1L)
+						.content(req.getContent())
+						.secret(req.getSecret())
+						.report(0)
+						.imageUrl("")
+						.build();
+
+				/**
+				 * 스터빙
+				 */
+				given(diaryRepository.findById(req.getDiaryId())).willReturn(Optional.of(existingDiary));
+				given(diaryRepository.save(any(Diary.class))).willReturn(updatedDiary);
+
+				// when
+				CreateDiaryResDto result = diaryService.updateDiary(req, null);
+
+				// then
+				/**
+				 * 동작 검증
+				 * 다이어리 조회
+				 * 사진 x
+				 */
+				then(diaryRepository).should().findById(req.getDiaryId());
+				then(s3Upload).shouldHaveNoInteractions();
+
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updatedDiary.getTitle());
+				BDDAssertions.then(result.getContent()).isEqualTo(updatedDiary.getContent());
+				BDDAssertions.then(result.getSecret()).isEqualTo(updatedDiary.getSecret());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedDiary.getImageUrl());
+
 
 			}
 
@@ -599,6 +664,18 @@ class DiaryServiceImplTest {
 			@Test
 			@DisplayName("작성자랑 요청 사용자가 다른 경우")
 			void notTheAuthor() {
+
+			}
+
+			@Test
+			@DisplayName("제목이 없는 경우")
+			void noTitle(){
+
+			}
+
+			@Test
+			@DisplayName("내용이 없는 경우")
+			void noContent(){
 
 			}
 
