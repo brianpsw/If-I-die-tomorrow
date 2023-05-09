@@ -181,7 +181,7 @@ function EditBucketModal({
   return (
     <ModalOverlay>
       <ModalWrapper>
-        <h2 className="text-h3 text-center">다이어리 수정</h2>
+        <h2 className="text-h3 text-center">버킷리스트 수정</h2>
         <Icon
           icon="line-md:remove"
           onClick={onClose}
