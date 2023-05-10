@@ -24,7 +24,7 @@ function App() {
             <Route path="/diary/:diaryId" element={<DiaryDetail />} />
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/will" element={<Will />} />
-            <Route path="/photo-cloud/:categoryId" element={<PhotoCloud />} />
+            <Route path="/photo-cloud" element={<PhotoCloud />} />
 
             {/* <Route path="/*" element={<ErrorPage />} /> */}
           </Routes>
