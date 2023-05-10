@@ -21,13 +21,8 @@ interface CategoryInfo {
   objectId: number;
 }
 
-interface PhotoCloudProps {
-  setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
-  deleteCategory: boolean;
-  cancelEdit: () => void;
-}
-
 function Scene(props: PreventDragClick) {
+  const { preventDragClick } = props;
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
   const [objectIds, setObjectIds] = useState<number[]>([]);
@@ -66,7 +61,7 @@ function Scene(props: PreventDragClick) {
       if (get_all_category.status === 200) {
         setCategory(get_all_category.data);
         const arr: number[] = [];
-        category?.map((category: CategoryInfo) => {
+        category?.forEach((category: CategoryInfo) => {
           arr.push(category.objectId);
         });
         setObjectIds([...arr]);
@@ -81,12 +76,11 @@ function Scene(props: PreventDragClick) {
   }, []);
 
   const clickRoom = (e: any) => {
-    if (props.preventDragClick) navigate('/room');
+    if (preventDragClick) navigate('/room');
     e?.stopPropagation();
   };
 
   const clickFox = (e: any) => {
-    console.log('클릭 여우');
     const earMove = mixer.clipAction(fox.animations[1]);
     default1.stop();
     earMove.loop = THREE.LoopOnce;
@@ -209,7 +203,7 @@ function HomeSemiRoom() {
   const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log('home에서 prevent', preventDragClick);
+    // console.log('home에서 prevent', preventDragClick);
     let nowCanvas = canvas.current;
     let clickStartX: number;
     let clickStartY: number;

@@ -1,13 +1,8 @@
-import React, { Suspense, useState, useRef, useEffect, RefObject } from 'react';
+import React, { Suspense, useState, useRef, RefObject } from 'react';
 
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import {
-  OrthographicCamera,
-  useGLTF,
-  useTexture,
-  OrbitControls,
-} from '@react-three/drei';
+import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
 
 function Scene() {

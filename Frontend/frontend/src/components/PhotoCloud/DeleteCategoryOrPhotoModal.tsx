@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -29,12 +29,20 @@ interface DeleteModalProps {
 }
 
 function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
+  const {
+    targetId,
+    epic,
+    onClose,
+    setDeleteCategory,
+    setDeleteContent,
+    categoryOwner,
+  } = props;
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
 
   const deleteCategory = async (id: string) => {
-    if (user?.userId === props.categoryOwner) {
+    if (user?.userId === categoryOwner) {
       try {
         const delete_category = await defaultApi.delete(
           requests.DELETE_CATEGORY(id),
@@ -42,8 +50,8 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
         );
         if (delete_category.status === 204) {
           navigate(`/photo-cloud/1`);
-          props.setDeleteCategory(true);
-          props.onClose?.();
+          setDeleteCategory(true);
+          onClose?.();
         }
       } catch (err) {
         console.error(err);
@@ -59,8 +67,8 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
         withCredentials: true,
       });
       if (delete_photo.status === 204) {
-        props.setDeleteContent(true);
-        props.onClose?.();
+        setDeleteContent(true);
+        onClose?.();
       }
     } catch (err) {
       console.error(err);
@@ -69,15 +77,15 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
 
   const handleDelete = () => {
     // epic에 따라 카테고리 또는 사진을 삭제
-    if (props.epic === '제목') {
-      deleteCategory(props.targetId);
-    } else if (props.epic === '내용') {
-      deletePhoto(props.targetId);
+    if (epic === '제목') {
+      deleteCategory(targetId);
+    } else if (epic === '내용') {
+      deletePhoto(targetId);
     }
     // props.onClose?.();
   };
   const handleClose = () => {
-    props.onClose?.();
+    onClose?.();
   };
 
   //모달 외부 클릭시 모달창 꺼짐
@@ -100,7 +108,7 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
   return (
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
-        {props.epic === '제목' ? (
+        {epic === '제목' ? (
           <p className="text-p2 text-center">
             삭제하시겠습니까? <br />
             삭제된 카테고리는 되돌릴 수 없습니다.

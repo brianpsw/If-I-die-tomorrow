@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-import { Icon } from '@iconify/react';
 
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
@@ -18,7 +16,6 @@ interface EditOrDeleteEpic {
 function PhotoCloud() {
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
-  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
   const [selectedPhotoCaption, setSelectedPhotoCaption] = useState<string>('');
@@ -40,9 +37,6 @@ function PhotoCloud() {
     setSelectedCategory(params.categoryId!);
   }, [params.categoryId]);
 
-  const handleEditOrDeleteModalOpen = () => {
-    setOpenEditOrDeleteModal(true);
-  };
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {
     setOpenEditOrDeleteModal(false);
