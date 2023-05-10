@@ -46,7 +46,8 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"FROM Bucket b " +
 			"JOIN User u " +
 			"ON b.userId = u.userId " +
-			"WHERE b.userId = :userId")
+			"WHERE b.userId = :userId " +
+			"ORDER BY b.createdAt ASC")
 	List<GetBucketResDto> findAllByUserIdWithUserNickName (@Param("userId") Long userId);
 
 	List<Bucket> findAllByReportIsGreaterThanEqual(Integer reportLimit);
