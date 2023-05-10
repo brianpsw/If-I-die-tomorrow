@@ -1,9 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryReqDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.CreateDiaryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto;
-import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.*;
 import com.a307.ifIDieTomorrow.domain.service.DiaryService;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
@@ -12,6 +9,7 @@ import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
+import com.opencsv.exceptions.CsvException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +69,11 @@ public class DiaryController {
 		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.updateDiary(data, photo));
 	}
-
+	
+	@GetMapping("/saying")
+	@Operation(summary = "랜덤 명언 얻기", description = "랜덤 명언 생성하기")
+	public ResponseEntity<FamousSayingDto> getFamousSaying() throws IOException, CsvException {
+		return ResponseEntity.status(HttpStatus.OK).body(diaryService.getFamousSaying());
+	}
 
 }

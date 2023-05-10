@@ -1,9 +1,9 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
-import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.entity.Personality;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.PersonalityRepository;
@@ -45,7 +45,6 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     private final WillService willService;
     private final AdminProperties adminProperties;
     private final PersonalityRepository personalityRepository;
-
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -113,7 +112,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
     public String generateNickname() {
         return "빨간 사과";
     }
-
+    
     @Override
     public UserDto getUser(Long userId) throws NotFoundException {
         return userRepository.findById(userId).map(UserDto::new).orElseThrow(() -> new NotFoundException("존재하지 않는 User ID 입니다."));
