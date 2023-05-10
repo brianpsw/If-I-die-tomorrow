@@ -88,7 +88,7 @@ const Question: React.FC<QuestionProps> = ({ id, title, onChange }) => {
     <StyledQuestion>
       <QuestionTitle>{title}</QuestionTitle>
       <RadioGroup>
-        <AgreeDisagreeText>동의</AgreeDisagreeText>
+        <AgreeDisagreeText>비동의</AgreeDisagreeText>
         {Array.from({ length: 5 }, (_, index) => (
           <RadioLabel key={index}>
             <RadioButton
@@ -101,7 +101,7 @@ const Question: React.FC<QuestionProps> = ({ id, title, onChange }) => {
             <span></span>
           </RadioLabel>
         ))}
-        <AgreeDisagreeText>비동의</AgreeDisagreeText>
+        <AgreeDisagreeText>동의</AgreeDisagreeText>
       </RadioGroup>
     </StyledQuestion>
   );

@@ -36,7 +36,7 @@ interface DiaryItem {
     content: string;
     imageUrl: string;
     secret: boolean;
-    created: string;
+    createdAt: string;
     updated: string;
   };
   comments: Comment[];
@@ -111,7 +111,9 @@ function DiaryFeed() {
                 <CardWrap key={index}>
                   <NickDateWrap>
                     <Nickname>{diary.nickname}</Nickname>
-                    <DateWrap>{diary.created}</DateWrap>
+                    <DateWrap>
+                      {new Date(diary.createdAt).toISOString().split('T')[0]}
+                    </DateWrap>
                   </NickDateWrap>
                   <ContentImg>
                     <TitleContent

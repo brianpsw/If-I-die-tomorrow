@@ -36,7 +36,7 @@ interface BucketItem {
     content: string;
     imageUrl: string;
     secret: boolean;
-    created: string;
+    createdAt: string;
     updated: string;
   };
   comments: Comment[];
@@ -114,7 +114,9 @@ function BucketFeed() {
                 <CardWrap key={index}>
                   <NickDateWrap>
                     <Nickname>{bucket.nickname}</Nickname>
-                    <DateWrap>{bucket.created}</DateWrap>
+                    <DateWrap>
+                      {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                    </DateWrap>
                   </NickDateWrap>
                   <ContentImg>
                     <TitleContent

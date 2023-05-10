@@ -88,6 +88,7 @@ function EditDiaryModal({
   const [newContent, setNewContent] = useState(content);
   const [newSecret, setNewSecret] = useState(secret);
   const [photo, setPhoto] = useState<File | null>(null);
+  const [imageUpdated, setImageUpdated] = useState<boolean>(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(image);
 
@@ -116,8 +117,8 @@ function EditDiaryModal({
         }),
       );
 
-      if (photo) {
-        formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
+      if (photo !== null) {
+        formData.append('photo', photo);
       }
 
       const response = await defaultApi.put(requests.PUT_DIARY(), formData, {
@@ -144,6 +145,7 @@ function EditDiaryModal({
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setPhoto(file);
+      setImageUpdated(true);
       setUpdatePhoto(true);
 
       // 이미지 미리보기 설정

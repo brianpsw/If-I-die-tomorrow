@@ -81,11 +81,11 @@ const ContentTitle = styled.div`
   word-wrap: break-word;
 `;
 const Nickname = styled.p`
-  font-size: 15px;
+  ${tw`text-p3`}
 `;
 
-const CreateDate = styled.div`
-  font-size: 12px;
+const CreateDate = styled.p`
+  ${tw`text-p3`}
 `;
 
 const DiaryImg = styled.div`
@@ -105,6 +105,11 @@ const CommentWrap = styled.div`
   border-radius: 10px;
   // color: white;
   // border: solid 1px white;
+`;
+
+const CommentLine = styled.p`
+  ${tw`mb-6 mt-6 text-h3`}
+  color: white;
 `;
 
 const CommentBox = styled.div`
@@ -285,9 +290,7 @@ function DiaryDetail() {
               <div>
                 <ContentTitle className="text-h3">{diary.title}</ContentTitle>
                 <Nickname>{diary.nickname}</Nickname>
-                <div>
-                  {diary.secret ? '비공개 다이어리' : '공개된 다이어리'}
-                </div>
+
                 <CreateDate>
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
@@ -304,9 +307,11 @@ function DiaryDetail() {
                 <img src={diary.imageUrl} alt="Diary" />
               )}
             </DiaryImg>
+            <div>{diary.secret ? '비공개 다이어리' : '공개된 다이어리'}</div>
             <DiaryText>{diary.content}</DiaryText>
           </DiaryWrap>
           <CommentWrap>
+            <CommentLine>댓글</CommentLine>
             <CommentForm
               diaryId={diary.diaryId}
               type={true}
