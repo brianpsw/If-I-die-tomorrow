@@ -125,7 +125,7 @@ function Scene() {
 
       <primitive
         object={roomFrame.scene}
-        scale={[10, 10, 10]}
+        scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
         position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         onClick={(e: any) => clickRoom(e)}
@@ -133,7 +133,7 @@ function Scene() {
       {objectIds?.includes(1) && (
         <primitive
           object={bed.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -141,7 +141,7 @@ function Scene() {
       {objectIds?.includes(2) && (
         <primitive
           object={coffeetable.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[-10, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -149,7 +149,7 @@ function Scene() {
       {objectIds?.includes(3) && (
         <primitive
           object={bookShelf.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -157,7 +157,7 @@ function Scene() {
       {objectIds?.includes(4) && (
         <primitive
           object={deskChair.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -165,7 +165,7 @@ function Scene() {
       {objectIds?.includes(5) && (
         <primitive
           object={board.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -173,7 +173,7 @@ function Scene() {
       {objectIds?.includes(6) && (
         <primitive
           object={carpet.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[-10, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -181,7 +181,7 @@ function Scene() {
       {objectIds?.includes(7) && (
         <primitive
           object={pc.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -189,7 +189,7 @@ function Scene() {
       {objectIds?.includes(8) && (
         <primitive
           object={sofa.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -197,7 +197,7 @@ function Scene() {
       {objectIds?.includes(9) && (
         <primitive
           object={wallShelf.scene}
-          scale={[10, 10, 10]}
+          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -205,7 +205,7 @@ function Scene() {
       {objectIds?.includes(10) && (
         <primitive
           object={cat.scene}
-          scale={[3.5, 3.5, 3.5]}
+          scale={window.innerWidth > 640 ? [3.5, 3.5, 3.5] : [1, 1, 1]}
           position={[30, -27.5, 0]}
           rotation={[0, -Math.PI / 2, 0]}
         />
@@ -213,8 +213,8 @@ function Scene() {
 
       <primitive
         object={fox.scene}
-        scale={[8, 8, 8]}
-        position={[20, -19.5, 20]}
+        scale={window.innerWidth > 640 ? [8, 8, 8] : [6, 6, 6]}
+        position={window.innerWidth > 640 ? [20, -19.5, 20] : [15, -22, 15]}
         rotation={[0, -Math.PI / 4, 0]}
         onClick={(e: any) => clickFox(e)}
       />
