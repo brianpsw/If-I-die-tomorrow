@@ -1,4 +1,5 @@
 import React, { Suspense, useState, useRef, RefObject } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
@@ -6,6 +7,7 @@ import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
 
 function Scene() {
+  const navigate = useNavigate();
   const foxRef = useRef<THREE.Object3D>(null);
   const homeRef = useRef<THREE.Object3D>(null);
   const pointRef: RefObject<THREE.Mesh> = useRef(null);
@@ -53,11 +55,23 @@ function Scene() {
       opacity: 0.5,
     }),
   );
-  // [-30, 2, 0];
   spotMesh.position.set(-25, 0.005, 12);
   spotMesh.rotation.x = -Math.PI / 2;
   spotMesh.receiveShadow = true;
   scene.add(spotMesh);
+
+  const movetoMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(5, 5),
+    new THREE.MeshStandardMaterial({
+      color: 'black',
+      transparent: true,
+      opacity: 0.5,
+    }),
+  );
+  movetoMesh.position.set(25, 0.005, 12);
+  movetoMesh.rotation.x = -Math.PI / 2;
+  movetoMesh.receiveShadow = true;
+  scene.add(movetoMesh);
 
   const fox = useGLTF('models/fox.glb', true);
   const foxModelMesh = fox.scene.children[0];
@@ -130,7 +144,6 @@ function Scene() {
             0.5
         ) {
           setFoxIsMoving(() => false);
-          console.log('멈춤');
         }
 
         if (
@@ -138,7 +151,6 @@ function Scene() {
           Math.abs(spotMesh.position.z - foxRef.current.position.z) < 5
         ) {
           if (!isHomeVisible) {
-            console.log('나와');
             setIsHomeVisible(() => true);
             spotMesh.material.color.set('seagreen');
             if (homeRef.current) {
@@ -161,7 +173,6 @@ function Scene() {
             }
           }
         } else if (isHomeVisible) {
-          console.log('들어가');
           setIsHomeVisible(() => false);
 
           spotMesh.material.color.set('yellow');
@@ -182,6 +193,13 @@ function Scene() {
               },
             });
           }
+        }
+
+        if (
+          Math.abs(movetoMesh.position.x - foxRef.current.position.x) < 1 &&
+          Math.abs(movetoMesh.position.z - foxRef.current.position.z) < 1
+        ) {
+          navigate('/photo-cloud/1');
         }
       } else {
         walk.stop();
