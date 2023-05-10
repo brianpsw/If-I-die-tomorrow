@@ -48,7 +48,7 @@ interface Diary {
 interface Will {
   willId: number;
   content: string;
-  voiceUrl: string;
+  videoUrl: string;
   signUrl: string;
   created: string;
   updated: string;
