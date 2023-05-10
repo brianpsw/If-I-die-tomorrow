@@ -36,7 +36,7 @@ interface BucketItem {
     content: string;
     imageUrl: string;
     secret: boolean;
-    created: string;
+    createdAt: string;
     updated: string;
   };
   comments: Comment[];
@@ -96,7 +96,9 @@ function BucketFeed() {
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         endMessage={
-          <p style={{ textAlign: 'center' }}>
+          <p
+            style={{ textAlign: 'center', marginBottom: '5%', marginTop: '5%' }}
+          >
             <b style={{ color: 'white' }}>모든 버킷리스트를 불러왔습니다.</b>
           </p>
         }
@@ -112,7 +114,9 @@ function BucketFeed() {
                 <CardWrap key={index}>
                   <NickDateWrap>
                     <Nickname>{bucket.nickname}</Nickname>
-                    <DateWrap>{bucket.created}</DateWrap>
+                    <DateWrap>
+                      {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                    </DateWrap>
                   </NickDateWrap>
                   <ContentImg>
                     <TitleContent

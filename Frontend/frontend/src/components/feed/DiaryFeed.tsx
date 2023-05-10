@@ -36,7 +36,7 @@ interface DiaryItem {
     content: string;
     imageUrl: string;
     secret: boolean;
-    created: string;
+    createdAt: string;
     updated: string;
   };
   comments: Comment[];
@@ -93,7 +93,9 @@ function DiaryFeed() {
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         endMessage={
-          <p style={{ textAlign: 'center' }}>
+          <p
+            style={{ textAlign: 'center', marginBottom: '5%', marginTop: '5%' }}
+          >
             <b style={{ color: 'white' }}>모든 다이어리를 불러왔습니다.</b>
           </p>
         }
@@ -109,7 +111,9 @@ function DiaryFeed() {
                 <CardWrap key={index}>
                   <NickDateWrap>
                     <Nickname>{diary.nickname}</Nickname>
-                    <DateWrap>{diary.created}</DateWrap>
+                    <DateWrap>
+                      {new Date(diary.createdAt).toISOString().split('T')[0]}
+                    </DateWrap>
                   </NickDateWrap>
                   <ContentImg>
                     <TitleContent
@@ -117,11 +121,7 @@ function DiaryFeed() {
                         diary.imageUrl && diary.imageUrl !== '""',
                       )}
                     >
-                      <Title>
-                        {diary.title.length > 18
-                          ? diary.title.substring(0, 18) + '⋯'
-                          : diary.title}
-                      </Title>
+                      <Title>{diary.title}</Title>
                       <Content>
                         {diary.content.length > 40
                           ? diary.content.substring(0, 40) + '⋯'
