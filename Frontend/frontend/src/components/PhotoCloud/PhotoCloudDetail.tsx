@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
@@ -60,6 +59,22 @@ interface PhotoCloudProps {
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
+  const {
+    setOpenEditOrDeleteModal,
+    setSelectedPhotoId,
+    selectedPhotoId,
+    selectedCategory,
+    setEpic,
+    epic,
+    setEditOrDeleteModalEpic,
+    editOrDeleteModalEpic,
+    setDeleteContent,
+    deleteContent,
+    setSelectedPhotoCaption,
+    selectedPhotoCaption,
+    cancelEdit,
+    setCategoryOwner,
+  } = props;
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
@@ -68,7 +83,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   const fetchData = async () => {
     try {
       const get_photo = await defaultApi.get(
-        requests.GET_PHOTO(props.selectedCategory),
+        requests.GET_PHOTO(selectedCategory),
         {
           withCredentials: true,
         },
@@ -76,7 +91,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       if (get_photo.status === 200) {
         const { data } = get_photo;
         setPhotoData(() => data);
-        props.setDeleteContent(false);
+        setDeleteContent(false);
       }
     } catch (err) {
       console.error(err);
@@ -90,18 +105,18 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   useEffect(() => {
     fetchData();
     setEditTitle(name!);
-  }, [props.selectedCategory]);
+  }, [selectedCategory]);
 
   useEffect(() => {
-    setEditContent(props.selectedPhotoCaption);
-  }, [props.selectedPhotoId]);
+    setEditContent(selectedPhotoCaption);
+  }, [selectedPhotoId]);
 
   useEffect(() => {
-    if (props.deleteContent) fetchData();
-  }, [props.deleteContent]);
+    if (deleteContent) fetchData();
+  }, [deleteContent]);
 
   const handleEditOrDeleteModalOpen = () => {
-    props.setOpenEditOrDeleteModal(true);
+    setOpenEditOrDeleteModal(true);
   };
 
   const handleEditTitle = (e: any) => {
@@ -134,7 +149,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       if (patch_category.status === 200) {
         setEditTitle(patch_category.data.name);
         fetchData();
-        props.setEditOrDeleteModalEpic({
+        setEditOrDeleteModalEpic({
           titleEdit: false,
           contentEdit: false,
         });
@@ -148,12 +163,12 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     try {
       const patch_photo = await defaultApi.patch(
         requests.PATCH_PHOTO(),
-        { photoId: props.selectedPhotoId, caption: editContent },
+        { photoId: selectedPhotoId, caption: editContent },
         { withCredentials: true },
       );
       if (patch_photo.status === 200) {
         fetchData();
-        props.setEditOrDeleteModalEpic({
+        setEditOrDeleteModalEpic({
           titleEdit: false,
           contentEdit: false,
         });
@@ -170,7 +185,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     } else if (expspaces.test(targetContent)) {
       alert('연속된 공백이 있으면 안됩니다.');
     } else {
-      if (props.epic === '제목') {
+      if (epic === '제목') {
         changeCategory();
       } else {
         changeContent();
@@ -179,14 +194,14 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   };
 
   const handleCancelEdit = () => {
-    props.cancelEdit?.();
+    cancelEdit?.();
   };
 
   return (
     <PhotoWrapper>
       {photoData ? (
         <div>
-          {props.editOrDeleteModalEpic.titleEdit ? (
+          {editOrDeleteModalEpic.titleEdit ? (
             <div className="flex flex-col items-center">
               <input
                 className="w-5/6 px-4 py-2 mb-6 rounded-[10px] text-p1"
@@ -225,8 +240,8 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 alt="three dot button"
                 onClick={() => {
                   handleEditOrDeleteModalOpen();
-                  props.setEpic('제목');
-                  props.setCategoryOwner(categoryUser ? categoryUser : null);
+                  setEpic('제목');
+                  setCategoryOwner(categoryUser ? categoryUser : null);
                 }}
               />
             </div>
@@ -237,8 +252,8 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 return (
                   <PhotoCardWrapper key={photo.photoId}>
                     <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
-                    {props.editOrDeleteModalEpic.contentEdit === true &&
-                    props.selectedPhotoId === photo.photoId.toString() ? (
+                    {editOrDeleteModalEpic.contentEdit === true &&
+                    selectedPhotoId === photo.photoId.toString() ? (
                       <div>
                         <textarea
                           defaultValue={photo.caption}
@@ -275,9 +290,9 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                           alt="three dot button"
                           onClick={() => {
                             handleEditOrDeleteModalOpen();
-                            props.setEpic('내용');
-                            props.setSelectedPhotoId(photo.photoId.toString());
-                            props.setSelectedPhotoCaption(photo.caption);
+                            setEpic('내용');
+                            setSelectedPhotoId(photo.photoId.toString());
+                            setSelectedPhotoCaption(photo.caption);
                           }}
                         />
                       </div>

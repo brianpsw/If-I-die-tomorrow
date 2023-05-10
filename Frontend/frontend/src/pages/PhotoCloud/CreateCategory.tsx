@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
 import {
@@ -13,7 +12,6 @@ import { defaultApi } from '../../api/axios';
 
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
-import { fontSize } from '@mui/system';
 
 function CreateCategory() {
   const navigate = useNavigate();

@@ -20,6 +20,7 @@ interface PhotoCloudProps {
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
+  const { setDeleteCategory, deleteCategory, cancelEdit } = props;
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
@@ -33,7 +34,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
       if (response.status === 200) {
         const { data } = response;
         setCategoryData(() => data);
-        props.setDeleteCategory(false);
+        setDeleteCategory(false);
       }
     } catch (err) {
       console.error(err);
@@ -45,12 +46,12 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   }, []);
 
   useEffect(() => {
-    if (props.deleteCategory) fetchData();
-  }, [props.deleteCategory]);
+    if (deleteCategory) fetchData();
+  }, [deleteCategory]);
 
   const handleCategory = (id: number) => {
     if (categoryId !== id.toString()) {
-      props.cancelEdit?.();
+      cancelEdit?.();
     }
     navigate(`/photo-cloud/${id}`);
   };
