@@ -12,6 +12,7 @@ import gsap from 'gsap';
 
 function Scene() {
   const foxRef = useRef<THREE.Object3D>(null);
+  const homeRef = useRef<THREE.Object3D>(null);
   const pointRef: RefObject<THREE.Mesh> = useRef(null);
   const { gl, scene, camera, raycaster, mouse } = useThree();
   const [isHomeVisible, setIsHomeVisible] = useState<boolean>(false);
@@ -34,12 +35,12 @@ function Scene() {
 
   const cameraPosition = new THREE.Vector3(1, 5, 5);
 
-  camera.zoom = 20;
+  camera.zoom = 50;
   camera.updateProjectionMatrix();
 
   // Mesh
   const floorMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(100, 100),
+    new THREE.PlaneGeometry(1000, 1000),
     new THREE.MeshStandardMaterial({
       map: floorTexture,
     }),
@@ -57,7 +58,8 @@ function Scene() {
       opacity: 0.5,
     }),
   );
-  spotMesh.position.set(5, 0.005, 5);
+  // [-30, 2, 0];
+  spotMesh.position.set(-25, 0.005, 12);
   spotMesh.rotation.x = -Math.PI / 2;
   spotMesh.receiveShadow = true;
   scene.add(spotMesh);
@@ -70,7 +72,6 @@ function Scene() {
   action1.play();
 
   const home = useGLTF('models/low_poly_room.glb', true);
-  const homeModelMesh = home.scene.children[0];
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -138,36 +139,54 @@ function Scene() {
         }
 
         if (
-          Math.abs(spotMesh.position.x - foxRef.current.position.x) < 1.5 &&
-          Math.abs(spotMesh.position.z - foxRef.current.position.z) < 1.5
+          Math.abs(spotMesh.position.x - foxRef.current.position.x) < 5 &&
+          Math.abs(spotMesh.position.z - foxRef.current.position.z) < 5
         ) {
           if (!isHomeVisible) {
             console.log('나와');
             setIsHomeVisible(() => true);
             spotMesh.material.color.set('seagreen');
-            gsap.to(homeModelMesh.position, {
-              duration: 1,
-              y: 1,
-              ease: 'Bounce.easeOut',
-            });
-            gsap.to(camera.position, {
-              duration: 1,
-              y: 3,
-            });
+            if (homeRef.current) {
+              gsap.to(homeRef.current.position, {
+                duration: 1,
+                y: 0.7,
+                ease: 'Back.easeOut',
+              });
+              gsap.to(camera.position, {
+                duration: 1,
+                y: 2,
+              });
+              gsap.to(camera, {
+                duration: 1,
+                zoom: 30,
+                onUpdate: function () {
+                  camera.updateProjectionMatrix();
+                },
+              });
+            }
           }
         } else if (isHomeVisible) {
           console.log('들어가');
           setIsHomeVisible(() => false);
 
           spotMesh.material.color.set('yellow');
-          gsap.to(homeModelMesh.position, {
-            duration: 0.5,
-            y: -1.3,
-          });
-          gsap.to(camera.position, {
-            duration: 1,
-            y: 5,
-          });
+          if (homeRef.current) {
+            gsap.to(homeRef.current.position, {
+              duration: 0.5,
+              y: -7.5,
+            });
+            gsap.to(camera.position, {
+              duration: 1,
+              y: 5,
+            });
+            gsap.to(camera, {
+              duration: 1,
+              zoom: 50,
+              onUpdate: function () {
+                camera.updateProjectionMatrix();
+              },
+            });
+          }
         }
       } else {
         walk.stop();
@@ -192,14 +211,14 @@ function Scene() {
   });
 
   //   // 터치 이벤트
-  window.addEventListener('touchstart', (e) => {
+  gl.domElement.addEventListener('touchstart', (e) => {
     setIsPressed(() => true);
     calculateMousePosition(e.touches[0]);
   });
-  window.addEventListener('touchend', () => {
+  gl.domElement.addEventListener('touchend', () => {
     setIsPressed(() => false);
   });
-  window.addEventListener('touchmove', (e) => {
+  gl.domElement.addEventListener('touchmove', (e) => {
     if (isPressed) {
       calculateMousePosition(e.touches[0]);
     }
@@ -216,24 +235,30 @@ function Scene() {
       >
         <OrthographicCamera makeDefault position={[1, 5, 5]} far={1000} />
       </directionalLight>
-      <mesh ref={pointRef} rotation={[-Math.PI / 2, 0, 0]} receiveShadow={true}>
-        <planeGeometry args={[1, 1]}></planeGeometry>
-        <meshStandardMaterial color={'blue'} transparent opacity={0.5} />
+      <mesh
+        ref={pointRef}
+        rotation={[-Math.PI / 2, 0, 0]}
+        receiveShadow={true}
+        position={[0, 0.05, 0]}
+      >
+        <circleGeometry args={[1, 16]}></circleGeometry>
+        <meshStandardMaterial transparent />
       </mesh>
 
       <primitive
         ref={foxRef}
         object={fox.scene}
         scale={[1, 1, 1]}
-        position={[0, 2, 0]}
+        position={[0, 1, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         receiveShadow={true}
       />
       <primitive
+        ref={homeRef}
         object={home.scene}
-        scale={[0.05, 0.05, 0.05]}
+        scale={[0.03, 0.03, 0.03]}
         rotation={[0, -Math.PI / 3, 0]}
-        position={[-30, 2, 0]}
+        position={[-30, -7.5, 0]}
         receiveShadow={true}
       />
     </Suspense>
