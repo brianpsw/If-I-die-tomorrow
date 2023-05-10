@@ -97,7 +97,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
     let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
     for (let i = 0; i < 7; i++) {
       days.push(
-        <DaysCellContainer>
+        <DaysCellContainer key={i}>
           {format(addDays(startDate, i), koreaDays[i])}
         </DaysCellContainer>,
       );
