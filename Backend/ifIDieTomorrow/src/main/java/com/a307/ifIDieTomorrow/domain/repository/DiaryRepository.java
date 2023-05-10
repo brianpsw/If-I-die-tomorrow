@@ -47,7 +47,8 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
-			"WHERE d.userId = :userId")
+			"WHERE d.userId = :userId " +
+			"ORDER BY d.createdAt ASC")
 	List<GetDiaryResDto> findAllByUserIdIdWithUserNickName(@Param("userId") Long userId);
 
 	List<Diary> findAllByReportGreaterThanEqual(Integer reportLimit);
