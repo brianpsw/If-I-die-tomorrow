@@ -233,17 +233,22 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               {name && (
                 <h4 className="text-h4 text-white text-center">{name}</h4>
               )}
-              <img
-                className="absolute"
-                style={{ top: '35%', right: '-5%' }}
-                src={whiteThreeDot}
-                alt="three dot button"
-                onClick={() => {
-                  handleEditOrDeleteModalOpen();
-                  setEpic('제목');
-                  setCategoryOwner(categoryUser ? categoryUser : null);
-                }}
-              />
+              {categoryId === 1 ||
+              categoryId === 2 ||
+              categoryId === 3 ||
+              categoryId === 4 ? null : (
+                <img
+                  className="absolute"
+                  style={{ top: '35%', right: '-5%' }}
+                  src={whiteThreeDot}
+                  alt="three dot button"
+                  onClick={() => {
+                    handleEditOrDeleteModalOpen();
+                    setEpic('제목');
+                    setCategoryOwner(categoryUser ? categoryUser : null);
+                  }}
+                />
+              )}
             </div>
           )}
           <div>
