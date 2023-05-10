@@ -1,7 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.diary.*;
-import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
@@ -10,9 +9,11 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FamousSayingGenerator;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
+import com.opencsv.exceptions.CsvException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,7 @@ public class DiaryServiceImpl implements DiaryService{
 	private final S3Upload s3Upload;
 	private final DiaryRepository diaryRepository;
 	private final CommentRepository commentRepository;
+	private final FamousSayingGenerator famousSayingGenerator;
 
 	@Override
 	public CreateDiaryResDto createDiary(CreateDiaryReqDto req, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
@@ -122,5 +124,10 @@ public class DiaryServiceImpl implements DiaryService{
 		);
 
 		return CreateDiaryResDto.toDto(diaryRepository.save(diary));
+	}
+	
+	@Override
+	public FamousSayingDto getFamousSaying () throws IOException, CsvException {
+		return famousSayingGenerator.getRandomItemFromCsv();
 	}
 }

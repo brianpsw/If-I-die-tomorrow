@@ -1,9 +1,9 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
-import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
-import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.global.auth.OAuth2UserInfo;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
@@ -24,7 +24,7 @@ public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2
     User updateUser(User user, OAuth2UserInfo userInfo);
 
     String generateNickname();
-
+	
     UserDto getUser(Long userId) throws NotFoundException;
 
     String getNickname() throws IOException, CsvException;

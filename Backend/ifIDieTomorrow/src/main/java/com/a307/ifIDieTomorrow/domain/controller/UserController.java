@@ -1,9 +1,9 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
-import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
-import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.personality.PersonalityResDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.PatchUserAfterDto;
+import com.a307.ifIDieTomorrow.domain.dto.user.UserDto;
 import com.a307.ifIDieTomorrow.domain.service.UserService;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
@@ -36,13 +36,13 @@ public class UserController {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUser(principal.getUserId()));
     }
-
+    
     @GetMapping("/nickname")
     @Operation(summary = "랜덤 닉네임 얻기", description = "랜덤 닉네임 생성하기")
     public ResponseEntity<String> getNickname() throws IOException, CsvException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getNickname());
     }
-
+    
     @PatchMapping("/nickname")
     @Operation(summary = "유저의 닉네임 변경", description = "유저의 닉네임 변경합니다.")
     public ResponseEntity<UserDto> patchNickname(@RequestBody Map<String, String> nicknameMap) throws NotFoundException {
