@@ -98,7 +98,8 @@ public class BucketServiceImpl implements BucketService {
 			throw new UnAuthorizedException("해당 버킷을 수정할 권한이 없습니다.");
 		
 		// 사진이 업데이트되었고 기존에 사진이 있었다면 S3에서 사진을 삭제함
-		if (data.getUpdatePhoto() && !"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());
+		if (data.getUpdatePhoto() && bucket.getImageUrl() != null && !"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());
+		
 		bucket.updateBucket(
 				data.getTitle(),
 				data.getContent(),
