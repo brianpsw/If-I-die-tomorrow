@@ -1,19 +1,14 @@
-import React, { useState, Suspense, useRef, useEffect } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
 
 import * as THREE from 'three';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, OrbitControls } from '@react-three/drei';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-
-interface PreventDragClick {
-  preventDragClick: boolean;
-  setPreventDragClick: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 interface CategoryInfo {
   categoryId: number;
@@ -21,11 +16,12 @@ interface CategoryInfo {
   objectId: number;
 }
 
-function Scene(props: PreventDragClick) {
-  const { preventDragClick } = props;
+function Scene() {
+  // const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
   const [objectIds, setObjectIds] = useState<number[]>([]);
+  const { gl, mouse } = useThree();
   // 기본 구성
   const roomFrame = useGLTF('models/room_frame.glb', true);
   const fox = useGLTF('models/fox.glb', true);
@@ -42,7 +38,7 @@ function Scene(props: PreventDragClick) {
   const cat = useGLTF('models/cat.glb', true);
 
   let mixer = new THREE.AnimationMixer(fox.scene);
-
+  let preventDragClick: boolean = false;
   const default1 = mixer.clipAction(fox.animations[0]);
   default1.play();
 
@@ -76,7 +72,8 @@ function Scene(props: PreventDragClick) {
   }, []);
 
   const clickRoom = (e: any) => {
-    if (preventDragClick) navigate('/room');
+    if (!preventDragClick) navigate('/room');
+
     e?.stopPropagation();
   };
 
@@ -91,6 +88,56 @@ function Scene(props: PreventDragClick) {
     }, 1200);
     e?.stopPropagation();
   };
+
+  const calculateMousePosition = (e: any) => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
+  };
+
+  let clickStartTime: any;
+
+  // 마우스 이벤트
+
+  gl.domElement.addEventListener('mousedown', (e) => {
+    calculateMousePosition(e);
+    clickStartTime = Date.now();
+  });
+
+  gl.domElement.addEventListener('mouseup', (e) => {
+    const nowX = (e.clientX / window.innerWidth) * 2 - 1;
+    const nowY = -((e.clientY / window.innerHeight) * 2 - 1);
+    const xGap = nowX - mouse.x;
+    const yGap = nowY - mouse.y;
+
+    const timeGap = Date.now() - clickStartTime;
+
+    if (xGap > 5 || yGap > 5 || timeGap > 100) {
+      // setPreventDragClick(() => true);
+      preventDragClick = true;
+    } else {
+      // setPreventDragClick(() => false);
+      preventDragClick = false;
+    }
+  });
+
+  // 터치 이벤트('touched가 안됨')
+
+  // gl.domElement.addEventListener('touchstart', (e) => {
+  //   calculateMousePosition(e.touches[0]);
+  //   clickStartTime = Date.now();
+  // });
+
+  // gl.domElement.addEventListener('touchend', (e) => {
+  //   const xGap = Math.abs(e.touches[0].clientX - mouse.x);
+  //   const yGap = Math.abs(e.touches[0].clientY - mouse.y);
+  //   const timeGap = Date.now() - clickStartTime;
+
+  //   if (xGap > 1 || yGap > 1 || timeGap > 100) {
+  //     setPreventDragClick(() => true);
+  //   } else {
+  //     setPreventDragClick(() => false);
+  //   }
+  // });
 
   return (
     <Suspense fallback={<div>loading...</div>}>
@@ -199,38 +246,8 @@ function Scene(props: PreventDragClick) {
 }
 
 function HomeSemiRoom() {
-  const canvas = useRef<HTMLCanvasElement>(null);
-  const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
-
-  useEffect(() => {
-    // console.log('home에서 prevent', preventDragClick);
-    let nowCanvas = canvas.current;
-    let clickStartX: number;
-    let clickStartY: number;
-    let clickStartTime: number;
-
-    nowCanvas?.addEventListener('mousedown', (e) => {
-      clickStartX = e.clientX;
-      clickStartY = e.clientY;
-      clickStartTime = Date.now();
-    });
-
-    nowCanvas?.addEventListener('mouseup', (e) => {
-      const xGap = Math.abs(e.clientX - clickStartX);
-      const yGap = Math.abs(e.clientY - clickStartY);
-      const timeGap = Date.now() - clickStartTime;
-
-      if (xGap > 1 || yGap > 1 || timeGap > 100) {
-        setPreventDragClick(() => true);
-      } else {
-        setPreventDragClick(() => false);
-      }
-    });
-  });
-
   return (
     <Canvas
-      ref={canvas}
       style={{ width: '100vw', height: '94vh' }}
       orthographic
       camera={{
@@ -240,10 +257,7 @@ function HomeSemiRoom() {
         zoom: 5,
       }}
     >
-      <Scene
-        preventDragClick={preventDragClick}
-        setPreventDragClick={setPreventDragClick}
-      />
+      <Scene />
     </Canvas>
   );
 }
