@@ -16,11 +16,16 @@ interface CategoryInfo {
   objectId: number;
 }
 
+interface CategoryIds {
+  [key: number]: number;
+}
+
 function Scene() {
   // const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
   const [objectIds, setObjectIds] = useState<number[]>([]);
+  const [categoryIds, setCategoryIds] = useState<CategoryIds>({});
   const { gl, mouse } = useThree();
   // 기본 구성
   const roomFrame = useGLTF('models/room_frame.glb', true);
@@ -57,10 +62,15 @@ function Scene() {
       if (get_all_category.status === 200) {
         setCategory(get_all_category.data);
         const arr: number[] = [];
+        const categoryObject: CategoryIds = {};
         category?.forEach((category: CategoryInfo) => {
           arr.push(category.objectId);
+          const objectId = category.objectId;
+          const categoryId = category.categoryId;
+          categoryObject[objectId] = categoryId;
         });
         setObjectIds([...arr]);
+        setCategoryIds({ ...categoryObject });
       }
     } catch (err) {
       console.error(err);
@@ -73,7 +83,31 @@ function Scene() {
 
   const clickRoom = (e: any) => {
     if (!preventDragClick) navigate('/room');
+    e?.stopPropagation();
+  };
 
+  const clickBed = (e: any) => {
+    if (!preventDragClick) navigate('/photo-cloud/1');
+    e?.stopPropagation();
+  };
+
+  const clickCoffeeTable = (e: any) => {
+    if (!preventDragClick) navigate('/photo-cloud/2');
+    e?.stopPropagation();
+  };
+
+  const clickBookShelf = (e: any) => {
+    if (!preventDragClick) navigate('/photo-cloud/3');
+    e?.stopPropagation();
+  };
+
+  const clickDeskChair = (e: any) => {
+    if (!preventDragClick) navigate('/photo-cloud/4');
+    e?.stopPropagation();
+  };
+
+  const clickCustomFurniture = (e: any, id: number) => {
+    if (!preventDragClick) navigate(`/photo-cloud/${id}`);
     e?.stopPropagation();
   };
 
@@ -136,6 +170,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickBed(e)}
         />
       )}
       {objectIds?.includes(2) && (
@@ -144,6 +179,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[-10, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCoffeeTable(e)}
         />
       )}
       {objectIds?.includes(3) && (
@@ -152,6 +188,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickBookShelf(e)}
         />
       )}
       {objectIds?.includes(4) && (
@@ -160,6 +197,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickDeskChair(e)}
         />
       )}
       {objectIds?.includes(5) && (
@@ -168,6 +206,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[5])}
         />
       )}
       {objectIds?.includes(6) && (
@@ -176,6 +215,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[-10, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[6])}
         />
       )}
       {objectIds?.includes(7) && (
@@ -184,6 +224,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[7])}
         />
       )}
       {objectIds?.includes(8) && (
@@ -192,6 +233,7 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[8])}
         />
       )}
       {objectIds?.includes(9) && (
@@ -200,14 +242,16 @@ function Scene() {
           scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
           position={[0, -30, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[9])}
         />
       )}
       {objectIds?.includes(10) && (
         <primitive
           object={cat.scene}
-          scale={window.innerWidth > 640 ? [3.5, 3.5, 3.5] : [1, 1, 1]}
-          position={[30, -27.5, 0]}
+          scale={window.innerWidth > 640 ? [3.5, 3.5, 3.5] : [2, 2, 2]}
+          position={window.innerWidth > 640 ? [30, -27.5, 0] : [20, -28.5, 0]}
           rotation={[0, -Math.PI / 2, 0]}
+          onClick={(e: any) => clickCustomFurniture(e, categoryIds[10])}
         />
       )}
 
