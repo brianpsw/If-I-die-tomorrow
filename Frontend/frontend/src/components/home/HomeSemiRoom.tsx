@@ -112,32 +112,11 @@ function Scene() {
     const timeGap = Date.now() - clickStartTime;
 
     if (xGap > 5 || yGap > 5 || timeGap > 100) {
-      // setPreventDragClick(() => true);
       preventDragClick = true;
     } else {
-      // setPreventDragClick(() => false);
       preventDragClick = false;
     }
   });
-
-  // 터치 이벤트('touched가 안됨')
-
-  // gl.domElement.addEventListener('touchstart', (e) => {
-  //   calculateMousePosition(e.touches[0]);
-  //   clickStartTime = Date.now();
-  // });
-
-  // gl.domElement.addEventListener('touchend', (e) => {
-  //   const xGap = Math.abs(e.touches[0].clientX - mouse.x);
-  //   const yGap = Math.abs(e.touches[0].clientY - mouse.y);
-  //   const timeGap = Date.now() - clickStartTime;
-
-  //   if (xGap > 1 || yGap > 1 || timeGap > 100) {
-  //     setPreventDragClick(() => true);
-  //   } else {
-  //     setPreventDragClick(() => false);
-  //   }
-  // });
 
   return (
     <Suspense fallback={<div>loading...</div>}>
