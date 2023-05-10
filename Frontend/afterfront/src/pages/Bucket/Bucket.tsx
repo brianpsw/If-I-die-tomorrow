@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import { Navigation } from '../../components/common/Navigation';
 
 interface Bucket {
   bucketId: number;
@@ -91,7 +92,7 @@ function BucketFeed() {
 
   return (
     <>
-      <TopBar title="" />
+      <Navigation />
       <Container>
         <InfiniteScroll
           dataLength={items.length}

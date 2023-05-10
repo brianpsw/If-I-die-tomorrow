@@ -6,12 +6,10 @@ import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import Button from '../../components/common/Button';
+import { Navigation } from '../../components/common/Navigation';
 
 const Container = styled.div`
   ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
-`;
-const LinkWrapper = styled.div`
-  ${tw`flex w-full text-h3 justify-center items-center my-[8px]`}
 `;
 const WillContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full h-[500px] text-p1 rounded border-black break-all mb-[16px]`}
@@ -23,7 +21,7 @@ function Will(): React.JSX.Element {
   const userData = useRecoilValue(userDataState);
   return (
     <div>
-      <TopBar title="유언장" />
+      <Navigation />
       <Container>
         {isVideo ? (
           <video

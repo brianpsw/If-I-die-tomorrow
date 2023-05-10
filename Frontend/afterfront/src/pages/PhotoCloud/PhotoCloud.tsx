@@ -7,6 +7,7 @@ import {
   PhotoCardWrapper,
   PhotoWrapper,
 } from './PhotoEmotion';
+import { Navigation } from '../../components/common/Navigation';
 
 // 인터페이스 선언 (나중에 공통으로 빼서 import 해오는 방식으로 바꾸면 좋을듯?)
 interface Category {
@@ -67,40 +68,53 @@ const PhotoPage = () => {
   };
 
   return (
-    <Background>
-      <h1>Categories</h1>
-      <div className="categories" style={{ display: 'flex', flexWrap: 'wrap' }}>
-        {userData.photos.map((photoCategory: PhotoCategory) => (
-          <div
-            key={photoCategory.category.categoryId}
-            className="category"
-            style={{ width: '18rem', marginBottom: '1rem', cursor: 'pointer' }}
-            onClick={() => handleCategory(photoCategory.category)}
-          >
-            <img
-              src={getObjectById(photoCategory.category.objectId)}
-              alt={photoCategory.category.name}
-              style={{ width: '100%' }}
-            />
-            <h2>{photoCategory.category.name}</h2>
-          </div>
-        ))}
-      </div>
-      {selectedCategory && (
-        <PhotoWrapper>
-          <h2>Photos of {selectedCategory.name}</h2>
-          <div className="photos" style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {getPhotosByCategory(selectedCategory.categoryId).map(
-              (photo: Photo) => (
-                <PhotoCardWrapper key={photo.photoId}>
-                  <PhotoStyle src={photo.imageUrl} alt={photo.caption} />
-                </PhotoCardWrapper>
-              ),
-            )}
-          </div>
-        </PhotoWrapper>
-      )}
-    </Background>
+    <>
+      <Navigation />
+      <Background>
+        <h1>Categories</h1>
+        <div
+          className="categories"
+          style={{ display: 'flex', flexWrap: 'wrap' }}
+        >
+          {userData.photos.map((photoCategory: PhotoCategory) => (
+            <div
+              key={photoCategory.category.categoryId}
+              className="category"
+              style={{
+                width: '18rem',
+                marginBottom: '1rem',
+                cursor: 'pointer',
+              }}
+              onClick={() => handleCategory(photoCategory.category)}
+            >
+              <img
+                src={getObjectById(photoCategory.category.objectId)}
+                alt={photoCategory.category.name}
+                style={{ width: '100%' }}
+              />
+              <h2>{photoCategory.category.name}</h2>
+            </div>
+          ))}
+        </div>
+        {selectedCategory && (
+          <PhotoWrapper>
+            <h2>Photos of {selectedCategory.name}</h2>
+            <div
+              className="photos"
+              style={{ display: 'flex', flexWrap: 'wrap' }}
+            >
+              {getPhotosByCategory(selectedCategory.categoryId).map(
+                (photo: Photo) => (
+                  <PhotoCardWrapper key={photo.photoId}>
+                    <PhotoStyle src={photo.imageUrl} alt={photo.caption} />
+                  </PhotoCardWrapper>
+                ),
+              )}
+            </div>
+          </PhotoWrapper>
+        )}
+      </Background>
+    </>
   );
 };
 

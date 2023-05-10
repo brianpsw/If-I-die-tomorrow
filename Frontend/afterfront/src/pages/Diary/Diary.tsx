@@ -18,6 +18,7 @@ import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import { Link } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
+import { Navigation } from '../../components/common/Navigation';
 
 interface Diary {
   diaryId: number;
@@ -84,14 +85,14 @@ function DiaryFeed() {
 
   const fetchMoreData = () => {
     if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
+      setPage((prevPage: number) => prevPage + 1);
       console.log('무한 스크롤 작동');
     }
   };
 
   return (
     <>
-      <TopBar title="" />
+      <Navigation />
       <Container>
         <InfiniteScroll
           dataLength={items.length}
