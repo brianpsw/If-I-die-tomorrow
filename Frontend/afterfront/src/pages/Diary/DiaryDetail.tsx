@@ -1,4 +1,5 @@
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -71,19 +72,30 @@ const DiaryText = styled.div`
 
 function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
+  const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const userData = useRecoilValue(userDataState);
-
-  let diary: Diary = {} as Diary;
-  const data = userData.diaries;
-  data.forEach((item) => {
-    if (item.diaryId == (diaryId as unknown as number)) {
-      diary = item;
+  const navigate = useNavigate();
+  const fetchDiaryDetail = async () => {
+    if (Object.keys(userData).length === 0) {
+      return;
     }
-  });
+    const data = userData.diaries;
+    data.forEach((diary) => {
+      if (diary.diaryId == (diaryId as unknown as number)) {
+        setDiaryDetail(diary);
+      }
+    });
+  };
 
-  if (!diary) {
+  useEffect(() => {
+    fetchDiaryDetail();
+  }, [diaryId]);
+
+  if (!diaryDetail) {
     return <div>Loading...</div>;
   }
+
+  const diary = diaryDetail;
 
   return (
     <div>

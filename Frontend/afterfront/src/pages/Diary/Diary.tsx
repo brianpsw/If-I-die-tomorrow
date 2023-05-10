@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 import {
@@ -35,6 +35,7 @@ function DiaryFeed() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const userData = useRecoilValue(userDataState);
+  const lastItemRef = useRef<HTMLAnchorElement>(null);
 
   const fetchData = async (page: number) => {
     try {
@@ -64,6 +65,21 @@ function DiaryFeed() {
 
   useEffect(() => {
     fetchData(page);
+    function handleResize() {
+      const lastItemLocation = lastItemRef.current?.getBoundingClientRect();
+      console.log(lastItemLocation?.bottom);
+      console.log(window.innerHeight);
+      if (
+        (lastItemLocation?.bottom as unknown as number) <= window.innerHeight
+      ) {
+        fetchMoreData();
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, [page]);
 
   const fetchMoreData = () => {
@@ -91,10 +107,14 @@ function DiaryFeed() {
           {items.length === 0 ? (
             <div>게시물이 없습니다.</div>
           ) : (
-            items.map((item: Diary) => {
+            items.map((item: Diary, index: number) => {
               const diary = item;
               return (
-                <Link to={`/diary/${item.diaryId}`} key={item.diaryId}>
+                <Link
+                  to={`/diary/${item.diaryId}`}
+                  key={item.diaryId}
+                  ref={index === items.length - 1 ? lastItemRef : null}
+                >
                   <CardWrap key={item.diaryId}>
                     <NickDateWrap>
                       <Nickname>{diary.nickname}</Nickname>

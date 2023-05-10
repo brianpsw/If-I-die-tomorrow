@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
@@ -36,6 +36,7 @@ function BucketFeed() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const userData = useRecoilValue(userDataState);
+  const lastItemRef = useRef<HTMLAnchorElement>(null);
 
   const fetchData = async (page: number) => {
     try {
@@ -65,11 +66,25 @@ function BucketFeed() {
 
   useEffect(() => {
     fetchData(page);
+    function handleResize() {
+      const lastItemLocation = lastItemRef.current?.getBoundingClientRect();
+      console.log(lastItemLocation?.bottom);
+      console.log(window.innerHeight);
+      if (
+        (lastItemLocation?.bottom as unknown as number) <= window.innerHeight
+      ) {
+        fetchMoreData();
+      }
+    }
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, [page]);
 
   const fetchMoreData = () => {
     if (hasMore) {
-      setPage((prevPage) => prevPage + 1);
+      setPage((prevPage: number) => prevPage + 1);
       console.log('무한 스크롤 작동');
     }
   };
@@ -92,10 +107,14 @@ function BucketFeed() {
           {items.length === 0 ? (
             <div>게시물이 없습니다.</div>
           ) : (
-            items.map((item: Bucket) => {
+            items.map((item: Bucket, index: number) => {
               const bucket = item;
               return (
-                <Link to={`/bucket/${bucket.bucketId}`} key={bucket.bucketId}>
+                <Link
+                  to={`/bucket/${bucket.bucketId}`}
+                  key={bucket.bucketId}
+                  ref={index === items.length - 1 ? lastItemRef : null}
+                >
                   <BucketContainer>
                     {bucket.complete ? (
                       <img src={CheckedIcon} alt="체크함" />
