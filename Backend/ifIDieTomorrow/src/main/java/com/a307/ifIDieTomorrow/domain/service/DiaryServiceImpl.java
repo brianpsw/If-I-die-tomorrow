@@ -112,7 +112,7 @@ public class DiaryServiceImpl implements DiaryService{
 		if(req.getTitle() == null || "".equals(req.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
 
 //		기존 사진 삭제
-		if (req.getUpdatePhoto() && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
+		if (req.getUpdatePhoto() && diary.getImageUrl() != null && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
 
 		diary.updateDiary(
 				req.getTitle(),
