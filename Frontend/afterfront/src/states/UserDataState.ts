@@ -4,13 +4,14 @@ const { persistAtom } = recoilPersist();
 
 interface Bucket {
   bucketId: number;
+  nickname: string;
   title: string;
   content: string;
   imageUrl: string;
   secret: boolean;
-  complete: string;
-  created: string;
-  updated: string;
+  complete: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Category {
