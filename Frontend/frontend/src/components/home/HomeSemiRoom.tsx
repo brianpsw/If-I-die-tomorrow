@@ -81,11 +81,6 @@ function Scene() {
     fetchData();
   }, []);
 
-  const clickRoom = (e: any) => {
-    if (!preventDragClick) navigate('/room');
-    e?.stopPropagation();
-  };
-
   const clickBed = (e: any) => {
     if (!preventDragClick) navigate('/photo-cloud/1');
     e?.stopPropagation();
@@ -162,7 +157,6 @@ function Scene() {
         scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
         position={[0, -30, 0]}
         rotation={[0, -Math.PI / 2, 0]}
-        onClick={(e: any) => clickRoom(e)}
       />
       {objectIds?.includes(1) && (
         <primitive
