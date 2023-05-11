@@ -53,5 +53,5 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
 	List<Diary> findAllByReportGreaterThanEqual(Integer reportLimit);
 	
-	List<Diary> findAllByUserId (Long userId);
+	List<Diary> findAllByUserId (@Param("userId") Long userId);
 }

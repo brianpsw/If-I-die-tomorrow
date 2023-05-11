@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.entity.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -19,5 +20,5 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 	@Query("DELETE " +
 			"FROM Report " +
 			"WHERE userId = :userId")
-	void deleteAllByUserId (Long userId);
+	void deleteAllByUserId (@Param("userId") Long userId);
 }
