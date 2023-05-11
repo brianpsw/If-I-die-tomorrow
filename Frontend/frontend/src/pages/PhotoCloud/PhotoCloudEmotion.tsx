@@ -28,3 +28,21 @@ export const PhotoCardWrapper = styled.div`
 export const Photo = styled.img`
   ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
+
+export const CategoryWrapper = styled.div`
+  ${tw`flex px-[24px] py-[16px] overflow-x-auto`}
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+`;

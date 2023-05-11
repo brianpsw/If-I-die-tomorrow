@@ -33,7 +33,7 @@ function CreateCategory() {
 
   useEffect(() => {
     const arr: number[] = [];
-    category?.map((cat) => {
+    category?.forEach((cat) => {
       arr.push(cat.objectId);
     });
     setUsedObjects(() => [...arr]);
@@ -169,7 +169,7 @@ function CreateCategory() {
                             width: '60px',
                             height: '60px',
                             backgroundSize: '500%',
-                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
+                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
                             backgroundRepeat: 'no-repeat',
                             backgroundPosition: `${exchange[ex]}`,
                           }}
@@ -188,7 +188,7 @@ function CreateCategory() {
                             width: '60px',
                             height: '60px',
                             backgroundSize: '500%',
-                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
+                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
                             backgroundRepeat: 'no-repeat',
                             backgroundPosition: `${exchange[ex]}`,
                           }}
