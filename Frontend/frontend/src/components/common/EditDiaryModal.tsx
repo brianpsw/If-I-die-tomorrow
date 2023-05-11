@@ -7,6 +7,8 @@ import { defaultApi } from '../../api/axios';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import Button from './Button';
 import { Icon } from '@iconify/react';
+import CheckedIcon from '../../assets/icons/checked_box.svg';
+import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 
 const ModalOverlay = styled.div`
   ${tw`text-p1 flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -182,8 +184,8 @@ function EditDiaryModal({
     }
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSecret(e.target.checked);
+  const handleCheckboxChange = () => {
+    setNewSecret(!newSecret);
   };
 
   return (
@@ -253,14 +255,14 @@ function EditDiaryModal({
           </EditSection>
           <div className="flex justify-start items-center">
             <EditSection>
-              <EditLabel htmlFor="secret">나만보기</EditLabel>
-              <input
-                className="text-left"
-                type="checkbox"
-                id="secret"
-                checked={newSecret}
-                onChange={handleCheckboxChange}
-              />
+              <EditLabel htmlFor="secret">피드 공개여부 체크</EditLabel>
+              <div onClick={handleCheckboxChange}>
+                {newSecret ? (
+                  <img src={UnCheckedIcon} alt="unchecked icon" />
+                ) : (
+                  <img src={CheckedIcon} alt="checked icon" />
+                )}
+              </div>
             </EditSection>
           </div>
           <ButtonWrap>

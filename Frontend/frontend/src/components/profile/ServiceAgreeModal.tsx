@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Button from '../common/Button';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 
 interface SubmitConfirmModalProps {
   onClose: () => void;
@@ -25,6 +27,9 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   const [phone, setPhone] = useState('');
   const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const user = useRecoilValue(userState);
+  const [userId, setUserId] = useState<number | null>(null);
+  const sendAgree = user?.sendAgree;
 
   const handlePhoneChange = (e: any) => {
     setPhone(e.target.value);

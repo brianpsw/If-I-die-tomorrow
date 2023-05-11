@@ -14,13 +14,14 @@ export const Background = styled.div`
   background-attachment: fixed;
 `;
 
-const BtModal = styled.div`
+export const BtModal = styled.div`
   ${tw`flex items-center justify-between border-b w-full `}
 `;
 
 export const Container = styled.div`
-  ${tw`text-p2 flex flex-col mx-auto pb-12`}
+  ${tw`text-p2 flex flex-col mx-auto pt-12`}
   max-width: calc(100% - 48px);
+  padding-bottom: 20%;
   // border: solid 1px white;
 `;
 
@@ -30,12 +31,12 @@ export const HeadText = styled.h1`
 `;
 
 export const MyProfile = styled.div`
-  ${tw`mb-6 mt-12`}
+  ${tw`mb-12 mt-12`}
   color: white;
 `;
 
 export const SettingBox = styled.div`
-  ${tw`mb-4 p-4 bg-white shadow rounded`}
+  ${tw`mb-4 mt-6 p-4 bg-white shadow rounded`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
   // width: 342px;
@@ -51,7 +52,7 @@ export const RadioContainer = styled.div`
 `;
 
 export const RadioButtonLabel = styled.label`
-  ${tw`mb-6 mr-6`}
+  ${tw`mb-6 mr-6 text-p3`}
   display: flex;
   align-items: center;
   color: #000;
@@ -99,4 +100,5 @@ export const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 15px;
 `;

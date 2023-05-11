@@ -170,8 +170,8 @@ function MyPage() {
           ...receiverTexts,
           {
             receiverId: addedReceiver.receiverId,
-            name: `이름: ${addedReceiver.name}`,
-            phone: `전화번호: ${addedReceiver.phoneNumber}`,
+            name: `이름 : ${addedReceiver.name}`,
+            phone: `전화번호 : ${addedReceiver.phoneNumber}`,
           },
         ]);
         setReceivers([
@@ -209,8 +209,8 @@ function MyPage() {
         setReceiverTexts(
           fetchedReceivers.map((receiver) => ({
             receiverId: receiver.receiverId,
-            name: `이름: ${receiver.name}`,
-            phone: `전화번호: ${receiver.phoneNumber}`,
+            name: `이름 : ${receiver.name}`,
+            phone: `전화번호 : ${receiver.phoneNumber}`,
           })),
         );
       }
@@ -236,8 +236,8 @@ function MyPage() {
         setReceiverTexts(
           newReceivers.map((receiver) => ({
             receiverId: receiver.receiverId,
-            name: `이름: ${receiver.name}`,
-            phone: `전화번호: ${receiver.phoneNumber}`,
+            name: `이름 : ${receiver.name}`,
+            phone: `전화번호 : ${receiver.phoneNumber}`,
           })),
         );
       }
@@ -281,8 +281,8 @@ function MyPage() {
   const createNewReceiverTexts = (validReceivers: any) =>
     validReceivers.map((receiver: any) => ({
       receiverId: receiver.receiverId,
-      name: `이름: ${receiver.name}`,
-      phone: `전화번호: ${receiver.phone}`,
+      name: `이름 : ${receiver.name}`,
+      phone: `전화번호 : ${receiver.phone}`,
     }));
 
   const focusOnInvalidReceiver = (invalidIndex: any) => {
@@ -387,10 +387,12 @@ function MyPage() {
           <UserInfo />
 
           <SettingBox>
-            <h3 className="text-h4">사후 전송 서비스 설정</h3>
-
+            <h4 className="text-h4">사후 전송 서비스 설정</h4>
+            <br />
             <IconWithText>
-              <h4>생존 여부 알림</h4>
+              <p className="text-p3" style={{ fontWeight: 'bold' }}>
+                생존 여부 알림
+              </p>
               <Icon
                 icon="line-md:question-circle-twotone"
                 onClick={openBottomModal}
@@ -425,7 +427,7 @@ function MyPage() {
                   color: receiverDisabled ? '#A9A9A9' : 'inherit',
                 }}
               >
-                <p className="text-p1">전화번호: {phone}</p>
+                <p className="text-p1">내 번호 : {phone}</p>
                 <p className="text-p1" style={{ fontSize: '0.8rem' }}>
                   개인정보 이용 및 수집에 동의하셨습니다.
                 </p>
@@ -433,7 +435,9 @@ function MyPage() {
               </div>
             )}
             <IconWithText>
-              <h4>내 기록 받아볼 사람</h4>
+              <p className="text-p3" style={{ fontWeight: 'bold' }}>
+                내 기록 받아볼 사람
+              </p>
               <Icon
                 icon="line-md:question-circle-twotone"
                 onClick={openBottomModal}

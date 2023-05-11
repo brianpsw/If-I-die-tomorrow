@@ -55,7 +55,7 @@ function UserInfo() {
         />
       )}
       <MyProfile>
-        <h3 className="text-h3">{loggedInUserNickname}님, 환영합니다</h3>
+        <h4 className="text-h4">{loggedInUserNickname}님, 환영합니다</h4>
         <Link to="/will">
           <IconWithText>
             <Icon icon="line-md:clipboard-list" />
@@ -64,10 +64,11 @@ function UserInfo() {
         </Link>
       </MyProfile>
       <SettingBox>
-        <h3 className="text-h3">내 정보</h3>
+        <h4 className="text-h4">내 정보</h4>
         <br />
         <p className="text-p1">이름: {loggedInUserName}</p>
         <p className="text-p1">이메일: {loggedInUserEmail}</p>
+        <br />
         <button onClick={handleLogout}>로그아웃</button>
       </SettingBox>
     </div>
