@@ -39,21 +39,12 @@ public class FamousSayingGenerator {
             reader.close();
         }
     
-        System.out.println(authors.size());
-        System.out.println(contents.size());
-
+        // Get a random item from the CSV file
         int index = rand.nextInt(authors.size());
         String content = contents.get(index)[0];
-    
-        // Return a random field from the row
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(row[0]);
-
-        // Get a random item from the CSV file
         String author = authors.get(index)[0];
 
         // Return a random field from the row
-//        sb.append(" -" + row[0].trim());
         return FamousSayingDto.builder()
                 .content(content)
                 .author(author)
