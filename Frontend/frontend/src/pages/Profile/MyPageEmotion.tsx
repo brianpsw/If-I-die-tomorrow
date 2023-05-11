@@ -100,5 +100,5 @@ export const IconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 15px;
+  font-size: 30px;
 `;
