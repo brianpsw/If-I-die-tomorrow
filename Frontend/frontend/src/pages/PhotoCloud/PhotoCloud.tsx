@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { categoryState } from '../../states/CategoryState';
+
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
@@ -14,6 +19,7 @@ interface EditOrDeleteEpic {
 }
 
 function PhotoCloud() {
+  const [category, setCategory] = useRecoilState(categoryState);
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
@@ -36,6 +42,26 @@ function PhotoCloud() {
   useEffect(() => {
     setSelectedCategory(params.categoryId!);
   }, [params.categoryId]);
+
+  const fetchData = async () => {
+    try {
+      const get_all_category = await defaultApi.get(
+        requests.GET_ALL_CATEGORY(),
+        {
+          withCredentials: true,
+        },
+      );
+      if (get_all_category.status === 200) {
+        setCategory(get_all_category.data);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [category]);
 
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {

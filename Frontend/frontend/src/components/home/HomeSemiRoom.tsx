@@ -21,7 +21,6 @@ interface CategoryIds {
 }
 
 function Scene() {
-  // const [preventDragClick, setPreventDragClick] = useState<boolean>(false);
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
   const [objectIds, setObjectIds] = useState<number[]>([]);
