@@ -62,5 +62,11 @@ public class UserController {
     public ResponseEntity<PersonalityResDto> insertPersonality(@RequestBody PersonalityReqDto req) throws NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.insertPersonality(req));
     }
-
+    
+    @DeleteMapping("/delete")
+    @Operation(summary = "회원 탈퇴", description = "회원 탈퇴. 기록은 한 달 후에 지워집니다. 그 전에 로그인하면 복원됨.")
+    public ResponseEntity<UserDto> deleteUser() throws NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteUser());
+    }
+    
 }
