@@ -5,14 +5,13 @@ import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
+import { RGBAFormat } from 'three';
 
 function Scene() {
   const navigate = useNavigate();
   const foxRef = useRef<THREE.Object3D>(null);
-  const homeRef = useRef<THREE.Object3D>(null);
   const pointRef: RefObject<THREE.Mesh> = useRef(null);
   const { gl, scene, camera, raycaster, mouse } = useThree();
-  const [isHomeVisible, setIsHomeVisible] = useState<boolean>(false);
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const [foxIsMoving, setFoxIsMoving] = useState<boolean>(false);
   // Texture
@@ -47,21 +46,21 @@ function Scene() {
   floorMesh.receiveShadow = true;
   scene.add(floorMesh);
 
-  const spotMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
+  const diaryMesh = new THREE.Mesh(
+    new THREE.CircleGeometry(5, 18),
     new THREE.MeshStandardMaterial({
-      color: 'pink',
+      color: '',
       transparent: true,
-      opacity: 0.5,
+      opacity: 0,
     }),
   );
-  spotMesh.position.set(-25, 0.005, 12);
-  spotMesh.rotation.x = -Math.PI / 2;
-  spotMesh.receiveShadow = true;
-  scene.add(spotMesh);
+  diaryMesh.position.set(-35, 0.005, -17.5);
+  diaryMesh.rotation.x = -Math.PI / 2;
+  diaryMesh.receiveShadow = true;
+  scene.add(diaryMesh);
 
   const movetoMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(5, 5),
+    new THREE.CircleGeometry(5, 5),
     new THREE.MeshStandardMaterial({
       color: 'black',
       transparent: true,
@@ -80,7 +79,7 @@ function Scene() {
   const walk = mixer.clipAction(fox.animations[2]);
   action1.play();
 
-  const home = useGLTF('models/low_poly_room.glb', true);
+  const diary = useGLTF('models/diary.glb', true);
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -147,52 +146,31 @@ function Scene() {
         }
 
         if (
-          Math.abs(spotMesh.position.x - foxRef.current.position.x) < 5 &&
-          Math.abs(spotMesh.position.z - foxRef.current.position.z) < 5
+          Math.abs(diaryMesh.position.x - foxRef.current.position.x) < 5 &&
+          Math.abs(diaryMesh.position.z - foxRef.current.position.z) < 5
         ) {
-          if (!isHomeVisible) {
-            setIsHomeVisible(() => true);
-            spotMesh.material.color.set('seagreen');
-            if (homeRef.current) {
-              gsap.to(homeRef.current.position, {
-                duration: 1,
-                y: 0.7,
-                ease: 'Back.easeOut',
-              });
-              gsap.to(camera.position, {
-                duration: 1,
-                y: 2,
-              });
-              gsap.to(camera, {
-                duration: 1,
-                zoom: 30,
-                onUpdate: function () {
-                  camera.updateProjectionMatrix();
-                },
-              });
-            }
-          }
-        } else if (isHomeVisible) {
-          setIsHomeVisible(() => false);
-
-          spotMesh.material.color.set('yellow');
-          if (homeRef.current) {
-            gsap.to(homeRef.current.position, {
-              duration: 0.5,
-              y: -7.5,
-            });
-            gsap.to(camera.position, {
-              duration: 1,
-              y: 5,
-            });
-            gsap.to(camera, {
-              duration: 1,
-              zoom: 50,
-              onUpdate: function () {
-                camera.updateProjectionMatrix();
-              },
-            });
-          }
+          diaryMesh.material.color.set('seagreen');
+          gsap.to(camera.position, {
+            duration: 1,
+            y: 2,
+          });
+          gsap.to(camera, {
+            duration: 1,
+            zoom: 30,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          gsap.to(camera, {
+            duration: 1,
+            near: -100,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          setTimeout(() => {
+            navigate('/diary');
+          }, 500);
         }
 
         if (
@@ -267,11 +245,10 @@ function Scene() {
         receiveShadow={true}
       />
       <primitive
-        ref={homeRef}
-        object={home.scene}
-        scale={[0.03, 0.03, 0.03]}
+        object={diary.scene}
+        scale={[0.3, 0.3, 0.3]}
         rotation={[0, -Math.PI / 3, 0]}
-        position={[-30, -7.5, 0]}
+        position={[-34, 2, -15]}
         receiveShadow={true}
       />
     </Suspense>
