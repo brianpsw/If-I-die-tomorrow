@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
@@ -20,11 +20,15 @@ interface PhotoCloudProps {
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
+  const categoryWrapper = useRef<HTMLDivElement>(null);
   const { setDeleteCategory, deleteCategory, cancelEdit } = props;
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
   const exchange = useRecoilValue(exchangeCategoryState);
+  const [scroll, setScroll] = useState<
+    'visible' | 'hidden' | 'scroll' | 'auto' | 'inherit' | 'initial' | 'unset'
+  >('scroll');
 
   const fetchData = async () => {
     try {
@@ -56,13 +60,21 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
     navigate(`/photo-cloud/${id}`);
   };
 
+  window.addEventListener('resize', () => {
+    if (categoryWrapper.current) {
+      categoryWrapper.current.clientWidth > window.innerWidth
+        ? setScroll(() => 'scroll')
+        : setScroll(() => 'hidden');
+    }
+  });
+
   return (
     <div
+      ref={categoryWrapper}
       style={{
         display: 'flex',
-        flexWrap: 'nowrap',
-        overflow: 'scroll',
         padding: '16px 24px',
+        overflowX: scroll,
       }}
     >
       {categoryData
