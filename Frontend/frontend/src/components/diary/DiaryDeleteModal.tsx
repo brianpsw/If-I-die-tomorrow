@@ -11,7 +11,7 @@ const ModalWrapper = styled.div`
   ${tw`text-p1 bg-gray-100 flex flex-col w-full mx-4 px-[16px] items-center border-solid rounded-xl shadow `}
 `;
 const ContentContainer = styled.div`
-  ${tw`flex flex-wrap w-full pt-1 h-[60px] bg-white rounded border-black my-4 px-[6px]`}
+  ${tw`flex flex-wrap w-full pt-4 h-[60px] bg-white rounded border-black my-4 px-[6px]`}
 `;
 
 interface DeleteConfirmModalProps {
@@ -32,15 +32,27 @@ const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
     <ModalOverlay>
       <ModalWrapper>
         <ContentContainer>
-          정말 삭제하시겠습니까?
-          <br />
-          삭제된 다이어리는 되돌릴 수 없습니다.
+          <p style={{ margin: '0 auto', textAlign: 'center' }}>
+            정말 삭제하시겠습니까?
+            <br />
+            삭제된 다이어리는 되돌릴 수 없습니다.
+          </p>
         </ContentContainer>
-        <div className="flex w-full justify-center my-4">
-          <Button onClick={handleConfirm} color="#B3E9EB" size="sm">
+        <div className="flex w-full justify-evenly my-4">
+          <Button
+            onClick={handleConfirm}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
             삭제하기
           </Button>
-          <Button onClick={onClose} color="#B3E9EB" size="sm">
+          <Button
+            onClick={onClose}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
             취소
           </Button>
         </div>

@@ -14,7 +14,7 @@ const ModalWrapper = styled.div`
   ${tw`bg-gray-100 flex flex-col w-full mx-[16px] px-[16px] items-center border-solid rounded-xl shadow `}
 `;
 const ContentContainer = styled.div`
-  ${tw`flex flex-wrap w-full pt-[4px] text-p2 h-[60px] bg-white rounded border-black my-[16px] px-[6px]`}
+  ${tw`flex flex-wrap w-full pt-4 text-p2 h-[60px] bg-white rounded border-black my-[16px] px-[6px]`}
 `;
 interface Bucket {
   bucketId: number;
@@ -89,11 +89,28 @@ function DeleteModal({
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
         <ContentContainer>
-          정말 삭제하시겠습니까? 삭제된 버킷은 되돌릴 수 없습니다.
+          <p style={{ margin: '0 auto', textAlign: 'center' }}>
+            정말 삭제하시겠습니까?
+            <br />
+            삭제된 버킷리스트는 되돌릴 수 없습니다.
+          </p>
         </ContentContainer>
-        <div className="flex w-full justify-center my-4">
-          <Button onClick={handleDelete} color="#B3E9EB" size="sm">
+        <div className="flex w-full justify-evenly my-4">
+          <Button
+            onClick={handleDelete}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
             삭제하기
+          </Button>
+          <Button
+            onClick={onClose}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
+            취소
           </Button>
         </div>
       </ModalWrapper>

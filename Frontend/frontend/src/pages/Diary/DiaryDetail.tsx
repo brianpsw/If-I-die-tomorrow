@@ -14,6 +14,7 @@ import EditDiaryModal from '../../components/common/EditDiaryModal';
 import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
+
 interface Comment {
   commentId: bigint;
   content: string;
@@ -80,6 +81,7 @@ const ContentTitle = styled.div`
   text-overflow: ellipsis;
   word-wrap: break-word;
 `;
+
 const Nickname = styled.p`
   ${tw`text-p3`}
 `;
@@ -316,7 +318,6 @@ function DiaryDetail() {
                 </DotIcon>
               )}
             </DiaryHeader>
-
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (
                 <img src={diary.imageUrl} alt="Diary" />

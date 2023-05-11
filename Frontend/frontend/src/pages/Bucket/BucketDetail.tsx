@@ -65,7 +65,7 @@ const DotIcon = styled.div`
   ${tw`flex`}
   position: absolute;
   right: 5%;
-  top: 18%;
+  top: 7%;
 `;
 
 const CommentDotIcon = styled.div`
@@ -84,11 +84,11 @@ const ContentTitle = styled.div`
 `;
 
 const Nickname = styled.p`
-  font-size: 15px;
+  ${tw`text-p3`}
 `;
 
-const CreateDate = styled.div`
-  font-size: 12px;
+const CreateDate = styled.p`
+  ${tw`text-p3`}
 `;
 
 const BucketImg = styled.div`
@@ -110,6 +110,11 @@ const CommentWrap = styled.div`
   // border: solid 1px white;
 `;
 
+const CommentLine = styled.p`
+  ${tw`mb-6 mt-6 text-h3`}
+  color: white;
+`;
+
 const CommentBox = styled.div`
   ${tw`mb-2 p-6 flex`}
   justify-content: space-between;
@@ -120,18 +125,33 @@ const CommentBox = styled.div`
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`mb-6 flex mx-auto w-full`}
+  ${tw`mb-6 flex w-full mx-auto`}
   color: white;
+  position: relative;
+  // border: solid 1px red;
+  height: 40px;
 `;
 
 const StyledInput = styled.input`
-  ${tw`flex-1 mr-2`}
+  ${tw``}
+  padding-right: 50px;
+  padding-left: 2%;
+  font-size: 1.5rem;
+  width: 100%;
   color: black;
   border-radius: 10px;
 `;
 
 const StyledButton = styled.button`
-  ${tw`text-white px-4 py-2 rounded`}
+  ${tw`px-4 py-2 rounded`}
+  position: absolute;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: gray;
+  height: 100%;
+  width: 50px;
+  right: 0;
+  // border: solid 1px black;
 `;
 
 const CommentNick = styled.div`
@@ -289,9 +309,7 @@ function BucketDetail() {
               <div>
                 <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
                 <Nickname>{bucket.nickname}</Nickname>
-                <div>
-                  {bucket.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
-                </div>
+
                 <CreateDate>
                   {new Date(bucket.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
@@ -307,9 +325,13 @@ function BucketDetail() {
                 <img src={bucket.imageUrl} alt="Bucket" />
               )}
             </BucketImg>
+            <div>
+              {bucket.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
+            </div>
             <BucketText>{bucket.content}</BucketText>
           </BucketWrap>
           <CommentWrap>
+            <CommentLine>댓글</CommentLine>
             <CommentForm
               bucketId={bucket.bucketId}
               type={false}

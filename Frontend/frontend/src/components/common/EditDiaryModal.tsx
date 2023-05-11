@@ -97,6 +97,7 @@ function EditDiaryModal({
     setUpdatePhoto(true);
     setImageUrl(null);
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newTitle.trim() === '' || newContent.trim() === '') {
