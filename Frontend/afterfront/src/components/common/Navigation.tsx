@@ -1,7 +1,14 @@
 'use client';
 
 import { Link, useLocation } from 'react-router-dom';
-
+import styled from 'styled-components';
+import tw from 'twin.macro';
+const FeedTab = styled.div`
+  ${tw`flex `}
+  justify-content: space-evenly;
+  color: white;
+  font-size: 16px;
+`;
 export function Navigation() {
   const location = useLocation();
   const pathname = location.pathname;
@@ -9,23 +16,28 @@ export function Navigation() {
     { href: '/bucket', name: '버킷리스트' },
     { href: '/photo-cloud', name: '사진첩' },
     { href: '/diary', name: '다이어리' },
-    { href: '/will', name: '유안장' },
+    { href: '/will', name: '유언장' },
   ];
   return (
-    <>
+    <FeedTab>
       {navLinks.map((link: any) => {
         const isActive = pathname.startsWith(link.href);
 
         return (
           <Link
-            className={isActive ? 'text-blue' : 'text-black'}
+            className={
+              isActive
+                ? 'cursor-pointer mb-12 inline-block pb-1 font-bold border-b-4'
+                : 'text-black'
+            }
             to={link.href}
             key={link.name}
+            style={isActive ? { borderColor: '#FFA9A9' } : {}}
           >
             {link.name}
           </Link>
         );
       })}
-    </>
+    </FeedTab>
   );
 }

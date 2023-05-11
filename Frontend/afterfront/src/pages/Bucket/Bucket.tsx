@@ -10,6 +10,7 @@ import TopBar from '../../components/common/TopBar';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import { Navigation } from '../../components/common/Navigation';
+import AuthWrapper from '../../api/AuthWrapper';
 
 interface Bucket {
   bucketId: number;
@@ -91,7 +92,7 @@ function BucketFeed() {
   };
 
   return (
-    <>
+    <AuthWrapper>
       <Navigation />
       <Container>
         <InfiniteScroll
@@ -132,7 +133,7 @@ function BucketFeed() {
           )}
         </InfiniteScroll>
       </Container>
-    </>
+    </AuthWrapper>
   );
 }
 

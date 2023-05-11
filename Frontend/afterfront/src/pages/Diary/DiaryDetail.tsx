@@ -6,6 +6,7 @@ import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import { userDataState } from '../../states/UserDataState';
+import AuthWrapper from '../../api/AuthWrapper';
 
 interface Diary {
   diaryId: number;
@@ -75,6 +76,7 @@ function DiaryDetail() {
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const userData = useRecoilValue(userDataState);
   const navigate = useNavigate();
+
   const fetchDiaryDetail = async () => {
     if (Object.keys(userData).length === 0) {
       return;
@@ -95,33 +97,34 @@ function DiaryDetail() {
     return <div>Loading...</div>;
   }
 
+  if (Object.keys(userData).length === 0) {
+    return <AuthWrapper></AuthWrapper>;
+  }
   const diary = diaryDetail;
 
   return (
-    <div>
-      <Background>
-        <TopBar title="" />
-        <Container>
-          <DiaryWrap>
-            <DiaryHeader>
-              <div>
-                <ContentTitle className="text-h3">{diary.title}</ContentTitle>
-                <Nickname>{diary.nickname}</Nickname>
-                <CreateDate>
-                  {new Date(diary.createdAt).toISOString().split('T')[0]}
-                </CreateDate>
-              </div>
-            </DiaryHeader>
-            <DiaryImg>
-              {diary.imageUrl && diary.imageUrl !== '""' && (
-                <img src={diary.imageUrl} alt="Diary" />
-              )}
-            </DiaryImg>
-            <DiaryText>{diary.content}</DiaryText>
-          </DiaryWrap>
-        </Container>
-      </Background>
-    </div>
+    <AuthWrapper>
+      <TopBar title="" />
+      <Container>
+        <DiaryWrap>
+          <DiaryHeader>
+            <div>
+              <ContentTitle className="text-h3">{diary.title}</ContentTitle>
+              <Nickname>{diary.nickname}</Nickname>
+              <CreateDate>
+                {new Date(diary.createdAt).toISOString().split('T')[0]}
+              </CreateDate>
+            </div>
+          </DiaryHeader>
+          <DiaryImg>
+            {diary.imageUrl && diary.imageUrl !== '""' && (
+              <img src={diary.imageUrl} alt="Diary" />
+            )}
+          </DiaryImg>
+          <DiaryText>{diary.content}</DiaryText>
+        </DiaryWrap>
+      </Container>
+    </AuthWrapper>
   );
 }
 

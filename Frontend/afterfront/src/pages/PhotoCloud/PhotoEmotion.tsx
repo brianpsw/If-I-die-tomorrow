@@ -6,7 +6,7 @@ import tw from 'twin.macro';
 const backgroundImg = '';
 
 export const Background = styled.div`
-  ${tw`text-p2`}
+  ${tw`text-p2 flex flex-row`}
   background-image: url(${backgroundImg});
   background-size: cover;
   background-position: center;
@@ -19,7 +19,7 @@ export const Background = styled.div`
 `;
 
 export const PhotoWrapper = styled.div`
-  ${tw`pb-[10px]`}
+  ${tw`pb-[10px] flex flex-col`}
 `;
 
 export const PhotoCardWrapper = styled.div`

@@ -2,11 +2,12 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import Button from '../../components/common/Button';
 import { Navigation } from '../../components/common/Navigation';
+import AuthWrapper from '../../api/AuthWrapper';
 
 const Container = styled.div`
   ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
@@ -16,11 +17,13 @@ const WillContentInputContainer = styled.textarea`
 `;
 
 function Will(): React.JSX.Element {
-  const navigate = useNavigate();
   const [isVideo, setIsVideo] = useState<boolean>(true);
   const userData = useRecoilValue(userDataState);
+  if (Object.keys(userData).length === 0) {
+    return <AuthWrapper></AuthWrapper>;
+  }
   return (
-    <div>
+    <AuthWrapper>
       <Navigation />
       <Container>
         {isVideo ? (
@@ -48,7 +51,7 @@ function Will(): React.JSX.Element {
         </Button>
         <img src={userData.will.signUrl} alt="사인" />
       </Container>
-    </div>
+    </AuthWrapper>
   );
 }
 

@@ -5,6 +5,7 @@ import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import { userDataState } from '../../states/UserDataState';
+import AuthWrapper from '../../api/AuthWrapper';
 
 interface Bucket {
   bucketId: number;
@@ -156,6 +157,9 @@ function BucketDetail() {
   const { bucketId } = useParams<{ bucketId: string }>();
   const userData = useRecoilValue(userDataState);
 
+  if (Object.keys(userData).length === 0) {
+    return <AuthWrapper></AuthWrapper>;
+  }
   let bucket: Bucket = {} as Bucket;
   const data = userData.buckets;
   data.forEach((item) => {
@@ -168,7 +172,7 @@ function BucketDetail() {
     return <div>Loading...</div>;
   }
   return (
-    <Background>
+    <AuthWrapper>
       <TopBar title="" />
       <Container>
         <BucketWrap>
@@ -189,7 +193,7 @@ function BucketDetail() {
           <BucketText>{bucket.content}</BucketText>
         </BucketWrap>
       </Container>
-    </Background>
+    </AuthWrapper>
   );
 }
 

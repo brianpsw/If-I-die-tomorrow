@@ -19,6 +19,7 @@ import { userDataState } from '../../states/UserDataState';
 import { Link } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import { Navigation } from '../../components/common/Navigation';
+import AuthWrapper from '../../api/AuthWrapper';
 
 interface Diary {
   diaryId: number;
@@ -91,7 +92,7 @@ function DiaryFeed() {
   };
 
   return (
-    <>
+    <AuthWrapper>
       <Navigation />
       <Container>
         <InfiniteScroll
@@ -151,7 +152,7 @@ function DiaryFeed() {
           )}
         </InfiniteScroll>
       </Container>
-    </>
+    </AuthWrapper>
   );
 }
 

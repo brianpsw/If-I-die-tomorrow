@@ -1,6 +1,7 @@
 import { useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
+import Room from './Room';
 
 function LoginForm({ setIsLogin }: any) {
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -46,6 +47,6 @@ export default function Home() {
   if (Object.keys(userData).length === 0) {
     return <LoginForm setIsLogin={setUserData}></LoginForm>;
   } else {
-    return <h1>Hello, Home!</h1>;
+    return <Room></Room>;
   }
 }
