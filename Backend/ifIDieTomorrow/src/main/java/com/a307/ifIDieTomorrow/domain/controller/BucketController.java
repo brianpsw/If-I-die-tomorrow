@@ -63,7 +63,7 @@ public class BucketController {
 	}
 	
 	@PutMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	@Operation(summary = "버킷 리스트 완료", description = "버킷 리스트를 완료합니다.")
+	@Operation(summary = "버킷 수정", description = "버킷 리스트를 수정합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException, IllegalArgumentException {
