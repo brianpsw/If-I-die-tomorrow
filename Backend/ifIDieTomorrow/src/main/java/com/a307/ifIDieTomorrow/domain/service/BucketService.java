@@ -16,7 +16,7 @@ import java.util.List;
 public interface BucketService {
 	CreateBucketResDto createBucket (CreateBucketDto data, MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException;
 	
-	CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, MetadataException, UnAuthorizedException;
+	CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, MetadataException, UnAuthorizedException, IllegalArgumentException;
 	
 	Long deleteBucket (Long bucketId) throws NotFoundException, UnAuthorizedException;
 	
