@@ -414,6 +414,7 @@ function CommentForm({
         ref={inputRef}
         type="text"
         value={content}
+        placeholder="댓글을 입력하세요"
         onChange={(e) => setContent(e.target.value)}
       />
       <StyledButton type="submit">작성</StyledButton>

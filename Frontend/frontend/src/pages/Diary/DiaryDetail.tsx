@@ -91,8 +91,22 @@ const CreateDate = styled.p`
 `;
 
 const DiaryImg = styled.div`
-  ${tw`mt-6 mb-6 flex flex-col mx-auto`}
+  ${tw`mt-2 mb-6 flex flex-col mx-auto`}
   width: 100%;
+`;
+
+const SecretOrNot = styled.div`
+  ${tw``}
+`;
+
+const SecretOrNotText = styled.p`
+  ${tw`text-smT pl-3 pr-3 pt-1 pb-1 mt-10`}
+  display: inline-block;
+  width: content;
+  border-radius: 10px;
+  // border: 1px solid black;
+  background-color: #ffa9a9;
+  font-weight: 400;
 `;
 
 const DiaryText = styled.div`
@@ -323,8 +337,12 @@ function DiaryDetail() {
                 <img src={diary.imageUrl} alt="Diary" />
               )}
             </DiaryImg>
-            <div>{diary.secret ? '비공개 다이어리' : '공개된 다이어리'}</div>
             <DiaryText>{diary.content}</DiaryText>
+            <SecretOrNot>
+              <SecretOrNotText>
+                {diary.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
+              </SecretOrNotText>
+            </SecretOrNot>
           </DiaryWrap>
           <CommentWrap>
             <CommentLine>댓글</CommentLine>
@@ -394,6 +412,7 @@ function CommentForm({
         ref={inputRef}
         type="text"
         value={content}
+        placeholder="댓글을 입력하세요"
         onChange={(e) => setContent(e.target.value)}
       />
       <StyledButton type="submit">작성</StyledButton>
