@@ -5,7 +5,6 @@ import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
-import { RGBAFormat } from 'three';
 
 function Scene() {
   const navigate = useNavigate();
@@ -59,18 +58,41 @@ function Scene() {
   diaryMesh.receiveShadow = true;
   scene.add(diaryMesh);
 
-  const movetoMesh = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 5),
+  const photoMesh = new THREE.Mesh(
+    new THREE.CircleGeometry(5, 18),
     new THREE.MeshStandardMaterial({
-      color: 'black',
       transparent: true,
-      opacity: 0.5,
+      opacity: 0,
     }),
   );
-  movetoMesh.position.set(25, 0.005, 12);
-  movetoMesh.rotation.x = -Math.PI / 2;
-  movetoMesh.receiveShadow = true;
-  scene.add(movetoMesh);
+  photoMesh.position.set(35, 0.005, 30);
+  photoMesh.rotation.x = -Math.PI / 2;
+  photoMesh.receiveShadow = true;
+  scene.add(photoMesh);
+
+  const willMesh = new THREE.Mesh(
+    new THREE.CircleGeometry(5, 18),
+    new THREE.MeshStandardMaterial({
+      transparent: true,
+      opacity: 0,
+    }),
+  );
+  willMesh.position.set(-21, 0.005, 39);
+  willMesh.rotation.x = -Math.PI / 2;
+  willMesh.receiveShadow = true;
+  scene.add(willMesh);
+
+  const bucketMesh = new THREE.Mesh(
+    new THREE.CircleGeometry(5, 18),
+    new THREE.MeshStandardMaterial({
+      transparent: true,
+      opacity: 0,
+    }),
+  );
+  bucketMesh.position.set(24, 0.005, -38);
+  bucketMesh.rotation.x = -Math.PI / 2;
+  bucketMesh.receiveShadow = true;
+  scene.add(bucketMesh);
 
   const fox = useGLTF('models/fox.glb', true);
   const foxModelMesh = fox.scene.children[0];
@@ -80,6 +102,9 @@ function Scene() {
   action1.play();
 
   const diary = useGLTF('models/diary.glb', true);
+  const photo = useGLTF('models/photoroom.glb', true);
+  const bucket = useGLTF('models/bucket.glb', true);
+  const will = useGLTF('models/letter2.glb', true);
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -174,10 +199,87 @@ function Scene() {
         }
 
         if (
-          Math.abs(movetoMesh.position.x - foxRef.current.position.x) < 1 &&
-          Math.abs(movetoMesh.position.z - foxRef.current.position.z) < 1
+          Math.abs(photoMesh.position.x - foxRef.current.position.x) < 5 &&
+          Math.abs(photoMesh.position.z - foxRef.current.position.z) < 5
         ) {
-          navigate('/photo-cloud/1');
+          photoMesh.material.color.set('seagreen');
+          gsap.to(camera.position, {
+            duration: 1,
+            y: 2,
+          });
+          gsap.to(camera, {
+            duration: 1,
+            zoom: 30,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          gsap.to(camera, {
+            duration: 1,
+            near: -100,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          setTimeout(() => {
+            navigate('/photo-cloud');
+          }, 500);
+        }
+
+        if (
+          Math.abs(willMesh.position.x - foxRef.current.position.x) < 5 &&
+          Math.abs(willMesh.position.z - foxRef.current.position.z) < 5
+        ) {
+          willMesh.material.color.set('seagreen');
+          gsap.to(camera.position, {
+            duration: 1,
+            y: 2,
+          });
+          gsap.to(camera, {
+            duration: 1,
+            zoom: 30,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          gsap.to(camera, {
+            duration: 1,
+            near: -100,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          setTimeout(() => {
+            navigate('/will');
+          }, 500);
+        }
+
+        if (
+          Math.abs(bucketMesh.position.x - foxRef.current.position.x) < 5 &&
+          Math.abs(bucketMesh.position.z - foxRef.current.position.z) < 5
+        ) {
+          bucketMesh.material.color.set('seagreen');
+          gsap.to(camera.position, {
+            duration: 1,
+            y: 2,
+          });
+          gsap.to(camera, {
+            duration: 1,
+            zoom: 30,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          gsap.to(camera, {
+            duration: 1,
+            near: -100,
+            onUpdate: function () {
+              camera.updateProjectionMatrix();
+            },
+          });
+          setTimeout(() => {
+            navigate('/bucket');
+          }, 500);
         }
       } else {
         walk.stop();
@@ -246,9 +348,30 @@ function Scene() {
       />
       <primitive
         object={diary.scene}
-        scale={[0.3, 0.3, 0.3]}
+        scale={[0.5, 0.5, 0.5]}
         rotation={[0, -Math.PI / 3, 0]}
         position={[-34, 2, -15]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={photo.scene}
+        scale={[0.6, 0.6, 0.6]}
+        rotation={[0, -Math.PI / 1.5, 0]}
+        position={[35.5, 0, 31]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={bucket.scene}
+        scale={[0.2, 0.2, 0.2]}
+        rotation={[0, -Math.PI / 3, 0]}
+        position={[21, 0.005, -36]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={will.scene}
+        scale={[0.005, 0.005, 0.005]}
+        rotation={[0, -Math.PI / 3, 0]}
+        position={[-21, 0.005, 39]}
         receiveShadow={true}
       />
     </Suspense>
