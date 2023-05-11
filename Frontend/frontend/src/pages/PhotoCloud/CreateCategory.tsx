@@ -161,20 +161,38 @@ function CreateCategory() {
                     return (
                       <div
                         key={ex}
-                        className="w-2/6 h-20 bg-pink_100 rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
+                        className="w-2/6 h-20 min-h-[60px] bg-pink_100 rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
                         onClick={() => handleClickObject(parseInt(ex))}
                       >
-                        <p className="text-center text-p2">{exchange[ex]}</p>
+                        <div
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            backgroundSize: '500%',
+                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: `${exchange[ex]}`,
+                          }}
+                        ></div>
                       </div>
                     );
                   } else {
                     return (
                       <div
                         key={ex}
-                        className="w-2/6 h-20 bg-white rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
+                        className="w-2/6 h-20 min-h-[60px] bg-white rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
                         onClick={() => setSelectedObject(parseInt(ex))}
                       >
-                        <p className="text-center text-p2">{exchange[ex]}</p>
+                        <div
+                          style={{
+                            width: '60px',
+                            height: '60px',
+                            backgroundSize: '500%',
+                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
+                            backgroundRepeat: 'no-repeat',
+                            backgroundPosition: `${exchange[ex]}`,
+                          }}
+                        ></div>
                       </div>
                     );
                   }

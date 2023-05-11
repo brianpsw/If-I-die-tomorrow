@@ -80,12 +80,14 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
                   justifyContent: 'center',
                   alignItems: 'center',
                   marginRight: '10px',
+                  backgroundSize: '500%',
+                  backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: `${exchange[category.objectId]}`,
                 }}
                 key={category.categoryId}
                 onClick={() => handleCategory(category.categoryId)}
-              >
-                <p className="text-smT">{exchange[category.objectId]}</p>
-              </div>
+              ></div>
             );
           })
         : null}
