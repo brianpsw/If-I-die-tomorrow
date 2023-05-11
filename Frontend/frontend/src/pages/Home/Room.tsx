@@ -16,7 +16,7 @@ function Scene() {
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const [foxIsMoving, setFoxIsMoving] = useState<boolean>(false);
   // Texture
-  const floorTexture = useTexture('images/example.png');
+  const floorTexture = useTexture('images/test2.png');
   floorTexture.wrapS = THREE.RepeatWrapping;
   floorTexture.wrapT = THREE.RepeatWrapping;
   floorTexture.repeat.x = 1;
@@ -37,7 +37,7 @@ function Scene() {
 
   // Mesh
   const floorMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(1000, 1000),
+    new THREE.PlaneGeometry(100, 100),
     new THREE.MeshStandardMaterial({
       map: floorTexture,
     }),
