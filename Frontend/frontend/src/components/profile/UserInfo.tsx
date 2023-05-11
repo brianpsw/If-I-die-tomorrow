@@ -35,7 +35,7 @@ function UserInfo() {
 
   const handleLogout = async () => {
     try {
-      await defaultApi.post(requests.POST_LOGOUT(), { withCredentials: true });
+      await defaultApi.get(requests.POST_LOGOUT(), { withCredentials: true });
       localStorage.removeItem('user');
       setIsLoggedIn(null);
       localStorage.removeItem('recoil-persist');
