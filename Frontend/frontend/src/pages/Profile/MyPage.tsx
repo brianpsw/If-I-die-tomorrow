@@ -37,6 +37,9 @@ function MyPage() {
   const [consent, setConsent] = useState<string | null>(
     sendAgree ? 'agree' : 'disagree',
   );
+  const [modalConsent, setModalConsent] = useState<string | null>(
+    sendAgree ? 'agree' : 'disagree',
+  );
 
   // bottom 모달 열고 닫기
   const openBottomModal = () => {
@@ -53,11 +56,22 @@ function MyPage() {
   }) => {
     setPhone(submittedData.phone);
     setServiceConsent(submittedData.serviceConsent);
-    setConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
+    setModalConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
+    // setConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
     setSubmitted(true);
     // PATCH_AGREEMENT API 호출
     if (submittedData.serviceConsent && userId) {
       await updateAgreementAndLocalStorage(true, submittedData.phone);
+    }
+    // Modal 닫기
+    setShowModal(false);
+  };
+
+  const handleCloseFromModal = (serviceConsent: boolean) => {
+    setShowModal(false);
+    if (!serviceConsent) {
+      setConsent('disagree');
+      setReceiverDisabled(true);
     }
   };
 
@@ -410,11 +424,7 @@ function MyPage() {
     <div>
       {showModal && (
         <ServiceAgreeModal
-          onClose={() => {
-            setShowModal(false);
-            setConsent('disagree');
-            setReceiverDisabled(true);
-          }}
+          onClose={handleCloseFromModal}
           onSubmit={handleSubmitFromModal}
         />
       )}
