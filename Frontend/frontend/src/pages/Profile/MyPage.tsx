@@ -108,7 +108,6 @@ function MyPage() {
         : user.sendAgree;
       setConsent(storedSendAgree ? 'agree' : 'disagree');
     }
-    console.log('sendAgree:', sendAgree);
   }, [user]);
 
   // 리시버 관련 state 정의
@@ -240,6 +239,20 @@ function MyPage() {
 
     fetchReceivers();
   }, []);
+
+  // 비동의시 리시버 정보란 비활성화 유지하도록
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const storedSendAgree = storedUser.hasOwnProperty('sendAgree')
+      ? storedUser.sendAgree
+      : user?.sendAgree;
+
+    if (storedSendAgree === false) {
+      setReceiverDisabled(true);
+    } else {
+      setReceiverDisabled(false);
+    }
+  }, [user]);
 
   // 리시버 삭제하기
   const deleteReceiverFromAPI = async (receiverId: number) => {
@@ -397,7 +410,11 @@ function MyPage() {
     <div>
       {showModal && (
         <ServiceAgreeModal
-          onClose={() => setShowModal(false)}
+          onClose={() => {
+            setShowModal(false);
+            setConsent('disagree');
+            setReceiverDisabled(true);
+          }}
           onSubmit={handleSubmitFromModal}
         />
       )}
@@ -507,14 +524,24 @@ function MyPage() {
                   </div>
                   <Icon
                     icon="line-md:remove"
-                    onClick={() => handleDelete(index)}
-                    style={{ cursor: 'pointer' }}
+                    onClick={
+                      receiverDisabled ? undefined : () => handleDelete(index)
+                    }
+                    style={
+                      receiverDisabled
+                        ? { color: '#A9A9A9', cursor: 'default' }
+                        : { cursor: 'pointer' }
+                    }
                   />
                 </Receiver>
               ))}
             {receivers.length < 3 && receiverTexts.length < 3 && (
               <IconContainer>
-                <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+                <Icon
+                  icon="line-md:plus-circle"
+                  onClick={receiverDisabled ? undefined : addReceiver}
+                  style={receiverDisabled ? { color: '#A9A9A9' } : {}}
+                />
               </IconContainer>
             )}
           </SettingBox>

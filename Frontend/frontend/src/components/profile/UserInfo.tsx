@@ -48,12 +48,6 @@ function UserInfo() {
 
   return (
     <div>
-      {showModal && (
-        <ServiceAgreeModal
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmitFromModal}
-        />
-      )}
       <MyProfile>
         <h4 className="text-h4">{loggedInUserNickname}님, 환영합니다</h4>
         <Link to="/will">
