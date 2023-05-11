@@ -21,14 +21,16 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"FROM Bucket " +
 			"WHERE userId = :userId " +
 			"ORDER BY complete, updatedAt DESC ")
-	List<GetBucketByUserResDto> findAllByUserId (@Param("userId") Long userId);
+	List<GetBucketByUserResDto> findAllBucketByUserId (@Param("userId") Long userId);
+	
+	List<Bucket> findAllByUserId (Long userId);
 	
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto" +
 			"(b.bucketId, b.userId, u.nickname, b.title, b.content, b.complete, b.imageUrl, b.secret, b.createdAt, b.updatedAt) " +
 			"FROM Bucket b " +
 			"JOIN User u " +
 			"ON b.userId = u.userId " +
-			"WHERE b.bucketId = :bucketId")
+			"WHERE b.bucketId = :bucketId AND u.deleted = false")
 	Optional<GetBucketResDto> findByBucketIdWithUserNickName (@Param("bucketId") Long bucketId);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto" +
@@ -37,7 +39,7 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"JOIN User u " +
 			"ON b.userId = u.userId " +
 			"WHERE b.secret = false " +
-			"AND b.report < :reportLimit " +
+			"AND b.report < :reportLimit AND u.deleted = false " +
 			"ORDER BY b.createdAt DESC")
 	Page<GetBucketResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
@@ -46,7 +48,7 @@ public interface BucketRepository extends JpaRepository<Bucket, Long> {
 			"FROM Bucket b " +
 			"JOIN User u " +
 			"ON b.userId = u.userId " +
-			"WHERE b.userId = :userId " +
+			"WHERE b.userId = :userId AND u.deleted = false " +
 			"ORDER BY b.createdAt ASC")
 	List<GetBucketResDto> findAllByUserIdWithUserNickName (@Param("userId") Long userId);
 

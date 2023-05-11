@@ -113,8 +113,8 @@ public class BucketRepositoryTest {
 		);
 		
 		// When
-		List<GetBucketByUserResDto> result1 = testBucketRepository.findAllByUserId(1L);
-		List<GetBucketByUserResDto> result2 = testBucketRepository.findAllByUserId(2L);
+		List<GetBucketByUserResDto> result1 = testBucketRepository.findAllBucketByUserId(1L);
+		List<GetBucketByUserResDto> result2 = testBucketRepository.findAllBucketByUserId(2L);
 		
 		// Then
 		assertThat(result1).hasSize(2);

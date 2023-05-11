@@ -29,4 +29,6 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
 	void deleteAllByCategory_CategoryId (@Param("categoryId") Long categoryId);
 	
 	Optional<Photo> findByPhotoId (Long photoId);
+	
+	List<Photo> findAllByUserId (Long userId);
 }

@@ -34,4 +34,6 @@ public interface UserService extends OAuth2UserService<OAuth2UserRequest, OAuth2
 	PersonalityResDto insertPersonality(PersonalityReqDto req) throws NotFoundException;
 
     UserDto patchUserAfter (PatchUserAfterDto data, Long userId) throws IllegalArgumentException, NotFoundException;
+    
+    UserDto deleteUser () throws NotFoundException;
 }

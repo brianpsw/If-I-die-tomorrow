@@ -68,7 +68,7 @@ public class BucketServiceImpl implements BucketService {
 	
 	@Override
 	public List<GetBucketByUserResDto> getBucketByUserId () {
-		return bucketRepository.findAllByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		return bucketRepository.findAllBucketByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 	
 	@Override

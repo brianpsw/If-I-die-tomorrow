@@ -65,7 +65,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         log.debug(user.getAttributes().toString());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         Optional<User> savedUser = userRepository.findByEmail(userInfo.getEmail());
-        User principal = new User();
+        User principal;
         if (savedUser.isPresent()) {
             User existedUser = savedUser.get();
             if (providerType != existedUser.getProviderType()) {
@@ -74,7 +74,10 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
                                 " account. Please use your " + existedUser.getProviderType() + " account to login."
                 );
             }
-            principal = updateUser(savedUser.get(), userInfo);
+            
+            if (existedUser.getDeleted()) existedUser.setDeleted(false);
+            
+            principal = updateUser(existedUser, userInfo);
         } else {
             // DB에 저장된 user가 없으면
             principal = createUser(userInfo, providerType);
@@ -161,6 +164,16 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         user.setSendAgree(data.getAgree());
         user.setPhone(data.getPhone());
         
+        return new UserDto(userRepository.save(user));
+    }
+    
+    @Override
+    public UserDto deleteUser () throws NotFoundException {
+        User user = userRepository.findById(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+                .orElseThrow(() -> new NotFoundException("존재하지 않는 유저입니다."));
+        
+        user.setDeleted(true);
+    
         return new UserDto(userRepository.save(user));
     }
     
