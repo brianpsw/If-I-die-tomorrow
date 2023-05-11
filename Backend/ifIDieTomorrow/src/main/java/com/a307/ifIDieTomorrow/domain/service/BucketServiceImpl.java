@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 
@@ -90,12 +92,15 @@ public class BucketServiceImpl implements BucketService {
 	}
 	
 	@Override
-	public CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws NotFoundException, ImageProcessingException, IOException, MetadataException, UnAuthorizedException {
+	public CreateBucketResDto updateBucket (UpdateBucketDto data, MultipartFile photo) throws NotFoundException, ImageProcessingException, IOException, MetadataException, UnAuthorizedException, IllegalArgumentException {
 		Bucket bucket = bucketRepository.findByBucketId(data.getBucketId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 버킷 ID 입니다."));
 		
 		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new UnAuthorizedException("해당 버킷을 수정할 권한이 없습니다.");
+		
+		LocalDate then  = LocalDate.parse(data.getComplete(), DateTimeFormatter.ISO_DATE);
+		if (LocalDate.now().isBefore(then)) throw new IllegalArgumentException("버킷 완료 날짜는 오늘 이후일 수 없습니다.");
 		
 		// 사진이 업데이트되었고 기존에 사진이 있었다면 S3에서 사진을 삭제함
 		if (data.getUpdatePhoto() && bucket.getImageUrl() != null && !"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());

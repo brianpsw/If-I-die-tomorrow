@@ -31,7 +31,7 @@ public class BucketController {
 	private final BucketService bucketService;
 	
 	@PostMapping("/title")
-	@Operation(summary = "버킷 리스트 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
+	@Operation(summary = "버킷 리스트 제목 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucketWithTitle(
 			@RequestBody CreateBucketWithTitleDto data) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(data));
@@ -63,7 +63,7 @@ public class BucketController {
 	}
 	
 	@PutMapping(value = "", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	@Operation(summary = "버킷 리스트 수정", description = "버킷 리스트를 수정합니다.")
+	@Operation(summary = "버킷 리스트 완료", description = "버킷 리스트를 완료합니다.")
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException, IllegalArgumentException {
