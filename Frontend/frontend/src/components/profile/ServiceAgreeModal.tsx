@@ -8,6 +8,11 @@ interface SubmitConfirmModalProps {
   onSubmit: (submittedData: { phone: string; serviceConsent: boolean }) => void;
 }
 
+const isValidPhoneNumber = (phone: string) => {
+  const phoneRegex = /^010\d{8}$/;
+  return phoneRegex.test(phone);
+};
+
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
   top:0;
@@ -35,6 +40,13 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   };
 
   const handleSubmit = () => {
+    if (!isValidPhoneNumber(phone)) {
+      alert(
+        '전화번호 형식이 올바르지 않습니다. 010으로 시작하는 11자리 숫자를 입력해주세요.',
+      );
+      return;
+    }
+
     if (serviceConsent) {
       setSubmitted(true);
       onSubmit({ phone, serviceConsent });
@@ -43,7 +55,6 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
       alert('개인정보 수집 및 이용에 동의해주세요.');
     }
   };
-
   return (
     <ModalOverlay>
       <ModalWrapper>
@@ -66,7 +77,7 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
           </div>
         ) : (
           <div style={{ width: '100%' }}>
-            <div style={{ display: 'flex', marginBottom: '8%' }}>
+            <div style={{ display: 'flex', marginBottom: '2%' }}>
               <p className="text-p2" style={{ marginRight: '3%' }}>
                 내 번호 :
               </p>
@@ -83,7 +94,9 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
                 }}
               />
             </div>
-            <div style={{ marginRight: '3%' }}>
+            <span> " - " 을 제외하고 입력해주세요.</span>
+
+            <div style={{ marginRight: '3%', marginTop: '8%' }}>
               <input
                 type="checkbox"
                 checked={serviceConsent}
