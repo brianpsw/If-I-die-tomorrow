@@ -5,7 +5,6 @@ import Question from '../../components/diary/Question';
 import Button from '../../components/common/Button';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
-import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 

@@ -7,22 +7,24 @@ import { defaultApi } from '../../api/axios';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import Button from './Button';
 import { Icon } from '@iconify/react';
+import CheckedIcon from '../../assets/icons/checked_box.svg';
+import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 
 const ModalOverlay = styled.div`
-  ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
+  ${tw`text-p1 flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`p-6 bg-white flex flex-col border-solid rounded-xl w-[380px] shadow font-sans justify-between`}
-  height: 70%;
+  ${tw`p-8 bg-white border-solid rounded-xl w-[380px] shadow font-sans justify-between`}
+  height: 80%;
   overflow-y: auto;
   position: relative;
 `;
 
 const ContentEditForm = styled.form`
-  ${tw`flex flex-col`}
-  justify-content: space-around;
+  ${tw`flex flex-col justify-between`}
   // border: solid 1px black;
+  height: 90%;
 `;
 
 const EditSection = styled.div`
@@ -50,6 +52,7 @@ const ContentEditInput = styled.textarea`
   ${tw``}
   border: 1px solid #ccc;
   width: 100%;
+  height: 100px;
   border-radius: 4px;
   padding: 6px 12px;
 `;
@@ -57,12 +60,17 @@ const ContentEditInput = styled.textarea`
 const ButtonWrap = styled.div`
   ${tw`flex`}
   justify-content: center;
-  // border-top: solid 1px black;
+  // border: 1px solid #ccc;
+  padding-top: 15px;
+  padding-bottom: 20px;
 `;
 
 const DeleteImageButton = styled.button`
-  ${tw`px-2 py-1 text-xs rounded mt-2`}
+  ${tw`flex px-2 py-1 rounded mt-2`}
+  justify-content: flex-end;
   color: black;
+  width: 100%;
+  text-align: center;
 `;
 
 interface EditBucketModalProps {
@@ -178,14 +186,16 @@ function EditBucketModal({
     }
   };
 
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewSecret(e.target.checked);
+  const handleCheckboxChange = () => {
+    setNewSecret(!newSecret);
   };
 
   return (
     <ModalOverlay>
       <ModalWrapper>
-        <h2 className="text-h3 text-center">버킷리스트 수정</h2>
+        <h2 className="text-h4 text-center" style={{ marginBottom: '5%' }}>
+          버킷리스트 수정
+        </h2>
         <Icon
           icon="line-md:remove"
           onClick={onClose}
@@ -208,15 +218,15 @@ function EditBucketModal({
               {/* <div className="image-upload-container w-full h-auto overflow-hidden"> */}
               {imageUrl ? (
                 <div className="relative">
+                  <DeleteImageButton onClick={removeImage}>
+                    <Icon icon="line-md:remove" />
+                  </DeleteImageButton>
                   <img
                     className="image-upload-preview w-auto h-full bg-auto "
                     src={imageUrl}
                     alt="upload-preview"
                     onClick={handleClick}
                   />
-                  <DeleteImageButton onClick={removeImage}>
-                    삭제
-                  </DeleteImageButton>
                 </div>
               ) : (
                 <label
@@ -247,14 +257,14 @@ function EditBucketModal({
           </EditSection>
           <div className="flex justify-start items-center">
             <EditSection>
-              <EditLabel htmlFor="secret">나만보기</EditLabel>
-              <input
-                className="text-left"
-                type="checkbox"
-                id="secret"
-                checked={newSecret}
-                onChange={handleCheckboxChange}
-              />
+              <EditLabel htmlFor="secret">피드 공개여부 체크</EditLabel>
+              <div onClick={handleCheckboxChange}>
+                {newSecret ? (
+                  <img src={UnCheckedIcon} alt="unchecked icon" />
+                ) : (
+                  <img src={CheckedIcon} alt="checked icon" />
+                )}
+              </div>
             </EditSection>
           </div>
           <ButtonWrap>
