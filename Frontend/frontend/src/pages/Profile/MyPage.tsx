@@ -491,9 +491,6 @@ function MyPage() {
                 <Icon icon="line-md:plus-circle" onClick={addReceiver} />
               </IconContainer>
             )}
-            <StyledButton color="#FFA9A9" size="sm" onClick={handleSave}>
-              저장
-            </StyledButton>
           </SettingBox>
         </Container>
       </Background>

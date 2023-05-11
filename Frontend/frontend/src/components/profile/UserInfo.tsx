@@ -1,9 +1,11 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Icon } from '@iconify/react';
-import { Link } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { Link, useNavigate } from 'react-router-dom';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
 import ServiceAgreeModal from './ServiceAgreeModal';
+import requests from '../../api/config';
+import { defaultApi } from '../../api/axios';
 import {
   MyProfile,
   SettingBox,
@@ -12,6 +14,7 @@ import {
 
 function UserInfo() {
   const user = useRecoilValue(userState);
+  const [isLoggedIn, setIsLoggedIn] = useRecoilState(userState);
   const loggedInUserName = user ? user.name : null;
   const loggedInUserEmail = user ? user.email : null;
   const loggedInUserNickname = user ? user.nickname : null;
@@ -19,6 +22,7 @@ function UserInfo() {
   const [phone, setPhone] = useState('');
   const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmitFromModal = (submittedData: {
     phone: string;
@@ -29,11 +33,16 @@ function UserInfo() {
     setSubmitted(true);
   };
 
-  const handleSubmit = () => {
-    if (serviceConsent) {
-      setSubmitted(true);
-    } else {
-      alert('개인정보 수집 및 이용에 동의해주세요.');
+  const handleLogout = async () => {
+    try {
+      await defaultApi.post(requests.POST_LOGOUT(), { withCredentials: true });
+      localStorage.removeItem('user');
+      setIsLoggedIn(null);
+      localStorage.removeItem('recoil-persist');
+      alert('로그아웃 성공!');
+    } catch (err) {
+      console.error(err);
+      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
     }
   };
 
@@ -59,6 +68,7 @@ function UserInfo() {
         <br />
         <p className="text-p1">이름: {loggedInUserName}</p>
         <p className="text-p1">이메일: {loggedInUserEmail}</p>
+        <button onClick={handleLogout}>로그아웃</button>
       </SettingBox>
     </div>
   );
