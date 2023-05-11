@@ -3,10 +3,12 @@ package com.a307.ifIDieTomorrow.domain.repository;
 import com.a307.ifIDieTomorrow.domain.dto.will.GetWillByUserResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Will;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +23,11 @@ public interface WillRepository extends JpaRepository<Will, Long> {
 	
 	// Entity 를 가져올 때
 	Will findByUserId (Long userId);
+	
+	@Modifying
+	@Transactional
+	@Query("DELETE " +
+			"FROM Will " +
+			"WHERE userId = :userId")
+	void deleteByUserId (@Param("userId") Long userId);
 }

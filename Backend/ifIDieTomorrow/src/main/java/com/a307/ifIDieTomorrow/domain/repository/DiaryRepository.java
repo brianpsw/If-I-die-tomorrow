@@ -29,7 +29,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
-			"WHERE d.diaryId = :diaryId")
+			"WHERE d.diaryId = :diaryId AND u.deleted = false")
 	Optional<GetDiaryResDto> findByIdWithUserNickName(@Param("diaryId") Long diaryId);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
@@ -38,7 +38,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
 			"WHERE d.secret = false " +
-			"AND d.report < :reportLimit " +
+			"AND d.report < :reportLimit AND u.deleted = false " +
 			"ORDER BY d.createdAt DESC")
 	Page<GetDiaryResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
@@ -47,11 +47,11 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
-			"WHERE d.userId = :userId " +
+			"WHERE d.userId = :userId AND u.deleted = false " +
 			"ORDER BY d.createdAt ASC")
 	List<GetDiaryResDto> findAllByUserIdIdWithUserNickName(@Param("userId") Long userId);
 
 	List<Diary> findAllByReportGreaterThanEqual(Integer reportLimit);
-
-
+	
+	List<Diary> findAllByUserId (Long userId);
 }
