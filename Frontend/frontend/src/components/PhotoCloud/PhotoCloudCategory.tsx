@@ -4,6 +4,8 @@ import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
 import { exchangeCategoryState } from '../../states/CategoryState';
 
+import { CategoryWrapper } from '../../pages/PhotoCloud/PhotoCloudEmotion';
+
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
@@ -20,7 +22,6 @@ interface PhotoCloudProps {
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
-  const categoryWrapper = useRef<HTMLDivElement>(null);
   const { setDeleteCategory, deleteCategory, cancelEdit } = props;
   const navigate = useNavigate();
   const { categoryId } = useParams();
@@ -60,23 +61,8 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
     navigate(`/photo-cloud/${id}`);
   };
 
-  window.addEventListener('resize', () => {
-    if (categoryWrapper.current) {
-      categoryWrapper.current.clientWidth > window.innerWidth
-        ? setScroll(() => 'scroll')
-        : setScroll(() => 'hidden');
-    }
-  });
-
   return (
-    <div
-      ref={categoryWrapper}
-      style={{
-        display: 'flex',
-        padding: '16px 24px',
-        overflowX: scroll,
-      }}
-    >
+    <CategoryWrapper>
       {categoryData
         ? categoryData.map((category: CategoryInfo) => {
             if (categoryId === category.categoryId.toString()) {
@@ -151,7 +137,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
           </Link>
         </div>
       ) : null}
-    </div>
+    </CategoryWrapper>
   );
 }
 
