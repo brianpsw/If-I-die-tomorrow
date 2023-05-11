@@ -37,6 +37,9 @@ function MyPage() {
   const [consent, setConsent] = useState<string | null>(
     sendAgree ? 'agree' : 'disagree',
   );
+  const [modalConsent, setModalConsent] = useState<string | null>(
+    sendAgree ? 'agree' : 'disagree',
+  );
 
   // bottom 모달 열고 닫기
   const openBottomModal = () => {
@@ -53,11 +56,22 @@ function MyPage() {
   }) => {
     setPhone(submittedData.phone);
     setServiceConsent(submittedData.serviceConsent);
-    setConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
+    setModalConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
+    // setConsent(submittedData.serviceConsent ? 'agree' : 'disagree');
     setSubmitted(true);
     // PATCH_AGREEMENT API 호출
     if (submittedData.serviceConsent && userId) {
       await updateAgreementAndLocalStorage(true, submittedData.phone);
+    }
+    // Modal 닫기
+    setShowModal(false);
+  };
+
+  const handleCloseFromModal = (serviceConsent: boolean) => {
+    setShowModal(false);
+    if (!serviceConsent) {
+      setConsent('disagree');
+      setReceiverDisabled(true);
     }
   };
 
@@ -108,7 +122,6 @@ function MyPage() {
         : user.sendAgree;
       setConsent(storedSendAgree ? 'agree' : 'disagree');
     }
-    console.log('sendAgree:', sendAgree);
   }, [user]);
 
   // 리시버 관련 state 정의
@@ -158,10 +171,32 @@ function MyPage() {
     }
   };
 
+  // 이름과 전화번호 검사 함수
+  const isNameValid = (name: string) => {
+    const regex = /^[가-힣a-zA-Z\s]*$/;
+    return regex.test(name);
+  };
+
+  const isPhoneNumberValid = (phoneNumber: string) => {
+    const regex = /^\d{10,11}$/;
+    return regex.test(phoneNumber);
+  };
+
   // 새 리시버를 추가하고 API에 저장
   const addReceiver = async () => {
     const lastIndex = receivers.length - 1;
     const lastReceiver = receivers[lastIndex];
+
+    // 유효성 검사를 추가
+    if (!isPhoneNumberValid(lastReceiver.phone)) {
+      alert('전화번호는 "-"을 제외한 10자리 또는 11자리의 숫자여야 합니다.');
+      return;
+    }
+
+    if (!isNameValid(lastReceiver.name)) {
+      alert('이름에는 숫자나 특수문자를 포함할 수 없습니다.');
+      return;
+    }
 
     if (lastReceiver.name.trim() !== '' && lastReceiver.phone.trim() !== '') {
       const addedReceiver = await addReceiverToAPI(lastReceiver);
@@ -218,6 +253,20 @@ function MyPage() {
 
     fetchReceivers();
   }, []);
+
+  // 비동의시 리시버 정보란 비활성화 유지하도록
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    const storedSendAgree = storedUser.hasOwnProperty('sendAgree')
+      ? storedUser.sendAgree
+      : user?.sendAgree;
+
+    if (storedSendAgree === false) {
+      setReceiverDisabled(true);
+    } else {
+      setReceiverDisabled(false);
+    }
+  }, [user]);
 
   // 리시버 삭제하기
   const deleteReceiverFromAPI = async (receiverId: number) => {
@@ -375,7 +424,7 @@ function MyPage() {
     <div>
       {showModal && (
         <ServiceAgreeModal
-          onClose={() => setShowModal(false)}
+          onClose={handleCloseFromModal}
           onSubmit={handleSubmitFromModal}
         />
       )}
@@ -485,14 +534,24 @@ function MyPage() {
                   </div>
                   <Icon
                     icon="line-md:remove"
-                    onClick={() => handleDelete(index)}
-                    style={{ cursor: 'pointer' }}
+                    onClick={
+                      receiverDisabled ? undefined : () => handleDelete(index)
+                    }
+                    style={
+                      receiverDisabled
+                        ? { color: '#A9A9A9', cursor: 'default' }
+                        : { cursor: 'pointer' }
+                    }
                   />
                 </Receiver>
               ))}
             {receivers.length < 3 && receiverTexts.length < 3 && (
               <IconContainer>
-                <Icon icon="line-md:plus-circle" onClick={addReceiver} />
+                <Icon
+                  icon="line-md:plus-circle"
+                  onClick={receiverDisabled ? undefined : addReceiver}
+                  style={receiverDisabled ? { color: '#A9A9A9' } : {}}
+                />
               </IconContainer>
             )}
           </SettingBox>

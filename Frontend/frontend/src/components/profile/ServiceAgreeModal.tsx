@@ -4,7 +4,7 @@ import tw from 'twin.macro';
 import Button from '../common/Button';
 
 interface SubmitConfirmModalProps {
-  onClose: () => void;
+  onClose: (serviceConsent: boolean) => void;
   onSubmit: (submittedData: { phone: string; serviceConsent: boolean }) => void;
 }
 
@@ -31,6 +31,10 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
   const [serviceConsent, setServiceConsent] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const handleClose = () => {
+    onClose(serviceConsent);
+  };
+
   const handlePhoneChange = (e: any) => {
     setPhone(e.target.value);
   };
@@ -50,7 +54,7 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
     if (serviceConsent) {
       setSubmitted(true);
       onSubmit({ phone, serviceConsent });
-      onClose();
+      handleClose();
     } else {
       alert('개인정보 수집 및 이용에 동의해주세요.');
     }
@@ -118,7 +122,7 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
               <button onClick={handleSubmit} style={{ marginRight: '5%' }}>
                 저장
               </button>
-              <button onClick={onClose}>취소</button>
+              <button onClick={handleClose}>취소</button>
             </div>
           </div>
         )}
