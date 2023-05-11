@@ -92,7 +92,7 @@ const CreateDate = styled.p`
 `;
 
 const BucketImg = styled.div`
-  ${tw`mt-6 mb-6 flex flex-col mx-auto`}
+  ${tw`mt-2 mb-6 flex flex-col mx-auto`}
   width: 100%;
 `;
 
@@ -101,7 +101,7 @@ const SecretOrNot = styled.div`
 `;
 
 const SecretOrNotText = styled.p`
-  ${tw`text-smT pl-3 pr-3 pt-1 pb-1 mt-6 mb-2`}
+  ${tw`text-smT pl-3 pr-3 pt-1 pb-1 mt-10`}
   display: inline-block;
   width: content;
   border-radius: 10px;
