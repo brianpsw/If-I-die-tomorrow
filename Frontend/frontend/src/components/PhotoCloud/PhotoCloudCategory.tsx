@@ -67,28 +67,53 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
     >
       {categoryData
         ? categoryData.map((category: CategoryInfo) => {
-            return (
-              <div
-                style={{
-                  flex: '0 0 auto',
-                  width: '60px',
-                  height: '60px',
-                  backgroundColor: 'white',
-                  borderRadius: '30px',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginRight: '10px',
-                  backgroundSize: '500%',
-                  backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo.webp')`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: `${exchange[category.objectId]}`,
-                }}
-                key={category.categoryId}
-                onClick={() => handleCategory(category.categoryId)}
-              ></div>
-            );
+            if (categoryId === category.categoryId.toString()) {
+              return (
+                <div
+                  className="bg-pink_100"
+                  style={{
+                    flex: '0 0 auto',
+                    width: '60px',
+                    height: '60px',
+                    borderRadius: '30px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: '10px',
+                    backgroundSize: '500%',
+                    backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: `${exchange[category.objectId]}`,
+                  }}
+                  key={category.categoryId}
+                  onClick={() => handleCategory(category.categoryId)}
+                ></div>
+              );
+            } else {
+              return (
+                <div
+                  style={{
+                    flex: '0 0 auto',
+                    width: '60px',
+                    height: '60px',
+                    backgroundColor: 'white',
+                    borderRadius: '30px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginRight: '10px',
+                    backgroundSize: '500%',
+                    backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
+                    backgroundRepeat: 'no-repeat',
+                    backgroundPosition: `${exchange[category.objectId]}`,
+                  }}
+                  key={category.categoryId}
+                  onClick={() => handleCategory(category.categoryId)}
+                ></div>
+              );
+            }
           })
         : null}
       {categoryData && categoryData!.length < 10 ? (
