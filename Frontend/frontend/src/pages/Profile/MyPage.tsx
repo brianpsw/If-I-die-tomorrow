@@ -158,10 +158,32 @@ function MyPage() {
     }
   };
 
+  // 이름과 전화번호 검사 함수
+  const isNameValid = (name: string) => {
+    const regex = /^[가-힣a-zA-Z\s]*$/;
+    return regex.test(name);
+  };
+
+  const isPhoneNumberValid = (phoneNumber: string) => {
+    const regex = /^\d{10,11}$/;
+    return regex.test(phoneNumber);
+  };
+
   // 새 리시버를 추가하고 API에 저장
   const addReceiver = async () => {
     const lastIndex = receivers.length - 1;
     const lastReceiver = receivers[lastIndex];
+
+    // 유효성 검사를 추가
+    if (!isPhoneNumberValid(lastReceiver.phone)) {
+      alert('전화번호는 "-"을 제외한 10자리 또는 11자리의 숫자여야 합니다.');
+      return;
+    }
+
+    if (!isNameValid(lastReceiver.name)) {
+      alert('이름에는 숫자나 특수문자를 포함할 수 없습니다.');
+      return;
+    }
 
     if (lastReceiver.name.trim() !== '' && lastReceiver.phone.trim() !== '') {
       const addedReceiver = await addReceiverToAPI(lastReceiver);
