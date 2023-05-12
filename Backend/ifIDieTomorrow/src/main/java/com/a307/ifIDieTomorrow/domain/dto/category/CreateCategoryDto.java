@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class CreateCategoryDto {
 
 	private String name;
-	private String color;
 	
 }

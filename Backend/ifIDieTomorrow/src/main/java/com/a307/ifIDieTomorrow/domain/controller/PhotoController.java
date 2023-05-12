@@ -69,7 +69,7 @@ public class PhotoController {
 	
 	//////////////////////////
 	// APIs For PHOTO CLOUD //
-	//////////////////////////
+	////////////////////////// 이연수 똥멍청이
 	
 	@PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}) // 메타데이터의 takeAt? 추가 할 것
 	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")

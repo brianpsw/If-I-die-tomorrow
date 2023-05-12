@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	Optional<Category> findByCategoryId (Long categoryId);
 	
-	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name, color, imageUrl) " +
+	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name, imageUrl) " +
 			"FROM Category " +
 			"WHERE userId = :userId " +
 			"OR userId = 0")

@@ -26,9 +26,6 @@ public class Category extends BaseEntity {
 	@Column(length = 100, nullable = false)
 	private String name;
 	
-	@Column(length = 30)
-	private String color;
-	
 	private String imageUrl;
 	
 	public void updateCategoryName (String name) {

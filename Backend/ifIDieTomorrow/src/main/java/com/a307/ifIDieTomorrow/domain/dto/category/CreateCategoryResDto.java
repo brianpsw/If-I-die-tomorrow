@@ -11,7 +11,6 @@ public class CreateCategoryResDto {
 	private Long userId;
 	private Long categoryId;
 	private String name;
-	private String color;
 	private String imageUrl;
 	
 	public static CreateCategoryResDto toDto(Category category) {
@@ -19,7 +18,6 @@ public class CreateCategoryResDto {
 				category.getUserId(),
 				category.getCategoryId(),
 				category.getName(),
-				category.getColor(),
 				category.getImageUrl()
 		);
 	}

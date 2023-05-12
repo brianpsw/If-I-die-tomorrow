@@ -60,7 +60,6 @@ public class PhotoServiceImpl implements PhotoService {
 		Category category = Category.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				name(data.getName()).
-				color(data.getColor()).
 				imageUrl(s3Upload.upload(imageProcess.resizeImage(image, 100), CATEGORY)).
 				build();
 		
