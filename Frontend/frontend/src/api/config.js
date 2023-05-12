@@ -36,7 +36,7 @@ const requests = {
     return `/api/user/personality`;
   },
   DELETE_USER() {
-    return `/api/delete`;
+    return `/api/user/delete`;
   },
   POST_ALL_PHOTO() {
     return `/api/photo`;

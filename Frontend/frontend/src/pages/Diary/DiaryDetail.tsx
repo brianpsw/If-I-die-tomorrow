@@ -105,7 +105,7 @@ const SecretOrNotText = styled.p`
   width: content;
   border-radius: 10px;
   // border: 1px solid black;
-  background-color: #ffa9a9;
+  background-color: #36c2cc;
   font-weight: 400;
 `;
 
@@ -340,7 +340,7 @@ function DiaryDetail() {
             <DiaryText>{diary.content}</DiaryText>
             <SecretOrNot>
               <SecretOrNotText>
-                {diary.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
+                {diary.secret ? '비공개 다이어리' : '공개된 다이어리'}
               </SecretOrNotText>
             </SecretOrNot>
           </DiaryWrap>
