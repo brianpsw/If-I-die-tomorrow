@@ -39,11 +39,12 @@ public class PhotoController {
 	// APIs For CATEGORY //
 	///////////////////////
 	
-	@PostMapping("/category")
+	@PostMapping(value = "/category", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
 	public ResponseEntity<CreateCategoryResDto> createCategory(
-			@RequestBody CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException {
-		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data));
+			@RequestPart CreateCategoryDto data,
+			@RequestPart MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data, image));
 	}
 	
 	@GetMapping("/category")
@@ -54,9 +55,9 @@ public class PhotoController {
 	
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
-	public ResponseEntity<CreateCategoryResDto> updateCategory(
+	public ResponseEntity<CreateCategoryResDto> updateCategoryName(
 			@RequestBody UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
-		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategory(data));
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryName(data));
 	}
 	
 	@DeleteMapping("/category/{categoryId}")

@@ -16,6 +16,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.ImageProcess;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
@@ -34,7 +35,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PhotoServiceImpl implements PhotoService {
 	
-	private final String PHOTO = "photo";
+	private static final String PHOTO = "photo";
+	
+	private static final String CATEGORY = "category";
 	
 	private final S3Upload s3Upload;
 	
@@ -42,21 +45,21 @@ public class PhotoServiceImpl implements PhotoService {
 	
 	private final PhotoRepository photoRepository;
 	
+	private final ImageProcess imageProcess;
+	
 	///////////////////////
 	// APIs For CATEGORY //
 	///////////////////////
 	
 	@Override
-	public CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException {
-		if (categoryRepository.findByUserIdAndObjectId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId(), data.getObjectId()) != null)
-			throw new UnAuthorizedException("이미 사용중인 오브젝트입니다.");
-		
+	public CreateCategoryResDto createCategory (CreateCategoryDto data, MultipartFile image) throws IllegalArgumentException, ImageProcessingException, IOException, MetadataException {
 		if ("".equals(data.getName().trim())) throw new IllegalArgumentException("이름이 없습니다.");
 		
 		Category category = Category.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				name(data.getName()).
-				objectId(data.getObjectId()).
+				color(data.getColor()).
+				imageUrl(s3Upload.upload(imageProcess.resizeImage(image, 100), CATEGORY)).
 				build();
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
@@ -64,11 +67,11 @@ public class PhotoServiceImpl implements PhotoService {
 	
 	@Override
 	public List<CreateCategoryResDto> getCategory () {
-		return categoryRepository.findAllByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
+		return categoryRepository.findAllCategoryByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId());
 	}
 	
 	@Override
-	public CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
+	public CreateCategoryResDto updateCategoryName (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
 		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
 		
@@ -78,7 +81,7 @@ public class PhotoServiceImpl implements PhotoService {
 		if (data.getName() == null || "".equals(data.getName().trim()))
 			throw new IllegalArgumentException("카테고리 이름이 없습니다.");
 		
-		category.updateCategory(data.getName());
+		category.updateCategoryName(data.getName());
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
 	}
@@ -181,7 +184,7 @@ public class PhotoServiceImpl implements PhotoService {
 
 	@Override
 	public List<GetPhotoByCategoryResDto> getPhotoByUser (Long userId) {
-		List<CreateCategoryResDto> categories = categoryRepository.findAllByUserId(userId);
+		List<CreateCategoryResDto> categories = categoryRepository.findAllCategoryByUserId(userId);
 		List<GetPhotoByCategoryResDto> list = new ArrayList<>();
 		categories.forEach(x -> list.add(
 				new GetPhotoByCategoryResDto(x, photoRepository.findAllPhotoByCategory_CategoryId(x.getCategoryId(), userId)))
