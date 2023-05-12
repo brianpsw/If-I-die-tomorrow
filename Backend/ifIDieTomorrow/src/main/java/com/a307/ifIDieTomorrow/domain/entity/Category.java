@@ -26,10 +26,14 @@ public class Category extends BaseEntity {
 	@Column(length = 100, nullable = false)
 	private String name;
 	
-	private Long objectId;
+	private String imageUrl;
 	
-	public void updateCategory (String name) {
+	public void updateCategoryName (String name) {
 		this.name = name;
+	}
+	
+	public void updateCategoryThumbnail (String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 	
 }

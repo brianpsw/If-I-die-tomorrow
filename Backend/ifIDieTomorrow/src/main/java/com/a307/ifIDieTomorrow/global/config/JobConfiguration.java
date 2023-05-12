@@ -1,10 +1,7 @@
 package com.a307.ifIDieTomorrow.global.config;
 
 import com.a307.ifIDieTomorrow.domain.dto.notification.SmsDto;
-import com.a307.ifIDieTomorrow.domain.entity.Bucket;
-import com.a307.ifIDieTomorrow.domain.entity.Diary;
-import com.a307.ifIDieTomorrow.domain.entity.Photo;
-import com.a307.ifIDieTomorrow.domain.entity.User;
+import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
 import com.a307.ifIDieTomorrow.global.util.Notification;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
@@ -193,7 +190,9 @@ public class JobConfiguration {
 		commentRepository.deleteAllByUserId(userId);
 		
 		// 카테고리 정리
-		categoryRepository.deleteAllByUserId(userId);
+		List<Category> categories = categoryRepository.findAllByUserId(userId);
+		photos.forEach(x -> s3Upload.delete(x.getImageUrl())); // 이미지 삭제
+		categoryRepository.deleteAllInBatch(categories);
 		
 		// 리시버 정리
 		receiverRepository.deleteAllByUserId(userId);

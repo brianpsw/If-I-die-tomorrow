@@ -2,7 +2,8 @@ package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoByCategoryResDto;
@@ -39,11 +40,12 @@ public class PhotoController {
 	// APIs For CATEGORY //
 	///////////////////////
 	
-	@PostMapping("/category")
+	@PostMapping(value = "/category", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
 	public ResponseEntity<CreateCategoryResDto> createCategory(
-			@RequestBody CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException {
-		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data));
+			@RequestPart CreateCategoryDto data,
+			@RequestPart MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException {
+		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data, image));
 	}
 	
 	@GetMapping("/category")
@@ -54,9 +56,18 @@ public class PhotoController {
 	
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
-	public ResponseEntity<CreateCategoryResDto> updateCategory(
-			@RequestBody UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
-		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategory(data));
+	public ResponseEntity<CreateCategoryResDto> updateCategoryName(
+			@RequestBody UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryName(data));
+	}
+	
+	@PatchMapping(value = "/category/thumbnail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@Operation(summary = "카테고리 썸네일 변경", description = "카테고리 썸네일을 변경합니다.")
+	public ResponseEntity<CreateCategoryResDto> updateCategoryThumbnail(
+			@RequestPart UpdateCategoryThumbnailDto data,
+			@RequestPart MultipartFile image
+			) throws ImageProcessingException, NotFoundException, IOException, IllegalArgumentException, NoPhotoException, MetadataException {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryThumbnail(data, image));
 	}
 	
 	@DeleteMapping("/category/{categoryId}")
@@ -68,7 +79,7 @@ public class PhotoController {
 	
 	//////////////////////////
 	// APIs For PHOTO CLOUD //
-	//////////////////////////
+	////////////////////////// 이연수 똥멍청이
 	
 	@PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}) // 메타데이터의 takeAt? 추가 할 것
 	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")

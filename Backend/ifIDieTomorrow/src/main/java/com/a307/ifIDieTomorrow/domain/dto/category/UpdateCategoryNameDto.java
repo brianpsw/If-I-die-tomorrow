@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateCategoryDto {
+public class UpdateCategoryNameDto {
 
 	private Long categoryId;
 	private String name;

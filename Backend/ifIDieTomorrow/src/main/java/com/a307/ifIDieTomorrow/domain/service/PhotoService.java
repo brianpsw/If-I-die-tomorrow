@@ -2,7 +2,8 @@ package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoByCategoryResDto;
@@ -19,9 +20,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface PhotoService {
-	CreateCategoryResDto createCategory (CreateCategoryDto data) throws UnAuthorizedException, IllegalArgumentException;
+	CreateCategoryResDto createCategory (CreateCategoryDto data, MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException;
 	
-	CreateCategoryResDto updateCategory (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException;
+	CreateCategoryResDto updateCategoryName (UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException;
 	
 	Long deleteCategory (Long categoryId) throws NotFoundException;
 	
@@ -38,4 +39,6 @@ public interface PhotoService {
 	List<GetPhotoByCategoryResDto> getPhotoByUser ();
 
 	List<GetPhotoByCategoryResDto> getPhotoByUser (Long userId);
+	
+	CreateCategoryResDto updateCategoryThumbnail (UpdateCategoryThumbnailDto data, MultipartFile image) throws NotFoundException, IllegalArgumentException, NoPhotoException, ImageProcessingException, IOException, MetadataException;
 }

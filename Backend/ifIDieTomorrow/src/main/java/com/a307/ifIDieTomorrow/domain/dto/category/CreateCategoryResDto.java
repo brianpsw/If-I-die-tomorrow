@@ -11,14 +11,14 @@ public class CreateCategoryResDto {
 	private Long userId;
 	private Long categoryId;
 	private String name;
-	private Long objectId;
+	private String imageUrl;
 	
 	public static CreateCategoryResDto toDto(Category category) {
 		return new CreateCategoryResDto(
 				category.getUserId(),
 				category.getCategoryId(),
 				category.getName(),
-				category.getObjectId()
+				category.getImageUrl()
 		);
 	}
 	
