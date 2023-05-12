@@ -5,7 +5,7 @@ import { categoryState } from '../../states/CategoryState';
 
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, OrbitControls } from '@react-three/drei';
+import { useGLTF, OrbitControls, useTexture } from '@react-three/drei';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -25,7 +25,7 @@ function Scene() {
   const navigate = useNavigate();
   const [objectIds, setObjectIds] = useState<number[]>([]);
   const [categoryIds, setCategoryIds] = useState<CategoryIds>({});
-  const { gl, mouse } = useThree();
+  const { gl, mouse, scene } = useThree();
   // 기본 구성
   const roomFrame = useGLTF('models/room_frame.glb', true);
   const fox = useGLTF('models/fox.glb', true);
@@ -40,6 +40,30 @@ function Scene() {
   const sofa = useGLTF('models/sofa.glb', true);
   const wallShelf = useGLTF('models/wallshelf.glb', true);
   const cat = useGLTF('models/cat.glb', true);
+
+  // const moonTexture = useTexture('images/moon.png');
+  const moonTexture = useTexture('images/squre_moon.png');
+
+  // 테스트용으로 넣어놓은 texture
+  const customTexture1 = useTexture(
+    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/456a5c36-d285-43b9-86f2-46f090175a5e',
+  );
+  const customTexture2 = useTexture(
+    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/f63c52a8-5eb8-4877-b275-d5a4c0d4b91d',
+  );
+  const customTexture3 = useTexture(
+    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/f63c52a8-5eb8-4877-b275-d5a4c0d4b91d',
+  );
+  const customTexture4 = useTexture(
+    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/a38ba2ff-e8e7-469a-be7a-f988b8817a49',
+  );
+  const customTexture5 = useTexture(
+    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/65f19542-8198-40a0-8baa-36c4689a5e1c',
+  );
+
+  // rose
+
+  const rose = useGLTF('models/low_poly_rose_in_glass_jar.glb', true);
 
   let mixer = new THREE.AnimationMixer(fox.scene);
   let preventDragClick: boolean = false;
@@ -150,109 +174,60 @@ function Scene() {
     <Suspense fallback={<div>loading...</div>}>
       <directionalLight position={[200, 50, 100]} intensity={1.2} />
       <ambientLight intensity={0.6} />
-
-      <primitive
-        object={roomFrame.scene}
-        scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-        position={[0, -30, 0]}
-        rotation={[0, -Math.PI / 2, 0]}
-      />
-      {objectIds?.includes(1) && (
-        <primitive
-          object={bed.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickBed(e)}
-        />
-      )}
-      {objectIds?.includes(2) && (
-        <primitive
-          object={coffeetable.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[-10, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCoffeeTable(e)}
-        />
-      )}
-      {objectIds?.includes(3) && (
-        <primitive
-          object={bookShelf.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickBookShelf(e)}
-        />
-      )}
-      {objectIds?.includes(4) && (
-        <primitive
-          object={deskChair.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickDeskChair(e)}
-        />
-      )}
-      {objectIds?.includes(5) && (
-        <primitive
-          object={board.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[5])}
-        />
-      )}
-      {objectIds?.includes(6) && (
-        <primitive
-          object={carpet.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[-10, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[6])}
-        />
-      )}
-      {objectIds?.includes(7) && (
-        <primitive
-          object={pc.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[7])}
-        />
-      )}
-      {objectIds?.includes(8) && (
-        <primitive
-          object={sofa.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[8])}
-        />
-      )}
-      {objectIds?.includes(9) && (
-        <primitive
-          object={wallShelf.scene}
-          scale={window.innerWidth > 640 ? [10, 10, 10] : [6, 6, 6]}
-          position={[0, -30, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[9])}
-        />
-      )}
-      {objectIds?.includes(10) && (
-        <primitive
-          object={cat.scene}
-          scale={window.innerWidth > 640 ? [3.5, 3.5, 3.5] : [2, 2, 2]}
-          position={window.innerWidth > 640 ? [30, -27.5, 0] : [20, -28.5, 0]}
-          rotation={[0, -Math.PI / 2, 0]}
-          onClick={(e: any) => clickCustomFurniture(e, categoryIds[10])}
-        />
-      )}
+      <mesh rotation={[0, 0, 0]} position={[10, -78, 10]}>
+        <sphereGeometry args={[50, 16]}></sphereGeometry>
+        <meshStandardMaterial color="yellow" map={moonTexture} />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[25, 3, -10]}>
+        <boxGeometry args={[5, 5, 5]}></boxGeometry>
+        <meshStandardMaterial map={customTexture5} />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[10, 20, -10]}>
+        <boxGeometry args={[5, 5, 5]}></boxGeometry>
+        <meshStandardMaterial color="pink" />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[10, 20, -30]}>
+        <sphereGeometry args={[5, 16]}></sphereGeometry>
+        <meshStandardMaterial color="yellow" />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[-10, -10, -20]}>
+        <sphereGeometry args={[5, 16]}></sphereGeometry>
+        <meshStandardMaterial map={customTexture1} />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[-25, 3, -10]}>
+        <sphereGeometry args={[5, 16]}></sphereGeometry>
+        <meshStandardMaterial map={customTexture4} />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[10, 0, 30]}>
+        <sphereGeometry args={[5, 16]}></sphereGeometry>
+        <meshStandardMaterial color="orange" />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[-10, 3, 30]}>
+        <boxGeometry args={[5, 5, 5]}></boxGeometry>
+        <meshStandardMaterial map={customTexture2} />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[-10, 25, 20]}>
+        <boxGeometry args={[5, 5, 5]}></boxGeometry>
+        <meshStandardMaterial color="red" />
+      </mesh>
+      <mesh rotation={[0, 0, 0]} position={[40, 0, 20]}>
+        <octahedronGeometry args={[5, 16]}></octahedronGeometry>
+        <meshStandardMaterial map={customTexture3} />
+      </mesh>
 
       <primitive
         object={fox.scene}
         scale={window.innerWidth > 640 ? [8, 8, 8] : [6, 6, 6]}
         position={window.innerWidth > 640 ? [20, -19.5, 20] : [15, -22, 15]}
         rotation={[0, -Math.PI / 4, 0]}
+        onClick={(e: any) => clickFox(e)}
+      />
+
+      <primitive
+        object={rose.scene}
+        scale={window.innerWidth > 640 ? [120, 120, 120] : [90, 90, 90]}
+        position={window.innerWidth > 640 ? [1, -30, 23] : [1, -30, 23]}
+        rotation={[Math.PI / 10, -Math.PI / 4, 0]}
         onClick={(e: any) => clickFox(e)}
       />
 
