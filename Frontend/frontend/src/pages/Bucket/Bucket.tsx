@@ -24,6 +24,7 @@ const Background = styled.div`
 
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
+  padding-bottom: 10%;
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}

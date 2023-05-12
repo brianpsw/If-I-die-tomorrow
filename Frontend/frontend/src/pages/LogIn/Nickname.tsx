@@ -24,7 +24,7 @@ const InfoText = styled.span`
   ${tw`w-full mt-[24px]`}
 `;
 const CheckText = styled.span`
-  ${tw`w-full mt-[256px]`}
+  ${tw`w-full mt-[200px]`}
 `;
 
 const IIDT = styled.span`
