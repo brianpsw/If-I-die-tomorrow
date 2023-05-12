@@ -43,7 +43,7 @@ public class PhotoController {
 	@Operation(summary = "카테고리 생성", description = "카테고리를 생성합니다.")
 	public ResponseEntity<CreateCategoryResDto> createCategory(
 			@RequestPart CreateCategoryDto data,
-			@RequestPart MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException {
+			@RequestPart MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data, image));
 	}
 	

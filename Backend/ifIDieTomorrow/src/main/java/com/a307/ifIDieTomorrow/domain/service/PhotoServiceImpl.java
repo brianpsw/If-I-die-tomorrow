@@ -52,8 +52,10 @@ public class PhotoServiceImpl implements PhotoService {
 	///////////////////////
 	
 	@Override
-	public CreateCategoryResDto createCategory (CreateCategoryDto data, MultipartFile image) throws IllegalArgumentException, ImageProcessingException, IOException, MetadataException {
+	public CreateCategoryResDto createCategory (CreateCategoryDto data, MultipartFile image) throws IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException {
 		if ("".equals(data.getName().trim())) throw new IllegalArgumentException("이름이 없습니다.");
+		
+		if (image == null) throw new NoPhotoException("사진이 없습니다.");
 		
 		Category category = Category.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
