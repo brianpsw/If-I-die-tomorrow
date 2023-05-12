@@ -2,7 +2,8 @@ package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoByCategoryResDto;
@@ -56,8 +57,17 @@ public class PhotoController {
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
 	public ResponseEntity<CreateCategoryResDto> updateCategoryName(
-			@RequestBody UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
+			@RequestBody UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryName(data));
+	}
+	
+	@PatchMapping(value = "/category/thumbnail", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+	@Operation(summary = "카테고리 썸네일 변경", description = "카테고리 썸네일을 변경합니다.")
+	public ResponseEntity<CreateCategoryResDto> updateCategoryThumbnail(
+			@RequestPart UpdateCategoryThumbnailDto data,
+			@RequestPart MultipartFile image
+			) throws ImageProcessingException, NotFoundException, IOException, IllegalArgumentException, NoPhotoException, MetadataException {
+		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryThumbnail(data, image));
 	}
 	
 	@DeleteMapping("/category/{categoryId}")

@@ -2,7 +2,8 @@ package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
-import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoByCategoryResDto;
@@ -72,7 +73,7 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public CreateCategoryResDto updateCategoryName (UpdateCategoryDto data) throws NotFoundException, IllegalArgumentException {
+	public CreateCategoryResDto updateCategoryName (UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException {
 		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
 		
@@ -83,6 +84,22 @@ public class PhotoServiceImpl implements PhotoService {
 			throw new IllegalArgumentException("카테고리 이름이 없습니다.");
 		
 		category.updateCategoryName(data.getName());
+		
+		return CreateCategoryResDto.toDto(categoryRepository.save(category));
+	}
+	
+	@Override
+	public CreateCategoryResDto updateCategoryThumbnail (UpdateCategoryThumbnailDto data, MultipartFile image) throws NotFoundException, IllegalArgumentException, NoPhotoException, ImageProcessingException, IOException, MetadataException {
+		Category category = categoryRepository.findByCategoryId(data.getCategoryId())
+				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
+		
+		if (category.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new IllegalArgumentException("카테고리 수정 권한이 없습니다.");
+		
+		if (image == null) throw new NoPhotoException("사진이 없습니다.");
+		
+		s3Upload.delete(category.getImageUrl());
+		category.updateCategoryThumbnail(s3Upload.upload(imageProcess.resizeImage(image, 100), CATEGORY));
 		
 		return CreateCategoryResDto.toDto(categoryRepository.save(category));
 	}
