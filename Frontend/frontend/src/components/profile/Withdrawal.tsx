@@ -19,8 +19,12 @@ function Withdrawal() {
         data: { userId: user.userId },
         withCredentials: true,
       });
+
+      // 로그아웃 API 호출
+      await defaultApi.get(requests.POST_LOGOUT(), { withCredentials: true });
       setUser(null);
       localStorage.removeItem('user');
+      setIsLoggedIn(null);
       localStorage.removeItem('recoil-persist');
       alert('회원탈퇴 성공!');
       navigate('/login');
@@ -31,8 +35,17 @@ function Withdrawal() {
   };
 
   return (
-    <div>
-      <button onClick={() => setShowModal(true)}>회원탈퇴</button>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        marginTop: '10%',
+        marginBottom: '10%',
+      }}
+    >
+      <button onClick={() => setShowModal(true)} style={{ color: 'white' }}>
+        회원탈퇴
+      </button>
       {showModal && (
         <div
           style={{
