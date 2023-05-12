@@ -215,35 +215,35 @@ function EditBucketModal({
           <EditSection>
             <EditLabel htmlFor="photo">사진 선택</EditLabel>
             <PhotoContainer>
-              {/* <div className="image-upload-container w-full h-auto overflow-hidden"> */}
-              {imageUrl ? (
-                <div className="relative">
-                  <DeleteImageButton onClick={removeImage}>
-                    <Icon icon="line-md:remove" />
-                  </DeleteImageButton>
-                  <img
-                    className="image-upload-preview w-auto h-full bg-auto "
-                    src={imageUrl}
-                    alt="upload-preview"
-                    onClick={handleClick}
-                  />
-                </div>
-              ) : (
-                <label
-                  htmlFor="photo"
-                  className="flex flex-col justify-center items-center w-full h-full cursor-pointer"
-                >
-                  <img src={uploadIcon} alt="" />
-                </label>
-              )}
-              <input
-                type="file"
-                id="photo"
-                onChange={handleFileChange}
-                accept="image/*"
-                hidden
-              />
-              {/* </div> */}
+              <div className="image-upload-container w-full h-full">
+                {imageUrl ? (
+                  <div className="relative">
+                    <DeleteImageButton onClick={removeImage}>
+                      <Icon icon="line-md:remove" />
+                    </DeleteImageButton>
+                    <img
+                      className="image-upload-preview w-auto h-full bg-auto "
+                      src={imageUrl}
+                      alt="upload-preview"
+                      onClick={handleClick}
+                    />
+                  </div>
+                ) : (
+                  <label
+                    htmlFor="photo"
+                    className="flex flex-col justify-center items-center w-full h-full cursor-pointer"
+                  >
+                    <img src={uploadIcon} alt="" />
+                  </label>
+                )}
+                <input
+                  type="file"
+                  id="photo"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  hidden
+                />
+              </div>
             </PhotoContainer>
           </EditSection>
           <EditSection>

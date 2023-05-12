@@ -8,6 +8,7 @@ import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
 import BottomModal from '../../components/profile/MyPageModal';
 import UserInfo from '../../components/profile/UserInfo';
+import Withdrawal from '../../components/profile/Withdrawal';
 import ServiceAgreeModal from '../../components/profile/ServiceAgreeModal';
 import {
   Background,
@@ -555,6 +556,7 @@ function MyPage() {
               </IconContainer>
             )}
           </SettingBox>
+          <Withdrawal></Withdrawal>
         </Container>
       </Background>
     </div>
