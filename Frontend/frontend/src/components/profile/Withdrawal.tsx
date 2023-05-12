@@ -37,16 +37,52 @@ function Withdrawal() {
         <div
           style={{
             position: 'absolute',
+            width: '90%',
+            borderRadius: '10px',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             backgroundColor: '#fff',
             padding: '20px',
+            textAlign: 'center',
           }}
         >
-          <p>정말로 회원탈퇴를 하시겠습니까?</p>
-          <button onClick={handleWithdrawal}>확인</button>
-          <button onClick={() => setShowModal(false)}>취소</button>
+          <p>
+            회원님의 기록들은 한 달 동안 보관되며,
+            <br />그 이후 삭제됩니다.
+            <br />한 달이 되기 전 다시 로그인 하시면
+            <br />
+            모든 기록이 복원됩니다.
+            <br />
+            <br />
+            정말로 회원탈퇴를 하시겠습니까?
+            <br />
+            <br />
+          </p>
+          <div>
+            <button
+              onClick={handleWithdrawal}
+              style={{
+                marginRight: '2%',
+                borderRadius: '10px',
+                border: '1px solid',
+                padding: '2%',
+              }}
+            >
+              확인
+            </button>
+            <button
+              onClick={() => setShowModal(false)}
+              style={{
+                marginRight: '2%',
+                borderRadius: '10px',
+                border: '1px solid',
+                padding: '2%',
+              }}
+            >
+              취소
+            </button>
+          </div>
         </div>
       )}
     </div>
