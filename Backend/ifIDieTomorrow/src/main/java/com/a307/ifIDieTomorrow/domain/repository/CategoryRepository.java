@@ -16,18 +16,11 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	Optional<Category> findByCategoryId (Long categoryId);
 	
-	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name, objectId) " +
+	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto(userId, categoryId, name, color, imageUrl) " +
 			"FROM Category " +
 			"WHERE userId = :userId " +
 			"OR userId = 0")
-	List<CreateCategoryResDto> findAllByUserId(@Param("userId") Long userId);
+	List<CreateCategoryResDto> findAllCategoryByUserId (@Param("userId") Long userId);
 	
-	Category findByUserIdAndObjectId (Long userId, Long objectId);
-	
-	@Modifying
-	@Transactional
-	@Query("DELETE " +
-			"FROM Category " +
-			"WHERE userId = :userId")
-	void deleteAllByUserId (@Param("userId") Long userId);
+	List<Category> findAllByUserId (Long userId);
 }

@@ -88,7 +88,7 @@ public class CategoryRepositoryTest {
 		);
 		
 		// When
-		List<CreateCategoryResDto> list = testCategoryRepository.findAllByUserId(user.getUserId());
+		List<CreateCategoryResDto> list = testCategoryRepository.findAllCategoryByUserId(user.getUserId());
 		
 		// Then
 		assertThat(list)
