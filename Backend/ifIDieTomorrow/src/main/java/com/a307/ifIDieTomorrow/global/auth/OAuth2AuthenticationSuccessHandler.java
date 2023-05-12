@@ -1,5 +1,7 @@
 package com.a307.ifIDieTomorrow.global.auth;
 
+import com.a307.ifIDieTomorrow.global.config.AdminProperties;
+import com.a307.ifIDieTomorrow.global.config.CorsProperties;
 import com.a307.ifIDieTomorrow.global.util.CookieUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,7 @@ import static com.a307.ifIDieTomorrow.global.auth.OAuth2AuthorizationRequestBase
 @RequiredArgsConstructor
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final OAuth2AuthorizationRequestBasedOnCookieRepository authorizationRequestRepository;
+    private final CorsProperties corsProperties;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -37,8 +40,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
         String targetUrl = redirectUri.orElse("https://ifidietomorrow.co.kr");
-
-        if(((UserPrincipal) authentication.getPrincipal()).getNewCheck() == null || ((UserPrincipal) authentication.getPrincipal()).getNewCheck()) targetUrl = "https://ifidietomorrow.co.kr/nickname";
+        if(((UserPrincipal) authentication.getPrincipal()).getNewCheck() == null || ((UserPrincipal) authentication.getPrincipal()).getNewCheck()) targetUrl = corsProperties.getRedirect();
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .build().toUriString();
     }
