@@ -26,7 +26,7 @@ const Background = styled.div`
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <BrowserRouter>
+      <BrowserRouter basename="/after">
         <div className="App min-w-[300px]">
           <Background>
             <Routes>
