@@ -15,4 +15,5 @@ public class CorsProperties {
     private String allowedMethods;
     private String allowedHeaders;
     private Long maxAge;
+    private String redirect;
 }

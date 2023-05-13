@@ -108,6 +108,7 @@ cors:
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   max-age: 3600
+  redirect: ${NEW_REDIRECT}
 
 # ssl 설정
 server:
@@ -125,5 +126,6 @@ server:
 # admin 설정
 admin:
   email: ${ADMIN_EMAIL}
+
 
 
