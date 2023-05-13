@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
-import RecordRTC from 'recordrtc';
+import RecordRTC, { CanvasRecorder } from 'recordrtc';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import TopBar from '../../components/common/TopBar';
@@ -15,6 +15,7 @@ function WillVideo(): JSX.Element {
   const webcamRef = useRef<Webcam>(null);
   const recordRef = useRef<RecordRTC | null>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [video, setVideo] = useState<File | null>(null);
   const [defaultVideo, setDefaultVideo] = useState('');
   const [isRecorded, setIsRecorded] = useState<Boolean>(false); //
@@ -82,13 +83,52 @@ function WillVideo(): JSX.Element {
   const startRecording = () => {
     setIsRecording(true);
     const webcam = webcamRef.current?.video;
+    const context = canvasRef?.current?.getContext('2d');
+    const canvasStream = canvasRef.current?.captureStream();
+    console.log(canvasRef.current?.width);
+    const audioPlusCanvasStream = new MediaStream();
+    canvasStream?.getVideoTracks().forEach((videoTrack) => {
+      audioPlusCanvasStream.addTrack(videoTrack);
+    });
+    webcamRef?.current?.stream?.getAudioTracks().forEach((audioTrack) => {
+      audioPlusCanvasStream.addTrack(audioTrack);
+    });
     if (webcam) {
-      recordRef.current = new RecordRTC(webcam.srcObject as MediaStream, {
+      recordRef.current = new RecordRTC(audioPlusCanvasStream, {
         type: 'video',
         mimeType: 'video/webm',
       });
       recordRef.current.startRecording();
     }
+    (function looper() {
+      if (!recordRef.current) return; // ignore/skip on stop-recording
+      if (canvasRef.current && webcam) {
+        canvasRef.current.width = webcam.clientWidth;
+        canvasRef.current.height = webcam.clientHeight;
+      }
+
+      context?.clearRect(
+        0,
+        0,
+        canvasRef.current?.width as unknown as number,
+        canvasRef.current?.height as unknown as number,
+      );
+      context?.save();
+      context?.translate(canvasRef.current?.width as unknown as number, 0);
+      context?.scale(-1, 1);
+      context?.drawImage(
+        webcam as CanvasImageSource,
+        0,
+        0,
+        canvasRef.current?.width as unknown as number,
+        canvasRef.current?.height as unknown as number,
+      );
+      context?.setTransform(1, 0, 0, 1, 0, 0);
+      context?.restore();
+
+      // repeat (looper)
+      setTimeout(looper, 10);
+    })();
   };
 
   const stopRecording = () => {
@@ -96,6 +136,7 @@ function WillVideo(): JSX.Element {
       const blob = recordRef.current?.getBlob();
       if (blob) {
         // 미리보기 업데이트
+        recordRef.current = null;
         const previewVideo = previewRef.current;
         if (previewVideo) {
           previewVideo.src = URL.createObjectURL(blob);
@@ -135,15 +176,20 @@ function WillVideo(): JSX.Element {
             {isRecorded && video ? (
               <video src={URL.createObjectURL(video)} controls />
             ) : (
-              <Webcam audio={true} ref={webcamRef} />
+              <Webcam
+                audio={true}
+                ref={webcamRef}
+                mirrored={true}
+                muted={true}
+              />
             )}
           </div>
         ) : (
           ''
         )}
-        {!isRecorded && editVideo ? (
+        {!isRecorded && editVideo && isRecording ? (
           <span className="text-yellow-500 text-p2 mt-[16px]">
-            동영상이 존재하지 않습니다.
+            동영상 촬영 중입니다.
           </span>
         ) : (
           ''
@@ -210,7 +256,7 @@ function WillVideo(): JSX.Element {
                     className="mx-[8px]"
                     // disabled={isValid ? false : true}
                   >
-                    녹화 중지
+                    녹화 완료
                   </Button>
                 </div>
               ) : (
@@ -248,6 +294,18 @@ function WillVideo(): JSX.Element {
           )}
         </div>
         {/* {sign ? <img src={URL.createObjectURL(sign)} alt="" /> : ''} */}
+        <canvas
+          ref={canvasRef}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            opacity: 0,
+            marginTop: -9999999999,
+            marginLeft: -999999999,
+            zIndex: -1,
+          }}
+        ></canvas>
       </Container>
     </div>
   );
