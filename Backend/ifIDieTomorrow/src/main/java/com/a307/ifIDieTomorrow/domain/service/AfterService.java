@@ -6,4 +6,7 @@ import java.util.Map;
 
 public interface AfterService {
     Map<String, Object> getData (String pwd) throws NotFoundException;
+    Map<String, Object> getMyData () throws NotFoundException;
+
+
 }

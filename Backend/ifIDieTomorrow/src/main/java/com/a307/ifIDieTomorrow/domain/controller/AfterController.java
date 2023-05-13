@@ -7,10 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -26,5 +23,12 @@ public class AfterController {
     public ResponseEntity<Map<String, Object>> getData(
             @RequestBody Map<String, String> passwordMap) throws NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(afterService.getData(passwordMap.get("pwd")));
+    }
+
+    @GetMapping()
+    @Operation(summary = "내 사후 페이지 전송", description = "내 사후 페이지 데이터를 전송받음.")
+    public ResponseEntity<Map<String, Object>> getMyData(
+            ) throws NotFoundException {
+        return ResponseEntity.status(HttpStatus.OK).body(afterService.getMyData());
     }
 }
