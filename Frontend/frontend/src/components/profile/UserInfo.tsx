@@ -56,6 +56,12 @@ function UserInfo() {
             <span>유언장 작성하러 가기</span>
           </IconWithText>
         </Link>
+        <Link to="/after">
+          <IconWithText>
+            <Icon icon="line-md:clipboard-list" />
+            <span>사후 페이지 보러가기</span>
+          </IconWithText>
+        </Link>
       </MyProfile>
       <SettingBox>
         <h4 className="text-h4">내 정보</h4>

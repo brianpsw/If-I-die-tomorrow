@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import Room from './Room';
@@ -44,6 +44,30 @@ function LoginForm({ setIsLogin }: any) {
 
 export default function Home() {
   const [userData, setUserData] = useRecoilState(userDataState);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          'https://ifidietomorrow.duckdns.org/api/after',
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+          },
+        );
+        const jsonData = await response.json();
+        console.log(jsonData);
+        setUserData(jsonData);
+      } catch (error) {}
+    }
+    if (Object.keys(userData).length === 0) {
+      fetchData();
+    }
+  }, []);
+
+  console.log('abc');
   if (Object.keys(userData).length === 0) {
     return <LoginForm setIsLogin={setUserData}></LoginForm>;
   } else {

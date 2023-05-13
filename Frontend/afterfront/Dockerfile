@@ -13,4 +13,4 @@ RUN npm install --force
 COPY . .
 
 # 시작 명령어 설정
-CMD ["npm", "start"]
+ENTRYPOINT PUBLIC_URL=/after npm run start
