@@ -42,22 +42,18 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const deleteCategory = async (id: string) => {
-    if (user?.userId === categoryOwner) {
-      try {
-        const delete_category = await defaultApi.delete(
-          requests.DELETE_CATEGORY(id),
-          { withCredentials: true },
-        );
-        if (delete_category.status === 204) {
-          navigate(`/photo-cloud/1`);
-          setDeleteCategory(true);
-          onClose?.();
-        }
-      } catch (err) {
-        console.error(err);
+    try {
+      const delete_category = await defaultApi.delete(
+        requests.DELETE_CATEGORY(id),
+        { withCredentials: true },
+      );
+      if (delete_category.status === 204) {
+        navigate(`/photo-cloud/1`);
+        setDeleteCategory(true);
+        onClose?.();
       }
-    } else {
-      alert('기본 카테고리는 삭제할 수 없습니다.');
+    } catch (err) {
+      console.error(err);
     }
   };
 

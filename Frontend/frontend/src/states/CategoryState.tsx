@@ -6,6 +6,7 @@ interface CategoryData {
   categoryId: number;
   name: string;
   objectId: number;
+  imageUrl: string;
 }
 
 export const categoryState = atom<CategoryData[] | null>({
