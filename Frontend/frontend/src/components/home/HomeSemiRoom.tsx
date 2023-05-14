@@ -165,14 +165,6 @@ function HomeScene() {
           <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
         </mesh>
       )}
-      <mesh
-        rotation={[0, Math.PI / 4, 0]}
-        position={[0, 0, 0]}
-        // onClick={() => earAni()}
-      >
-        <planeGeometry args={[4, 4, 1]}></planeGeometry>
-        <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
-      </mesh>
 
       <primitive
         object={fox.scene}
