@@ -355,7 +355,7 @@ pipeline {
 
             }
             steps {
-                sh 'docker run -d -p 3000:3000 --name front-react --env-file .env --network my-network front-react'
+                sh 'docker run -d -p 3000:3000 --name front-react --network my-network front-react'
             }
 
             post {
