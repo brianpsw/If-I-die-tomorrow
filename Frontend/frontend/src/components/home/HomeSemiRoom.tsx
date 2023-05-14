@@ -22,7 +22,8 @@ function HomeScene() {
   const navigate = useNavigate();
   const { gl, mouse, scene } = useThree();
   // 기본 구성
-  const fox = useGLTF('models/fox.glb', true);
+  // const fox = useGLTF('models/fox.glb', true);
+  const fox = useGLTF('models/fox_2.glb');
   const rose = useGLTF('models/low_poly_rose_in_glass_jar.glb', true);
   const moonTexture = useTexture('images/squre_moon.png');
   const createTexture = useTexture('images/category_create.png');
@@ -71,6 +72,18 @@ function HomeScene() {
       earMove.stop();
       default1.play();
     }, 1200);
+    e?.stopPropagation();
+  };
+
+  const clickRose = (e: any) => {
+    const tailMove = mixer.clipAction(fox.animations[3]);
+    default1.stop();
+    tailMove.loop = THREE.LoopOnce;
+    tailMove.play();
+    setTimeout(() => {
+      tailMove.stop();
+      default1.play();
+    }, 2400);
     e?.stopPropagation();
   };
 
@@ -152,11 +165,19 @@ function HomeScene() {
           <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
         </mesh>
       )}
+      <mesh
+        rotation={[0, Math.PI / 4, 0]}
+        position={[0, 0, 0]}
+        // onClick={() => earAni()}
+      >
+        <planeGeometry args={[4, 4, 1]}></planeGeometry>
+        <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
+      </mesh>
 
       <primitive
         object={fox.scene}
         scale={window.innerWidth > 640 ? [8, 8, 8] : [6, 6, 6]}
-        position={window.innerWidth > 640 ? [20, -19.5, 20] : [15, -22, 15]}
+        position={window.innerWidth > 640 ? [20, -19.5, 20] : [15, -21, 15]}
         rotation={[0, -Math.PI / 4, 0]}
         onClick={(e: any) => clickFox(e)}
       />
@@ -166,7 +187,7 @@ function HomeScene() {
         scale={window.innerWidth > 640 ? [120, 120, 120] : [90, 90, 90]}
         position={window.innerWidth > 640 ? [1, -30, 23] : [1, -30, 23]}
         rotation={[Math.PI / 10, -Math.PI / 4, 0]}
-        onClick={(e: any) => clickFox(e)}
+        onClick={(e: any) => clickRose(e)}
       />
 
       <OrbitControls />
