@@ -12,6 +12,7 @@ import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
 import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
+import ReportModal from '../../components/common/DiaryReportModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
 
@@ -208,30 +209,47 @@ function DiaryDetail() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [reportModalOpen, setReportModalOpen] = useState(false);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [deleteConfirmModalOpen, setDeleteConfirmModalOpen] = useState(false);
   const user = useRecoilValue(userState);
   const loggedInUserNickname = user ? user.nickname : null;
   const navigate = useNavigate();
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
-
   const handleModalClose = () => {
     setModalOpen(false);
+    setReportModalOpen(false);
   };
 
   const handleEditModalOpen = () => {
     setEditModalOpen(true);
   };
 
+  const handleReportModalOpen = () => {
+    setReportModalOpen(true);
+  };
+
+  const handleReportModalClose = () => {
+    setReportModalOpen(false);
+    handleModalClose();
+  };
+
+  const handleModalOpen = () => {
+    if (loggedInUserNickname === diary.nickname) {
+      setModalOpen(true);
+    } else {
+      setReportModalOpen(true);
+    }
+  };
+
   const handleEditModalClose = () => {
     setEditModalOpen(false);
+    handleModalClose();
   };
 
   const openDeleteConfirmModal = () => {
     setDeleteConfirmModalOpen(true);
+    handleModalClose();
   };
 
   const closeDeleteConfirmModal = () => {
@@ -296,6 +314,13 @@ function DiaryDetail() {
           handleDeleteModalOpen={openDeleteConfirmModal}
         />
       )}
+      {reportModalOpen && (
+        <ReportModal
+          handleReportModalOpen={handleReportModalOpen}
+          onClose={handleReportModalClose}
+          typeId={diaryDetail.diaryId}
+        />
+      )}
       {editModalOpen && diaryDetail && (
         <EditDiaryModal
           diaryId={diaryDetail.diaryId}
@@ -307,6 +332,7 @@ function DiaryDetail() {
           onUpdate={handleUpdate}
         />
       )}
+
       {deleteConfirmModalOpen && (
         <DeleteConfirmModal
           onClose={closeDeleteConfirmModal}
@@ -326,11 +352,16 @@ function DiaryDetail() {
                   {new Date(diary.createdAt).toISOString().split('T')[0]}
                 </CreateDate>
               </div>
-              {loggedInUserNickname === diary.nickname && (
+
+              <DotIcon>
+                <img src={TreeDot} alt="" onClick={handleModalOpen} />
+              </DotIcon>
+
+              {/* {loggedInUserNickname === diary.nickname && (
                 <DotIcon>
                   <img src={TreeDot} alt="" onClick={handleModalOpen} />
                 </DotIcon>
-              )}
+              )} */}
             </DiaryHeader>
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (

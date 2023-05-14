@@ -58,6 +58,7 @@ function EditOrDeleteModal({
       }
     };
   }, []);
+
   return (
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
