@@ -13,57 +13,19 @@ import { defaultApi } from '../../api/axios';
 interface CategoryInfo {
   categoryId: number;
   name: string;
-  objectId: number;
-}
-
-interface CategoryIds {
-  [key: number]: number;
+  userId: number;
+  imageUrl: string;
 }
 
 function Scene() {
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
-  const [objectIds, setObjectIds] = useState<number[]>([]);
-  const [categoryIds, setCategoryIds] = useState<CategoryIds>({});
   const { gl, mouse, scene } = useThree();
   // 기본 구성
-  const roomFrame = useGLTF('models/room_frame.glb', true);
   const fox = useGLTF('models/fox.glb', true);
-  const bed = useGLTF('models/bed.glb', true); // 1
-  const coffeetable = useGLTF('models/coffeetable.glb', true); // 2
-  const bookShelf = useGLTF('models/bookshelf.glb', true); // 3
-  const deskChair = useGLTF('models/desk_chair.glb', true); // 4
-  // 추가 구성
-  const board = useGLTF('models/board.glb', true);
-  const carpet = useGLTF('models/carpet.glb', true);
-  const pc = useGLTF('models/pc.glb', true);
-  const sofa = useGLTF('models/sofa.glb', true);
-  const wallShelf = useGLTF('models/wallshelf.glb', true);
-  const cat = useGLTF('models/cat.glb', true);
-
-  // const moonTexture = useTexture('images/moon.png');
-  const moonTexture = useTexture('images/squre_moon.png');
-
-  // 테스트용으로 넣어놓은 texture
-  const customTexture1 = useTexture(
-    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/456a5c36-d285-43b9-86f2-46f090175a5e',
-  );
-  const customTexture2 = useTexture(
-    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/f63c52a8-5eb8-4877-b275-d5a4c0d4b91d',
-  );
-  const customTexture3 = useTexture(
-    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/f63c52a8-5eb8-4877-b275-d5a4c0d4b91d',
-  );
-  const customTexture4 = useTexture(
-    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/a38ba2ff-e8e7-469a-be7a-f988b8817a49',
-  );
-  const customTexture5 = useTexture(
-    'https://a307.s3.ap-northeast-2.amazonaws.com/photo/65f19542-8198-40a0-8baa-36c4689a5e1c',
-  );
-
-  // rose
-
   const rose = useGLTF('models/low_poly_rose_in_glass_jar.glb', true);
+  const moonTexture = useTexture('images/squre_moon.png');
+  const createTexture = useTexture('images/category_create.png');
 
   let mixer = new THREE.AnimationMixer(fox.scene);
   let preventDragClick: boolean = false;
@@ -84,16 +46,6 @@ function Scene() {
       );
       if (get_all_category.status === 200) {
         setCategory(get_all_category.data);
-        const arr: number[] = [];
-        const categoryObject: CategoryIds = {};
-        category?.forEach((category: CategoryInfo) => {
-          arr.push(category.objectId);
-          const objectId = category.objectId;
-          const categoryId = category.categoryId;
-          categoryObject[objectId] = categoryId;
-        });
-        setObjectIds([...arr]);
-        setCategoryIds({ ...categoryObject });
       }
     } catch (err) {
       console.error(err);
@@ -104,27 +56,7 @@ function Scene() {
     fetchData();
   }, []);
 
-  const clickBed = (e: any) => {
-    if (!preventDragClick) navigate('/photo-cloud/1');
-    e?.stopPropagation();
-  };
-
-  const clickCoffeeTable = (e: any) => {
-    if (!preventDragClick) navigate('/photo-cloud/2');
-    e?.stopPropagation();
-  };
-
-  const clickBookShelf = (e: any) => {
-    if (!preventDragClick) navigate('/photo-cloud/3');
-    e?.stopPropagation();
-  };
-
-  const clickDeskChair = (e: any) => {
-    if (!preventDragClick) navigate('/photo-cloud/4');
-    e?.stopPropagation();
-  };
-
-  const clickCustomFurniture = (e: any, id: number) => {
+  const clickStar = (e: any, id: number) => {
     if (!preventDragClick) navigate(`/photo-cloud/${id}`);
     e?.stopPropagation();
   };
@@ -170,6 +102,19 @@ function Scene() {
     }
   });
 
+  const spherePosition = [
+    [25, 3, -10],
+    [10, 20, -10],
+    [10, 20, -30],
+    [-10, -10, -20],
+    [-25, 3, -10],
+    [5, 0, 30],
+    [-10, 3, 30],
+    [-10, 25, 20],
+    [40, 0, 20],
+    [3, -15, 50],
+  ];
+
   return (
     <Suspense fallback={<div>loading...</div>}>
       <directionalLight position={[200, 50, 100]} intensity={1.2} />
@@ -178,42 +123,33 @@ function Scene() {
         <sphereGeometry args={[50, 16]}></sphereGeometry>
         <meshStandardMaterial color="yellow" map={moonTexture} />
       </mesh>
-      <mesh rotation={[0, 0, 0]} position={[25, 3, -10]}>
-        <boxGeometry args={[5, 5, 5]}></boxGeometry>
-        <meshStandardMaterial map={customTexture5} />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[10, 20, -10]}>
-        <boxGeometry args={[5, 5, 5]}></boxGeometry>
-        <meshStandardMaterial color="pink" />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[10, 20, -30]}>
-        <sphereGeometry args={[5, 16]}></sphereGeometry>
-        <meshStandardMaterial color="yellow" />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[-10, -10, -20]}>
-        <sphereGeometry args={[5, 16]}></sphereGeometry>
-        <meshStandardMaterial map={customTexture1} />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[-25, 3, -10]}>
-        <sphereGeometry args={[5, 16]}></sphereGeometry>
-        <meshStandardMaterial map={customTexture4} />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[10, 0, 30]}>
-        <sphereGeometry args={[5, 16]}></sphereGeometry>
-        <meshStandardMaterial color="orange" />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[-10, 3, 30]}>
-        <boxGeometry args={[5, 5, 5]}></boxGeometry>
-        <meshStandardMaterial map={customTexture2} />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[-10, 25, 20]}>
-        <boxGeometry args={[5, 5, 5]}></boxGeometry>
-        <meshStandardMaterial color="red" />
-      </mesh>
-      <mesh rotation={[0, 0, 0]} position={[40, 0, 20]}>
-        <octahedronGeometry args={[5, 16]}></octahedronGeometry>
-        <meshStandardMaterial map={customTexture3} />
-      </mesh>
+      {category && category.length > 0 ? (
+        <>
+          {category.map((cat, idx) => {
+            const position = new THREE.Vector3(...spherePosition[idx]);
+            const texture = new THREE.TextureLoader().load(cat.imageUrl);
+            return (
+              <mesh
+                rotation={[0, 0, 0]}
+                position={position}
+                onClick={(e) => clickStar(e, cat.categoryId)}
+              >
+                <sphereGeometry args={[5, 16]}></sphereGeometry>
+                <meshStandardMaterial map={texture} />
+              </mesh>
+            );
+          })}
+        </>
+      ) : (
+        <mesh
+          rotation={[0, Math.PI / 4, 0]}
+          position={[0, 0, 0]}
+          onClick={() => navigate('/photo-cloud/create-category')}
+        >
+          <planeGeometry args={[50, 9, 1]}></planeGeometry>
+          <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
+        </mesh>
+      )}
 
       <primitive
         object={fox.scene}

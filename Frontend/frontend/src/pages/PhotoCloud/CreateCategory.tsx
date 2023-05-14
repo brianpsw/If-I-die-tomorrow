@@ -2,23 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
-import {
-  categoryState,
-  exchangeCategoryState,
-} from '../../states/CategoryState';
+import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import PhotoInput from '../../components/PhotoCloud/PhotoInput';
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
+import { LeakAdd } from '@mui/icons-material';
 
 function CreateCategory() {
   const navigate = useNavigate();
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [thumbColor, setThumbColor] = useState<string | null>('');
   const category = useRecoilValue(categoryState);
-  const exchange = useRecoilValue(exchangeCategoryState);
   const [customTitle, setCustomTitle] = useState<string>('');
-  const [usedObjects, setUsedObjects] = useState<number[]>([]);
   const [isFirst, setIsFirst] = useState<boolean>(true);
   const [selectedObject, setSelectedObject] = useState<number | null>(null);
   const recommendCategory: string[] = [
@@ -31,18 +31,12 @@ function CreateCategory() {
     '내가 가장 오래 사용한 물건',
   ];
 
-  useEffect(() => {
-    const arr: number[] = [];
-    category?.forEach((cat) => {
-      arr.push(cat.objectId);
-    });
-    setUsedObjects(() => [...arr]);
-  }, []);
-
+  // 카테고리명 확정짓는 함수
   const handleCategory = (category: string) => {
     setCustomTitle(category);
   };
 
+  // 카테고리명 유효성 검사
   const handleTitle = (e: any) => {
     const regExp = /^.{0,30}$/;
 
@@ -53,6 +47,7 @@ function CreateCategory() {
     }
   };
 
+  // 다음단계로 넘어가기 전 카테고리명 존재 검사
   const handleNextStep = () => {
     const expspaces = /  +/g;
     if (customTitle === '') {
@@ -64,32 +59,43 @@ function CreateCategory() {
     }
   };
 
+  // 카테고리 생성 api 보내기 전 사진 유효성 검사
   const checkBeforeSend = () => {
-    if (selectedObject) {
+    if (photoFile) {
       sendCategory();
     } else {
-      alert('오브젝트를 선택해주세요.');
+      alert('사진을 넣어주세요.');
     }
   };
 
-  const handleClickObject = (id: number) => {
-    if (selectedObject === id) {
-      setSelectedObject(() => null);
-    } else {
-      setSelectedObject(() => id);
-    }
+  const changeColor = (e: any) => {
+    setThumbColor(() => e.target.value);
   };
 
+  // 카테고리 생성 api 보내기
   const sendCategory = async () => {
     try {
+      const formData = new FormData();
+      formData.append(
+        'data',
+        JSON.stringify({
+          name: customTitle,
+          color: thumbColor,
+        }),
+      );
+
+      if (photoFile) {
+        formData.append('image', photoFile);
+      }
+
       const post_category = await defaultApi.post(
         requests.POST_CATEGORY(),
-        {
-          name: customTitle,
-          objectId: selectedObject,
-        },
+        formData,
         {
           withCredentials: true,
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
         },
       );
       if (post_category.status === 201) {
@@ -111,9 +117,9 @@ function CreateCategory() {
           }}
         />
 
-        <p className="text-h4 text-white text-center my-6">
+        <h4 className="text-h4 text-white text-center my-6">
           사진 카테고리를 만들어보세요.
-        </p>
+        </h4>
         {isFirst ? (
           <div>
             <div className="flex flex-wrap justify-center ">
@@ -154,50 +160,29 @@ function CreateCategory() {
           </div>
         ) : (
           <div>
-            <div className="flex flex-wrap justify-center">
-              {Object.keys(exchange)?.map((ex: string) => {
-                if (!usedObjects.includes(parseInt(ex, 10))) {
-                  if (parseInt(ex, 10) === selectedObject) {
-                    return (
-                      <div
-                        key={ex}
-                        className="w-2/6 h-20 min-h-[60px] bg-pink_100 rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
-                        onClick={() => handleClickObject(parseInt(ex))}
-                      >
-                        <div
-                          style={{
-                            width: '60px',
-                            height: '60px',
-                            backgroundSize: '500%',
-                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: `${exchange[ex]}`,
-                          }}
-                        ></div>
-                      </div>
-                    );
-                  } else {
-                    return (
-                      <div
-                        key={ex}
-                        className="w-2/6 h-20 min-h-[60px] bg-white rounded-[10px] mr-6 mb-6 flex justify-center items-center cursor-pointer"
-                        onClick={() => setSelectedObject(parseInt(ex))}
-                      >
-                        <div
-                          style={{
-                            width: '60px',
-                            height: '60px',
-                            backgroundSize: '500%',
-                            backgroundImage: `url('https://a307.s3.ap-northeast-2.amazonaws.com/thumbnail/thumbnail_and_logo_remove.webp')`,
-                            backgroundRepeat: 'no-repeat',
-                            backgroundPosition: `${exchange[ex]}`,
-                          }}
-                        ></div>
-                      </div>
-                    );
-                  }
-                }
-              })}
+            <p className="text-p1 text-white text-center mb-6">
+              카테고리 썸네일을 추가해주세요.
+            </p>
+            <div className="flex flex-col justify-center items-center mb-6">
+              <PhotoInput
+                imgUrl={imgUrl}
+                setImgUrl={setImgUrl}
+                photoFile={photoFile}
+                setPhotoFile={setPhotoFile}
+              />
+              <label
+                htmlFor="colorPicker"
+                className="cursor-pointer text-p2 text-white mb-4"
+              >
+                썸네일 배경색을 추가해보세요! (기본값은 흰색입니다.)
+              </label>
+              <input
+                type="color"
+                defaultValue="#FFFFFF"
+                className="cursor-pointer md:w-[40%] sm:w-[60%] w-[100%] h-[60px] bg-transparent"
+                id="colorPicker"
+                onChange={(e) => changeColor(e)}
+              ></input>
             </div>
             <Button
               color={'#36C2CC'}

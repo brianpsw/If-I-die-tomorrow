@@ -102,6 +102,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   const name = photoData?.category.name;
   const photos = photoData?.photos;
 
+  // 카테고리 누를 때마다 해당 카테고리명을 바꿈
   useEffect(() => {
     fetchData();
     setEditTitle(name!);
@@ -111,6 +112,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     setEditContent(selectedPhotoCaption);
   }, [selectedPhotoId]);
 
+  // 캡션 수정시 photo 다시 불러오기
   useEffect(() => {
     if (deleteContent) fetchData();
   }, [deleteContent]);
@@ -233,22 +235,18 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               {name && (
                 <h4 className="text-h4 text-white text-center">{name}</h4>
               )}
-              {categoryId === 1 ||
-              categoryId === 2 ||
-              categoryId === 3 ||
-              categoryId === 4 ? null : (
-                <img
-                  className="absolute"
-                  style={{ top: '35%', right: '-5%' }}
-                  src={whiteThreeDot}
-                  alt="three dot button"
-                  onClick={() => {
-                    handleEditOrDeleteModalOpen();
-                    setEpic('제목');
-                    setCategoryOwner(categoryUser ? categoryUser : null);
-                  }}
-                />
-              )}
+
+              <img
+                className="absolute"
+                style={{ top: '35%', right: '-5%' }}
+                src={whiteThreeDot}
+                alt="three dot button"
+                onClick={() => {
+                  handleEditOrDeleteModalOpen();
+                  setEpic('제목');
+                  setCategoryOwner(categoryUser ? categoryUser : null);
+                }}
+              />
             </div>
           )}
           <div>
