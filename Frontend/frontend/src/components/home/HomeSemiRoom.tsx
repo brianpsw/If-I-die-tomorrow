@@ -17,7 +17,7 @@ interface CategoryInfo {
   imageUrl: string;
 }
 
-function Scene() {
+function HomeScene() {
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
   const { gl, mouse, scene } = useThree();
@@ -57,7 +57,8 @@ function Scene() {
   }, []);
 
   const clickStar = (e: any, id: number) => {
-    if (!preventDragClick) navigate(`/photo-cloud/${id}`);
+    // if (!preventDragClick)
+    navigate(`/photo-cloud/${id}`);
     e?.stopPropagation();
   };
 
@@ -73,34 +74,34 @@ function Scene() {
     e?.stopPropagation();
   };
 
-  const calculateMousePosition = (e: any) => {
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
-  };
+  // const calculateMousePosition = (e: any) => {
+  //   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  //   mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
+  // };
 
-  let clickStartTime: any;
+  // let clickStartTime: any;
 
-  // 마우스 이벤트
+  // // 마우스 이벤트
 
-  gl.domElement.addEventListener('mousedown', (e) => {
-    calculateMousePosition(e);
-    clickStartTime = Date.now();
-  });
+  // gl.domElement.addEventListener('mousedown', (e) => {
+  //   calculateMousePosition(e);
+  //   clickStartTime = Date.now();
+  // });
 
-  gl.domElement.addEventListener('mouseup', (e) => {
-    const nowX = (e.clientX / window.innerWidth) * 2 - 1;
-    const nowY = -((e.clientY / window.innerHeight) * 2 - 1);
-    const xGap = nowX - mouse.x;
-    const yGap = nowY - mouse.y;
+  // gl.domElement.addEventListener('mouseup', (e) => {
+  //   const nowX = (e.clientX / window.innerWidth) * 2 - 1;
+  //   const nowY = -((e.clientY / window.innerHeight) * 2 - 1);
+  //   const xGap = nowX - mouse.x;
+  //   const yGap = nowY - mouse.y;
 
-    const timeGap = Date.now() - clickStartTime;
+  //   const timeGap = Date.now() - clickStartTime;
 
-    if (xGap > 5 || yGap > 5 || timeGap > 100) {
-      preventDragClick = true;
-    } else {
-      preventDragClick = false;
-    }
-  });
+  //   if (xGap > 5 || yGap > 5 || timeGap > 100) {
+  //     preventDragClick = true;
+  //   } else {
+  //     preventDragClick = false;
+  //   }
+  // });
 
   const spherePosition = [
     [25, 3, -10],
@@ -130,6 +131,7 @@ function Scene() {
             const texture = new THREE.TextureLoader().load(cat.imageUrl);
             return (
               <mesh
+                key={cat.categoryId}
                 rotation={[0, 0, 0]}
                 position={position}
                 onClick={(e) => clickStar(e, cat.categoryId)}
@@ -184,7 +186,7 @@ function HomeSemiRoom() {
         zoom: 5,
       }}
     >
-      <Scene />
+      <HomeScene />
     </Canvas>
   );
 }
