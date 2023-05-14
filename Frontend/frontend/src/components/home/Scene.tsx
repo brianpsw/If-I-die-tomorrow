@@ -1,4 +1,4 @@
-import React, { Suspense, useState, useRef, RefObject } from 'react';
+import React, { Suspense, useState, useRef, RefObject, useEffect } from 'react';
 
 import * as THREE from 'three';
 import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
@@ -9,10 +9,11 @@ import gsap from 'gsap';
 interface roomProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMoveUrl: React.Dispatch<React.SetStateAction<string>>;
+  setCurrentPosition: React.Dispatch<React.SetStateAction<THREE.Vector3>>;
 }
 
 function Scene(props: roomProps) {
-  const { setIsModalOpen, setMoveUrl } = props;
+  const { setIsModalOpen, setMoveUrl, setCurrentPosition } = props;
   const foxRef = useRef<THREE.Object3D>(null);
   const pointRef: RefObject<THREE.Mesh> = useRef(null);
   const { gl, scene, camera, raycaster, mouse } = useThree();
@@ -119,6 +120,8 @@ function Scene(props: roomProps) {
   const racket = useGLTF('models/racket.glb');
   const ball = useGLTF('models/tennis_ball.glb');
 
+  //렌더링 최적화를 위한 메모이제이션
+
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
     const intersects = raycaster.intersectObjects(meshes);
@@ -167,6 +170,15 @@ function Scene(props: roomProps) {
       },
     });
   };
+
+  useEffect(() => {
+    setCurrentPosition((prevState) => {
+      if (!foxRef.current) return prevState;
+      const newPosition = foxRef.current.position;
+      if (newPosition.equals(prevState)) return prevState;
+      return newPosition;
+    });
+  }, [foxRef.current?.position]);
 
   useFrame((state, delta) => {
     if (mixer) mixer.update(delta);
