@@ -12,7 +12,7 @@ import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
 import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
-import ReportModal from '../../components/common/ReportModal';
+import ReportModal from '../../components/common/DiaryReportModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
 
@@ -332,17 +332,7 @@ function DiaryDetail() {
           onUpdate={handleUpdate}
         />
       )}
-      {editModalOpen && diaryDetail && (
-        <EditDiaryModal
-          diaryId={diaryDetail.diaryId}
-          title={diaryDetail.title}
-          content={diaryDetail.content}
-          secret={diaryDetail.secret}
-          image={diaryDetail.imageUrl}
-          onClose={handleEditModalClose}
-          onUpdate={handleUpdate}
-        />
-      )}
+
       {deleteConfirmModalOpen && (
         <DeleteConfirmModal
           onClose={closeDeleteConfirmModal}
