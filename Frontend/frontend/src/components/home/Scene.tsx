@@ -1,6 +1,7 @@
 import React, { Suspense, useState, useRef, RefObject } from 'react';
 
 import * as THREE from 'three';
+import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
@@ -31,6 +32,7 @@ function Scene(props: roomProps) {
   const cameraPosition = new THREE.Vector3(1, 5, 5);
 
   camera.zoom = 50;
+  // camera.zoom = 10;
   camera.updateProjectionMatrix();
 
   // Mesh
@@ -46,9 +48,8 @@ function Scene(props: roomProps) {
   scene.add(floorMesh);
 
   const diaryMesh = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 18),
+    new THREE.CircleGeometry(2.5, 18),
     new THREE.MeshStandardMaterial({
-      color: '',
       transparent: true,
       opacity: 0,
     }),
@@ -59,10 +60,10 @@ function Scene(props: roomProps) {
   scene.add(diaryMesh);
 
   const photoMesh = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 18),
+    new THREE.CircleGeometry(2.5, 18),
     new THREE.MeshStandardMaterial({
       transparent: true,
-      opacity: 0,
+      opacity: 1,
     }),
   );
   photoMesh.position.set(35, 0.005, 30);
@@ -71,7 +72,7 @@ function Scene(props: roomProps) {
   scene.add(photoMesh);
 
   const willMesh = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 18),
+    new THREE.CircleGeometry(2.5, 18),
     new THREE.MeshStandardMaterial({
       transparent: true,
       opacity: 0,
@@ -83,7 +84,7 @@ function Scene(props: roomProps) {
   scene.add(willMesh);
 
   const bucketMesh = new THREE.Mesh(
-    new THREE.CircleGeometry(5, 18),
+    new THREE.CircleGeometry(2.5, 18),
     new THREE.MeshStandardMaterial({
       transparent: true,
       opacity: 0,
@@ -94,17 +95,29 @@ function Scene(props: roomProps) {
   bucketMesh.receiveShadow = true;
   scene.add(bucketMesh);
 
-  const fox = useGLTF('models/fox.glb', true);
+  const fox = useGLTF('models/fox_2.glb', true);
   const foxModelMesh = fox.scene.children[0];
   let mixer = new THREE.AnimationMixer(fox.scene);
   const action1 = mixer.clipAction(fox.animations[0]);
-  const walk = mixer.clipAction(fox.animations[2]);
+  const run = mixer.clipAction(fox.animations[2]);
   action1.play();
 
+  // router object들
   const diary = useGLTF('models/diary.glb', true);
   const photo = useGLTF('models/photoroom.glb', true);
   const bucket = useGLTF('models/bucket.glb', true);
   const will = useGLTF('models/letter2.glb', true);
+
+  // 팀원들 오브젝트
+
+  const heart = useGLTF('models/heart.glb');
+  const bicycle = useGLTF('models/bicycle.glb');
+  const blueberry = useGLTF('models/blueberry.glb');
+  const cake = useGLTF('models/cake.glb');
+  const cooking = useGLTF('models/cooking.glb');
+  const ethereum = useGLTF('models/ethereum.glb');
+  const racket = useGLTF('models/racket.glb');
+  const ball = useGLTF('models/tennis_ball.glb');
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -180,7 +193,7 @@ function Scene(props: roomProps) {
         camera.position.z = cameraPosition.z + foxRef.current.position.z;
 
         action1.stop();
-        walk.play();
+        run.play();
 
         if (
           Math.abs(pointRef.current.position.x - foxRef.current.position.x) <
@@ -199,10 +212,10 @@ function Scene(props: roomProps) {
             duration: 1,
             y: Math.PI * 2 - Math.PI / 1.5,
           });
-          cameraMoving();
+
           if (
-            Math.abs(diaryMesh.position.x - foxRef.current.position.x) < 4 &&
-            Math.abs(diaryMesh.position.z - foxRef.current.position.z) < 4
+            Math.abs(diaryMesh.position.x - foxRef.current.position.x) < 3 &&
+            Math.abs(diaryMesh.position.z - foxRef.current.position.z) < 3
           ) {
             setMoveUrl(() => '/diary');
             setIsModalOpen(() => true);
@@ -217,10 +230,10 @@ function Scene(props: roomProps) {
             duration: 1,
             y: Math.PI * 2 - Math.PI / 1.5,
           });
-          cameraMoving();
+
           if (
-            Math.abs(photoMesh.position.x - foxRef.current.position.x) < 4 &&
-            Math.abs(photoMesh.position.z - foxRef.current.position.z) < 4
+            Math.abs(photoMesh.position.x - foxRef.current.position.x) < 3 &&
+            Math.abs(photoMesh.position.z - foxRef.current.position.z) < 3
           ) {
             setMoveUrl(() => '/photo-cloud');
             setIsModalOpen(() => true);
@@ -235,10 +248,10 @@ function Scene(props: roomProps) {
             duration: 1,
             y: Math.PI * 2 - Math.PI / 1.5,
           });
-          cameraMoving();
+
           if (
-            Math.abs(willMesh.position.x - foxRef.current.position.x) < 4 &&
-            Math.abs(willMesh.position.z - foxRef.current.position.z) < 4
+            Math.abs(willMesh.position.x - foxRef.current.position.x) < 3 &&
+            Math.abs(willMesh.position.z - foxRef.current.position.z) < 3
           ) {
             setMoveUrl(() => '/will');
             setIsModalOpen(() => true);
@@ -253,17 +266,17 @@ function Scene(props: roomProps) {
             duration: 1,
             y: Math.PI * 2 - Math.PI / 1.5,
           });
-          cameraMoving();
+
           if (
-            Math.abs(bucketMesh.position.x - foxRef.current.position.x) < 4 &&
-            Math.abs(bucketMesh.position.z - foxRef.current.position.z) < 4
+            Math.abs(bucketMesh.position.x - foxRef.current.position.x) < 3 &&
+            Math.abs(bucketMesh.position.z - foxRef.current.position.z) < 3
           ) {
             setMoveUrl(() => '/bucket');
             setIsModalOpen(() => true);
           }
         }
       } else {
-        walk.stop();
+        run.stop();
         action1.play();
       }
     }
@@ -302,8 +315,8 @@ function Scene(props: roomProps) {
     <Suspense fallback={<div>loading...</div>}>
       <ambientLight intensity={0.7} />
       <directionalLight
-        position={[1, 1, 1]}
-        intensity={0.5}
+        position={[1, 5, 1]}
+        intensity={0.7}
         shadow-mapSize={[2048, 2048]}
         castShadow={true}
       >
@@ -318,12 +331,59 @@ function Scene(props: roomProps) {
         <circleGeometry args={[1, 16]}></circleGeometry>
         <meshStandardMaterial transparent />
       </mesh>
-
+      <primitive
+        object={heart.scene}
+        scale={[0.01, 0.01, 0.01]}
+        position={[20, 5, 20]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={bicycle.scene}
+        scale={[0.01, 0.01, 0.01]}
+        position={[-25, 5, 10]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={blueberry.scene}
+        scale={[0.1, 0.1, 0.1]}
+        position={[20, 0, -20]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={cake.scene}
+        scale={[50, 50, 50]}
+        position={[-20, 0, -20]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={cooking.scene}
+        scale={[1, 1, 1]}
+        position={[0, 0, -40]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={ethereum.scene}
+        scale={[1, 1, 1]}
+        position={[5, 5, 30]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={racket.scene}
+        scale={[1, 1, 1]}
+        position={[-35, 5, 40]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={ball.scene}
+        scale={[0.4, 0.4, 0.4]}
+        position={[-35, 5.5, 40]}
+        rotation={[0, 0, 0]}
+      />
       <primitive
         ref={foxRef}
         object={fox.scene}
         scale={[1, 1, 1]}
-        position={[0, 1, 0]}
+        position={[0, 1.3, 0]}
         rotation={[0, -Math.PI / 2, 0]}
         receiveShadow={true}
       />
