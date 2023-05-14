@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
-import { exchangeCategoryState } from '../../states/CategoryState';
 
 import { CategoryWrapper } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 
@@ -27,10 +26,6 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
-  const exchange = useRecoilValue(exchangeCategoryState);
-  const [scroll, setScroll] = useState<
-    'visible' | 'hidden' | 'scroll' | 'auto' | 'inherit' | 'initial' | 'unset'
-  >('scroll');
 
   const fetchData = async () => {
     try {
