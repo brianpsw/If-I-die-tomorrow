@@ -89,7 +89,7 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 
 	@Override
-	public CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException {
+	public CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException {
 
 		//		유저 정보 파싱
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -98,6 +98,8 @@ public class CommunityServiceImpl implements CommunityService{
 		// 존재하지 않는 게시글에 댓글 작성
 		boolean isExisting = req.getType() ? diaryRepository.existsById(req.getTypeId()) : bucketRepository.existsById(req.getTypeId());
 		if (!isExisting) throw new NotFoundException("존재하지 않는 게시글입니다.");
+
+		if ("".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
 
 
 		Comment comment = commentRepository.save(req.toEntity(userId));

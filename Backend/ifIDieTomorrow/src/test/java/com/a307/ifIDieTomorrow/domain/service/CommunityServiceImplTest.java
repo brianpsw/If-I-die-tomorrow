@@ -16,6 +16,7 @@ import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
 import org.assertj.core.api.BDDAssertions;
@@ -393,7 +394,7 @@ class CommunityServiceImplTest {
 
 			@Test
 			@DisplayName("다이어리에 댓글 생성")
-			void createCommentForDiary() throws NotFoundException {
+			void createCommentForDiary() throws NotFoundException, IllegalArgumentException {
 
 				// Given
 				CreateCommentReqDto req = CreateCommentReqDto.builder()
@@ -431,7 +432,7 @@ class CommunityServiceImplTest {
 
 			@Test
 			@DisplayName("버킷에 댓글 생성")
-			void createCommentForBucket() throws NotFoundException {
+			void createCommentForBucket() throws NotFoundException, IllegalArgumentException {
 
 				// Given
 				CreateCommentReqDto req = CreateCommentReqDto.builder()
