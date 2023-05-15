@@ -66,11 +66,10 @@ const ButtonWrap = styled.div`
 `;
 
 const DeleteImageButton = styled.button`
-  ${tw`flex px-2 py-1 rounded mt-2`}
-  justify-content: flex-end;
-  color: black;
-  width: 100%;
-  text-align: center;
+  ${tw`fill-black w-[30px] absolute h-[30px] right-[4px] top-[4px] cursor-pointer`}// justify-content: flex-end;
+  // color: black;
+  // width: 100%;
+  // text-align: center;
 `;
 
 interface EditBucketModalProps {
@@ -218,8 +217,16 @@ function EditBucketModal({
               <div className="image-upload-container w-full h-full">
                 {imageUrl ? (
                   <div className="relative">
-                    <DeleteImageButton onClick={removeImage}>
+                    {/* <DeleteImageButton onClick={removeImage}>
                       <Icon icon="line-md:remove" />
+                    </DeleteImageButton> */}
+                    <DeleteImageButton onClick={removeImage}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                      >
+                        <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                      </svg>
                     </DeleteImageButton>
                     <img
                       className="image-upload-preview w-auto h-full bg-auto "
