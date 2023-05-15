@@ -1,7 +1,6 @@
 import React, { Suspense, useState, useRef, RefObject, useEffect } from 'react';
 
 import * as THREE from 'three';
-import * as BufferGeometryUtils from 'three/examples/jsm/utils/BufferGeometryUtils';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
@@ -9,16 +8,17 @@ import gsap from 'gsap';
 interface roomProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMoveUrl: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentPosition: React.Dispatch<React.SetStateAction<THREE.Vector3>>;
+  updatePosition: (position: THREE.Vector3) => void;
 }
 
 function Scene(props: roomProps) {
-  const { setIsModalOpen, setMoveUrl, setCurrentPosition } = props;
+  const { setIsModalOpen, setMoveUrl, updatePosition } = props;
   const foxRef = useRef<THREE.Object3D>(null);
   const pointRef: RefObject<THREE.Mesh> = useRef(null);
   const { gl, scene, camera, raycaster, mouse } = useThree();
   const [isPressed, setIsPressed] = useState<boolean>(false);
   const [foxIsMoving, setFoxIsMoving] = useState<boolean>(false);
+
   // Texture
   const floorTexture = useTexture('images/test2.png');
 
@@ -111,7 +111,6 @@ function Scene(props: roomProps) {
 
   // 팀원들 오브젝트
 
-  const heart = useGLTF('models/heart.glb');
   const honey = useGLTF('models/honey.glb');
   const bicycle = useGLTF('models/bicycle.glb');
   const blueberry = useGLTF('models/blueberry.glb');
@@ -151,35 +150,7 @@ function Scene(props: roomProps) {
     mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
   };
 
-  const cameraMoving = () => {
-    gsap.to(camera.position, {
-      duration: 1,
-      y: 2,
-    });
-    gsap.to(camera, {
-      duration: 1,
-      zoom: 30,
-      onUpdate: function () {
-        camera.updateProjectionMatrix();
-      },
-    });
-    gsap.to(camera, {
-      duration: 1,
-      near: -100,
-      onUpdate: function () {
-        camera.updateProjectionMatrix();
-      },
-    });
-  };
-
-  useEffect(() => {
-    setCurrentPosition((prevState) => {
-      if (!foxRef.current) return prevState;
-      const newPosition = foxRef.current.position;
-      if (newPosition.equals(prevState)) return prevState;
-      return newPosition;
-    });
-  }, [foxRef.current?.position]);
+  let currentPosition = new THREE.Vector3(0, 0, 0);
 
   useFrame((state, delta) => {
     if (mixer) mixer.update(delta);
@@ -291,6 +262,12 @@ function Scene(props: roomProps) {
       } else {
         run.stop();
         action1.play();
+        let nowPosition = foxRef.current!.position;
+        if (nowPosition !== currentPosition) {
+          updatePosition(nowPosition);
+
+          currentPosition = nowPosition;
+        }
       }
     }
     gl.render(scene, camera);
@@ -344,12 +321,7 @@ function Scene(props: roomProps) {
         <circleGeometry args={[1, 16]}></circleGeometry>
         <meshStandardMaterial transparent />
       </mesh>
-      <primitive
-        object={heart.scene}
-        scale={[0.01, 0.01, 0.01]}
-        position={[20, 5, 20]}
-        rotation={[0, 0, 0]}
-      />
+
       <primitive
         object={bicycle.scene}
         scale={[0.01, 0.01, 0.01]}

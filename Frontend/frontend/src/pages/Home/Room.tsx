@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as THREE from 'three';
@@ -15,17 +15,31 @@ function Room() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [moveUrl, setMoveUrl] = useState<string>('');
   const [isMapShow, setIsMapShow] = useState<boolean>(false);
-  const [currentPosition, setCurrentPosition] = useState<THREE.Vector3>(
-    new THREE.Vector3(0, 0, 0),
-  );
+  const [topPosition, setTopPosition] = useState<string>('48%');
+  const [leftPosition, setLeftPosition] = useState<string>('48%');
 
-  console.log(currentPosition);
+  let tmpTop = '48%';
+  let tmpLeft = '48%';
+
+  const updatePosition = (position: THREE.Vector3) => {
+    tmpTop = (48 + position.z).toString() + '%';
+    tmpLeft = (48 + position.x).toString() + '%';
+    setTopPosition(() => tmpTop);
+    setLeftPosition(() => tmpLeft);
+  };
+
+  useEffect(() => {
+    console.log(topPosition + ' ' + leftPosition);
+    setTopPosition(() => tmpTop);
+    setLeftPosition(() => tmpLeft);
+  }, [tmpTop, tmpLeft]);
+
   return (
     <div className="relative">
       {isModalOpen ? (
         <Modal>
           <div className="flex flex-col">
-            <p className="text-p1 mt-6">해당 페이지로 이동하시겠습니까?</p>
+            <p className="text-p1 mt-6">해당 페이지로 이동하시겠습니까??</p>
             <div className="flex justify-evenly my-6">
               <Button
                 color="#36C2CC"
@@ -58,9 +72,12 @@ function Room() {
         />
       </div>
       {isMapShow && (
-        <div className="fixed top-[60px] left-6 z-20 w-[100px] h-[100px] border-2 border-black">
+        <div className="fixed top-[60px] left-6 z-20 w-[200px] h-[200px] border-2 border-black">
           <img src={Map} alt="미니맵" className="relative" />
-          <div className="bg-red w-2 h-2 absolute top-[47%] left-[47%]"></div>
+          <div
+            className="bg-red w-2 h-2 absolute rounded-[10px]"
+            style={{ top: topPosition, left: leftPosition }}
+          ></div>
         </div>
       )}
       <div className="fixed top-6 right-6 z-10">
@@ -74,7 +91,7 @@ function Room() {
         <Scene
           setIsModalOpen={setIsModalOpen}
           setMoveUrl={setMoveUrl}
-          setCurrentPosition={setCurrentPosition}
+          updatePosition={updatePosition}
         />
       </Canvas>
     </div>
