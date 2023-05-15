@@ -79,7 +79,7 @@ const CommentDotIcon = styled.div`
 
 const ContentTitle = styled.div`
   ${tw``}
-  width: 280px;
+  width: 100%;
   word-break: break-all;
   text-overflow: ellipsis;
   word-wrap: break-word;
