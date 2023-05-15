@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import SignatureCanvas from 'react-signature-canvas'; // 라이브러리 import
 import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
@@ -8,9 +9,9 @@ import TopBar from '../../components/common/TopBar';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
-
+import AppTitle from '../../assets/images/app_title.svg';
 const Container = styled.div`
-  ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
+  ${tw`flex flex-col justify-center rounded-xl items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
 
 const SignatureCanvasContainer = styled.div`
@@ -53,18 +54,24 @@ function WillSign(): JSX.Element {
     }
     const patch_will_sign = async () => {
       try {
-        const response = await defaultApi.patch(
-          requests.PATCH_WILL_SIGN(),
-          formData,
-          {
-            withCredentials: true,
-          },
-        );
+        await defaultApi.patch(requests.PATCH_WILL_SIGN(), formData, {
+          withCredentials: true,
+        });
         get_will();
         setEditSign(false);
         setIsValid(false);
-        console.log(response);
+        Swal.fire({
+          title: '서명 등록 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '서명 등록 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -83,7 +90,6 @@ function WillSign(): JSX.Element {
     if (signCanvas.current) {
       const isSignatureEmpty = signCanvas.current.isEmpty();
       if (isSignatureEmpty) {
-        console.log('서명이 존재하지 않습니다.');
       } else {
         const canvasData = signCanvas.current.toDataURL('image/png');
         fetch(canvasData)
@@ -97,7 +103,6 @@ function WillSign(): JSX.Element {
               },
             );
             setSign(file);
-            console.log('저장완료');
             setIsValid(true);
           })
           .catch((error) => {
@@ -110,6 +115,9 @@ function WillSign(): JSX.Element {
   return (
     <div>
       <TopBar title="유언장 서명 등록" />
+      <div className="flex justify-center my-[30px]">
+        <img src={AppTitle} alt="" />
+      </div>
       <Container>
         {editSign ? '' : <img src={defaultSign} alt="" />}
         {editSign ? (
