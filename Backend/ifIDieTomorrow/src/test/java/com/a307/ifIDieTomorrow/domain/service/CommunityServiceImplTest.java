@@ -477,6 +477,21 @@ class CommunityServiceImplTest {
 			@DisplayName("존재하지 않는 게시글에 댓글 생성 시 예외처리")
 			void throwsExceptionWhenArticleDoesntExist(){
 
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(false);
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.createComment(req))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("존재하지 않는 게시글입니다.");
+
+				then(commentRepository).shouldHaveNoInteractions();
 			}
 
 		}
