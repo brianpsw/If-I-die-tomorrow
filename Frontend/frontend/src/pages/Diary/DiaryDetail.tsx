@@ -16,6 +16,7 @@ import DeleteConfirmModal from '../../components/diary/DiaryDeleteModal';
 import ReportModal from '../../components/common/DiaryReportModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
+import { FaUnlock, FaLock } from 'react-icons/fa';
 
 interface Comment {
   commentId: bigint;
@@ -97,17 +98,13 @@ const DiaryImg = styled.div`
   width: 100%;
 `;
 
-const SecretOrNot = styled.div`
-  ${tw``}
-`;
-
 const SecretOrNotText = styled.p`
-  ${tw`text-smT pl-3 pr-3 pt-1 pb-1 mt-10`}
+  ${tw`text-p1`}
   display: inline-block;
   width: content;
   border-radius: 10px;
   // border: 1px solid black;
-  background-color: #36c2cc;
+  // background-color: #36c2cc;
   font-weight: 400;
 `;
 
@@ -356,6 +353,9 @@ function DiaryDetail() {
           <DiaryWrap>
             <DiaryHeader>
               <div>
+                <SecretOrNotText>
+                  {diary.secret ? <FaLock /> : <FaUnlock />}
+                </SecretOrNotText>
                 <ContentTitle className="text-h3">{diary.title}</ContentTitle>
                 <Nickname>{diary.nickname}</Nickname>
 
@@ -380,11 +380,6 @@ function DiaryDetail() {
               )}
             </DiaryImg>
             <DiaryText>{diary.content}</DiaryText>
-            <SecretOrNot>
-              <SecretOrNotText>
-                {diary.secret ? '비공개 다이어리' : '공개된 다이어리'}
-              </SecretOrNotText>
-            </SecretOrNot>
           </DiaryWrap>
           <CommentWrap>
             <CommentLine>댓글</CommentLine>
