@@ -105,6 +105,7 @@ function CreateCategory() {
       }
     } catch (err) {
       console.error(err);
+      btnRef.current!.disabled = false;
     }
   };
 
