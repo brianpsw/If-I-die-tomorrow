@@ -61,7 +61,7 @@ function PhotoCloud() {
 
   useEffect(() => {
     fetchData();
-  }, [category]);
+  }, []);
 
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {
