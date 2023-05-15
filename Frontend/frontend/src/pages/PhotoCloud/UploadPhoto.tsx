@@ -8,13 +8,9 @@ import styled from 'styled-components';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import PhotoInput from '../../components/PhotoCloud/PhotoInput';
 import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
-
-const PhotoUploadWrapper = styled.div`
-  ${tw`md:max-w-[40%] sm:max-w-[60%] p-4 rounded-[10px] cursor-pointer mb-8 bg-[#f6f6f6b3] mx-auto `}
-  width: 100%;
-`;
 
 const ContentWrapper = styled.div`
   ${tw`md:max-w-[40%] sm:max-w-[60%] p-4 rounded-[10px] mb-8 bg-[#f6f6f6b3] mx-auto `}
@@ -27,21 +23,21 @@ function UploadPhoto() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [content, setContent] = useState<string>('');
   const params = useParams();
-  const handleInputPhoto = (e: any) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImgUrl(imageUrl);
-      setPhotoFile(file);
-    }
-  };
+  // const handleInputPhoto = (e: any) => {
+  //   const file = e.target.files?.[0];
+  //   if (file) {
+  //     const imageUrl = URL.createObjectURL(file);
+  //     setImgUrl(imageUrl);
+  //     setPhotoFile(file);
+  //   }
+  // };
 
-  const handlePhotoUpload = (e: any) => {
-    const photoInput = document.getElementById('photo-input');
-    if (photoInput) {
-      photoInput.click();
-    }
-  };
+  // const handlePhotoUpload = (e: any) => {
+  //   const photoInput = document.getElementById('photo-input');
+  //   if (photoInput) {
+  //     photoInput.click();
+  //   }
+  // };
 
   const handleContent = (e: any) => {
     setContent(e.target.value);
@@ -106,8 +102,13 @@ function UploadPhoto() {
         <h4 className="text-h4 text-white text-center my-8">
           사진과 텍스트를 넣어주세요
         </h4>
-
-        <PhotoUploadWrapper onClick={handlePhotoUpload}>
+        <PhotoInput
+          imgUrl={imgUrl}
+          setImgUrl={setImgUrl}
+          photoFile={photoFile}
+          setPhotoFile={setPhotoFile}
+        />
+        {/* <PhotoUploadWrapper onClick={handlePhotoUpload}>
           <div
             style={{
               width: '100%',
@@ -140,7 +141,7 @@ function UploadPhoto() {
             onChange={handleInputPhoto}
             hidden
           />
-        </PhotoUploadWrapper>
+        </PhotoUploadWrapper> */}
         <ContentWrapper>
           <textarea
             rows={5}
