@@ -7,9 +7,12 @@ import TopBar from '../../components/common/TopBar';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
+import './Will.css';
+import AppTitle from '../../assets/images/app_title.svg';
+import Swal from 'sweetalert2';
 
 const Container = styled.div`
-  ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
+  ${tw`flex flex-col justify-center rounded-lg items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
 function WillVideo(): JSX.Element {
   const webcamRef = useRef<Webcam>(null);
@@ -28,7 +31,6 @@ function WillVideo(): JSX.Element {
         withCredentials: true,
       });
       setDefaultVideo(response.data.videoUrl);
-      console.log(response);
     } catch (error) {
       throw error;
     }
@@ -39,12 +41,22 @@ function WillVideo(): JSX.Element {
   const handleDelete = () => {
     const delete_will_video = async () => {
       try {
-        const response = await defaultApi.delete(requests.DELETE_WILL_VIDEO(), {
+        await defaultApi.delete(requests.DELETE_WILL_VIDEO(), {
           withCredentials: true,
         });
         get_will();
-        console.log(response);
+        Swal.fire({
+          title: '동영상 등록 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '동영상 등록 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -53,23 +65,17 @@ function WillVideo(): JSX.Element {
   };
   const handleSubmit = () => {
     const formData = new FormData();
-    console.log(video);
     if (video) {
       formData.append('video', video);
     }
     const patch_will_video = async () => {
       try {
-        const response = await defaultApi.patch(
-          requests.PATCH_WILL_VIDEO(),
-          formData,
-          {
-            withCredentials: true,
-          },
-        );
+        await defaultApi.patch(requests.PATCH_WILL_VIDEO(), formData, {
+          withCredentials: true,
+        });
         get_will();
         setEditVideo(false);
         setIsRecorded(false);
-        console.log(response);
       } catch (error) {
         throw error;
       }
@@ -85,7 +91,6 @@ function WillVideo(): JSX.Element {
     const webcam = webcamRef.current?.video;
     const context = canvasRef?.current?.getContext('2d');
     const canvasStream = canvasRef.current?.captureStream();
-    console.log(canvasRef.current?.width);
     const audioPlusCanvasStream = new MediaStream();
     canvasStream?.getVideoTracks().forEach((videoTrack) => {
       audioPlusCanvasStream.addTrack(videoTrack);
@@ -161,6 +166,9 @@ function WillVideo(): JSX.Element {
   return (
     <div>
       <TopBar title="동영상 유언장" />
+      <div className="flex justify-center my-[30px]">
+        <img src={AppTitle} alt="" />
+      </div>
       <Container>
         {editVideo ? (
           ''
@@ -188,7 +196,8 @@ function WillVideo(): JSX.Element {
           ''
         )}
         {!isRecorded && editVideo && isRecording ? (
-          <span className="text-yellow-500 text-p2 mt-[16px]">
+          <span className="text-red text-p2 mt-[16px] flex items-center">
+            <i className="teaser__title-pre sc-bdVaJa dqrciE mt-[8px]" />
             동영상 촬영 중입니다.
           </span>
         ) : (
@@ -208,11 +217,9 @@ function WillVideo(): JSX.Element {
               </Button>
               <Button
                 onClick={handleDelete}
-                // color={isValid ? '#0E848A' : '#B3E9EB'}
                 color="#0E848A"
                 size="sm"
                 className="mx-[8px]"
-                // disabled={isValid ? false : true}
               >
                 동영상 삭제
               </Button>
@@ -241,20 +248,16 @@ function WillVideo(): JSX.Element {
                   <Button
                     onClick={startRecording}
                     color={!isRecording ? '#0E848A' : '#B3E9EB'}
-                    // color="#0E848A"
                     size="sm"
                     className="mx-[8px]"
-                    // disabled={isValid ? false : true}
                   >
                     녹화 시작
                   </Button>
                   <Button
                     onClick={stopRecording}
                     color={isRecording ? '#0E848A' : '#B3E9EB'}
-                    // color="#0E848A"
                     size="sm"
                     className="mx-[8px]"
-                    // disabled={isValid ? false : true}
                   >
                     녹화 완료
                   </Button>
@@ -266,21 +269,17 @@ function WillVideo(): JSX.Element {
                 <div className="flex">
                   <Button
                     onClick={handleRecordAgain}
-                    // color={isValid ? '#0E848A' : '#B3E9EB'}
                     color="#0E848A"
                     size="sm"
                     className="mx-[8px]"
-                    // disabled={isValid ? false : true}
                   >
                     다시 녹화
                   </Button>
                   <Button
                     onClick={handleSubmit}
-                    // color={isValid ? '#0E848A' : '#B3E9EB'}
                     color="#0E848A"
                     size="sm"
                     className="mx-[8px]"
-                    // disabled={isValid ? false : true}
                   >
                     등록완료
                   </Button>
@@ -293,7 +292,6 @@ function WillVideo(): JSX.Element {
             ''
           )}
         </div>
-        {/* {sign ? <img src={URL.createObjectURL(sign)} alt="" /> : ''} */}
         <canvas
           ref={canvasRef}
           style={{
@@ -305,7 +303,7 @@ function WillVideo(): JSX.Element {
             marginLeft: -999999999,
             zIndex: -1,
           }}
-        ></canvas>
+        />
       </Container>
     </div>
   );
