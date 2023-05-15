@@ -4,6 +4,7 @@ import { userState } from '../../states/UserState';
 import { defaultApi } from '../../api/axios';
 import requests from '../../api/config';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 function Withdrawal() {
   const [user, setUser] = useRecoilState(userState);
@@ -26,11 +27,20 @@ function Withdrawal() {
       localStorage.removeItem('user');
       setIsLoggedIn(null);
       localStorage.removeItem('recoil-persist');
-      alert('회원탈퇴 성공!');
+      Swal.fire({
+        title: '회원탈퇴 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
       navigate('/login');
     } catch (err) {
       console.error(err);
-      alert('회원탈퇴에 실패했습니다. 다시 시도해주세요.');
+      Swal.fire({
+        title: '회원탈퇴에 실패했습니다.',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
 
