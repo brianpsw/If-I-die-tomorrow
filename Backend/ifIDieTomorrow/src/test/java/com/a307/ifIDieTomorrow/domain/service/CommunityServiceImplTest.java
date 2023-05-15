@@ -1,18 +1,24 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
+import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -47,6 +53,8 @@ class CommunityServiceImplTest {
 	private DiaryRepository diaryRepository;
 	@Mock
 	private CommentRepository commentRepository;
+	@Mock
+	private UserRepository userRepository;
 	@Mock
 	private AdminUtil adminUtil;
 	private User user;
@@ -385,13 +393,77 @@ class CommunityServiceImplTest {
 
 			@Test
 			@DisplayName("다이어리에 댓글 생성")
-			void createCommentForDiary(){
+			void createCommentForDiary() throws NotFoundException {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				Comment comment = Comment.builder()
+						.commentId(1L)
+						.content(req.getContent())
+						.userId(1L)
+						.type(req.getType())
+						.typeId(req.getTypeId())
+						.build();
+
+				ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(true);
+				given(commentRepository.save(any(Comment.class))).willReturn(comment);
+				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+
+				// When
+				CreateCommentResDto res = communityService.createComment(req);
+
+				// Then
+				then(commentRepository).should().save(commentCaptor.capture());
+
+				assertThat(user.getUserId()).isEqualTo(commentCaptor.getValue().getUserId());
+				assertThat(req.getContent()).isEqualTo(commentCaptor.getValue().getContent());
+				assertThat(res.getCommentId()).isEqualTo(comment.getCommentId());
+				assertThat(res.getNickname()).isEqualTo(user.getNickname());
 
 			}
 
 			@Test
 			@DisplayName("버킷에 댓글 생성")
-			void createCommentForBucket(){
+			void createCommentForBucket() throws NotFoundException {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(false)
+						.typeId(1L)
+						.build();
+
+				Comment comment = Comment.builder()
+						.commentId(1L)
+						.content(req.getContent())
+						.userId(1L)
+						.type(req.getType())
+						.typeId(req.getTypeId())
+						.build();
+
+				ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+				given(bucketRepository.existsById(req.getTypeId())).willReturn(true);
+				given(commentRepository.save(any(Comment.class))).willReturn(comment);
+				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+
+				// When
+				CreateCommentResDto res = communityService.createComment(req);
+
+				// Then
+				then(commentRepository).should().save(commentCaptor.capture());
+
+				assertThat(user.getUserId()).isEqualTo(commentCaptor.getValue().getUserId());
+				assertThat(req.getContent()).isEqualTo(commentCaptor.getValue().getContent());
+				assertThat(res.getCommentId()).isEqualTo(comment.getCommentId());
+				assertThat(res.getNickname()).isEqualTo(user.getNickname());
 
 			}
 
