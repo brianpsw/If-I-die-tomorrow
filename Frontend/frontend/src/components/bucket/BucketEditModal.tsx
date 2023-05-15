@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import Swal from 'sweetalert2';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../common/Button';
@@ -67,7 +68,18 @@ function BucketEditModal({
           },
         );
         get_user_bucket();
+        Swal.fire({
+          title: '버킷 수정 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '버킷 수정 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
