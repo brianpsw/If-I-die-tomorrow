@@ -1,0 +1,47 @@
+.dqrciE {
+  animation-delay: 0s;
+  animation-direction: normal;
+  animation-duration: 1.5s;
+  animation-fill-mode: none;
+  animation-iteration-count: infinite;
+  animation-name: a;
+  animation-play-state: running;
+  animation-timing-function: step-end;
+  background-color: rgb(236, 76, 96);
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
+  box-sizing: border-box;
+  color: rgb(62, 61, 59);
+  cursor: pointer;
+  display: inline-block;
+  font-family: Euclid;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  height: 10px;
+  line-height: 24px;
+  margin-right: 8px;
+  position: relative;
+  text-rendering: optimizelegibility;
+  text-size-adjust: 100%;
+  top: -4px;
+  vertical-align: middle;
+  width: 10px;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes a {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

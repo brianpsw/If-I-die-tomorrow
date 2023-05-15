@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import Swal from 'sweetalert2';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../common/Button';
@@ -61,7 +62,18 @@ function CreateModal({ onClose, setBuckets }: ModalProps) {
         );
 
         get_user_bucket();
+        Swal.fire({
+          title: '버킷 생성 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '버킷 생성 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -107,7 +119,7 @@ function CreateModal({ onClose, setBuckets }: ModalProps) {
         <div className="flex w-full justify-center my-[16px]">
           <Button
             onClick={handleSubmit}
-            color="#B3E9EB"
+            color={isValid ? '#0E848A' : '#B3E9EB'}
             size="sm"
             disabled={isValid ? false : true}
           >

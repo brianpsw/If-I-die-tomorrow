@@ -26,16 +26,19 @@ const ContentContainer = styled.div`
   ${tw`flex items-center justify-between border-b border-black w-full h-[33px] px-[6px]`}
 `;
 const ContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p2 h-[86px] rounded border-black break-all my-[16px]`}
+  ${tw`flex flex-wrap w-full text-p2 h-[86px] p-[8px] rounded border-black break-all my-[16px]`}
 `;
 const TitleContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p2 rounded border-black break-all my-[8px]`}
+  ${tw`flex flex-wrap w-full text-p1 rounded border-black break-all my-[8px]`}
 `;
 const PhotoContainer = styled.div`
   ${tw`items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
 `;
 const FeedCheckContainer = styled.div`
   ${tw`flex items-center w-full h-[24px] my-[8px]`}
+`;
+const DeleteBtn = styled.div`
+  ${tw`fill-black w-[30px] absolute h-[30px] right-[4px] top-[4px] cursor-pointer`}
 `;
 interface Bucket {
   bucketId: number;
@@ -73,7 +76,7 @@ function BucketListItem({
   const [completeContent, setCompleteContent] = useState('');
   const [completeDate, setCompleteDate] = useState('');
   const [photo, setPhoto] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isValid, setIsValid] = useState(false);
   const [isCompleteDateValid, setIsCompleteDateValid] = useState(false);
   const [isCompleteContentValid, setIsCompleteContentValid] = useState(false);
@@ -139,11 +142,15 @@ function BucketListItem({
 
     put_bucket();
   };
+  const handleDeleteItemImage = () => {
+    setPhoto(null);
+    setImageUrl(null);
+  };
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    let file = e.target.files?.[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImageUrl(imageUrl);
+      let fileToUrl = URL.createObjectURL(file);
+      setImageUrl(fileToUrl);
       setPhoto(file);
     }
   };
@@ -183,7 +190,7 @@ function BucketListItem({
           <img onClick={handleBucketClick} src={UnCheckedIcon} alt="" />
         )}
         <ContentContainer onClick={handleBucketClick}>
-          <span className="text-p1">{bucketTitle}</span>
+          <span className="text-p1">{bucket.title}</span>
         </ContentContainer>
         <div onClick={handleEditModalOpen}>
           <img className="cursor-pointer" src={TreeDot} alt="" />
@@ -209,12 +216,22 @@ function BucketListItem({
           <PhotoContainer>
             <div className="image-upload-container w-full h-full">
               {imageUrl ? (
-                <img
-                  className="image-upload-preview w-full h-full bg-auto "
-                  src={imageUrl}
-                  alt="upload-preview"
-                  onClick={handleClick}
-                />
+                <div className="relative">
+                  <DeleteBtn onClick={handleDeleteItemImage}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 512 512"
+                    >
+                      <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                    </svg>
+                  </DeleteBtn>
+                  <img
+                    className="image-upload-preview w-full h-full bg-auto "
+                    src={imageUrl}
+                    alt="upload-preview"
+                    onClick={handleClick}
+                  />
+                </div>
               ) : (
                 <div
                   className="image-upload-placeholder h-full"
@@ -245,7 +262,7 @@ function BucketListItem({
           <div className="flex w-full justify-center my-4">
             <Button
               onClick={handleSubmit}
-              color="#B3E9EB"
+              color={isValid ? '#0E848A' : '#B3E9EB'}
               size="sm"
               disabled={isValid ? false : true}
             >
