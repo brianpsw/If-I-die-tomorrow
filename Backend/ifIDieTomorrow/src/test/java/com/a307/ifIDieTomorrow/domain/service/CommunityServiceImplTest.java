@@ -383,11 +383,29 @@ class CommunityServiceImplTest {
 		@DisplayName("성공 케이스")
 		class NormalScenario {
 
+			@Test
+			@DisplayName("다이어리에 댓글 생성")
+			void createCommentForDiary(){
+
+			}
+
+			@Test
+			@DisplayName("버킷에 댓글 생성")
+			void createCommentForBucket(){
+
+			}
+
 		}
 
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
+
+			@Test
+			@DisplayName("존재하지 않는 게시글에 댓글 생성 시 예외처리")
+			void throwsExceptionWhenArticleDoesntExist(){
+
+			}
 
 		}
 
