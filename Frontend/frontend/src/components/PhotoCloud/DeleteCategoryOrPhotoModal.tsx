@@ -1,10 +1,14 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+
 import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
+import { useRecoilState } from 'recoil';
+import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -37,23 +41,55 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     setDeleteContent,
     categoryOwner,
   } = props;
+  const [category, setCategory] = useRecoilState(categoryState);
   const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const deleteCategory = async (id: string) => {
+  const fetchData = async () => {
     try {
-      const delete_category = await defaultApi.delete(
-        requests.DELETE_CATEGORY(id),
-        { withCredentials: true },
+      const get_all_category = await defaultApi.get(
+        requests.GET_ALL_CATEGORY(),
+        {
+          withCredentials: true,
+        },
       );
-      if (delete_category.status === 204) {
-        navigate(`/photo-cloud/1`);
-        setDeleteCategory(true);
-        onClose?.();
+      if (get_all_category.status === 200) {
+        setCategory(() => get_all_category.data);
+        return get_all_category.data;
       }
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const deleteCategory = async (id: string) => {
+    if (categoryOwner === user!.userId) {
+      try {
+        const delete_category = await defaultApi.delete(
+          requests.DELETE_CATEGORY(id),
+          { withCredentials: true },
+        );
+        if (delete_category.status === 204) {
+          const res = fetchData();
+          const getData = () => {
+            res.then((data) => {
+              if (data.length > 0) {
+                navigate(`/photo-cloud/${data[0].categoryId}`);
+              } else {
+                navigate('/');
+              }
+            });
+          };
+          getData();
+          setDeleteCategory(true);
+          onClose?.();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      alert('본인의 카테고리만 삭제할 수 있습니다.');
     }
   };
 
