@@ -29,19 +29,18 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
-			"WHERE d.diaryId = :diaryId AND u.deleted = false")
-	Optional<GetDiaryResDto> findByIdWithUserNickName(@Param("diaryId") Long diaryId);
+			"WHERE d.secret = false " +
+			"AND d.report < :reportLimit AND u.deleted = false " +
+			"ORDER BY d.createdAt DESC")
+	Page<GetDiaryResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
 			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
-			"WHERE d.secret = false " +
-			"AND d.report < :reportLimit AND u.deleted = false " +
-			"ORDER BY d.createdAt DESC")
-	Page<GetDiaryResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
-
+			"WHERE d.diaryId = :diaryId AND u.deleted = false")
+	Optional<GetDiaryResDto> findByIdWithUserNickName(@Param("diaryId") Long diaryId);
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
 			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
 			"FROM Diary d " +

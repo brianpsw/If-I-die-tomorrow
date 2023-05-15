@@ -48,7 +48,7 @@ public class CommunityController {
 	@Operation(summary = "댓글 작성", description = "댓글 작성입니다")
 	public ResponseEntity<CreateCommentResDto> createComment(
 			@RequestBody CreateCommentReqDto data
-	){
+	) throws NotFoundException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(communityService.createComment(data));
 	}
 
