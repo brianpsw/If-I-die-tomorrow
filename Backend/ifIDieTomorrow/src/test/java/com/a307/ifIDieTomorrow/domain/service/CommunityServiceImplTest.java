@@ -3,7 +3,9 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
+import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
+import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -224,8 +226,8 @@ class CommunityServiceImplTest {
 
 				// Then
 				then(bucketRepository).should().findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
+				then(commentRepository).shouldHaveNoInteractions();
 
-				// Assertions
 				assertThat(result.getData()).isEqualTo(Collections.emptyList());
 				assertThat(result.getHasNext()).isFalse();
 			}
@@ -242,11 +244,132 @@ class CommunityServiceImplTest {
 		@DisplayName("성공 케이스")
 		class NormalScenario {
 
+			@Test
+			@DisplayName("공개된 다이어리랑 댓글 가져오기")
+			void getDiaryWithComments() {
+
+				// Given
+				int pageNo = 0;
+				int pageSize = 10;
+
+//				페이지 요청
+				PageRequest pageable = PageRequest.of(pageNo, pageSize);
+
+//				다이어리 1
+				GetDiaryResDto diaryResDto1 = GetDiaryResDto.builder()
+						.diaryId(1L)
+						.userId(1L)
+						.nickname("TestUser1")
+						.title("TestBucketTitle1")
+						.content("TestBucketContent1")
+						.imageUrl("")
+						.secret(false)
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.build();
+
+//				다이어리 2
+				GetDiaryResDto diaryResDto2 = GetDiaryResDto.builder()
+						.diaryId(2L)
+						.userId(2L)
+						.nickname("TestUser2")
+						.title("TestBucketTitle2")
+						.content("TestBucketContent2")
+						.imageUrl("")
+						.secret(false)
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.build();
+
+//				다이어리 1의 댓글
+				GetCommentResDto commentResDto = GetCommentResDto.builder()
+						.commentId(1L)
+						.content("TestCommentContent")
+						.userId(1L)
+						.nickname("TestUser1")
+						.createdAt(LocalDateTime.now())
+						.updatedAt(LocalDateTime.now())
+						.build();
+
+				List<GetCommentResDto> commentResDtoList = Collections.singletonList(commentResDto);
+
+//				다이어리 1 + 댓글
+				GetDiaryWithCommentDto diaryWithCommentDto1 = GetDiaryWithCommentDto.builder()
+						.diary(diaryResDto1)
+						.comments(commentResDtoList)
+						.build();
+
+//				다이어리 2 + 댓글 없음
+				GetDiaryWithCommentDto diaryWithCommentDto2 = GetDiaryWithCommentDto.builder()
+						.diary(diaryResDto2)
+						.comments(Collections.emptyList())
+						.build();
+
+//				예상 결괏값
+				PageImpl<GetDiaryResDto> pageResponse = new PageImpl<>(Arrays.asList(diaryResDto1, diaryResDto2));
+				List<GetDiaryWithCommentDto> diaryWithCommentsList = Arrays.asList(diaryWithCommentDto1, diaryWithCommentDto2);
+
+				given(diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT)).willReturn(pageResponse);
+				given(commentRepository.findCommentsByTypeId(1L, true)).willReturn(commentResDtoList);
+				given(commentRepository.findCommentsByTypeId(2L, true)).willReturn(Collections.emptyList());
+
+
+				// When
+				GetPageDto result = communityService.getDiaryWithComments(pageNo, pageSize);
+
+
+				// Then
+				/**
+				 * 게시글 조회
+				 * 게시글 당 댓글 조회
+				 */
+				then(diaryRepository).should().findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
+				then(commentRepository).should(times(diaryWithCommentsList.size())).findCommentsByTypeId(anyLong(), eq(true));
+
+				/**
+				 * 결괏값 검증
+				 * 페이징 검증
+				 */
+				assertThat(result.getData()).isEqualTo(diaryWithCommentsList);
+				assertThat(result.getHasNext()).isEqualTo(pageResponse.hasNext());
+			}
+
 		}
 
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
+
+			@Test
+			@DisplayName("해당하는 다이어리 게시글이 없을 때 빈 리스트 반환")
+			void checkWhenNoDiary() {
+				// Given
+				Integer pageNo = 0;
+				Integer pageSize = 10;
+				PageRequest pageable = PageRequest.of(pageNo, pageSize);
+
+//				레포지토리에서 다이어리 조회 시 빈 페이지 반환
+				Page<GetDiaryResDto> pageResponse = new PageImpl<>(Collections.emptyList());
+				given(diaryRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT)).willReturn(pageResponse);
+
+				// When
+				GetPageDto result = communityService.getDiaryWithComments(pageNo, pageSize);
+
+				// Then
+				/**
+				 * 다이어리 조회
+				 * 댓글 조회 x
+				 */
+				then(diaryRepository).should().findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
+				then(commentRepository).shouldHaveNoInteractions();
+
+				/**
+				 * 빈 리스트 반환
+				 * 다음 페이지 x
+				 */
+				assertThat(result.getData()).isEqualTo(Collections.emptyList());
+				assertThat(result.getHasNext()).isFalse();
+			}
 
 		}
 
