@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Button from '../common/Button';
+import Swal from 'sweetalert2';
 
 interface SubmitConfirmModalProps {
   onClose: (serviceConsent: boolean) => void;
@@ -45,9 +46,12 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
 
   const handleSubmit = () => {
     if (!isValidPhoneNumber(phone)) {
-      alert(
-        '전화번호 형식이 올바르지 않습니다. 010으로 시작하는 11자리 숫자를 입력해주세요.',
-      );
+      Swal.fire({
+        title:
+          '전화번호 형식이 올바르지 않습니다. 010으로 시작하는 11자리 숫자를 입력해주세요.',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
       return;
     }
 
@@ -56,7 +60,11 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
       onSubmit({ phone, serviceConsent });
       handleClose();
     } else {
-      alert('개인정보 수집 및 이용에 동의해주세요.');
+      Swal.fire({
+        title: '개인정보 수집 및 이용에 동의해주세요.',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
   return (
