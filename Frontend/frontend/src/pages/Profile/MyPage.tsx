@@ -12,6 +12,7 @@ import Withdrawal from '../../components/profile/Withdrawal';
 import ServiceAgreeModal from '../../components/profile/ServiceAgreeModal';
 import {
   Background,
+  Logo,
   Container,
   SettingBox,
   RadioContainer,
@@ -433,6 +434,7 @@ function MyPage() {
         <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
       ) : null}
       <Background>
+        <Logo />
         <Container>
           <UserInfo />
 

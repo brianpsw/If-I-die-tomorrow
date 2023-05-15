@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/mypage_bg.jpg';
 import Button from '../../components/common/Button';
+import textLogoImg from '../../assets/images/text_logo.png';
 
 export const Background = styled.div`
   background-image: url(${backgroundImg});
@@ -14,12 +15,24 @@ export const Background = styled.div`
   background-attachment: fixed;
 `;
 
+export const Logo = styled.div`
+  background-image: url(${textLogoImg});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 120px;
+  min-height: 60px;
+  position: absolute;
+  top: 36px;
+  left: 24px;
+`;
+
 export const BtModal = styled.div`
   ${tw`flex items-center justify-between border-b w-full `}
 `;
 
 export const Container = styled.div`
-  ${tw`text-p2 flex flex-col mx-auto pt-12`}
+  ${tw`text-p2 flex flex-col mx-auto pt-36`}
   max-width: calc(100% - 48px);
   padding-bottom: 20%;
   // border: solid 1px white;
