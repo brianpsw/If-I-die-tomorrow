@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 const FeedTab = styled.div`
-  ${tw`flex `}
+  ${tw`flex pt-12 `}
   justify-content: space-evenly;
   color: white;
   font-size: 16px;
