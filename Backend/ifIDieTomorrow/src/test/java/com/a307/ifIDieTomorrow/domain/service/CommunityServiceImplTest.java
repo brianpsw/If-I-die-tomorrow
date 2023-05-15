@@ -192,7 +192,7 @@ class CommunityServiceImplTest {
 
 				// Then
 				/**
-				 * 기본값 잘 들어가는지 검증
+				 * 기본값 0, 10이 들어가는지 검증
 				 */
 				then(bucketRepository).should().findAllBySecretIsFalseAndReportUnderLimit(pageableCaptor.capture(), eq(adminUtil.MAX_REPORT));
 
@@ -204,12 +204,31 @@ class CommunityServiceImplTest {
 
 		}
 
-
-
-
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
+
+			@Test
+			@DisplayName("해당하는 버킷 게시글이 없을 때 빈 리스트 반환")
+			void checkWhenNoBuckets() {
+				// Given
+				Integer pageNo = 0;
+				Integer pageSize = 10;
+				PageRequest pageable = PageRequest.of(pageNo, pageSize);
+
+				Page<GetBucketResDto> pageResponse = new PageImpl<>(Collections.emptyList());
+				given(bucketRepository.findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT)).willReturn(pageResponse);
+
+				// When
+				GetPageDto result = communityService.getBucketWithComments(pageNo, pageSize);
+
+				// Then
+				then(bucketRepository).should().findAllBySecretIsFalseAndReportUnderLimit(pageable, adminUtil.MAX_REPORT);
+
+				// Assertions
+				assertThat(result.getData()).isEqualTo(Collections.emptyList());
+				assertThat(result.getHasNext()).isFalse();
+			}
 
 		}
 
