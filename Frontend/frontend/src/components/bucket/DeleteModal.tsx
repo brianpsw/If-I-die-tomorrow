@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import Swal from 'sweetalert2';
 import Button from '../common/Button';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -57,7 +58,18 @@ function DeleteModal({
         );
 
         get_user_bucket();
+        Swal.fire({
+          title: '버킷 삭제 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '버킷 삭제 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -98,9 +110,9 @@ function DeleteModal({
         <div className="flex w-full justify-evenly my-4">
           <Button
             onClick={handleDelete}
-            color="#B3E9EB"
+            color="#ff0000"
             size="sm"
-            style={{ color: '#04373B' }}
+            style={{ color: '#f6f6f6' }}
           >
             삭제하기
           </Button>
