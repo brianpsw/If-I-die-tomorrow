@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
@@ -9,6 +9,7 @@ import {
   PhotoCardWrapper,
   Photo,
 } from '../../pages/PhotoCloud/PhotoCloudEmotion';
+import PhotoInput from './PhotoInput';
 
 import threeDot from '../../assets/icons/three_dot.svg';
 import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
@@ -18,7 +19,7 @@ interface Category {
   userId: number;
   categoryId: number;
   name: string;
-  objectId: number;
+  imageUrl: string;
 }
 
 interface PhotoInfo {
@@ -59,6 +60,7 @@ interface PhotoCloudProps {
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
+  const navigate = useNavigate();
   const {
     setOpenEditOrDeleteModal,
     setSelectedPhotoId,
@@ -78,7 +80,9 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
-
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [currentImg, setCurrentImg] = useState<string>('');
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
@@ -91,6 +95,8 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       if (get_photo.status === 200) {
         const { data } = get_photo;
         setPhotoData(() => data);
+
+        setImgUrl(() => data.category.imageUrl);
         setDeleteContent(false);
       }
     } catch (err) {
@@ -98,6 +104,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     }
   };
   const categoryId = photoData?.category.categoryId;
+  const imageInput = photoData?.category.imageUrl;
   const categoryUser = photoData?.category.userId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
@@ -140,7 +147,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       alert('내용은 300자이내여야합니다.');
     }
   };
-
+  // 카테고리 수정 api
   const changeCategory = async () => {
     try {
       const patch_category = await defaultApi.patch(
@@ -159,8 +166,41 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     } catch (err) {
       console.error(err);
     }
+
+    if (currentImg !== imgUrl) {
+      try {
+        const formData = new FormData();
+        formData.append(
+          'data',
+          JSON.stringify({
+            data: categoryId,
+          }),
+        );
+
+        if (photoFile) {
+          formData.append('image', photoFile);
+        }
+
+        const patch_thumbnail = await defaultApi.patch(
+          requests.PATCH_THUMBNAIL(),
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        if (patch_thumbnail.status === 200) {
+          navigate(`/photo-cloud/${categoryId}`);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
+  // 캡션 수정 api
   const changeContent = async () => {
     try {
       const patch_photo = await defaultApi.patch(
@@ -179,7 +219,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       console.error(err);
     }
   };
-
+  // api 보내기 전 체크하는 함수
   const checkBeforeSend = (targetContent: string) => {
     const expspaces = /  +/g;
     if (targetContent === '') {
@@ -210,6 +250,12 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 defaultValue={name}
                 maxLength={30}
                 onChange={(e: any) => handleEditTitle(e)}
+              />
+              <PhotoInput
+                imgUrl={imgUrl}
+                setImgUrl={setImgUrl}
+                photoFile={photoFile}
+                setPhotoFile={setPhotoFile}
               />
               <div className="w-full flex justify-center">
                 <Button
