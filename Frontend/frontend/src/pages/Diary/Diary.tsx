@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
+import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import './CalenderStyles.css';
-import Calendar from '../../components/diary/Calender';
+import './CalendarStyles.css';
+import Calendar from '../../components/diary/Calendar';
 import backgroundImg from '../../assets/images/bucket_bg.png';
 import IIDT from '../../assets/icons/IIDT.svg';
 import Button from '../../components/common/Button';
@@ -76,6 +77,8 @@ interface Diary {
 function Diary() {
   const navigate = useNavigate();
   const userInfo = useRecoilState(userState);
+  const [prevSelectedDate, setPrevSelectedDate] = useState<Date>(new Date());
+  const [prevSelectedMonth, setPrevSelectedMonth] = useState<Date>(new Date());
   const [data, setData] = useState<Diary | null>();
   const [diarys, setDiarys] = useState<Diary[]>([]);
   const [sameDay, setSameDay] = useState<boolean>(false);
@@ -189,6 +192,8 @@ function Diary() {
             showDetailsHandle={showDetailsHandle}
             diarys={diarys}
             setSameDay={setSameDay}
+            setPrevSelectedDate={setPrevSelectedDate}
+            setPrevSelectedMonth={setPrevSelectedMonth}
           />
           {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
           {data ? (

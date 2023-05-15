@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import { useRecoilState } from 'recoil';
+import { calendarState } from '../../states/CalendarState';
 import {
   format,
   startOfWeek,
@@ -44,14 +46,16 @@ interface Diary {
 
 interface Props {
   showDetailsHandle: (diaryData: Diary | null) => void;
+  setPrevSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
+  setPrevSelectedMonth: React.Dispatch<React.SetStateAction<Date>>;
   diarys: Diary[];
   setSameDay: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   let koreaDays = ['월', '화', '수', '목', '금', '토', '일'];
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(new Date());
   const dateFormat = 'yyyy.MM';
 
   useEffect(() => {
@@ -67,17 +71,31 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
       showDetailsHandle(null);
     }
   }, [diarys]);
+
+  // useEffect(() => {
+  //   if (calendarData?.clickedDate) {
+  //     onDateClickHandle(calendarData?.clickedDate);
+  //   }
+  //   if (calendarData?.clickedMonth) {
+  //     setCurrentMonth(calendarData?.clickedMonth);
+  //   }
+  // }, []);
+
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
+      console.log(currentMonth);
     }
     if (btnType === 'next') {
       setCurrentMonth(addWeeks(currentMonth, 1));
+      console.log(currentMonth);
     }
   };
 
   const onDateClickHandle = (day: Date) => {
     setSelectedDate(day);
+    console.log(day);
+    console.log(selectedDate);
     const diary = diarys.find((diary) => {
       const createdAtDate: Date = new Date(diary.createdAt);
       return isSameDay(day, createdAtDate);
@@ -97,7 +115,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
     let startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
     for (let i = 0; i < 7; i++) {
       days.push(
-        <DaysCellContainer>
+        <DaysCellContainer key={i}>
           {format(addDays(startDate, i), koreaDays[i])}
         </DaysCellContainer>,
       );
