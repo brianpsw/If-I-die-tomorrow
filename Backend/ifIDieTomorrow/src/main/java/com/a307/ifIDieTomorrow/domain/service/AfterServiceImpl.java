@@ -29,7 +29,7 @@ public class AfterServiceImpl implements AfterService{
         result.put("photos", photoService.getPhotoByUser(after.getUserId()));
         result.put("diaries", diaryRepository.findAllByUserIdIdWithUserNickName(after.getUserId()));
         result.put("buckets", bucketRepository.findAllByUserIdWithUserNickName(after.getUserId()));
-        result.put("will", willRepository.findByUserId(after.getUserId()));
+        result.put("will", willRepository.getByUserId(after.getUserId()));
         return result;
     }
 
@@ -39,7 +39,7 @@ public class AfterServiceImpl implements AfterService{
         result.put("photos", photoService.getPhotoByUser(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()));
         result.put("diaries", diaryRepository.findAllByUserIdIdWithUserNickName(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()));
         result.put("buckets", bucketRepository.findAllByUserIdWithUserNickName(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()));
-        result.put("will", willRepository.findByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()));
+        result.put("will", willRepository.getByUserId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()));
         return result;
     }
 }
