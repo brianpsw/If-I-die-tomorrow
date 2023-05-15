@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useRecoilValue } from 'recoil';
@@ -14,6 +14,7 @@ import { LeakAdd } from '@mui/icons-material';
 
 function CreateCategory() {
   const navigate = useNavigate();
+  const btnRef = useRef<HTMLButtonElement | null>(null);
   const [imgUrl, setImgUrl] = useState<string>('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [thumbColor, setThumbColor] = useState<string | null>('');
@@ -74,6 +75,7 @@ function CreateCategory() {
 
   // 카테고리 생성 api 보내기
   const sendCategory = async () => {
+    btnRef.current?.setAttribute('disabled', 'disabled');
     try {
       const formData = new FormData();
       formData.append(
@@ -170,21 +172,9 @@ function CreateCategory() {
                 photoFile={photoFile}
                 setPhotoFile={setPhotoFile}
               />
-              <label
-                htmlFor="colorPicker"
-                className="cursor-pointer text-p2 text-white mb-4"
-              >
-                썸네일 배경색을 추가해보세요! (기본값은 흰색입니다.)
-              </label>
-              <input
-                type="color"
-                defaultValue="#FFFFFF"
-                className="cursor-pointer md:w-[40%] sm:w-[60%] w-[100%] h-[60px] bg-transparent"
-                id="colorPicker"
-                onChange={(e) => changeColor(e)}
-              ></input>
             </div>
             <Button
+              ref={btnRef}
               color={'#36C2CC'}
               size={'lg'}
               style={{ color: '#04373B', margin: '0 auto' }}
