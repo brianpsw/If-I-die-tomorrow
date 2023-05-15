@@ -22,7 +22,6 @@ function HomeScene() {
   const navigate = useNavigate();
   const { gl, mouse, scene } = useThree();
   // 기본 구성
-  // const fox = useGLTF('models/fox.glb', true);
   const fox = useGLTF('models/fox_2.glb');
   const rose = useGLTF('models/low_poly_rose_in_glass_jar.glb', true);
   const moonTexture = useTexture('images/squre_moon.png');
@@ -58,8 +57,7 @@ function HomeScene() {
   }, []);
 
   const clickStar = (e: any, id: number) => {
-    // if (!preventDragClick)
-    navigate(`/photo-cloud/${id}`);
+    if (!preventDragClick) navigate(`/photo-cloud/${id}`);
     e?.stopPropagation();
   };
 
@@ -87,34 +85,34 @@ function HomeScene() {
     e?.stopPropagation();
   };
 
-  // const calculateMousePosition = (e: any) => {
-  //   mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-  //   mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
-  // };
+  const calculateMousePosition = (e: any) => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
+  };
 
-  // let clickStartTime: any;
+  let clickStartTime: any;
 
-  // // 마우스 이벤트
+  // 마우스 이벤트
 
-  // gl.domElement.addEventListener('mousedown', (e) => {
-  //   calculateMousePosition(e);
-  //   clickStartTime = Date.now();
-  // });
+  gl.domElement.addEventListener('mousedown', (e) => {
+    calculateMousePosition(e);
+    clickStartTime = Date.now();
+  });
 
-  // gl.domElement.addEventListener('mouseup', (e) => {
-  //   const nowX = (e.clientX / window.innerWidth) * 2 - 1;
-  //   const nowY = -((e.clientY / window.innerHeight) * 2 - 1);
-  //   const xGap = nowX - mouse.x;
-  //   const yGap = nowY - mouse.y;
+  gl.domElement.addEventListener('mouseup', (e) => {
+    const nowX = (e.clientX / window.innerWidth) * 2 - 1;
+    const nowY = -((e.clientY / window.innerHeight) * 2 - 1);
+    const xGap = nowX - mouse.x;
+    const yGap = nowY - mouse.y;
 
-  //   const timeGap = Date.now() - clickStartTime;
+    const timeGap = Date.now() - clickStartTime;
 
-  //   if (xGap > 5 || yGap > 5 || timeGap > 100) {
-  //     preventDragClick = true;
-  //   } else {
-  //     preventDragClick = false;
-  //   }
-  // });
+    if (xGap > 5 || yGap > 5 || timeGap > 100) {
+      preventDragClick = true;
+    } else {
+      preventDragClick = false;
+    }
+  });
 
   const spherePosition = [
     [25, 3, -10],
@@ -142,16 +140,25 @@ function HomeScene() {
           {category.map((cat, idx) => {
             const position = new THREE.Vector3(...spherePosition[idx]);
             const texture = new THREE.TextureLoader().load(cat.imageUrl);
+
             return (
-              <mesh
+              <group
                 key={cat.categoryId}
-                rotation={[0, 0, 0]}
-                position={position}
                 onClick={(e) => clickStar(e, cat.categoryId)}
               >
-                <sphereGeometry args={[5, 16]}></sphereGeometry>
-                <meshStandardMaterial map={texture} />
-              </mesh>
+                <mesh
+                  rotation={[0, -Math.PI / 4, Math.PI / 9]}
+                  position={position}
+                >
+                  <boxGeometry args={[15, 15, 15]}></boxGeometry>
+                  <meshStandardMaterial opacity={0} transparent={true} />
+                </mesh>
+
+                <mesh rotation={[0, 0, 0]} position={position}>
+                  <sphereGeometry args={[5, 16]}></sphereGeometry>
+                  <meshStandardMaterial map={texture} />
+                </mesh>
+              </group>
             );
           })}
         </>
@@ -177,7 +184,7 @@ function HomeScene() {
       <primitive
         object={rose.scene}
         scale={window.innerWidth > 640 ? [120, 120, 120] : [90, 90, 90]}
-        position={window.innerWidth > 640 ? [1, -30, 23] : [1, -30, 23]}
+        position={[1, -30, 23]}
         rotation={[Math.PI / 10, -Math.PI / 4, 0]}
         onClick={(e: any) => clickRose(e)}
       />
