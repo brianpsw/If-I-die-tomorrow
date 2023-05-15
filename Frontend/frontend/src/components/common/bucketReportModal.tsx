@@ -5,6 +5,7 @@ import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import Button from './Button';
+import Swal from 'sweetalert2';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -119,11 +120,20 @@ function ReportModal({
         handleReportModalOpen();
         onClose?.();
         setConfirmModalOpen(false);
-        alert('신고가 성공적으로 처리되었습니다.');
+        Swal.fire({
+          title: '신고 완료!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       })
       .catch((error) => {
         if (error.response && error.response.status === 400) {
-          alert('이미 신고한 게시물입니다.');
+          Swal.fire({
+            title: '이미 신고한 게시물입니다.',
+            icon: 'error',
+            confirmButtonText: '확인',
+          });
           handleReportModalOpen();
           onClose?.();
           setConfirmModalOpen(false);

@@ -8,6 +8,7 @@ import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/bucket_bg.png';
+import Swal from 'sweetalert2';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
@@ -269,9 +270,19 @@ function BucketDetail() {
       navigate(-1);
       setBucketDetail(null);
       setComments([]);
-      alert('버킷리스트가 삭제되었습니다.');
+      Swal.fire({
+        title: '버킷리스트 삭제 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.error(error);
+      Swal.fire({
+        title: '버킷리스트 삭제 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+      throw error;
     }
   };
 

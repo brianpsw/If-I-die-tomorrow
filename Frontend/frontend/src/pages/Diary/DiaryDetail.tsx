@@ -7,6 +7,7 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import Swal from 'sweetalert2';
 import backgroundImg from '../../assets/images/diary_bg.png';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
@@ -269,9 +270,19 @@ function DiaryDetail() {
       navigate(-1);
       setDiaryDetail(null); // 상태를 업데이트하여 게시물이 화면에서 사라지도록 함
       setComments([]); // 댓글도 함께 초기화
-      alert('다이어리가 삭제되었습니다.');
+      Swal.fire({
+        title: '다이어리 삭제 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.error(error);
+      Swal.fire({
+        title: '다이어리 삭제 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+      throw error;
     }
   };
 
