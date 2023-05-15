@@ -109,7 +109,7 @@ public class BucketServiceImpl implements BucketService {
 				data.getTitle(),
 				data.getContent(),
 				data.getComplete(),
-				data.getUpdatePhoto() && photo != null ? s3Upload.upload(photo, BUCKET) : "",
+				data.getUpdatePhoto() ? (photo == null ? "" : s3Upload.upload(photo, BUCKET)) : bucket.getImageUrl(),
 				data.getSecret()
 		);
 		

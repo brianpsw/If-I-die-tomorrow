@@ -119,7 +119,7 @@ public class DiaryServiceImpl implements DiaryService{
 		diary.updateDiary(
 				req.getTitle(),
 				req.getContent(),
-				req.getUpdatePhoto() && photo != null ? s3Upload.upload(photo, "diary") : "",
+				req.getUpdatePhoto() ? (photo == null ? "" : s3Upload.upload(photo, "diary")) : diary.getImageUrl(),
 				req.getSecret()
 		);
 
