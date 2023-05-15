@@ -138,7 +138,7 @@ function Bucket() {
 
           <img
             onClick={handleCreateModalOpen}
-            className="fixed bottom-[78px] right-[10px]"
+            className="fixed bottom-[78px] right-[10px] cursor-pointer"
             src={AddButtonIcon}
             alt=""
           />
