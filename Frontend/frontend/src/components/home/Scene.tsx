@@ -112,6 +112,7 @@ function Scene(props: roomProps) {
   // 팀원들 오브젝트
 
   const heart = useGLTF('models/heart.glb');
+  const honey = useGLTF('models/honey.glb');
   const bicycle = useGLTF('models/bicycle.glb');
   const blueberry = useGLTF('models/blueberry.glb');
   const cake = useGLTF('models/cake.glb');
@@ -377,6 +378,12 @@ function Scene(props: roomProps) {
         object={ethereum.scene}
         scale={[1, 1, 1]}
         position={[5, 5, 30]}
+        rotation={[0, 0, 0]}
+      />
+      <primitive
+        object={honey.scene}
+        scale={[1, 1, 1]}
+        position={[30, 5, 30]}
         rotation={[0, 0, 0]}
       />
       <primitive
