@@ -184,7 +184,7 @@ function HomeScene() {
       <primitive
         object={rose.scene}
         scale={window.innerWidth > 640 ? [120, 120, 120] : [90, 90, 90]}
-        position={window.innerWidth > 640 ? [1, -30, 23] : [1, -30, 23]}
+        position={[1, -30, 23]}
         rotation={[Math.PI / 10, -Math.PI / 4, 0]}
         onClick={(e: any) => clickRose(e)}
       />
