@@ -21,6 +21,7 @@ interface PhotoCloudProps {
   cancelEdit: () => void;
   setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
   editCategoryThumbnail: boolean;
+  setCategoryLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
@@ -30,6 +31,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
     cancelEdit,
     setEditCategoryThumbnail,
     editCategoryThumbnail,
+    setCategoryLoading,
   } = props;
   const navigate = useNavigate();
   const { categoryId } = useParams();
@@ -45,6 +47,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
         setCategoryData(() => data);
         setDeleteCategory(false);
         setEditCategoryThumbnail(false);
+        setCategoryLoading(true);
       }
     } catch (err) {
       console.error(err);
