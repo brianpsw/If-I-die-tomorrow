@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Icon } from '@iconify/react';
 import { useRecoilState } from 'recoil';
 import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
@@ -10,7 +11,7 @@ import { defaultApi } from '../../api/axios';
 import './CalendarStyles.css';
 import Calendar from '../../components/diary/Calendar';
 import backgroundImg from '../../assets/images/bucket_bg.png';
-import IIDT from '../../assets/icons/IIDT.svg';
+import IIDT from '../../assets/images/app_title.svg';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
@@ -43,7 +44,7 @@ const Container = styled.div`
   padding-bottom: 10%;
 `;
 const LogoContainer = styled.img`
-  ${tw`self-start mt-[60px] w-[71px] h-[44px] my-[8px]`}
+  ${tw`self-start mt-[60px] my-[8px]`}
 `;
 
 const FormContainer = styled.div`
