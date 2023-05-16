@@ -44,7 +44,7 @@ export const HeadText = styled.h1`
 `;
 
 export const MyProfile = styled.div`
-  ${tw`mb-12 mt-12`}
+  ${tw`mt-12`}
   color: white;
 `;
 
@@ -52,11 +52,30 @@ export const SettingBox = styled.div`
   ${tw`mb-4 mt-6 p-4 bg-white shadow rounded`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
+  color: black;
   // width: 342px;
   // height: auto;
   // display: flex;
   // flex-direction: column;
   // justify-content: space-between;
+`;
+
+export const WillServiceWrap = styled.div`
+  color: black;
+  // width: 342px;
+  // height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const WillContent = styled.div`
+  ${tw`mb-4 mt-6 p-4 bg-white shadow rounded`}
+  background-color: rgba(246, 246, 246, 0.7);
+  border-radius: 10px;
+  color: black;
+  width: 43vw;
+  height: 150px;
 `;
 
 export const RadioContainer = styled.div`

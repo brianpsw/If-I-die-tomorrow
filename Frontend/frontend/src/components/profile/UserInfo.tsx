@@ -11,6 +11,8 @@ import {
   MyProfile,
   SettingBox,
   IconWithText,
+  WillServiceWrap,
+  WillContent,
 } from '../../pages/Profile/MyPageEmotion';
 
 function UserInfo() {
@@ -60,27 +62,29 @@ function UserInfo() {
     <div>
       <MyProfile>
         <h4 className="text-h4">{loggedInUserNickname}님, 환영합니다</h4>
-        <Link to="/will">
-          <IconWithText>
-            <Icon icon="line-md:clipboard-list" />
-            <span>유언장 작성하러 가기</span>
-          </IconWithText>
-        </Link>
-        <Link to="/after" target="_self" reloadDocument={true} replace={true}>
-          <IconWithText>
-            <Icon icon="line-md:clipboard-list" />
-            <span>사후 페이지 보러가기</span>
-          </IconWithText>
-        </Link>
+        <SettingBox>
+          <h4 className="text-h4">내 정보</h4>
+          <br />
+          <p className="text-p1">이름: {loggedInUserName}</p>
+          <p className="text-p1">이메일: {loggedInUserEmail}</p>
+          <br />
+          <button onClick={handleLogout}>로그아웃</button>
+        </SettingBox>
+        <WillServiceWrap>
+          <Link to="/will">
+            <WillContent>
+              <Icon icon="line-md:clipboard-list" />
+              <p>유언장 작성하러 가기</p>
+            </WillContent>
+          </Link>
+          <Link to="/after" target="_self" reloadDocument={true} replace={true}>
+            <WillContent>
+              <Icon icon="line-md:clipboard-list" />
+              <p>사후 페이지 보러가기</p>
+            </WillContent>
+          </Link>
+        </WillServiceWrap>
       </MyProfile>
-      <SettingBox>
-        <h4 className="text-h4">내 정보</h4>
-        <br />
-        <p className="text-p1">이름: {loggedInUserName}</p>
-        <p className="text-p1">이메일: {loggedInUserEmail}</p>
-        <br />
-        <button onClick={handleLogout}>로그아웃</button>
-      </SettingBox>
     </div>
   );
 }
