@@ -4,10 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 const FeedTab = styled.div`
-  ${tw`flex pt-12 `}
-  justify-content: space-evenly;
-  color: white;
-  font-size: 16px;
+  ${tw`flex pt-12 fixed min-w-[100%] justify-evenly text-white text-xl z-10`}
 `;
 export function Navigation() {
   const location = useLocation();
@@ -27,7 +24,7 @@ export function Navigation() {
           <Link
             className={
               isActive
-                ? 'cursor-pointer mb-12 inline-block pb-1 font-bold border-b-4'
+                ? 'cursor-pointer mb-6 inline-block pb-1 font-bold border-b-4'
                 : 'text-black'
             }
             to={link.href}

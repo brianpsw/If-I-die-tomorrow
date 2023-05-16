@@ -15,7 +15,7 @@ function AuthWrapper({ children }: any) {
     }
   }, [userData]);
 
-  return <>{children}</>;
+  return <div>{children}</div>;
 }
 
 export default AuthWrapper;

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import {
-  Background,
   PhotoStyle,
   PhotoCardWrapper,
   PhotoWrapper,
@@ -33,12 +32,9 @@ interface PhotoCategory {
 }
 
 const categoryStyle = {
-  flex: '0 0 auto',
   width: '60px',
   height: '60px',
-  backgroundColor: 'white',
   borderRadius: '30px',
-  border: 'solid 2px #111',
   cursor: 'pointer',
   display: 'flex',
   justifyContent: 'center',
@@ -46,20 +42,9 @@ const categoryStyle = {
   marginRight: '10px',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
+  marginBottom: '16px',
 };
 
-const exchange = [
-  '0 0',
-  '-60px 0',
-  '-120px 0',
-  '-180px 0',
-  '-240px 0',
-  '0 -60px',
-  '-60px -60px',
-  '-120px -60px',
-  '-180px -60px',
-  '-240px -60px',
-];
 const PhotoPage = () => {
   const userData = useRecoilValue(userDataState);
   const [selectedCategory, setSelectedCategory] = useState<Category>(
@@ -94,63 +79,53 @@ const PhotoPage = () => {
   return (
     <AuthWrapper>
       <Navigation />
-      <Background>
-        <Container>
-          <div
-            className="categories"
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              flexDirection: 'column',
-            }}
-          >
-            {userData.photos.map((photoCategory: PhotoCategory) =>
-              photoCategory.category.categoryId ===
-              selectedCategory.categoryId ? (
-                <div
-                  key={photoCategory.category.categoryId}
-                  className="bg-pink_100"
-                  style={{
-                    ...categoryStyle,
-                    backgroundImage: `url(${photoCategory.category.imageUrl})`,
-                  }}
-                  onClick={() => handleCategory(photoCategory.category)}
-                ></div>
-              ) : (
-                <div
-                  key={photoCategory.category.categoryId}
-                  className="bg-white"
-                  style={{
-                    ...categoryStyle,
-                    backgroundImage: `url(${photoCategory.category.imageUrl})`,
-                  }}
-                  onClick={() => handleCategory(photoCategory.category)}
-                />
-              ),
-            )}
-          </div>
-          {selectedCategory && (
-            <PhotoWrapper>
-              <h2>Photos of {selectedCategory.name}</h2>
+      <Container>
+        <div className="categories flex flex-wrap flex-col fixed">
+          {userData.photos.map((photoCategory: PhotoCategory) =>
+            photoCategory.category.categoryId ===
+            selectedCategory.categoryId ? (
               <div
-                className="flex-row"
-                style={{ display: 'flex', flexWrap: 'wrap' }}
-              >
-                {getPhotosByCategory(selectedCategory.categoryId).map(
-                  (photo: Photo) => (
-                    <PhotoCardWrapper key={photo.photoId}>
-                      <PhotoStyle src={photo.imageUrl} alt={photo.caption} />
-                      <p className="text-p3 text-green_800 mb-[20px]">
-                        {photo.caption}
-                      </p>
-                    </PhotoCardWrapper>
-                  ),
-                )}
-              </div>
-            </PhotoWrapper>
+                key={photoCategory.category.categoryId}
+                className="border-[3px]"
+                style={{
+                  ...categoryStyle,
+                  backgroundImage: `url(${photoCategory.category.imageUrl})`,
+                }}
+                onClick={() => handleCategory(photoCategory.category)}
+              ></div>
+            ) : (
+              <div
+                key={photoCategory.category.categoryId}
+                style={{
+                  ...categoryStyle,
+                  backgroundImage: `url(${photoCategory.category.imageUrl})`,
+                }}
+                onClick={() => handleCategory(photoCategory.category)}
+              />
+            ),
           )}
-        </Container>
-      </Background>
+        </div>
+        {selectedCategory && (
+          <PhotoWrapper>
+            <h2 className="text-h2 text-center">{selectedCategory.name}</h2>
+            <div
+              className="flex-row"
+              style={{ display: 'flex', flexWrap: 'wrap' }}
+            >
+              {getPhotosByCategory(selectedCategory.categoryId).map(
+                (photo: Photo) => (
+                  <PhotoCardWrapper key={photo.photoId}>
+                    <PhotoStyle src={photo.imageUrl} alt={photo.caption} />
+                    <p className="text-p3 text-green_800 mb-[20px]">
+                      {photo.caption}
+                    </p>
+                  </PhotoCardWrapper>
+                ),
+              )}
+            </div>
+          </PhotoWrapper>
+        )}
+      </Container>
     </AuthWrapper>
   );
 };
