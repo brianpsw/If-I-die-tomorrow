@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import { userDataState } from '../../states/UserDataState';
 import AuthWrapper from '../../api/AuthWrapper';
@@ -19,23 +18,12 @@ interface Diary {
   nickname: string;
 }
 
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  background-attachment: fixed;
-`;
-
 const Container = styled.div`
-  ${tw`pt-12 pb-24`}
+  ${tw`pt-12 pb-24 px-[24px]`}
 `;
 
 const DiaryWrap = styled.div`
-  ${tw`mb-6 p-6 flex flex-col mx-auto`}
-  max-width: calc(100% - 48px);
+  ${tw`mb-6 p-6 flex flex-col mx-auto w-full sm:w-4/6 md:w-3/6`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
   position: relative;
@@ -46,8 +34,7 @@ const DiaryHeader = styled.div`
 `;
 
 const ContentTitle = styled.div`
-  ${tw``}
-  width: 280px;
+  ${tw`w-full`}
   word-break: break-all;
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -75,7 +62,6 @@ function DiaryDetail() {
   const { diaryId } = useParams<{ diaryId: string }>();
   const [diaryDetail, setDiaryDetail] = useState<Diary | null>(null);
   const userData = useRecoilValue(userDataState);
-  const navigate = useNavigate();
 
   const fetchDiaryDetail = async () => {
     if (Object.keys(userData).length === 0) {
@@ -104,7 +90,7 @@ function DiaryDetail() {
 
   return (
     <AuthWrapper>
-      <TopBar title="" />
+      <TopBar title="다이어리" />
       <Container>
         <DiaryWrap>
           <DiaryHeader>
