@@ -4,7 +4,8 @@ import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 const FeedTab = styled.div`
-  ${tw`flex pt-12 fixed min-w-[100%] justify-evenly text-white text-xl z-10`}
+  ${tw`flex pt-6 fixed min-w-[100%] justify-evenly text-white text-xl z-10 bg-gray-100/30`}
+  backgorund-color:
 `;
 export function Navigation() {
   const location = useLocation();
@@ -12,6 +13,7 @@ export function Navigation() {
   const navLinks = [
     { href: '/bucket', name: '버킷리스트' },
     { href: '/photo-cloud', name: '사진첩' },
+    { href: '/home', name: '홈' },
     { href: '/diary', name: '다이어리' },
     { href: '/will', name: '유언장' },
   ];
