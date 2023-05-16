@@ -51,11 +51,11 @@ const FormContainer = styled.div`
 `;
 
 const TitleInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p1 h-[33px] rounded border-black break-all mt-[16px]`}
+  ${tw`flex flex-wrap w-full text-p1 h-[33px] p-[8px] rounded border-black break-all mt-[16px]`}
 `;
 
 const ContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p1 h-[86px] rounded border-black break-all my-[16px]`}
+  ${tw`flex flex-wrap w-full text-p1 h-[86px] p-[8px] rounded border-black break-all my-[16px]`}
 `;
 const PhotoContainer = styled.div`
   ${tw`items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
@@ -107,20 +107,19 @@ function Diary() {
     }
   };
   const handleSubmit = () => {
-    //버킷 완료 api 연결
     const formData = new FormData();
     let hasPhoto = false;
     if (photo) {
-      formData.append('photo', photo); // 사진 파일이 있으면 formData에 추가
+      formData.append('photo', photo);
       hasPhoto = true;
     }
     formData.append(
       'data',
       JSON.stringify({
-        title: completeTitle, // 제목
-        content: completeContent, // 내용
-        secret: !isChecked, // 공개/비공개 여부
-        hasPhoto: hasPhoto, // 사진을 바꿨다면 true로 보내주세요},
+        title: completeTitle,
+        content: completeContent,
+        secret: !isChecked,
+        hasPhoto: hasPhoto,
       }),
     );
 
@@ -185,127 +184,122 @@ function Diary() {
 
   return (
     <div className="w-full">
-      <Background>
-        <Container>
-          <LogoContainer src={IIDT} />
-          <Calendar
-            showDetailsHandle={showDetailsHandle}
-            diarys={diarys}
-            setSameDay={setSameDay}
-            setPrevSelectedDate={setPrevSelectedDate}
-            setPrevSelectedMonth={setPrevSelectedMonth}
-          />
-          {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
-          {data ? (
-            <CardWrap
-              className="flex flex-col w-full mt-6"
-              onClick={handleClickDiary}
-            >
-              <NickDateWrap>
-                <Nickname>{userInfo[0]?.nickname}</Nickname>
-                <DateWrap>{data.createdAt}</DateWrap>
-              </NickDateWrap>
-              <ContentImg>
-                <TitleContent
-                  hasImage={Boolean(data.imageUrl && data.imageUrl !== '""')}
-                >
-                  <Title>{data.title}</Title>
-                  <Content>
-                    {data.content.length > 40
-                      ? data.content.substring(0, 40) + '⋯'
-                      : data.content}
-                  </Content>
-                </TitleContent>
-                <div>
-                  {data.imageUrl && data.imageUrl !== '""' && (
-                    <Image src={data.imageUrl} alt="Diary" />
-                  )}
-                </div>
-              </ContentImg>
-              <Meta>
-                <Comments>댓글 {data.commentCount}개</Comments>
-              </Meta>
-            </CardWrap>
-          ) : (
-            ''
-          )}
-          {/* 사용일자와 같은 날일 경우 다이어리 작성 form 보여주기 */}
-          {!data && sameDay ? (
-            <FormContainer>
-              <form action="submit">
-                <TitleInputContainer
-                  onChange={handleTitleChange}
-                  value={completeTitle}
-                  placeholder="제목을 작성해주세요."
-                />
-              </form>
-              <form action="submit">
-                <ContentInputContainer
-                  onChange={handleContentChange}
-                  value={completeContent}
-                  placeholder="오늘 질문, 혹은 데일리 버킷에 대해 작성해 주세요."
-                />
-              </form>
-              <PhotoContainer>
-                <div className="image-upload-container w-full h-full">
-                  {imageUrl ? (
-                    <img
-                      className="image-upload-preview w-full h-full bg-auto "
-                      src={imageUrl}
-                      alt="upload-preview"
-                      onClick={handleClick}
-                    />
-                  ) : (
-                    <div
-                      className="image-upload-placeholder h-full"
-                      onClick={handleClick}
-                    >
-                      <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
-                        <img src={uploadIcon} alt="" />
-                      </div>
-                    </div>
-                  )}
-                  <input
-                    id="file-input"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageSelect}
-                    hidden
-                  />
-                </div>
-              </PhotoContainer>
-              <FeedCheckContainer>
-                {isChecked ? (
+      {/* <Background> */}
+      <Container>
+        <LogoContainer src={IIDT} />
+        <Calendar
+          showDetailsHandle={showDetailsHandle}
+          diarys={diarys}
+          setSameDay={setSameDay}
+          setPrevSelectedDate={setPrevSelectedDate}
+          setPrevSelectedMonth={setPrevSelectedMonth}
+        />
+        {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
+        {data ? (
+          <CardWrap
+            className="flex flex-col w-full mt-6"
+            onClick={handleClickDiary}
+          >
+            <NickDateWrap>
+              <Nickname>{userInfo[0]?.nickname}</Nickname>
+              <DateWrap>{data.createdAt}</DateWrap>
+            </NickDateWrap>
+            <ContentImg>
+              <TitleContent
+                hasImage={Boolean(data.imageUrl && data.imageUrl !== '""')}
+              >
+                <Title>{data.title}</Title>
+                <Content>
+                  {data.content.length > 40
+                    ? data.content.substring(0, 40) + '⋯'
+                    : data.content}
+                </Content>
+              </TitleContent>
+              <div>
+                {data.imageUrl && data.imageUrl !== '""' && (
+                  <Image src={data.imageUrl} alt="Diary" />
+                )}
+              </div>
+            </ContentImg>
+            <Meta>
+              <Comments>댓글 {data.commentCount}개</Comments>
+            </Meta>
+          </CardWrap>
+        ) : (
+          ''
+        )}
+        {!data && sameDay ? (
+          <FormContainer>
+            <form action="submit">
+              <TitleInputContainer
+                onChange={handleTitleChange}
+                value={completeTitle}
+                placeholder="제목을 작성해주세요."
+              />
+            </form>
+            <form action="submit">
+              <ContentInputContainer
+                onChange={handleContentChange}
+                value={completeContent}
+                placeholder="오늘 질문, 혹은 데일리 버킷에 대해 작성해 주세요."
+              />
+            </form>
+            <PhotoContainer>
+              <div className="image-upload-container w-full h-full">
+                {imageUrl ? (
                   <img
-                    onClick={handleFeedCheckClick}
-                    src={CheckedIcon}
-                    alt=""
+                    className="image-upload-preview w-full h-full bg-auto "
+                    src={imageUrl}
+                    alt="upload-preview"
+                    onClick={handleClick}
                   />
                 ) : (
-                  <img
-                    onClick={handleFeedCheckClick}
-                    src={UnCheckedIcon}
-                    alt=""
-                  />
+                  <div
+                    className="image-upload-placeholder h-full"
+                    onClick={handleClick}
+                  >
+                    <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
+                      <img src={uploadIcon} alt="" />
+                    </div>
+                  </div>
                 )}
-                <span className="text-p1 mx-2">피드 공개여부 체크</span>
-              </FeedCheckContainer>
-              <div className="flex w-full justify-center my-4">
-                <Button
-                  onClick={handleSubmit}
-                  color="#B3E9EB"
-                  size="sm"
-                  disabled={isValid ? false : true}
-                >
-                  작성 완료
-                </Button>
+                <input
+                  id="file-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  hidden
+                />
               </div>
-            </FormContainer>
-          ) : (
-            ''
-          )}
-        </Container>
-      </Background>
+            </PhotoContainer>
+            <FeedCheckContainer>
+              {isChecked ? (
+                <img onClick={handleFeedCheckClick} src={CheckedIcon} alt="" />
+              ) : (
+                <img
+                  onClick={handleFeedCheckClick}
+                  src={UnCheckedIcon}
+                  alt=""
+                />
+              )}
+              <span className="text-p1 mx-2">피드 공개여부 체크</span>
+            </FeedCheckContainer>
+            <div className="flex w-full justify-center my-4">
+              <Button
+                onClick={handleSubmit}
+                color="#B3E9EB"
+                size="sm"
+                disabled={isValid ? false : true}
+              >
+                작성 완료
+              </Button>
+            </div>
+          </FormContainer>
+        ) : (
+          ''
+        )}
+      </Container>
+      {/* </Background> */}
     </div>
   );
 }
