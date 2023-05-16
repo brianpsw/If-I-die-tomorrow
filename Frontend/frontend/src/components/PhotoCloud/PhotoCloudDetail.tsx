@@ -11,8 +11,8 @@ import {
 } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import PhotoInput from './PhotoInput';
 
-import threeDot from '../../assets/icons/three_dot.svg';
-import blackThreeDot from '../../assets/icons/black_three_dot.svg';
+import threeDot from '../../assets/icons/white_three_dot.svg';
+import blackThreeDot from '../../assets/icons/three_dot.svg';
 import Button from '../../components/common/Button';
 
 interface Category {
