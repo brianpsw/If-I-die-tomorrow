@@ -18,7 +18,6 @@ const PhotoUploadWrapper = styled.div`
 
 function PhotoInput(props: PhotoUpload) {
   const { imgUrl, setImgUrl, photoFile, setPhotoFile } = props;
-  console.log(imgUrl);
   const handleInputPhoto = (e: any) => {
     const file = e.target.files?.[0];
     if (file) {

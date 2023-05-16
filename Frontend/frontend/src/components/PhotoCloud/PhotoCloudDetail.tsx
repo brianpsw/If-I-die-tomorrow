@@ -57,6 +57,7 @@ interface PhotoCloudProps {
   selectedPhotoCaption: string;
   cancelEdit: () => void;
   setCategoryOwner: React.Dispatch<React.SetStateAction<number | null>>;
+  setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
@@ -76,6 +77,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     selectedPhotoCaption,
     cancelEdit,
     setCategoryOwner,
+    setEditCategoryThumbnail,
   } = props;
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
@@ -95,7 +97,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       if (get_photo.status === 200) {
         const { data } = get_photo;
         setPhotoData(() => data);
-
+        setCurrentImg(() => data.category.imageUrl);
         setImgUrl(() => data.category.imageUrl);
         setDeleteContent(false);
       }
@@ -104,7 +106,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     }
   };
   const categoryId = photoData?.category.categoryId;
-  const imageInput = photoData?.category.imageUrl;
   const categoryUser = photoData?.category.userId;
   const name = photoData?.category.name;
   const photos = photoData?.photos;
@@ -166,14 +167,13 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     } catch (err) {
       console.error(err);
     }
-
     if (currentImg !== imgUrl) {
       try {
         const formData = new FormData();
         formData.append(
           'data',
           JSON.stringify({
-            data: categoryId,
+            categoryId: categoryId,
           }),
         );
 
@@ -192,7 +192,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           },
         );
         if (patch_thumbnail.status === 200) {
-          navigate(`/photo-cloud/${categoryId}`);
+          setEditCategoryThumbnail(() => true);
         }
       } catch (err) {
         console.error(err);
