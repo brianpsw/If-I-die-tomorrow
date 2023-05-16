@@ -33,7 +33,7 @@ const Slide = styled.div<{ imgUrl: string }>`
 //   navIndex: number;
 // }
 
-const Carousel = ({}) => {
+const Carousel = () => {
   // 슬라이드 이동
   const location = useLocation().pathname;
   const [currentIndex, setCurrentIndex] = useState(0);
