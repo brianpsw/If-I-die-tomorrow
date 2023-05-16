@@ -11,7 +11,7 @@ import Image5 from '../../assets/images/mypage_bg.jpg';
 
 // Styled Component
 const Window = styled.div`
-  ${tw`overflow-hidden w-full h-[300px] absolute`}
+  ${tw`flex items-center justify-center z-[-10] h-full w-full bottom-[70px] fixed`}
 `;
 
 const Slider = styled.div<{ index: number }>`
@@ -38,15 +38,23 @@ const Carousel = ({}) => {
   const location = useLocation().pathname;
   const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
-    if (location.startsWith('/login') || location.startsWith('/home')) {
+    if (
+      location.startsWith('/login') ||
+      location.startsWith('/home') ||
+      location.startsWith('/photo-cloud') ||
+      location === '/'
+    ) {
       setCurrentIndex(3);
-    } else if (location.startsWith('/diary')) {
+    } else if (
+      location.startsWith('/diary') ||
+      location.startsWith('/survey')
+    ) {
       setCurrentIndex(1);
     } else if (location.startsWith('/bucket')) {
       setCurrentIndex(2);
     } else if (location.startsWith('/feed')) {
       setCurrentIndex(4);
-    } else if (location.startsWith('/mypage')) {
+    } else if (location.startsWith('/mypage' || location.startsWith('will'))) {
       setCurrentIndex(5);
     }
   }, [location]);
@@ -55,11 +63,9 @@ const Carousel = ({}) => {
   return (
     <Window id="window">
       <Slider id="slider" index={currentIndex}>
-        {backgroundImage
-          ? backgroundImage.map((url, index) => (
-              <Slide key={index} imgUrl={url} />
-            ))
-          : ''}
+        {backgroundImage.map((url, index) => (
+          <Slide key={index} imgUrl={url} />
+        ))}
       </Slider>
     </Window>
   );
