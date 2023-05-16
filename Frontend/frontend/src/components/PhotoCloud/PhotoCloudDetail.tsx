@@ -4,6 +4,8 @@ import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+
+import Loading from '../../components/common/Loading';
 import {
   PhotoWrapper,
   PhotoCardWrapper,
@@ -58,6 +60,7 @@ interface PhotoCloudProps {
   cancelEdit: () => void;
   setCategoryOwner: React.Dispatch<React.SetStateAction<number | null>>;
   setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
+  setPhotoLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
@@ -78,6 +81,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     cancelEdit,
     setCategoryOwner,
     setEditCategoryThumbnail,
+    setPhotoLoading,
   } = props;
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
@@ -101,6 +105,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
         setImgUrl(() => data.category.imageUrl);
         setEditTitle(() => data.category.name);
         setDeleteContent(false);
+        setPhotoLoading(true);
       }
     } catch (err) {
       console.error(err);
@@ -365,9 +370,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
             ) : null}
           </div>
         </div>
-      ) : (
-        <p>loading...</p>
-      )}
+      ) : null}
     </PhotoWrapper>
   );
 }

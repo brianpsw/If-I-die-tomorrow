@@ -1,11 +1,14 @@
-import React, { Suspense } from 'react';
-import { useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
+
 import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
+
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+
 import HomeSemiRoom from '../../components/home/HomeSemiRoom';
 import { Background, Logo, FeelingTxt } from './HomeEmotion';
+import Loading from '../../components/common/Loading';
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
@@ -45,7 +48,7 @@ function Home() {
       <FeelingTxt>
         밤하늘을 보며 <br /> 산책 한번 어때요?
       </FeelingTxt>
-      <Suspense fallback={<div>loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <HomeSemiRoom />
       </Suspense>
     </Background>

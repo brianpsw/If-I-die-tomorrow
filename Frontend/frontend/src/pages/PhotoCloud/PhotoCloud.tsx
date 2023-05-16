@@ -6,12 +6,11 @@ import { categoryState } from '../../states/CategoryState';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import Loading from '../../components/common/Loading';
 import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
-
-import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 
 interface EditOrDeleteEpic {
   titleEdit: boolean;
@@ -38,6 +37,8 @@ function PhotoCloud() {
   const [editCategoryThumbnail, setEditCategoryThumbnail] =
     useState<boolean>(false);
   const [deleteContent, setDeleteContent] = useState<boolean>(false);
+  const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
+  const [photoLoading, setPhotoLoading] = useState<boolean>(false);
 
   const params = useParams();
 
@@ -116,51 +117,56 @@ function PhotoCloud() {
   };
 
   return (
-    <Background>
-      {openEditOrDeleteModal ? (
-        <EditOrDeleteModal
-          onClose={onEditOrDeleteModalClose}
-          handleBucketEditModalOpen={handleEdit}
-          handleDeleteModalOpen={handleDeleteModalOpen}
-        />
-      ) : null}
-      {deleteModalOpen ? (
-        <DeleteCategoryOrPhotoModal
-          onClose={onDeleteModalClose}
-          targetId={targetId}
-          epic={epic}
+    <div>
+      {!photoLoading && !categoryLoading ? <Loading /> : null}
+      <div>
+        {openEditOrDeleteModal ? (
+          <EditOrDeleteModal
+            onClose={onEditOrDeleteModalClose}
+            handleBucketEditModalOpen={handleEdit}
+            handleDeleteModalOpen={handleDeleteModalOpen}
+          />
+        ) : null}
+        {deleteModalOpen ? (
+          <DeleteCategoryOrPhotoModal
+            onClose={onDeleteModalClose}
+            targetId={targetId}
+            epic={epic}
+            setDeleteCategory={setDeleteCategory}
+            setDeleteContent={setDeleteContent}
+            categoryOwner={categoryOwner!}
+          />
+        ) : null}
+        <PhotoCloudCategory
           setDeleteCategory={setDeleteCategory}
-          setDeleteContent={setDeleteContent}
-          categoryOwner={categoryOwner!}
-        />
-      ) : null}
-      <PhotoCloudCategory
-        setDeleteCategory={setDeleteCategory}
-        deleteCategory={deleteCategory}
-        cancelEdit={cancelEdit}
-        setEditCategoryThumbnail={setEditCategoryThumbnail}
-        editCategoryThumbnail={editCategoryThumbnail}
-      ></PhotoCloudCategory>
-      {selectedCategory && (
-        <PhotoCloudDetail
-          setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-          setSelectedPhotoId={setSelectedPhotoId}
-          selectedPhotoId={selectedPhotoId}
-          selectedCategory={selectedCategory}
-          setEpic={setEpic}
-          epic={epic}
-          setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
-          editOrDeleteModalEpic={editOrDeleteModalEpic}
-          setDeleteContent={setDeleteContent}
-          deleteContent={deleteContent}
-          setSelectedPhotoCaption={setSelectedPhotoCaption}
-          selectedPhotoCaption={selectedPhotoCaption}
+          deleteCategory={deleteCategory}
           cancelEdit={cancelEdit}
-          setCategoryOwner={setCategoryOwner}
           setEditCategoryThumbnail={setEditCategoryThumbnail}
-        ></PhotoCloudDetail>
-      )}
-    </Background>
+          editCategoryThumbnail={editCategoryThumbnail}
+          setCategoryLoading={setCategoryLoading}
+        ></PhotoCloudCategory>
+        {selectedCategory && (
+          <PhotoCloudDetail
+            setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+            setSelectedPhotoId={setSelectedPhotoId}
+            selectedPhotoId={selectedPhotoId}
+            selectedCategory={selectedCategory}
+            setEpic={setEpic}
+            epic={epic}
+            setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
+            editOrDeleteModalEpic={editOrDeleteModalEpic}
+            setDeleteContent={setDeleteContent}
+            deleteContent={deleteContent}
+            setSelectedPhotoCaption={setSelectedPhotoCaption}
+            selectedPhotoCaption={selectedPhotoCaption}
+            cancelEdit={cancelEdit}
+            setCategoryOwner={setCategoryOwner}
+            setEditCategoryThumbnail={setEditCategoryThumbnail}
+            setPhotoLoading={setPhotoLoading}
+          ></PhotoCloudDetail>
+        )}
+      </div>
+    </div>
   );
 }
 
