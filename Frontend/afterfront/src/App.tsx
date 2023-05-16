@@ -10,18 +10,11 @@ import Will from './pages/Will/Will';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from './assets/images/main_bg.png';
+
 const Background = styled.div`
-  ${tw`text-p2`}
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
+  background-color: pink;
   background-attachment: fixed;
-  padding-bottom: 70px;
+  min-height: 100vh;
 `;
 function App() {
   return (
