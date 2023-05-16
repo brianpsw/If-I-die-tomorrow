@@ -24,10 +24,11 @@ function TopBar({ title }: TopBarProps) {
         alt="button to go back"
         onClick={handleGoBack}
         className="cursor-pointer"
+        style={{ filter: 'invert(1)' }}
       />
       <h3 className="text-h3">{title}</h3>
       <div
-        className="w-[24px] h-[24px] fill-black cursor-pointer"
+        className="w-[24px] h-[24px] fill-white cursor-pointer"
         onClick={() => navigate('/')}
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">

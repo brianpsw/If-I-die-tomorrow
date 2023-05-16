@@ -6,6 +6,7 @@ import { userState } from '../../states/UserState';
 import ServiceAgreeModal from './ServiceAgreeModal';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+import Swal from 'sweetalert2';
 import {
   MyProfile,
   SettingBox,
@@ -39,10 +40,19 @@ function UserInfo() {
       localStorage.removeItem('user');
       setIsLoggedIn(null);
       localStorage.removeItem('recoil-persist');
-      alert('로그아웃 성공!');
+      Swal.fire({
+        title: '로그아웃 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
     } catch (err) {
       console.error(err);
-      alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+      Swal.fire({
+        title: '로그아웃에 실패했습니다. 다시 시도해주세요.',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
 

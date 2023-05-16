@@ -8,6 +8,7 @@ import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import backgroundImg from '../../assets/images/bucket_bg.png';
+import Swal from 'sweetalert2';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditBucketModal from '../../components/common/EditBucketModal';
@@ -15,6 +16,7 @@ import DeleteConfirmModal from '../../components/bucket/BucketDeleteModal';
 import ReportModal from '../../components/common/bucketReportModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
+import { FaUnlock, FaLock } from 'react-icons/fa';
 
 interface Comment {
   commentId: bigint;
@@ -78,7 +80,7 @@ const CommentDotIcon = styled.div`
 
 const ContentTitle = styled.div`
   ${tw``}
-  width: 280px;
+  width: 100%;
   word-break: break-all;
   text-overflow: ellipsis;
   word-wrap: break-word;
@@ -97,17 +99,13 @@ const BucketImg = styled.div`
   width: 100%;
 `;
 
-const SecretOrNot = styled.div`
-  ${tw``}
-`;
-
 const SecretOrNotText = styled.p`
-  ${tw`text-smT pl-3 pr-3 pt-1 pb-1 mt-10`}
+  ${tw`text-p1`}
   display: inline-block;
   width: content;
   border-radius: 10px;
   // border: 1px solid black;
-  background-color: #ffa9a9;
+  // background-color: #ffa9a9;
   font-weight: 400;
 `;
 
@@ -269,9 +267,19 @@ function BucketDetail() {
       navigate(-1);
       setBucketDetail(null);
       setComments([]);
-      alert('버킷리스트가 삭제되었습니다.');
+      Swal.fire({
+        title: '버킷리스트 삭제 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
     } catch (error) {
-      console.error(error);
+      Swal.fire({
+        title: '버킷리스트 삭제 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+      throw error;
     }
   };
 
@@ -345,6 +353,9 @@ function BucketDetail() {
           <BucketWrap>
             <BucketHeader>
               <div>
+                <SecretOrNotText>
+                  {bucket.secret ? <FaLock /> : <FaUnlock />}
+                </SecretOrNotText>
                 <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
                 <Nickname>{bucket.nickname}</Nickname>
 
@@ -362,11 +373,6 @@ function BucketDetail() {
               )}
             </BucketImg>
             <BucketText>{bucket.content}</BucketText>
-            <SecretOrNot>
-              <SecretOrNotText>
-                {bucket.secret ? '비공개 버킷리스트' : '공개된 버킷리스트'}
-              </SecretOrNotText>
-            </SecretOrNot>
           </BucketWrap>
           <CommentWrap>
             <CommentLine>댓글</CommentLine>
