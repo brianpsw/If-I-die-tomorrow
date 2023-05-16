@@ -24,6 +24,7 @@ function LoginForm({ setIsLogin }: any) {
         },
       );
       const jsonData = await response.json();
+      jsonData.preview = false;
       console.log(jsonData);
       setIsLogin(jsonData);
     } catch (error) {
@@ -58,6 +59,7 @@ export default function Home() {
           },
         );
         const jsonData = await response.json();
+        jsonData.preview = true;
         console.log(jsonData);
         setUserData(jsonData);
       } catch (error) {}

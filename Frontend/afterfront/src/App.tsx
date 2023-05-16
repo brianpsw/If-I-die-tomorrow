@@ -10,6 +10,8 @@ import Will from './pages/Will/Will';
 import PhotoCloud from './pages/PhotoCloud/PhotoCloud';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from './states/UserDataState';
 
 const Background = styled.div`
   background-color: pink;
@@ -22,14 +24,17 @@ const Preview = styled.div`
 `;
 
 function App() {
+  const userData = useRecoilValue(userDataState);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter basename="/after">
         <div className="App min-w-[300px]">
           <Background>
-            <Preview>
-              <h3 className="text-h3 text-red">미리보기 페이지</h3>
-            </Preview>
+            {userData && userData.preview ? (
+              <Preview>
+                <h3 className="text-h3 text-red">미리보기 페이지</h3>
+              </Preview>
+            ) : null}
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />

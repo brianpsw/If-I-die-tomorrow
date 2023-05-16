@@ -60,6 +60,7 @@ interface Data {
   diaries: Diary[];
   photos: PhotoCategory[];
   will: Will;
+  preview: boolean;
 }
 
 export const userDataState = atom<Data>({
