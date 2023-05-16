@@ -40,8 +40,18 @@ function Login() {
           <br />
           당신의 인생 저희 If I die tomorrow가 정리해드릴게요!
         </InfoText>
-        <img src={NaverLoginButton} onClick={naverLogin} alt="naver_login" />
-        <img src={KakaoLoginButton} onClick={kakaoLogin} alt="kakao_login" />
+        <img
+          className="cursor-pointer"
+          src={NaverLoginButton}
+          onClick={naverLogin}
+          alt="naver_login"
+        />
+        <img
+          className="cursor-pointer"
+          src={KakaoLoginButton}
+          onClick={kakaoLogin}
+          alt="kakao_login"
+        />
       </LogInContainer>
     </Container>
   );
