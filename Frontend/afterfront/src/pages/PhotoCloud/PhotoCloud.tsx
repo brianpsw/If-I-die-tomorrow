@@ -107,7 +107,7 @@ const PhotoPage = () => {
         </div>
         {selectedCategory && (
           <PhotoWrapper>
-            <h2 className="text-h2 text-center">{selectedCategory.name}</h2>
+            <h3 className="text-h3 text-center">{selectedCategory.name}</h3>
             <div
               className="flex-row"
               style={{ display: 'flex', flexWrap: 'wrap' }}
