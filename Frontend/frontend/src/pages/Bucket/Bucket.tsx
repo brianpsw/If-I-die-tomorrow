@@ -6,7 +6,7 @@ import { defaultApi } from '../../api/axios';
 import BucketListItem from '../../components/bucket/BucketListItem';
 import CreateModal from '../../components/bucket/CreateModal';
 import DeleteModal from '../../components/bucket/DeleteModal';
-import IIDT from '../../assets/icons/IIDT.svg';
+import IIDT from '../../assets/images/app_title.svg';
 import backgroundImg from '../../assets/images/bucket_bg.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
@@ -27,7 +27,7 @@ const Container = styled.div`
   padding-bottom: 10%;
 `;
 const LogoContainer = styled.img`
-  ${tw`self-start mt-[60px] w-[71px] h-[44px] my-2`}
+  ${tw`self-start mt-[60px] my-[8px]`}
 `;
 interface Bucket {
   bucketId: number;
