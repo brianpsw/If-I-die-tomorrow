@@ -1,6 +1,3 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 // import { RecoilRoot } from 'recoil';
 // import styled from 'styled-components';
@@ -39,13 +36,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
-            <Route path="/room" element={<Room />} />
             <Route path="/bucket" element={<Bucket />} />
             <Route path="/diary" element={<Diary />} />
             <Route path="/login" element={<Login />} />
             <Route path="/nickname" element={<Nickname />} />
             <Route path="/feed" element={<Feed />} />
-            <Route path="/service-agreement" element={<ServiceAgreement />} />
             <Route path="/diary/:diaryId" element={<DiaryDetail />} />
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/mypage" element={<MyPage />} />
