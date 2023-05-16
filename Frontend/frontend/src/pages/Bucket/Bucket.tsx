@@ -11,7 +11,7 @@ import backgroundImg from '../../assets/images/bucket_bg.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
-
+import Carousel from '../../components/common/Carousel';
 const Background = styled.div`
   background-image: url(${backgroundImg});
   background-size: cover;
@@ -121,29 +121,29 @@ function Bucket() {
           setBuckets={setBuckets}
         />
       ) : null}
-      <Background>
-        <Container>
-          <LogoContainer src={IIDT} />
-          {buckets &&
-            buckets.map((bucket) => (
-              <BucketListItem
-                key={bucket.bucketId} // 고유 식별자 사용
-                bucket={bucket}
-                setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
-                setSelectedBucketId={setSelectedBucketId}
-                setSelectedBucketContent={setSelectedBucketContent}
-                setBuckets={setBuckets}
-              />
-            ))}
+      {/* <Background> */}
+      <Container>
+        <LogoContainer src={IIDT} />
+        {buckets &&
+          buckets.map((bucket) => (
+            <BucketListItem
+              key={bucket.bucketId} // 고유 식별자 사용
+              bucket={bucket}
+              setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
+              setSelectedBucketId={setSelectedBucketId}
+              setSelectedBucketContent={setSelectedBucketContent}
+              setBuckets={setBuckets}
+            />
+          ))}
 
-          <img
-            onClick={handleCreateModalOpen}
-            className="fixed bottom-[78px] right-[10px] cursor-pointer"
-            src={AddButtonIcon}
-            alt=""
-          />
-        </Container>
-      </Background>
+        <img
+          onClick={handleCreateModalOpen}
+          className="fixed bottom-[78px] right-[10px] cursor-pointer"
+          src={AddButtonIcon}
+          alt=""
+        />
+      </Container>
+      {/* </Background> */}
     </div>
   );
 }
