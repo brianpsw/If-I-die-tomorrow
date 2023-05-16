@@ -12,7 +12,7 @@ import {
 import PhotoInput from './PhotoInput';
 
 import threeDot from '../../assets/icons/three_dot.svg';
-import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
+import blackThreeDot from '../../assets/icons/black_three_dot.svg';
 import Button from '../../components/common/Button';
 
 interface Category {
@@ -283,9 +283,9 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               )}
 
               <img
-                className="absolute"
+                className="absolute cursor-pointer"
                 style={{ top: '35%', right: '-5%' }}
-                src={whiteThreeDot}
+                src={threeDot}
                 alt="three dot button"
                 onClick={() => {
                   handleEditOrDeleteModalOpen();
@@ -330,12 +330,13 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                       </div>
                     ) : (
                       <div>
-                        <p className="text-p3 text-green_800 mb-[20px]">
+                        <p className="text-p3 text-green_800 mb-[30px]">
                           {photo.caption}
                         </p>
+
                         <img
-                          className="absolute bottom-6 right-6"
-                          src={threeDot}
+                          className="absolute bottom-6 right-6 cursor-pointer"
+                          src={blackThreeDot}
                           alt="three dot button"
                           onClick={() => {
                             handleEditOrDeleteModalOpen();
