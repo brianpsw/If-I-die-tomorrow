@@ -35,6 +35,8 @@ function PhotoCloud() {
       contentEdit: false,
     });
   const [deleteCategory, setDeleteCategory] = useState<boolean>(false);
+  const [editCategoryThumbnail, setEditCategoryThumbnail] =
+    useState<boolean>(false);
   const [deleteContent, setDeleteContent] = useState<boolean>(false);
 
   const params = useParams();
@@ -61,7 +63,7 @@ function PhotoCloud() {
 
   useEffect(() => {
     fetchData();
-  }, [category]);
+  }, []);
 
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {
@@ -136,6 +138,8 @@ function PhotoCloud() {
         setDeleteCategory={setDeleteCategory}
         deleteCategory={deleteCategory}
         cancelEdit={cancelEdit}
+        setEditCategoryThumbnail={setEditCategoryThumbnail}
+        editCategoryThumbnail={editCategoryThumbnail}
       ></PhotoCloudCategory>
       {selectedCategory && (
         <PhotoCloudDetail
@@ -153,6 +157,7 @@ function PhotoCloud() {
           selectedPhotoCaption={selectedPhotoCaption}
           cancelEdit={cancelEdit}
           setCategoryOwner={setCategoryOwner}
+          setEditCategoryThumbnail={setEditCategoryThumbnail}
         ></PhotoCloudDetail>
       )}
     </Background>

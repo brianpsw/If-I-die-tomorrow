@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
@@ -9,16 +9,17 @@ import {
   PhotoCardWrapper,
   Photo,
 } from '../../pages/PhotoCloud/PhotoCloudEmotion';
+import PhotoInput from './PhotoInput';
 
 import threeDot from '../../assets/icons/three_dot.svg';
-import whiteThreeDot from '../../assets/icons/white_three_dot.svg';
+import blackThreeDot from '../../assets/icons/black_three_dot.svg';
 import Button from '../../components/common/Button';
 
 interface Category {
   userId: number;
   categoryId: number;
   name: string;
-  objectId: number;
+  imageUrl: string;
 }
 
 interface PhotoInfo {
@@ -56,9 +57,11 @@ interface PhotoCloudProps {
   selectedPhotoCaption: string;
   cancelEdit: () => void;
   setCategoryOwner: React.Dispatch<React.SetStateAction<number | null>>;
+  setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
+  const navigate = useNavigate();
   const {
     setOpenEditOrDeleteModal,
     setSelectedPhotoId,
@@ -74,11 +77,14 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     selectedPhotoCaption,
     cancelEdit,
     setCategoryOwner,
+    setEditCategoryThumbnail,
   } = props;
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
   const [editContent, setEditContent] = useState<string>('');
-
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [currentImg, setCurrentImg] = useState<string>('');
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
@@ -91,6 +97,9 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       if (get_photo.status === 200) {
         const { data } = get_photo;
         setPhotoData(() => data);
+        setCurrentImg(() => data.category.imageUrl);
+        setImgUrl(() => data.category.imageUrl);
+        setEditTitle(() => data.category.name);
         setDeleteContent(false);
       }
     } catch (err) {
@@ -105,7 +114,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   // 카테고리 누를 때마다 해당 카테고리명을 바꿈
   useEffect(() => {
     fetchData();
-    setEditTitle(name!);
   }, [selectedCategory]);
 
   useEffect(() => {
@@ -140,7 +148,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       alert('내용은 300자이내여야합니다.');
     }
   };
-
+  // 카테고리 수정 api
   const changeCategory = async () => {
     try {
       const patch_category = await defaultApi.patch(
@@ -159,8 +167,40 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     } catch (err) {
       console.error(err);
     }
+    if (currentImg !== imgUrl) {
+      try {
+        const formData = new FormData();
+        formData.append(
+          'data',
+          JSON.stringify({
+            categoryId: categoryId,
+          }),
+        );
+
+        if (photoFile) {
+          formData.append('image', photoFile);
+        }
+
+        const patch_thumbnail = await defaultApi.patch(
+          requests.PATCH_THUMBNAIL(),
+          formData,
+          {
+            withCredentials: true,
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          },
+        );
+        if (patch_thumbnail.status === 200) {
+          setEditCategoryThumbnail(() => true);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
   };
 
+  // 캡션 수정 api
   const changeContent = async () => {
     try {
       const patch_photo = await defaultApi.patch(
@@ -179,7 +219,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       console.error(err);
     }
   };
-
+  // api 보내기 전 체크하는 함수
   const checkBeforeSend = (targetContent: string) => {
     const expspaces = /  +/g;
     if (targetContent === '') {
@@ -211,6 +251,12 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 maxLength={30}
                 onChange={(e: any) => handleEditTitle(e)}
               />
+              <PhotoInput
+                imgUrl={imgUrl}
+                setImgUrl={setImgUrl}
+                photoFile={photoFile}
+                setPhotoFile={setPhotoFile}
+              />
               <div className="w-full flex justify-center">
                 <Button
                   color="#36C2CC"
@@ -237,9 +283,9 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               )}
 
               <img
-                className="absolute"
+                className="absolute cursor-pointer"
                 style={{ top: '35%', right: '-5%' }}
-                src={whiteThreeDot}
+                src={threeDot}
                 alt="three dot button"
                 onClick={() => {
                   handleEditOrDeleteModalOpen();
@@ -284,12 +330,13 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                       </div>
                     ) : (
                       <div>
-                        <p className="text-p3 text-green_800 mb-[20px]">
+                        <p className="text-p3 text-green_800 mb-[30px]">
                           {photo.caption}
                         </p>
+
                         <img
-                          className="absolute bottom-6 right-6"
-                          src={threeDot}
+                          className="absolute bottom-6 right-6 cursor-pointer"
+                          src={blackThreeDot}
                           alt="three dot button"
                           onClick={() => {
                             handleEditOrDeleteModalOpen();

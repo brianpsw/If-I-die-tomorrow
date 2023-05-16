@@ -19,10 +19,18 @@ interface PhotoCloudProps {
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   deleteCategory: boolean;
   cancelEdit: () => void;
+  setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
+  editCategoryThumbnail: boolean;
 }
 
 function PhotoCloudCategory(props: PhotoCloudProps) {
-  const { setDeleteCategory, deleteCategory, cancelEdit } = props;
+  const {
+    setDeleteCategory,
+    deleteCategory,
+    cancelEdit,
+    setEditCategoryThumbnail,
+    editCategoryThumbnail,
+  } = props;
   const navigate = useNavigate();
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
@@ -36,6 +44,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
         const { data } = response;
         setCategoryData(() => data);
         setDeleteCategory(false);
+        setEditCategoryThumbnail(false);
       }
     } catch (err) {
       console.error(err);
@@ -47,8 +56,8 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   }, []);
 
   useEffect(() => {
-    if (deleteCategory) fetchData();
-  }, [deleteCategory]);
+    if (deleteCategory || editCategoryThumbnail) fetchData();
+  }, [deleteCategory, editCategoryThumbnail]);
 
   const handleCategory = (id: number) => {
     if (categoryId !== id.toString()) {

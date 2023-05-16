@@ -47,6 +47,9 @@ const requests = {
   PATCH_PHOTO() {
     return `/api/photo`;
   },
+  PATCH_THUMBNAIL() {
+    return `/api/photo/category/thumbnail`;
+  },
   DELETE_PHOTO(photoId) {
     return `/api/photo/${photoId}`;
   },
