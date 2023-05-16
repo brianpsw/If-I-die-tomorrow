@@ -11,7 +11,7 @@ import AuthWrapper from '../../api/AuthWrapper';
 import WillModal from './WillModal';
 
 const Container = styled.div`
-  ${tw`flex flex-col justify-center items-center p-[16px] m-[24px] bg-gray-100/80`}
+  ${tw`flex flex-col justify-center items-center p-10 m-10 bg-gray-100/80`}
 `;
 const WillContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full h-[500px] text-p1 rounded border-black break-all`}
@@ -69,6 +69,13 @@ function Will(): React.JSX.Element {
                 <p className="text-lg leading-relaxed mb-6 whitespace-pre-wrap">
                   {userData.will.content}
                 </p>
+                <div className="flex w-full justify-end">
+                  <img
+                    className="h-32"
+                    src={userData.will.signUrl}
+                    alt="사인"
+                  />
+                </div>
                 {/* More paragraphs... */}
               </div>
             </div>
@@ -95,7 +102,6 @@ function Will(): React.JSX.Element {
             onClick={onWillVideoModalOpen}
           />
         </div>
-        <img className="h-32" src={userData.will.signUrl} alt="사인" />
       </Container>
     </AuthWrapper>
   );

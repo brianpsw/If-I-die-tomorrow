@@ -17,7 +17,6 @@ import {
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import { Link } from 'react-router-dom';
-import TopBar from '../../components/common/TopBar';
 import { Navigation } from '../../components/common/Navigation';
 import AuthWrapper from '../../api/AuthWrapper';
 

@@ -18,6 +18,10 @@ export const Background = styled.div`
   padding-bottom: 70px;
 `;
 
+export const Container = styled.div`
+  ${tw`flex p-4 m-4`}
+`;
+
 export const PhotoWrapper = styled.div`
   ${tw`pb-[10px] flex flex-col`}
 `;

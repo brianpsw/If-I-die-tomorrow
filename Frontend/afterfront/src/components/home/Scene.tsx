@@ -162,8 +162,8 @@ function Scene(props: roomProps) {
           pointRef.current.position.x - foxRef.current!.position.x,
         );
 
-        foxRef.current.position.x += Math.cos(angle) * 1;
-        foxRef.current.position.z += Math.sin(angle) * 1;
+        foxRef.current.position.x += Math.cos(angle) * 0.1;
+        foxRef.current.position.z += Math.sin(angle) * 0.1;
 
         camera.position.x = cameraPosition.x + foxRef.current.position.x;
         camera.position.z = cameraPosition.z + foxRef.current.position.z;
