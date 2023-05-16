@@ -11,8 +11,6 @@ import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
 
-import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
-
 interface EditOrDeleteEpic {
   titleEdit: boolean;
   contentEdit: boolean;
@@ -116,7 +114,7 @@ function PhotoCloud() {
   };
 
   return (
-    <Background>
+    <div>
       {openEditOrDeleteModal ? (
         <EditOrDeleteModal
           onClose={onEditOrDeleteModalClose}
@@ -160,7 +158,7 @@ function PhotoCloud() {
           setEditCategoryThumbnail={setEditCategoryThumbnail}
         ></PhotoCloudDetail>
       )}
-    </Background>
+    </div>
   );
 }
 
