@@ -99,6 +99,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
         setPhotoData(() => data);
         setCurrentImg(() => data.category.imageUrl);
         setImgUrl(() => data.category.imageUrl);
+        setEditTitle(() => data.category.name);
         setDeleteContent(false);
       }
     } catch (err) {
@@ -113,7 +114,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   // 카테고리 누를 때마다 해당 카테고리명을 바꿈
   useEffect(() => {
     fetchData();
-    setEditTitle(name!);
   }, [selectedCategory]);
 
   useEffect(() => {
