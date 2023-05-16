@@ -513,7 +513,11 @@ function MyPage() {
                         ref={inputRefs[index].name}
                         value={receiver.name}
                         onChange={(e) => handleReceiverChange(index, 'name', e)}
-                        disabled={!serviceEnabled || receiverDisabled}
+                        disabled={
+                          !serviceEnabled ||
+                          receiverDisabled ||
+                          receiverTexts.length >= 3
+                        }
                       />
 
                       <input
@@ -524,14 +528,26 @@ function MyPage() {
                         onChange={(e) =>
                           handleReceiverChange(index, 'phone', e)
                         }
-                        disabled={!serviceEnabled || receiverDisabled}
+                        disabled={
+                          !serviceEnabled ||
+                          receiverDisabled ||
+                          receiverTexts.length >= 3
+                        }
                       />
-                      {receivers.length < 3 && receiverTexts.length < 3 && (
+                      {receivers.length < 3 && (
                         <IconContainer>
                           <Icon
                             icon="line-md:plus-circle"
-                            onClick={receiverDisabled ? undefined : addReceiver}
-                            style={receiverDisabled ? { color: '#A9A9A9' } : {}}
+                            onClick={
+                              receiverDisabled || receiverTexts.length >= 3
+                                ? undefined
+                                : addReceiver
+                            }
+                            style={
+                              receiverDisabled || receiverTexts.length >= 3
+                                ? { color: '#A9A9A9' }
+                                : {}
+                            }
                           />
                         </IconContainer>
                       )}
@@ -548,7 +564,7 @@ function MyPage() {
             >
               등록된 리시버
             </p>
-            {receiverTexts &&
+            {receiverTexts && receiverTexts.length > 0 ? (
               receiverTexts.map((text, index) => (
                 <Receiver
                   key={index}
@@ -573,7 +589,10 @@ function MyPage() {
                     }
                   />
                 </Receiver>
-              ))}
+              ))
+            ) : (
+              <p>등록된 리시버가 없습니다.</p>
+            )}
           </SettingBox>
           <Withdrawal></Withdrawal>
         </Container>

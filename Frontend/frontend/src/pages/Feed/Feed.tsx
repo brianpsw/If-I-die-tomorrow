@@ -9,6 +9,7 @@ import DiaryFeed from '../../components/feed/DiaryFeed';
 import BucketFeed from '../../components/feed/BucketFeed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopButton from '../../components/common/ScrollToTopButton';
+import textLogoImg from '../../assets/images/text_logo.png';
 
 const Background = styled.div`
   background-image: url(${backgroundImg});
@@ -21,8 +22,20 @@ const Background = styled.div`
   background-attachment: fixed;
 `;
 
+const Logo = styled.div`
+  background-image: url(${textLogoImg});
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 120px;
+  min-height: 60px;
+  position: absolute;
+  top: 36px;
+  left: 24px;
+`;
+
 const Container = styled.div`
-  ${tw`flex flex-col mx-auto pt-12`}
+  ${tw`flex flex-col mx-auto pt-48`}
   max-width: calc(100% - 48px);
   text-align: center;
   justify-content: center;
@@ -41,6 +54,7 @@ const Tab = styled.span<{ isSelected: boolean }>`
   ${({ isSelected }) => (isSelected ? tw`font-bold border-b-4` : null)}
   ${({ isSelected }) => (isSelected ? { borderColor: '#FFA9A9' } : null)}
   width: 110px;
+  white-space: nowrap;
 `;
 
 function Feed() {
@@ -83,6 +97,7 @@ function Feed() {
 
   return (
     <Background>
+      <Logo />
       <Container>
         <FeedTab>
           <Tab
