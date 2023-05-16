@@ -83,6 +83,7 @@ export const WillContent = styled.div`
 `;
 
 export const RadioContainer = styled.div`
+  ${tw`mt-4`}
   display: flex;
   margin-top: 8px;
 `;
@@ -100,19 +101,31 @@ export const RadioButton = styled.input.attrs({ type: 'radio' })`
 
 export const InputRow = styled.div`
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  justify-content: space-between;
   margin-bottom: 16px;
+  margin-top: 3%;
 
   input {
     margin-bottom: 8px;
     border-radius: 5px;
-    height: 30px;
+    height: 2.5rem;
     padding: 3px;
+  }
+
+  input:nth-child(1) {
+    width: 25%;
+  }
+
+  input:nth-child(2) {
+    width: 63%;
   }
 `;
 
 export const Receiver = styled.div`
   ${tw`mb-6 flex justify-between`}
+  align-items: center;
+  // border: 1px solid;
 `;
 
 export const StyledButton = styled(Button)`
@@ -122,9 +135,9 @@ export const StyledButton = styled(Button)`
 export const IconWithText = styled.div`
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
+  // margin-bottom: 8px;
   margin-top: 4px;
-  font-size: 14px;
+  // font-size: 14px;
   svg {
     margin-right: 8px;
     margin-left: 8px;
@@ -137,4 +150,17 @@ export const IconContainer = styled.div`
   justify-content: center;
   align-items: center;
   font-size: 30px;
+`;
+
+export const ReceiverTextWrap = styled.div`
+  ${tw`flex text-p2`}
+  width: 80%;
+  // justify-content: space-around;
+  // border: solid 1px;
+`;
+export const NameText = styled.p`
+  ${tw`mr-20 ml-2`}
+`;
+export const PhoneText = styled.p`
+  ${tw``}
 `;

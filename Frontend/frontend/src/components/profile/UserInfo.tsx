@@ -8,7 +8,8 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Swal from 'sweetalert2';
 import Lottie from 'react-lottie-player';
-import WillAnimation from '../../../src/assets/animation/write-paper.json';
+import WillAnimation3 from '../../../src/assets/animation/many-papers.json';
+import WillAnimation4 from '../../../src/assets/animation/preview-animation.json';
 import {
   MyProfile,
   SettingBox,
@@ -76,23 +77,23 @@ function UserInfo() {
           <Link to="/will">
             <WillContent>
               <Lottie
-                animationData={WillAnimation}
+                animationData={WillAnimation3}
                 play
                 loop
                 style={{ width: 120, height: 120, margin: '0 auto' }}
               />
-              <p>유언장 작성하러 가기</p>
+              <p className="text-p2">유언장 작성하러 가기</p>
             </WillContent>
           </Link>
           <Link to="/after" target="_self" reloadDocument={true} replace={true}>
             <WillContent>
               <Lottie
-                animationData={WillAnimation}
+                animationData={WillAnimation4}
                 play
                 loop
                 style={{ width: 120, height: 120, margin: '0 auto' }}
               />
-              <p>사후 페이지 보러가기</p>
+              <p className="text-p2">사후 페이지 보러가기</p>
             </WillContent>
           </Link>
         </WillServiceWrap>
