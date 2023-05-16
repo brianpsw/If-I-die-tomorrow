@@ -16,12 +16,20 @@ const Background = styled.div`
   background-attachment: fixed;
   min-height: 100vh;
 `;
+
+const Preview = styled.div`
+  ${tw`fixed z-10 bg-gray-100/50 p-4 rounded-[10px] bottom-4 left-6`}
+`;
+
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter basename="/after">
         <div className="App min-w-[300px]">
           <Background>
+            <Preview>
+              <h3 className="text-h3 text-red">미리보기 페이지</h3>
+            </Preview>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/home" element={<Home />} />
