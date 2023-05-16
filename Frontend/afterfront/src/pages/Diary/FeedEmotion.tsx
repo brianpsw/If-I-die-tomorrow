@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 export const Container = styled.div`
-  ${tw`flex flex-col justify-center items-center p-4 m-4`}
+  ${tw`flex flex-col justify-center items-center md:pt-[100px] pt-[80px] px-[24px]`}
 `;
 
 export const CardWrap = styled.div`

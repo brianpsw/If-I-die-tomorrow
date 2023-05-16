@@ -32,12 +32,9 @@ interface PhotoCategory {
 }
 
 const categoryStyle = {
-  flex: '0 0 auto',
   width: '60px',
   height: '60px',
-  backgroundColor: 'white',
   borderRadius: '30px',
-  border: 'solid 2px #111',
   cursor: 'pointer',
   display: 'flex',
   justifyContent: 'center',
@@ -45,6 +42,7 @@ const categoryStyle = {
   marginRight: '10px',
   backgroundSize: 'cover',
   backgroundRepeat: 'no-repeat',
+  marginBottom: '16px',
 };
 
 const PhotoPage = () => {
@@ -81,22 +79,14 @@ const PhotoPage = () => {
   return (
     <AuthWrapper>
       <Navigation />
-
       <Container>
-        <div
-          className="categories"
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            flexDirection: 'column',
-          }}
-        >
+        <div className="categories flex flex-wrap flex-col fixed">
           {userData.photos.map((photoCategory: PhotoCategory) =>
             photoCategory.category.categoryId ===
             selectedCategory.categoryId ? (
               <div
                 key={photoCategory.category.categoryId}
-                className="bg-pink_100"
+                className="border-[3px]"
                 style={{
                   ...categoryStyle,
                   backgroundImage: `url(${photoCategory.category.imageUrl})`,
@@ -106,7 +96,6 @@ const PhotoPage = () => {
             ) : (
               <div
                 key={photoCategory.category.categoryId}
-                className="bg-white"
                 style={{
                   ...categoryStyle,
                   backgroundImage: `url(${photoCategory.category.imageUrl})`,
@@ -118,7 +107,7 @@ const PhotoPage = () => {
         </div>
         {selectedCategory && (
           <PhotoWrapper>
-            <h2>Photos of {selectedCategory.name}</h2>
+            <h2 className="text-h2 text-center">{selectedCategory.name}</h2>
             <div
               className="flex-row"
               style={{ display: 'flex', flexWrap: 'wrap' }}

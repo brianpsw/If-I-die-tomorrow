@@ -2,11 +2,11 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 export const Container = styled.div`
-  ${tw`flex p-4 m-4`}
+  ${tw`px-[24px] pt-[80px] md:pt-[100px]`}
 `;
 
 export const PhotoWrapper = styled.div`
-  ${tw`pb-[10px] flex flex-col`}
+  ${tw`pb-[10px] flex flex-col ml-[60px]`}
 `;
 
 export const PhotoCardWrapper = styled.div`

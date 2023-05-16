@@ -11,14 +11,11 @@ import AuthWrapper from '../../api/AuthWrapper';
 import WillModal from './WillModal';
 
 const Container = styled.div`
-  ${tw`flex flex-col justify-center items-center p-10 m-10 bg-gray-100/80`}
+  ${tw` md:pt-[100px] pt-[80px] px-[24px]`}
 `;
-const WillContentInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full h-[500px] text-p1 rounded border-black break-all`}
-`;
+
 const Content = styled.p`
-  ${tw`flex justify-center text-center items-center text-p2`}
-  width: 100%;
+  ${tw`flex justify-center w-full text-center items-center text-p2`}
 `;
 
 function Will(): React.JSX.Element {
@@ -84,23 +81,25 @@ function Will(): React.JSX.Element {
       ) : null}
       <Navigation />
       <Container>
-        <img src={PenIcon} />
-        <Content className="my-8">박상우님께서 남기신 유언장입니다.</Content>
-        <Content>
-          버튼을 클릭하여 동영상과 <br />
-          서면 유언장을 확인하십시오
-        </Content>
-        <div className="flex space-x-[30px] my-8">
-          <img
-            className="cursor-pointer"
-            src={WillDoc}
-            onClick={onWillDocModalOpen}
-          />
-          <img
-            className="cursor-pointer"
-            src={WillVideo}
-            onClick={onWillVideoModalOpen}
-          />
+        <div className="flex flex-col justify-center items-center text-p2 bg-gray-100/80 rounded-[10px] max-w-[700px] mx-auto min-h-[85vh]">
+          <img src={PenIcon} />
+          <Content className="my-8">박상우님께서 남기신 유언장입니다.</Content>
+          <Content>
+            버튼을 클릭하여 동영상과 <br />
+            서면 유언장을 확인하십시오
+          </Content>
+          <div className="flex space-x-[30px] my-8">
+            <img
+              className="cursor-pointer"
+              src={WillDoc}
+              onClick={onWillDocModalOpen}
+            />
+            <img
+              className="cursor-pointer"
+              src={WillVideo}
+              onClick={onWillVideoModalOpen}
+            />
+          </div>
         </div>
       </Container>
     </AuthWrapper>
