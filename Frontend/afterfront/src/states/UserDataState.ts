@@ -18,7 +18,7 @@ interface Category {
   userId: number;
   categoryId: number;
   name: string;
-  objectId: number;
+  imageUrl: string;
 }
 
 interface Photo {
@@ -47,6 +47,7 @@ interface Diary {
 
 interface Will {
   willId: number;
+  name: string;
   content: string;
   videoUrl: string;
   signUrl: string;
