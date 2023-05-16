@@ -26,6 +26,12 @@ const Slide = styled.div<{ imgUrl: string }>`
   ${tw`w-full h-full bg-contain bg-no-repeat bg-center flex-none`}
   ${({ imgUrl }) => css`
     background-image: url(${imgUrl});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    background-attachment: fixed;
   `}
 `;
 
