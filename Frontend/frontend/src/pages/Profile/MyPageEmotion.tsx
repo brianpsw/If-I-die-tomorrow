@@ -71,11 +71,15 @@ export const WillServiceWrap = styled.div`
 
 export const WillContent = styled.div`
   ${tw`mb-4 mt-6 p-4 bg-white shadow rounded`}
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
   color: black;
   width: 43vw;
-  height: 150px;
+  height: auto;
 `;
 
 export const RadioContainer = styled.div`

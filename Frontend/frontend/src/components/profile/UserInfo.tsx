@@ -7,6 +7,8 @@ import ServiceAgreeModal from './ServiceAgreeModal';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Swal from 'sweetalert2';
+import Lottie from 'react-lottie-player';
+import WillAnimation from '../../../src/assets/animation/write-paper.json';
 import {
   MyProfile,
   SettingBox,
@@ -73,13 +75,23 @@ function UserInfo() {
         <WillServiceWrap>
           <Link to="/will">
             <WillContent>
-              <Icon icon="line-md:clipboard-list" />
+              <Lottie
+                animationData={WillAnimation}
+                play
+                loop
+                style={{ width: 120, height: 120, margin: '0 auto' }}
+              />
               <p>유언장 작성하러 가기</p>
             </WillContent>
           </Link>
           <Link to="/after" target="_self" reloadDocument={true} replace={true}>
             <WillContent>
-              <Icon icon="line-md:clipboard-list" />
+              <Lottie
+                animationData={WillAnimation}
+                play
+                loop
+                style={{ width: 120, height: 120, margin: '0 auto' }}
+              />
               <p>사후 페이지 보러가기</p>
             </WillContent>
           </Link>
