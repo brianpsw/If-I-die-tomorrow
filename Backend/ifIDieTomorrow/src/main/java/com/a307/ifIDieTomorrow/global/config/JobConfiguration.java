@@ -1,6 +1,7 @@
 package com.a307.ifIDieTomorrow.global.config;
 
 import com.a307.ifIDieTomorrow.domain.dto.notification.SmsDto;
+import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto;
 import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
 import com.a307.ifIDieTomorrow.global.util.Notification;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -41,17 +43,33 @@ public class JobConfiguration {
 	private final ReceiverRepository receiverRepository;
 	private final ReportRepository reportRepository;
 	private final WillRepository willRepository;
+	private final AfterRepository afterRepository;
 	private final S3Upload s3Upload;
 
 	@Bean
 	public Job job(){
 		return jobBuilderFactory.get("job")
 				.start(processUser())
+//				.start(testing())
 				.next(deleteUser())
 				.next(finished())
 				.build();
 	}
-
+	
+	@Bean
+	public Step testing() {
+		TaskletStep testing = stepBuilderFactory.get("testing")
+				.tasklet((contribution, chunkContext) -> {
+					User user = userRepository.findById(9L).get();
+					sendPage(user);
+					return RepeatStatus.FINISHED;
+				})
+				.build();
+		testing.setAllowStartIfComplete(true);
+		return testing;
+	}
+	
+	
 	@Bean
 	public Step processUser(){
 		TaskletStep processUser = stepBuilderFactory.get("processUser")
@@ -160,8 +178,36 @@ public class JobConfiguration {
 	}
 	
 	private void sendPage(User user){
-		// 페이지를 발송하는 뭔가
-		log.info("send Page to receivers of {}", user.getNickname());
+		// 퍼스널 페이지 null 이 아닌 것 채워넣기
+		String uuid = UUID.randomUUID().toString();
+		user.setPersonalPage(uuid);
+		userRepository.save(user);
+		
+		// After 에 UUID 저장
+		After after = After.builder()
+				.userId(user.getUserId())
+				.uuid(uuid)
+				.build();
+		afterRepository.save(after);
+		
+		// 문자로 사후 페이지와 UUID 전송
+		List<CreateReceiverResDto> list = receiverRepository.findAllByUserId(user.getUserId());
+		for (CreateReceiverResDto receiver : list) {
+			StringBuilder content = new StringBuilder();
+			content.append("[If I Die Tomorrow]").append("\n");
+			content.append(receiver.getName()).append("님, ").append("\n");
+			content.append(user.getName()).append("님으로부터 편지가 도착했습니다.").append("\n");
+			content.append(user.getName()).append("님께서 생전에 남긴 기록들을 www.ifidietomorrow.co.kr/after 에서 확인하실 수 있습니다.").append("\n");
+			content.append("비밀번호 : ").append(uuid);
+			
+			try {
+				notification.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(receiver.getPhoneNumber()).build());
+			} catch (IOException e) {
+				log.error(e.getMessage());
+			}
+			log.info("send Notice to {}", receiver.getName());
+		}
+		
 	}
 	
 	private void deleteAll(User user) {
