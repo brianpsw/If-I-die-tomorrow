@@ -1,5 +1,6 @@
 import React from 'react';
-// import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Route, Routes, BrowserRouter } from 'react-router-dom';
 // import { RecoilRoot } from 'recoil';
 // import styled from 'styled-components';
@@ -8,6 +9,7 @@ import { Route, Routes, BrowserRouter } from 'react-router-dom';
 // import { persistAtom } from 'recoil-persist';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Carousel from './components/common/Carousel';
 import Home from './pages/Home/Home';
 import Room from './pages/Home/Room';
 import Bucket from './pages/Bucket/Bucket';
@@ -51,7 +53,6 @@ function App() {
             <Route path="/will/text" element={<WillText />} />
             <Route path="/will/sign" element={<WillSign />} />
             <Route path="/will/video" element={<WillVideo />} />
-
             <Route path="/survey" element={<Survey />} />
             <Route path="/photo-cloud/:categoryId" element={<PhotoCloud />} />
             <Route
@@ -64,6 +65,7 @@ function App() {
             />
             {/* <Route path="/*" element={<ErrorPage />} /> */}
           </Routes>
+          <Carousel />
           <NavBar />
         </div>
       </BrowserRouter>
