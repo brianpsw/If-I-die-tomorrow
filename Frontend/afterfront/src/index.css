@@ -19,14 +19,6 @@ code {
     monospace;
 }
 
-@font-face {
-  font-family: 'S-CoreDream';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream.woff')
-    format('woff');
-  font-weight: normal;
-  font-style: normal;
-}
-
 @media (max-width: 390px) {
   html {
     font-size: 10px;
