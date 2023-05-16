@@ -2,6 +2,18 @@ import { useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import Room from './Room';
+import Button from '../../components/common/Button';
+import AppTitle from '../../assets/images/app_title.svg';
+import Logo from '../../assets/icons/logo.svg';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+
+const LogoContainer = styled.div`
+  ${tw`flex items-center flex-col w-full space-y-6 mb-6`}
+`;
+const LogInContainer = styled.div`
+  ${tw`flex items-center flex-col w-full space-y-6 `}
+`;
 
 function LoginForm({ setIsLogin }: any) {
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -33,13 +45,35 @@ function LoginForm({ setIsLogin }: any) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Password:
-        <input type="password" ref={passwordRef} />
-      </label>
-      <button type="submit">Submit</button>
-    </form>
+    <div className="flex items-center justify-center min-h-[90vh]">
+      <div>
+        <LogoContainer>
+          <img className="mb-6" src={Logo} width={82} height={102} alt="" />
+          <img className="mb-6" src={AppTitle} width={213} height={30} alt="" />
+        </LogoContainer>
+        <LogInContainer>
+          <form className=" w-21rm" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Password
+              </label>
+              <input
+                className="shadow appearance-none border border-red-500 rounded w-full py-2 text-gray-700 mb-6 leading-tight focus:outline-none focus:shadow-outline focus:border-green-200 focus:ring-1 focus:ring-green-200"
+                id="password"
+                type="password"
+                placeholder="비밀번호"
+                ref={passwordRef}
+              />
+            </div>
+            <div>
+              <Button color="#046F75" size="lg">
+                로그인
+              </Button>
+            </div>
+          </form>
+        </LogInContainer>
+      </div>
+    </div>
   );
 }
 
@@ -69,7 +103,6 @@ export default function Home() {
     }
   }, []);
 
-  console.log('abc');
   if (Object.keys(userData).length === 0) {
     return <LoginForm setIsLogin={setUserData}></LoginForm>;
   } else {
