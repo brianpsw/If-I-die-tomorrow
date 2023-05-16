@@ -64,7 +64,7 @@ function UserInfo() {
   return (
     <div>
       <MyProfile>
-        <h4 className="text-h4">{loggedInUserNickname}님, 환영합니다</h4>
+        <h4 className="text-h4">{loggedInUserNickname}</h4>
         <SettingBox>
           <h4 className="text-h4">내 정보</h4>
           <br />
@@ -93,7 +93,7 @@ function UserInfo() {
                 loop
                 style={{ width: 120, height: 120, margin: '0 auto' }}
               />
-              <p className="text-p2">사후 페이지 보러가기</p>
+              <p className="text-p2">사후 페이지 미리보기</p>
             </WillContent>
           </Link>
         </WillServiceWrap>

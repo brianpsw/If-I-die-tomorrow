@@ -348,7 +348,7 @@ function BucketDetail() {
         />
       )}
       <Background>
-        <TopBar title="" />
+        <TopBar title="버킷리스트" />
         <Container>
           <BucketWrap>
             <BucketHeader>

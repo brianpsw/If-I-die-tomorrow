@@ -348,7 +348,7 @@ function DiaryDetail() {
         />
       )}
       <Background>
-        <TopBar title="" />
+        <TopBar title="다이어리" />
         <Container>
           <DiaryWrap>
             <DiaryHeader>
