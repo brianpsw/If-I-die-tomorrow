@@ -156,14 +156,16 @@ const StyledInput = styled.input`
 const StyledButton = styled.button`
   ${tw`text-p1 px-4 py-2 rounded flex`}
   justify-content: center;
+  background-color: white;
   align-items: center;
   position: absolute;
+  border-radius: 10px;
   // font-size: 1.5rem;
   font-weight: bold;
   color: gray;
   height: 100%;
   width: 50px;
-  right: 1%;
+  right: 0;
   white-space: nowrap;
   // border: solid 1px black;
 `;
@@ -179,13 +181,13 @@ const CommentDate = styled.div`
   font-size: 12px;
 `;
 
-const CommentContent = styled.p`
-  ${tw`text-smT`}
-  width: 90%;
+const CommentContent = styled.div`
+  ${tw`text-p3`}
+  max-width: 90%;
 `;
 
 const EditContentForm = styled.form`
-  ${tw`flex flex-col`}
+  ${tw`flex flex-col text-p3`}
   align-items: flex-end;
   width: 73vw;
 `;
@@ -565,7 +567,7 @@ function Comment({
         />
       )}
       <CommentBox>
-        <div>
+        <div className="w-full">
           <CommentNick>{comment.nickname}</CommentNick>
           <CommentDate>
             {new Date(comment.createdAt).toISOString().split('T')[0]}
