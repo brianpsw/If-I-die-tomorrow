@@ -7,6 +7,7 @@ import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+import { Link } from 'react-router-dom';
 
 const questions = [
   '나는 새로운 사람들을 만나는 것이 흥미롭다.',
@@ -89,16 +90,16 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
 
     switch (personalityType) {
       case '외향형안정형':
-        personalityId = 0;
-        break;
-      case '외향형진취형':
         personalityId = 1;
         break;
-      case '내향형안정형':
+      case '외향형진취형':
         personalityId = 2;
         break;
-      case '내향형진취형':
+      case '내향형안정형':
         personalityId = 3;
+        break;
+      case '내향형진취형':
+        personalityId = 4;
         break;
       default:
         throw new Error('Invalid personality type');
@@ -141,9 +142,11 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
               />
             ))}
         </QuestionWrapper>
-        <StyledButton color="#FFA9A9" size="md">
-          선택완료
-        </StyledButton>
+        <Link to="/diary">
+          <StyledButton color="#FFA9A9" size="md">
+            선택완료
+          </StyledButton>
+        </Link>
       </SurveyForm>
     </Background>
   );
