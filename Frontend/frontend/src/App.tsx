@@ -35,22 +35,23 @@ import AppTitle from './assets/images/app_title.svg';
 const LogoContainer = styled.div`
   ${tw`flex items-center flex-col w-full mt-[146px] space-y-6 `}
 `;
+// 화면크기 커짐 방지 페이지
+// <div className="fixed min-[501px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
+//   <LogoContainer>
+//     <img src={Logo} width={82} height={102} alt="" />
+//     <img src={AppTitle} width={213} height={30} alt="" />
+//   </LogoContainer>
+//   <p className="text-center text-p1 mt-8 text-white">
+//     저희 서비스는 모바일에 최적화 되어있습니다.
+//     <br /> 화면의 크기를 줄여주세요.
+//   </p>
+// </div>
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <div className="App min-w-[300px]">
-          <div className="fixed min-[501px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
-            <LogoContainer>
-              <img src={Logo} width={82} height={102} alt="" />
-              <img src={AppTitle} width={213} height={30} alt="" />
-            </LogoContainer>
-            <p className="text-center text-p1 mt-8 text-white">
-              저희 서비스는 모바일에 최적화 되어있습니다.
-              <br /> 화면의 크기를 줄여주세요.
-            </p>
-          </div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
