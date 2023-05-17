@@ -83,7 +83,9 @@ function Will(): React.JSX.Element {
       <Container>
         <div className="flex flex-col justify-center items-center text-p2 bg-gray-100/80 rounded-[10px] max-w-[700px] mx-auto min-h-[85vh]">
           <img src={PenIcon} />
-          <Content className="my-8">박상우님께서 남기신 유언장입니다.</Content>
+          <Content className="my-8">
+            {userData.will.name}님께서 남기신 유언장입니다.
+          </Content>
           <Content>
             버튼을 클릭하여 동영상과 <br />
             서면 유언장을 확인하십시오
