@@ -97,7 +97,9 @@ function Feed() {
 
   return (
     <div>
-      <Logo />
+      <Link to="/home">
+        <Logo />
+      </Link>
       <Container>
         <FeedTab>
           <Tab
