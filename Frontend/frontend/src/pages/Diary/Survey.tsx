@@ -36,7 +36,7 @@ const Background = styled.div`
 `;
 
 const SurveyForm = styled.form`
-  ${tw`flex flex-col items-center mx-auto`}
+  ${tw`mt-8 flex flex-col items-center mx-auto`}
   max-width: calc(100% - 48px);
   padding-bottom: 18%;
   // border: 1px solid white;
@@ -47,9 +47,9 @@ const QuestionWrapper = styled.div`
 `;
 
 const SurveyText = styled.p`
+  ${tw`text-p2 mb-14`}
   text-align: center;
   color: #fff;
-  font-size: 12px;
 `;
 
 const StyledButton = styled(Button)`
