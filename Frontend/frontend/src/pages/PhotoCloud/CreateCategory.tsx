@@ -1,27 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { useRecoilValue } from 'recoil';
-import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import Swal from 'sweetalert2';
+import Loading from '../../components/common/Loading';
 import PhotoInput from '../../components/PhotoCloud/PhotoInput';
-import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
-import { LeakAdd } from '@mui/icons-material';
 
 function CreateCategory() {
   const navigate = useNavigate();
-  const btnRef = useRef<HTMLButtonElement | null>(null);
   const [imgUrl, setImgUrl] = useState<string>('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [thumbColor, setThumbColor] = useState<string | null>('');
-  const category = useRecoilValue(categoryState);
   const [customTitle, setCustomTitle] = useState<string>('');
   const [isFirst, setIsFirst] = useState<boolean>(true);
-  const [selectedObject, setSelectedObject] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const recommendCategory: string[] = [
     '테마가 있는 사진',
     '나의 열정이 돋보이는 사진',
@@ -69,20 +65,16 @@ function CreateCategory() {
     }
   };
 
-  const changeColor = (e: any) => {
-    setThumbColor(() => e.target.value);
-  };
-
   // 카테고리 생성 api 보내기
+  let isCreateCategory = '';
   const sendCategory = async () => {
-    btnRef.current?.setAttribute('disabled', 'disabled');
+    setIsLoading(() => true);
     try {
       const formData = new FormData();
       formData.append(
         'data',
         JSON.stringify({
           name: customTitle,
-          color: thumbColor,
         }),
       );
 
@@ -101,16 +93,29 @@ function CreateCategory() {
         },
       );
       if (post_category.status === 201) {
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '카테고리 생성 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
         navigate(`/photo-cloud/${post_category.data.categoryId}`);
       }
     } catch (err) {
       console.error(err);
-      btnRef.current!.disabled = false;
+      setIsLoading(() => false);
+      Swal.fire({
+        title: '카테고리 생성 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
 
   return (
-    <Background>
+    <div>
+      {isLoading && <Loading />}
       <div style={{ padding: '16px 24px' }}>
         <Icon
           icon="ph:x-bold"
@@ -175,7 +180,6 @@ function CreateCategory() {
               />
             </div>
             <Button
-              ref={btnRef}
               color={'#36C2CC'}
               size={'lg'}
               style={{ color: '#04373B', margin: '0 auto' }}
@@ -186,7 +190,7 @@ function CreateCategory() {
           </div>
         )}
       </div>
-    </Background>
+    </div>
   );
 }
 
