@@ -653,6 +653,34 @@ class CommunityServiceImplTest {
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
 
+			@Test
+			@DisplayName("존재하지 않는 댓글 수정 시 예외처리")
+			void ThrowsExceptionWhenWrongCommentId() {
+				// Given
+				Long commentId = 1L;
+				Long WrongId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(WrongId)
+						.content("New Content")
+						.build();
+
+				given(commentRepository.findById(WrongId)).willReturn(Optional.empty());
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 댓글 아이디입니다.");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+			}
+
 		}
 
 	}
