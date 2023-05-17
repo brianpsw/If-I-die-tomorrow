@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import axios from 'axios';
 import { defaultApi } from '../../api/axios';
@@ -46,6 +46,7 @@ function DiaryFeed() {
   const [items, setItems] = useState<DiaryItem[]>([]);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const lastItemRef = useRef<HTMLAnchorElement>(null);
 
   const fetchData = async (page: number) => {
     try {
@@ -53,7 +54,7 @@ function DiaryFeed() {
         withCredentials: true,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 && typeof response.data === 'object') {
         const { data } = response.data;
         setItems((prevItems: DiaryItem[]) => {
           const newData = data.filter(
@@ -76,6 +77,19 @@ function DiaryFeed() {
 
   useEffect(() => {
     fetchData(page);
+    function handleResize() {
+      const lastItemLocation = lastItemRef.current?.getBoundingClientRect();
+      if (
+        (lastItemLocation?.bottom as unknown as number) <= window.innerHeight
+      ) {
+        fetchMoreData();
+      }
+    }
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener on unmount
+    return () => window.removeEventListener('resize', handleResize);
   }, [page]);
 
   const fetchMoreData = () => {
@@ -107,7 +121,11 @@ function DiaryFeed() {
             const diary = item.diary;
             const commentCount = item.comments.length;
             return (
-              <Link to={`/diary/${diary.diaryId}`} key={index}>
+              <Link
+                to={`/diary/${diary.diaryId}`}
+                key={index}
+                ref={index === items.length - 1 ? lastItemRef : null}
+              >
                 <CardWrap key={index}>
                   <NickDateWrap>
                     <Nickname>{diary.nickname}</Nickname>

@@ -186,6 +186,7 @@ const CommentDate = styled.div`
 const CommentContent = styled.div`
   ${tw`text-p3`}
   max-width: 90%;
+  word-break: break-word;
 `;
 
 const EditContentForm = styled.form`
@@ -561,7 +562,7 @@ function Comment({
         />
       )}
       <CommentBox>
-        <div>
+        <div className="w-full">
           <CommentNick>{comment.nickname}</CommentNick>
           <CommentDate>
             {new Date(comment.createdAt).toISOString().split('T')[0]}

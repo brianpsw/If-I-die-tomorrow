@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import Button from './Button';
 import Swal from 'sweetalert2';
+import ReportIcon from '../../assets/icons/reportIcon.svg';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -175,7 +176,7 @@ function ReportModal({
         <ModalOverlay>
           <ModalWrapper ref={modalRef}>
             <ContentContainer onClick={handleReportClick}>
-              {/* <img src={ReportIcon} alt="report_icon" /> */}
+              <img src={ReportIcon} alt="report_icon" />
               <span className="text-p2">신고</span>
             </ContentContainer>
           </ModalWrapper>
