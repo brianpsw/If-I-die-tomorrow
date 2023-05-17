@@ -8,7 +8,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`p-5 pt-4 pb-10 bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
+  ${tw`text-p3 pt-16 pb-20 pl-8 pr-8 bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[100%] shadow mt-[50%] font-sans`}
   bottom: 0;
 `;
 const ContentWrapper = styled.div`
@@ -16,7 +16,7 @@ const ContentWrapper = styled.div`
 `;
 
 const ContentTitle = styled.div`
-  ${tw`m-1 mt-6`}
+  ${tw`text-p2 m-1 mt-12`}
   font-weight: 600
 `;
 

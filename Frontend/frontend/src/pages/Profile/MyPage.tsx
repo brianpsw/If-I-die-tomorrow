@@ -427,6 +427,16 @@ function MyPage() {
 
   return (
     <div>
+      {showModal && (
+        <ServiceAgreeModal
+          onClose={handleCloseFromModal}
+          onSubmit={handleSubmitFromModal}
+        />
+      )}
+      {isBottomModalOpen ? (
+        <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
+      ) : null}
+
       <Logo />
       <Container>
         <UserInfo />
