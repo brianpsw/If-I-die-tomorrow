@@ -299,7 +299,7 @@ function Diary() {
             <div className="flex w-full justify-center my-4">
               <Button
                 onClick={handleSubmit}
-                color="#B3E9EB"
+                color={isValid ? '#0E848A' : '#B3E9EB'}
                 size="sm"
                 disabled={isValid ? false : true}
               >
