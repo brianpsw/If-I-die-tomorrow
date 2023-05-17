@@ -56,7 +56,7 @@ function BucketFeed() {
         },
       );
 
-      if (response.status === 200) {
+      if (response.status === 200 && typeof response.data === 'object') {
         const { data } = response.data;
         setItems((prevItems: BucketItem[]) => {
           const newData = data.filter(

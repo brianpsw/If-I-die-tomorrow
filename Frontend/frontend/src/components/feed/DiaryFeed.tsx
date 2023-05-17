@@ -53,7 +53,7 @@ function DiaryFeed() {
         withCredentials: true,
       });
 
-      if (response.status === 200) {
+      if (response.status === 200 && typeof response.data === 'object') {
         const { data } = response.data;
         setItems((prevItems: DiaryItem[]) => {
           const newData = data.filter(
