@@ -138,7 +138,7 @@ const CommentBox = styled.div`
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`mb-6 flex w-full mx-auto`}
+  ${tw`text-p1 mb-6 flex w-full mx-auto`}
   color: white;
   position: relative;
   // border: solid 1px red;
@@ -156,7 +156,7 @@ const StyledInput = styled.input`
 `;
 
 const StyledButton = styled.button`
-  ${tw`text-p1 px-4 py-2 rounded flex`}
+  ${tw`px-4 py-2 rounded flex`}
   justify-content: center;
   background-color: white;
   align-items: center;
