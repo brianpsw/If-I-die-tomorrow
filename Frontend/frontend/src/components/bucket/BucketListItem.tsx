@@ -7,7 +7,7 @@ import { defaultApi } from '../../api/axios';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-
+import Swal from 'sweetalert2';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 import Button from '../common/Button';
@@ -91,10 +91,12 @@ function BucketListItem({
     } else {
       setBucketTitle(title);
     }
-  }, []);
+  }, [bucket]);
   useEffect(() => {
     if (isCompleteContentValid && isCompleteDateValid) {
       setIsValid(true);
+    } else {
+      setIsValid(false);
     }
   }, [isCompleteDateValid, isCompleteContentValid]);
   const handleSubmit = () => {
@@ -136,8 +138,18 @@ function BucketListItem({
         });
 
         get_user_bucket();
-        setIsClicked(false);
+        Swal.fire({
+          title: '버킷 완료 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '버킷 완료 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -192,16 +204,20 @@ function BucketListItem({
           <img onClick={handleBucketClick} src={UnCheckedIcon} alt="" />
         )}
         <ContentContainer onClick={handleBucketClick}>
-          <span className="text-p1">{bucket.title}</span>
+          <span className="text-p1">{bucketTitle}</span>
         </ContentContainer>
-        <div onClick={handleEditModalOpen}>
-          <img className="cursor-pointer" src={TreeDot} alt="" />
-        </div>
+        {bucket.complete ? (
+          ''
+        ) : (
+          <div onClick={handleEditModalOpen}>
+            <img className="cursor-pointer" src={TreeDot} alt="" />
+          </div>
+        )}
       </BucketContainer>
 
       {isClicked ? (
         <FormContainer>
-          <TitleContainer value={bucket.title} disabled />
+          <TitleContainer value={bucketTitle} disabled />
           <DatePicker
             label="버킷 완료 일자 선택"
             className="flex w-full"

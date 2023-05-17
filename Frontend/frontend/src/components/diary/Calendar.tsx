@@ -60,15 +60,17 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
 
   useEffect(() => {
     const today = new Date();
-    const diary = diarys.find((diary) =>
-      isSameDay(today, new Date(diary.createdAt)),
-    );
-    setSameDay(true);
-    if (diary) {
-      setSelectedDate(new Date(diary.createdAt));
-      showDetailsHandle(diary);
-    } else {
-      showDetailsHandle(null);
+    if (typeof diarys === 'object') {
+      const diary = diarys.find((diary) =>
+        isSameDay(today, new Date(diary.createdAt)),
+      );
+      setSameDay(true);
+      if (diary) {
+        setSelectedDate(new Date(diary.createdAt));
+        showDetailsHandle(diary);
+      } else {
+        showDetailsHandle(null);
+      }
     }
   }, [diarys]);
 
@@ -96,18 +98,20 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
     setSelectedDate(day);
     console.log(day);
     console.log(selectedDate);
-    const diary = diarys.find((diary) => {
-      const createdAtDate: Date = new Date(diary.createdAt);
-      return isSameDay(day, createdAtDate);
-    });
-    const today = new Date();
-    if (isSameDay(today, day)) {
-      setSameDay(true);
-    } else {
-      setSameDay(false);
-    }
+    if (typeof diarys === 'object') {
+      const diary = diarys.find((diary) => {
+        const createdAtDate: Date = new Date(diary.createdAt);
+        return isSameDay(day, createdAtDate);
+      });
+      const today = new Date();
+      if (isSameDay(today, day)) {
+        setSameDay(true);
+      } else {
+        setSameDay(false);
+      }
 
-    showDetailsHandle(diary ? diary : null);
+      showDetailsHandle(diary ? diary : null);
+    }
   };
 
   const renderDays = () => {
@@ -125,10 +129,12 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
 
   const renderCells = () => {
     const getCellBackgroundColor = (day: Date) => {
-      const diary = diarys.find((diary) =>
-        isSameDay(day, new Date(diary.createdAt)),
-      );
-      return diary ? '#36C2CC' : '';
+      if (typeof diarys === 'object') {
+        const diary = diarys.find((diary) =>
+          isSameDay(day, new Date(diary.createdAt)),
+        );
+        return diary ? '#36C2CC' : '';
+      }
     };
     const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });
     const endDate = lastDayOfWeek(currentMonth, { weekStartsOn: 1 });

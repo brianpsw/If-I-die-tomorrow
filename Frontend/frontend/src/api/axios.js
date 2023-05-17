@@ -3,6 +3,7 @@
 */
 import axios from 'axios';
 import requests from './config';
+import Swal from 'sweetalert2';
 
 const BASE_URL = requests.base_url;
 const axiosApi = (url, options) => {
@@ -30,8 +31,14 @@ const handleResponse = (response) => {
 
 const handleError = (error) => {
   const status = error.response && error.response.status;
-  if (status === 302) {
-    window.location.href = '/login';
+  if (status === 401) {
+    Swal.fire({
+      title: '접근권한이 없는 페이지입니다',
+      icon: 'error',
+      confirmButtonText: '확인',
+    }).then(() => {
+      window.location.href = '/';
+    });
   }
   return Promise.reject(error);
 };
