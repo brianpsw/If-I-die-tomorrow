@@ -436,8 +436,9 @@ function MyPage() {
       {isBottomModalOpen ? (
         <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
       ) : null}
-
-      <Logo />
+      <Link to="/home">
+        <Logo />
+      </Link>
       <Container>
         <UserInfo />
 
