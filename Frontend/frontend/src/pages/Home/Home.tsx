@@ -7,7 +7,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
 import HomeSemiRoom from '../../components/home/HomeSemiRoom';
-import { Background, Logo, FeelingTxt } from './HomeEmotion';
+import { Logo, FeelingTxt } from './HomeEmotion';
 import Loading from '../../components/common/Loading';
 
 function Home() {
@@ -43,7 +43,7 @@ function Home() {
   }, []);
 
   return (
-    <Background>
+    <div>
       <Logo />
       <FeelingTxt>
         밤하늘을 보며 <br /> 산책 한번 어때요?
@@ -51,7 +51,7 @@ function Home() {
       <Suspense fallback={<Loading />}>
         <HomeSemiRoom />
       </Suspense>
-    </Background>
+    </div>
   );
 }
 

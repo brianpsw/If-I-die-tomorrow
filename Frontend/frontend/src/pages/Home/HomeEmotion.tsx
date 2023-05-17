@@ -1,18 +1,7 @@
 import styled from 'styled-components';
 import tw from 'twin.macro';
 
-import backgroundImg from '../../assets/images/main_bg.png';
 import textLogoImg from '../../assets/images/text_logo.png';
-
-export const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-`;
 
 export const Logo = styled.div`
   background-image: url(${textLogoImg});
@@ -33,5 +22,5 @@ export const FeelingTxt = styled.h1`
   position: absolute;
   top: 155px;
   left: 24px;
-  z-index: 100;
+  z-index: 1;
 `;

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import Swal from 'sweetalert2';
 import Loading from '../../components/common/Loading';
 import {
   PhotoWrapper,
@@ -60,11 +61,9 @@ interface PhotoCloudProps {
   cancelEdit: () => void;
   setCategoryOwner: React.Dispatch<React.SetStateAction<number | null>>;
   setEditCategoryThumbnail: React.Dispatch<React.SetStateAction<boolean>>;
-  setPhotoLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function PhotoCloudDetail(props: PhotoCloudProps) {
-  const navigate = useNavigate();
   const {
     setOpenEditOrDeleteModal,
     setSelectedPhotoId,
@@ -81,7 +80,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
     cancelEdit,
     setCategoryOwner,
     setEditCategoryThumbnail,
-    setPhotoLoading,
   } = props;
   const [photoData, setPhotoData] = useState<CategoryPhoto | null>(null);
   const [editTitle, setEditTitle] = useState<string>('');
@@ -89,6 +87,8 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   const [imgUrl, setImgUrl] = useState<string>('');
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [currentImg, setCurrentImg] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   // photo 데이터 받아오는 함수
   const fetchData = async () => {
     try {
@@ -105,7 +105,6 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
         setImgUrl(() => data.category.imageUrl);
         setEditTitle(() => data.category.name);
         setDeleteContent(false);
-        setPhotoLoading(true);
       }
     } catch (err) {
       console.error(err);
@@ -153,8 +152,12 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
       alert('내용은 300자이내여야합니다.');
     }
   };
+
   // 카테고리 수정 api
+  let isModifyCategory = '';
+  let isModifyThumbnail = '';
   const changeCategory = async () => {
+    setIsLoading(() => true);
     try {
       const patch_category = await defaultApi.patch(
         requests.PATCH_CATEGORY(),
@@ -168,10 +171,13 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           titleEdit: false,
           contentEdit: false,
         });
+        isModifyCategory = '성공';
       }
     } catch (err) {
       console.error(err);
+      isModifyCategory = '실패';
     }
+
     if (currentImg !== imgUrl) {
       try {
         const formData = new FormData();
@@ -198,15 +204,42 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
         );
         if (patch_thumbnail.status === 200) {
           setEditCategoryThumbnail(() => true);
+          isModifyThumbnail = '성공';
         }
       } catch (err) {
         console.error(err);
+        isModifyThumbnail = '실패';
       }
     }
+
+    setIsLoading(() => false);
+
+    if (
+      (isModifyCategory === '성공' && isModifyThumbnail === '') ||
+      (isModifyCategory === '성공' && isModifyThumbnail === '성공')
+    ) {
+      Swal.fire({
+        title: '카테고리 수정 성공!',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
+    } else if (isModifyCategory === '실패' || isModifyThumbnail === '실패') {
+      Swal.fire({
+        title: '카테고리 수정 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+    }
+
+    isModifyCategory = '';
+    isModifyThumbnail = '';
   };
 
   // 캡션 수정 api
+
   const changeContent = async () => {
+    setIsLoading(() => true);
     try {
       const patch_photo = await defaultApi.patch(
         requests.PATCH_PHOTO(),
@@ -219,11 +252,25 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
           titleEdit: false,
           contentEdit: false,
         });
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '캡션 수정 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       }
     } catch (err) {
       console.error(err);
+      setIsLoading(() => false);
+      Swal.fire({
+        title: '캡션 수정 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
+
   // api 보내기 전 체크하는 함수
   const checkBeforeSend = (targetContent: string) => {
     const expspaces = /  +/g;
@@ -246,6 +293,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
 
   return (
     <PhotoWrapper>
+      {isLoading && <Loading />}
       {photoData ? (
         <div>
           {editOrDeleteModalEpic.titleEdit ? (
