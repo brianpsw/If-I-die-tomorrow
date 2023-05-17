@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as THREE from 'three';
@@ -9,6 +9,8 @@ import Button from '../../components/common/Button';
 import Scene from '../../components/home/Scene';
 import { Icon } from '@iconify/react';
 import Map from '../../assets/images/test2.png';
+import { useRecoilValue } from 'recoil';
+import { userDataState } from '../../states/UserDataState';
 
 function Room() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ function Room() {
   const [isMapShow, setIsMapShow] = useState<boolean>(false);
   const [topPosition, setTopPosition] = useState<string>('48%');
   const [leftPosition, setLeftPosition] = useState<string>('48%');
+  const userData = useRecoilValue(userDataState);
 
   let tmpTop = '48%';
   let tmpLeft = '48%';
@@ -33,6 +36,10 @@ function Room() {
     setTopPosition(() => tmpTop);
     setLeftPosition(() => tmpLeft);
   }, [tmpTop, tmpLeft]);
+
+  const downloadWill = () => {
+    console.log('여기에 api연결해줘');
+  };
 
   return (
     <div className="relative">
@@ -60,31 +67,50 @@ function Room() {
           </div>
         </Modal>
       ) : null}
-      <div
-        className="fixed top-6 left-6 z-10 cursor-pointer"
-        onClick={() => {
-          setIsMapShow((prev) => !prev);
-        }}
-      >
-        <Icon
-          icon="ic:round-map"
-          style={{ fontSize: '30px', color: '#111111' }}
-        />
-      </div>
-      {isMapShow && (
-        <div className="fixed top-[60px] left-6 z-20 w-[200px] h-[200px] border-2 border-black">
-          <img src={Map} alt="미니맵" className="relative" />
-          <div
-            className="bg-red w-2 h-2 absolute rounded-[10px]"
-            style={{ top: topPosition, left: leftPosition }}
-          ></div>
+
+      <div className="fixed z-10 top-0 w-full h-[80px] flex justify-around items-center">
+        <div
+          className="cursor-pointer"
+          onClick={() => {
+            setIsMapShow((prev) => !prev);
+          }}
+        >
+          <Icon
+            icon="ic:round-map"
+            style={{ fontSize: '30px', color: '#111111' }}
+          />
         </div>
-      )}
-      <div className="fixed top-6 right-6 z-10">
-        <Icon
-          icon="ic:round-volume-up"
-          style={{ fontSize: '30px', color: '#111111' }}
-        />
+        {isMapShow && (
+          <div className="fixed mt-[60px] w-[200px] h-[200px] border-2 border-black top-0 left-[24px]">
+            <img src={Map} alt="미니맵" className="relative" />
+            <div
+              className="bg-red w-2 h-2 absolute rounded-[10px]"
+              style={{ top: topPosition, left: leftPosition }}
+            ></div>
+          </div>
+        )}
+        {userData && userData.preview ? (
+          <div
+            className="min-w-[120px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center"
+            onClick={() => downloadWill()}
+          >
+            <Icon
+              icon="material-symbols:download-rounded"
+              style={{ fontSize: '30px', color: 'white' }}
+            />
+            <p className="text-p2 text-white text-center ml-2">
+              {' '}
+              오프라인 다운로드
+            </p>
+          </div>
+        ) : null}
+
+        <div className="">
+          <Icon
+            icon="ic:round-volume-up"
+            style={{ fontSize: '30px', color: '#111111' }}
+          />
+        </div>
       </div>
 
       <Canvas>

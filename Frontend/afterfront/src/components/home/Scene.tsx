@@ -27,11 +27,9 @@ function Scene(props: roomProps) {
   gl.shadowMap.type = THREE.PCFSoftShadowMap;
 
   //Camera
-
   const cameraPosition = new THREE.Vector3(1, 5, 5);
 
   camera.zoom = 25;
-  // camera.zoom = 10;
   camera.updateProjectionMatrix();
 
   // Mesh
@@ -280,7 +278,12 @@ function Scene(props: roomProps) {
         shadow-mapSize={[2048, 2048]}
         castShadow={true}
       >
-        <OrthographicCamera makeDefault position={[1, 5, 5]} far={2000} />
+        <OrthographicCamera
+          makeDefault
+          position={[1, 5, 5]}
+          far={2000}
+          near={-10}
+        />
       </directionalLight>
       <mesh
         ref={pointRef}
