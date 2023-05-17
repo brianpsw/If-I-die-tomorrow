@@ -1,22 +1,35 @@
-import { useEffect, useRef, useState, ReactNode } from 'react';
+import { useEffect, useRef, ReactNode } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
+
+const slideUp = keyframes`
+from {
+    bottom: -125px;
+}
+to {
+  bottom: 0;
+}
+`;
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`p-5 pt-4 pb-10 bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[380px] shadow mt-[50%] font-sans`}
+  ${tw`text-p3 pt-10 pb-20 pl-8 pr-8 bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-[100%] shadow mt-[50%] font-sans`}
   bottom: 0;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-name: ${slideUp};
+  animation-fill-mode: forwards;
 `;
 const ContentWrapper = styled.div`
   ${tw`m-1`}
 `;
 
 const ContentTitle = styled.div`
-  ${tw`m-1 mt-6`}
+  ${tw`text-p2 m-1 mt-12`}
   font-weight: 600
 `;
 

@@ -1,7 +1,6 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Button from '../common/Button';
 import Swal from 'sweetalert2';
 
 interface SubmitConfirmModalProps {
@@ -10,7 +9,7 @@ interface SubmitConfirmModalProps {
 }
 
 const isValidPhoneNumber = (phone: string) => {
-  const phoneRegex = /^010\d{8}$/;
+  const phoneRegex = /^\d{10,11}$/;
   return phoneRegex.test(phone);
 };
 
@@ -48,7 +47,7 @@ const SubmitConfirmModal: React.FC<SubmitConfirmModalProps> = ({
     if (!isValidPhoneNumber(phone)) {
       Swal.fire({
         title:
-          '전화번호 형식이 올바르지 않습니다. 010으로 시작하는 11자리 숫자를 입력해주세요.',
+          '전화번호 형식이 올바르지 않습니다. 10-11자리 숫자를 입력해주세요.',
         icon: 'error',
         confirmButtonText: '확인',
       });

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -56,6 +55,8 @@ const BucketWrap = styled.div`
   ${tw`mb-6 p-6 flex flex-col mx-auto`}
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+  border: solid 2px #9e9e9e;
   border-radius: 10px;
   position: relative;
 `;
@@ -133,12 +134,14 @@ const CommentBox = styled.div`
   justify-content: space-between;
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+  border: solid 1px #9e9e9e;
   border-radius: 10px;
   position: relative;
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`mb-6 flex w-full mx-auto`}
+  ${tw`text-p2 mb-6 flex w-full mx-auto`}
   color: white;
   position: relative;
   // border: solid 1px red;
@@ -146,17 +149,19 @@ const StyledCommentForm = styled.form`
 `;
 
 const StyledInput = styled.input`
-  ${tw``}
+  ${tw`text-p3`}
   // padding-right: 50px;
   padding-left: 2%;
   // font-size: 1.5rem;
   width: 100%;
   color: black;
   border-radius: 10px;
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+  border: solid 1px #9e9e9e;
 `;
 
 const StyledButton = styled.button`
-  ${tw`text-p1 px-4 py-2 rounded flex`}
+  ${tw` px-4 py-2 rounded flex`}
   justify-content: center;
   background-color: white;
   align-items: center;
@@ -173,18 +178,17 @@ const StyledButton = styled.button`
 `;
 
 const CommentNick = styled.div`
-  ${tw``}
+  ${tw`text-p1`}
   font-weight: bold;
-  font-size: 14px;
+  // font-size: 14px;
 `;
 
 const CommentDate = styled.div`
-  ${tw`mb-2`}
-  font-size: 12px;
+  ${tw`mb-2 text-smT`}// font-size: 12px;
 `;
 
 const CommentContent = styled.div`
-  ${tw`text-p3`}
+  ${tw`text-p1`}
   max-width: 90%;
   word-break: break-word;
 `;

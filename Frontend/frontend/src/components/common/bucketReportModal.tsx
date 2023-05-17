@@ -2,12 +2,20 @@ import { useEffect, useRef, useState } from 'react';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import Button from './Button';
 import Swal from 'sweetalert2';
 import ReportIcon from '../../assets/icons/reportIcon.svg';
 
+const slideUp = keyframes`
+from {
+    bottom: -125px;
+}
+to {
+  bottom: 0;
+}
+`;
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
   left:0;
@@ -17,6 +25,10 @@ const ModalOverlay = styled.div`
 const ModalWrapper = styled.div`
   ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-full shadow mt-[50%] font-sans`}
   bottom: 0;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-name: ${slideUp};
+  animation-fill-mode: forwards;
 `;
 
 const ContentContainer = styled.div`

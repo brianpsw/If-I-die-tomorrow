@@ -1,26 +1,24 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Icon } from '@iconify/react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/feed.png';
-import Button from '../../components/common/Button';
+// import backgroundImg from '../../assets/images/feed.png';
 import DiaryFeed from '../../components/feed/DiaryFeed';
 import BucketFeed from '../../components/feed/BucketFeed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopButton from '../../components/common/ScrollToTopButton';
 import textLogoImg from '../../assets/images/text_logo.png';
 
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  background-attachment: fixed;
-`;
+// const Background = styled.div`
+//   background-image: url(${backgroundImg});
+//   background-size: cover;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   min-height: 100vh;
+//   width: 100%;
+//   position: relative;
+//   background-attachment: fixed;
+// `;
 
 const Logo = styled.div`
   background-image: url(${textLogoImg});
@@ -43,14 +41,14 @@ const Container = styled.div`
 `;
 
 const FeedTab = styled.p`
-  ${tw`flex text-p1`}
+  ${tw`flex`}
   justify-content: space-evenly;
   color: white;
   // font-size: 16px;
 `;
 
-const Tab = styled.span<{ isSelected: boolean }>`
-  ${tw`cursor-pointer mb-12 inline-block pb-1`}
+const Tab = styled.p<{ isSelected: boolean }>`
+  ${tw`text-p1 cursor-pointer mb-12 inline-block pb-1`}
   ${({ isSelected }) => (isSelected ? tw`font-bold border-b-4` : null)}
   ${({ isSelected }) => (isSelected ? { borderColor: '#FFA9A9' } : null)}
   width: 110px;
@@ -97,7 +95,9 @@ function Feed() {
 
   return (
     <div>
-      <Logo />
+      <Link to="/home">
+        <Logo />
+      </Link>
       <Container>
         <FeedTab>
           <Tab

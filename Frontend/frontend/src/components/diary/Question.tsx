@@ -46,14 +46,13 @@ const RadioButton = styled.input`
 `;
 
 const StyledQuestion = styled.div`
-  ${tw`mb-6 p-6`}
+  ${tw`text-p1 mb-6 p-6`}
   background-color: rgba(246, 246, 246, 0.7);
   border-radius: 10px;
 `;
 
 const QuestionTitle = styled.h2`
-  ${tw`mb-4 font-bold`}
-  font-size: 14px;
+  ${tw`mb-4 font-bold`}// font-size: 14px;
 `;
 
 const AgreeDisagreeText = styled.span`

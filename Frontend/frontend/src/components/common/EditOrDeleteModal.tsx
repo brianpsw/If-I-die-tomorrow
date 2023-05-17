@@ -1,4 +1,3 @@
-import React from 'react';
 import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled, { keyframes } from 'styled-components';

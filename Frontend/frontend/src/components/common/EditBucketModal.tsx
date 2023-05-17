@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
@@ -9,6 +8,7 @@ import Button from './Button';
 import { Icon } from '@iconify/react';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
+import Loading from './Loading';
 
 const ModalOverlay = styled.div`
   ${tw`text-p1 flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -100,6 +100,7 @@ function EditBucketModal({
   const [photo, setPhoto] = useState<File | null>(null);
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(image);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const removeImage = () => {
     setPhoto(null);
@@ -109,6 +110,7 @@ function EditBucketModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
     if (newTitle.trim() === '' || newContent.trim() === '') {
       alert('제목과 내용을 모두 입력해주세요.');
       return;
@@ -148,8 +150,10 @@ function EditBucketModal({
           onUpdate(response.data); // Add this line
         } // Add this line
       }
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
+      setIsLoading(false);
     }
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -191,95 +195,99 @@ function EditBucketModal({
 
   return (
     <ModalOverlay>
-      <ModalWrapper>
-        <h2 className="text-h4 text-center" style={{ marginBottom: '5%' }}>
-          버킷리스트 수정
-        </h2>
-        <Icon
-          icon="line-md:remove"
-          onClick={onClose}
-          className="absolute right-6 top-7"
-        />
-        <ContentEditForm onSubmit={handleSubmit}>
-          <EditSection>
-            <EditLabel htmlFor="title">제목</EditLabel>
-            <TitleEditInput
-              type="text"
-              id="title"
-              name="title"
-              value={newTitle}
-              onChange={handleInputChange}
-            />
-          </EditSection>
-          <EditSection>
-            <EditLabel htmlFor="photo">사진 선택</EditLabel>
-            <PhotoContainer>
-              <div className="image-upload-container w-full h-full">
-                {imageUrl ? (
-                  <div className="relative">
-                    <DeleteImageButton onClick={removeImage}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 512 512"
-                      >
-                        <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
-                      </svg>
-                    </DeleteImageButton>
-                    <img
-                      className="image-upload-preview w-full h-full bg-auto "
-                      src={imageUrl}
-                      alt="upload-preview"
-                      onClick={handleClick}
-                    />
-                  </div>
-                ) : (
-                  <div
-                    className="image-upload-placeholder h-full"
-                    onClick={handleClick}
-                  >
-                    <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
-                      <img src={uploadIcon} alt="" />
-                    </div>
-                  </div>
-                )}
-                <input
-                  type="file"
-                  id="file-input"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                  hidden
-                />
-              </div>
-            </PhotoContainer>
-          </EditSection>
-          <EditSection>
-            <EditLabel htmlFor="content">내용</EditLabel>
-            <ContentEditInput
-              id="content"
-              name="content"
-              value={newContent}
-              onChange={handleInputChange}
-            />
-          </EditSection>
-          <div className="flex justify-start items-center">
+      {isLoading ? (
+        <Loading /> // 로딩 상태가 true일 경우 Loading 컴포넌트를 렌더링합니다.
+      ) : (
+        <ModalWrapper>
+          <h2 className="text-h4 text-center" style={{ marginBottom: '5%' }}>
+            버킷리스트 수정
+          </h2>
+          <Icon
+            icon="line-md:remove"
+            onClick={onClose}
+            className="absolute right-6 top-7"
+          />
+          <ContentEditForm onSubmit={handleSubmit}>
             <EditSection>
-              <EditLabel htmlFor="secret">피드 공개여부 체크</EditLabel>
-              <div onClick={handleCheckboxChange}>
-                {newSecret ? (
-                  <img src={UnCheckedIcon} alt="unchecked icon" />
-                ) : (
-                  <img src={CheckedIcon} alt="checked icon" />
-                )}
-              </div>
+              <EditLabel htmlFor="title">제목</EditLabel>
+              <TitleEditInput
+                type="text"
+                id="title"
+                name="title"
+                value={newTitle}
+                onChange={handleInputChange}
+              />
             </EditSection>
-          </div>
-          <ButtonWrap>
-            <Button color="#36C2CC" size="md">
-              수정하기
-            </Button>
-          </ButtonWrap>
-        </ContentEditForm>
-      </ModalWrapper>
+            <EditSection>
+              <EditLabel htmlFor="photo">사진 선택</EditLabel>
+              <PhotoContainer>
+                <div className="image-upload-container w-full h-full">
+                  {imageUrl ? (
+                    <div className="relative">
+                      <DeleteImageButton onClick={removeImage}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 512 512"
+                        >
+                          <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                        </svg>
+                      </DeleteImageButton>
+                      <img
+                        className="image-upload-preview w-full h-full bg-auto "
+                        src={imageUrl}
+                        alt="upload-preview"
+                        onClick={handleClick}
+                      />
+                    </div>
+                  ) : (
+                    <div
+                      className="image-upload-placeholder h-full"
+                      onClick={handleClick}
+                    >
+                      <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
+                        <img src={uploadIcon} alt="" />
+                      </div>
+                    </div>
+                  )}
+                  <input
+                    type="file"
+                    id="file-input"
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    hidden
+                  />
+                </div>
+              </PhotoContainer>
+            </EditSection>
+            <EditSection>
+              <EditLabel htmlFor="content">내용</EditLabel>
+              <ContentEditInput
+                id="content"
+                name="content"
+                value={newContent}
+                onChange={handleInputChange}
+              />
+            </EditSection>
+            <div className="flex justify-start items-center">
+              <EditSection>
+                <EditLabel htmlFor="secret">피드 공개여부 체크</EditLabel>
+                <div onClick={handleCheckboxChange}>
+                  {newSecret ? (
+                    <img src={UnCheckedIcon} alt="unchecked icon" />
+                  ) : (
+                    <img src={CheckedIcon} alt="checked icon" />
+                  )}
+                </div>
+              </EditSection>
+            </div>
+            <ButtonWrap>
+              <Button color="#36C2CC" size="md">
+                수정하기
+              </Button>
+            </ButtonWrap>
+          </ContentEditForm>
+        </ModalWrapper>
+      )}
     </ModalOverlay>
   );
 }

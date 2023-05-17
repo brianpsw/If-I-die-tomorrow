@@ -7,7 +7,8 @@ import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const questions = [
   '나는 새로운 사람들을 만나는 것이 흥미롭다.',
@@ -36,7 +37,7 @@ const Background = styled.div`
 `;
 
 const SurveyForm = styled.form`
-  ${tw`flex flex-col items-center mx-auto`}
+  ${tw`mt-8 flex flex-col items-center mx-auto`}
   max-width: calc(100% - 48px);
   padding-bottom: 18%;
   // border: 1px solid white;
@@ -47,9 +48,9 @@ const QuestionWrapper = styled.div`
 `;
 
 const SurveyText = styled.p`
+  ${tw`text-p2 mb-14`}
   text-align: center;
   color: #fff;
-  font-size: 12px;
 `;
 
 const StyledButton = styled(Button)`
@@ -58,13 +59,34 @@ const StyledButton = styled(Button)`
 
 const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
   const [answers, setAnswers] = useState<{ [key: string]: number }>({});
+  const navigate = useNavigate();
 
   const handleChange = (id: number, value: number) => {
     setAnswers((prev) => ({ ...prev, [`q${id}`]: value }));
   };
 
+  // 모든 문항에 답변이 있는지 확인하는 함수
+  const allQuestionsAnswered = () => {
+    for (let i = 1; i <= questions.length; i++) {
+      if (answers[`q${i}`] === undefined) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // 모든 문항에 대한 응답이 없는 경우
+    if (!allQuestionsAnswered()) {
+      Swal.fire({
+        title: '모든 문항을 선택해주세요!',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
+      return;
+    }
 
     let introvertExtrovertScore = 0;
     let stabilityAchievementScore = 0;
@@ -117,6 +139,13 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
         { withCredentials: true },
       );
       console.log(response.data);
+      Swal.fire({
+        title: '설문이 제출되었습니다.',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
+      navigate('/diary');
     } catch (error) {
       console.error(error);
     }
@@ -142,11 +171,11 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
               />
             ))}
         </QuestionWrapper>
-        <Link to="/diary">
-          <StyledButton color="#FFA9A9" size="md">
-            선택완료
-          </StyledButton>
-        </Link>
+        {/* <Link to="/diary"> */}
+        <StyledButton color="#FFA9A9" size="md">
+          선택완료
+        </StyledButton>
+        {/* </Link> */}
       </SurveyForm>
     </Background>
   );
