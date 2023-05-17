@@ -2,7 +2,12 @@ import React, { Suspense, useState, useRef, RefObject, useEffect } from 'react';
 
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
-import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
+import {
+  OrthographicCamera,
+  useGLTF,
+  useTexture,
+  OrbitControls,
+} from '@react-three/drei';
 import gsap from 'gsap';
 
 interface roomProps {
@@ -18,7 +23,8 @@ function Scene(props: roomProps) {
   const { gl, scene, camera, raycaster, mouse } = useThree();
   let foxIsMoving = false;
   // Texture
-  const floorTexture = useTexture('images/test2.png');
+  // const floorTexture = useTexture('images/map.png');
+  const floorTexture = useTexture('images/map2.png');
 
   // canvas
   gl.setSize(window.innerWidth, window.innerHeight);
@@ -29,7 +35,8 @@ function Scene(props: roomProps) {
   //Camera
   const cameraPosition = new THREE.Vector3(1, 5, 5);
 
-  camera.zoom = 25;
+  // camera.zoom = 25;
+  camera.zoom = 10;
   camera.updateProjectionMatrix();
 
   // Mesh
@@ -110,13 +117,22 @@ function Scene(props: roomProps) {
   const honey = useGLTF('models/honey.glb');
   const bicycle = useGLTF('models/bicycle.glb');
   const blueberry = useGLTF('models/blueberry.glb');
-  const cake = useGLTF('models/cake.glb');
   const cooking = useGLTF('models/cooking.glb');
   const ethereum = useGLTF('models/ethereum.glb');
   const racket = useGLTF('models/racket.glb');
   const ball = useGLTF('models/tennis_ball.glb');
 
-  //렌더링 최적화를 위한 메모이제이션
+  // 꾸미는 오브젝트
+  const cake = useGLTF('models/cake.glb');
+  const cloud2 = useGLTF('models/cloud2.glb');
+  const cloud3 = useGLTF('models/cloud3.glb');
+  const cloud4 = useGLTF('models/cloud4.glb');
+  const cloud4_1 = useGLTF('models/cloud4_1.glb');
+  const ladder = useGLTF('models/ladder.glb');
+  const star = useGLTF('models/star.glb');
+  const star1 = useGLTF('models/star1.glb');
+  const star2 = useGLTF('models/star2.glb');
+  const ship = useGLTF('models/paper_ship.glb');
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -280,9 +296,14 @@ function Scene(props: roomProps) {
       >
         <OrthographicCamera
           makeDefault
+          castShadow={true}
           position={[1, 5, 5]}
           far={2000}
-          near={-10}
+          near={-100}
+          left={-10}
+          right={10}
+          top={10}
+          bottom={-10}
         />
       </directionalLight>
       <mesh
@@ -300,36 +321,108 @@ function Scene(props: roomProps) {
         scale={[0.01, 0.01, 0.01]}
         position={[-25, 5, 10]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={blueberry.scene}
         scale={[0.1, 0.1, 0.1]}
-        position={[20, 0, -20]}
+        position={[5, 0, 3]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
+
       <primitive
         object={cake.scene}
         scale={[50, 50, 50]}
-        position={[-20, 0, -20]}
+        position={[30, 0, 5]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
+      <primitive
+        object={cloud2.scene}
+        scale={[2.5, 2.5, 2.5]}
+        position={[-40, 10, 15]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+
+      <primitive
+        object={cloud3.scene}
+        scale={[1.5, 1.5, 1.5]}
+        position={[40, 10, -5]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={ladder.scene}
+        scale={[4, 4, 4]}
+        position={[36, 0, -5]}
+        rotation={[0, 0, -Math.PI / 6]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud4.scene}
+        scale={[0.5, 0.5, 0.5]}
+        position={[-40, 10, -10]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud4_1.scene}
+        scale={[0.3, 0.3, 0.3]}
+        position={[-10, 10, 60]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={ship.scene}
+        scale={[1, 1, 1]}
+        position={[-10, 0, -30]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star.scene}
+        scale={[5, 5, 5]}
+        position={[0, 10, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star1.scene}
+        scale={[3, 3, 3]}
+        position={[5, 10, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star2.scene}
+        scale={[5, 5, 5]}
+        position={[5, 15, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+
       <primitive
         object={cooking.scene}
         scale={[1, 1, 1]}
-        position={[0, 0, -40]}
+        position={[35, 0, -20]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={ethereum.scene}
         scale={[1, 1, 1]}
-        position={[5, 5, 30]}
+        position={[5, 2, 30]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={honey.scene}
         scale={[1, 1, 1]}
-        position={[30, 5, 30]}
+        position={[20, 0, 40]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={racket.scene}
@@ -342,6 +435,7 @@ function Scene(props: roomProps) {
         scale={[0.4, 0.4, 0.4]}
         position={[-35, 5.5, 40]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         ref={foxRef}
@@ -379,6 +473,7 @@ function Scene(props: roomProps) {
         position={[-21, 0.005, 39]}
         receiveShadow={true}
       />
+      <OrbitControls />
     </Suspense>
   );
 }
