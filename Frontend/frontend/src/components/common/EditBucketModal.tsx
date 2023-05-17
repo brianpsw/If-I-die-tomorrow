@@ -217,9 +217,6 @@ function EditBucketModal({
               <div className="image-upload-container w-full h-full">
                 {imageUrl ? (
                   <div className="relative">
-                    {/* <DeleteImageButton onClick={removeImage}>
-                      <Icon icon="line-md:remove" />
-                    </DeleteImageButton> */}
                     <DeleteImageButton onClick={removeImage}>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -229,23 +226,25 @@ function EditBucketModal({
                       </svg>
                     </DeleteImageButton>
                     <img
-                      className="image-upload-preview w-auto h-full bg-auto "
+                      className="image-upload-preview w-full h-full bg-auto "
                       src={imageUrl}
                       alt="upload-preview"
                       onClick={handleClick}
                     />
                   </div>
                 ) : (
-                  <label
-                    htmlFor="photo"
-                    className="flex flex-col justify-center items-center w-full h-full cursor-pointer"
+                  <div
+                    className="image-upload-placeholder h-full"
+                    onClick={handleClick}
                   >
-                    <img src={uploadIcon} alt="" />
-                  </label>
+                    <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
+                      <img src={uploadIcon} alt="" />
+                    </div>
+                  </div>
                 )}
                 <input
                   type="file"
-                  id="photo"
+                  id="file-input"
                   onChange={handleFileChange}
                   accept="image/*"
                   hidden
