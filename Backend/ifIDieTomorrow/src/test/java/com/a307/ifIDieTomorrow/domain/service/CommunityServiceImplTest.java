@@ -681,6 +681,36 @@ class CommunityServiceImplTest {
 				then(commentRepository).should(never()).save(any(Comment.class));
 			}
 
+			@Test
+			@DisplayName("내가 작성하지 않은 댓글 수정 시 예외처리")
+			void ThrowsExceptionWhenNotMyComment() {
+				// Given
+				Long commentId = 1L;
+				Long anotherUserId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(anotherUserId)
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("New Content")
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+				given(userRepository.findById(user.getUserId())).willReturn(Optional.of(user));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(UnAuthorizedException.class)
+						.hasMessage("내가 작성한 댓글이 아닙니다");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+			}
+
+
 		}
 
 	}
