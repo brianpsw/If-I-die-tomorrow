@@ -7,8 +7,8 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Swal from 'sweetalert2';
 import backgroundImg from '../../assets/images/diary_bg.png';
+import Swal from 'sweetalert2';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import EditDiaryModal from '../../components/common/EditDiaryModal';
@@ -145,7 +145,7 @@ const StyledCommentForm = styled.form`
 `;
 
 const StyledInput = styled.input`
-  ${tw``}
+  ${tw`text-p2`}
   padding-left: 2%;
   // font-size: 1.5rem;
   width: 100%;
@@ -184,6 +184,7 @@ const CommentDate = styled.div`
 const CommentContent = styled.div`
   ${tw`text-p3`}
   max-width: 90%;
+  word-break: break-word;
 `;
 
 const EditContentForm = styled.form`
@@ -243,7 +244,6 @@ function DiaryDetail() {
       setReportModalOpen(true);
     }
   };
-
   const handleEditModalClose = () => {
     setEditModalOpen(false);
     handleModalClose();
@@ -371,12 +371,6 @@ function DiaryDetail() {
               <DotIcon>
                 <img src={TreeDot} alt="" onClick={handleModalOpen} />
               </DotIcon>
-
-              {/* {loggedInUserNickname === diary.nickname && (
-                <DotIcon>
-                  <img src={TreeDot} alt="" onClick={handleModalOpen} />
-                </DotIcon>
-              )} */}
             </DiaryHeader>
             <DiaryImg>
               {diary.imageUrl && diary.imageUrl !== '""' && (

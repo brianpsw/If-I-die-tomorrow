@@ -186,6 +186,7 @@ const CommentDate = styled.div`
 const CommentContent = styled.div`
   ${tw`text-p3`}
   max-width: 90%;
+  word-break: break-word;
 `;
 
 const EditContentForm = styled.form`
