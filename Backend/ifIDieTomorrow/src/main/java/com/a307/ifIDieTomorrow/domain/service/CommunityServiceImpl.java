@@ -127,7 +127,7 @@ public class CommunityServiceImpl implements CommunityService{
 		Long userId = principal.getUserId();
 
 //		작성자 일치 여부 검증
-		if(!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다");
+		if(!comment.getUserId().equals(userId)) throw new UnAuthorizedException("내가 작성한 댓글이 아닙니다.");
 
 		commentRepository.delete(comment);
 

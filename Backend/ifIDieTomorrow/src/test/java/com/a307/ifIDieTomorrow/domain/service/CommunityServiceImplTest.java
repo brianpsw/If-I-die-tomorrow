@@ -559,6 +559,31 @@ class CommunityServiceImplTest {
 		class ExceptionScenario {
 
 			@Test
+			@DisplayName("내가 작성하지 않은 댓글 삭제 시 예외처리")
+			void throwsExceptionWhenNotMyComment() {
+				// Given
+				Long commentId = 1L;
+				Long anotherUserId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.content("comment content")
+						.userId(anotherUserId)
+						.build();
+
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.deleteComment(commentId))
+						.isInstanceOf(UnAuthorizedException.class)
+						.hasMessage("내가 작성한 댓글이 아닙니다.");
+				then(commentRepository).should(never()).delete(any(Comment.class));
+
+			}
+
+			@Test
+			@DisplayName("존재하지 않는 댓글 삭제 시 예외처리")
 			void throwsExceptionWhenWrongCommentId() {
 				// Given
 				Long commentId = 1L;
