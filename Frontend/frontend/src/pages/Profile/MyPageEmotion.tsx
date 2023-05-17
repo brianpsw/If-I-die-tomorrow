@@ -34,7 +34,7 @@ export const BtModal = styled.div`
 export const Container = styled.div`
   ${tw`text-p2 flex flex-col mx-auto pt-36`}
   max-width: calc(100% - 48px);
-  padding-bottom: 20%;
+  padding-bottom: 15%;
   // border: solid 1px white;
 `;
 
