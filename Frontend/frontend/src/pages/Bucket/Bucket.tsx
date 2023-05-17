@@ -6,7 +6,7 @@ import { defaultApi } from '../../api/axios';
 import BucketListItem from '../../components/bucket/BucketListItem';
 import CreateModal from '../../components/bucket/CreateModal';
 import DeleteModal from '../../components/bucket/DeleteModal';
-import IIDT from '../../assets/images/app_title.svg';
+import IIDT from '../../assets/images/text_logo.png';
 import backgroundImg from '../../assets/images/bucket_bg.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
