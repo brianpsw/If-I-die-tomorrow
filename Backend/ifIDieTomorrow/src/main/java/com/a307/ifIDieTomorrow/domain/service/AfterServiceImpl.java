@@ -61,32 +61,32 @@ public class AfterServiceImpl implements AfterService{
 
         String basicDirectory = "./";
         fileUtil.createDirectory(basicDirectory + uuid);
-        String commonDirectory = basicDirectory + uuid + "\\";
+        String commonDirectory = basicDirectory + uuid + "/";
         fileUtil.copyDirectory("./IIDT", basicDirectory + uuid);
-        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getVideoUrl(), commonDirectory + "will\\" + ((GetWillByUserResDto)result.get("will")).getVideoUrl().substring(((GetWillByUserResDto)result.get("will")).getVideoUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getVideoUrl()));
-        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getSignUrl(), commonDirectory + "will\\" + ((GetWillByUserResDto)result.get("will")).getSignUrl().substring(((GetWillByUserResDto)result.get("will")).getSignUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getSignUrl()));
+        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getVideoUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getVideoUrl().substring(((GetWillByUserResDto)result.get("will")).getVideoUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getVideoUrl()));
+        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getSignUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getSignUrl().substring(((GetWillByUserResDto)result.get("will")).getSignUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getSignUrl()));
         for (GetBucketResDto item : (ArrayList<GetBucketResDto>)result.get("buckets")
              ) {
             if(item.getImageUrl() != null && !"".equals(item.getImageUrl())){
-                fileUtil.downloadFile(item.getImageUrl(), commonDirectory + "bucket\\" + item.getImageUrl().substring(item.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(item.getImageUrl()));
+                fileUtil.downloadFile(item.getImageUrl(), commonDirectory + "bucket/" + item.getImageUrl().substring(item.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(item.getImageUrl()));
             }
         }
         for (GetDiaryResDto item : (ArrayList<GetDiaryResDto>)result.get("diaries")
         ) {
             if(item.getImageUrl() != null && !"".equals(item.getImageUrl())){
-                fileUtil.downloadFile(item.getImageUrl(), commonDirectory + "diary\\"+ item.getImageUrl().substring(item.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(item.getImageUrl()));
+                fileUtil.downloadFile(item.getImageUrl(), commonDirectory + "diary/"+ item.getImageUrl().substring(item.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(item.getImageUrl()));
             }
         }
         for (GetPhotoByCategoryResDto item : (ArrayList<GetPhotoByCategoryResDto>)result.get("photos")
              ) {
 
             if(item.getCategory().getImageUrl() != null && !"".equals(item.getCategory().getImageUrl())){
-                fileUtil.downloadFile(item.getCategory().getImageUrl(), commonDirectory + "category\\" + (item.getCategory().getImageUrl().substring(item.getCategory().getImageUrl().lastIndexOf("/"))) + fileUtil.getContentType(item.getCategory().getImageUrl()));
+                fileUtil.downloadFile(item.getCategory().getImageUrl(), commonDirectory + "category/" + (item.getCategory().getImageUrl().substring(item.getCategory().getImageUrl().lastIndexOf("/"))) + fileUtil.getContentType(item.getCategory().getImageUrl()));
             }
             for (GetPhotoResDto photo : item.getPhotos()
                  ) {
                 if((photo.getImageUrl() != null && !"".equals(photo.getImageUrl()))){
-                    fileUtil.downloadFile(photo.getImageUrl(), commonDirectory + "photo\\" + photo.getImageUrl().substring(photo.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(photo.getImageUrl()));
+                    fileUtil.downloadFile(photo.getImageUrl(), commonDirectory + "photo/" + photo.getImageUrl().substring(photo.getImageUrl().lastIndexOf("/")) + fileUtil.getContentType(photo.getImageUrl()));
                 }
             }
         }
