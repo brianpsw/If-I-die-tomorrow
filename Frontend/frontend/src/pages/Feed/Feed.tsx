@@ -41,14 +41,14 @@ const Container = styled.div`
 `;
 
 const FeedTab = styled.p`
-  ${tw`flex text-p1`}
+  ${tw`flex`}
   justify-content: space-evenly;
   color: white;
   // font-size: 16px;
 `;
 
-const Tab = styled.span<{ isSelected: boolean }>`
-  ${tw`cursor-pointer mb-12 inline-block pb-1`}
+const Tab = styled.p<{ isSelected: boolean }>`
+  ${tw`text-p1 cursor-pointer mb-12 inline-block pb-1`}
   ${({ isSelected }) => (isSelected ? tw`font-bold border-b-4` : null)}
   ${({ isSelected }) => (isSelected ? { borderColor: '#FFA9A9' } : null)}
   width: 110px;
