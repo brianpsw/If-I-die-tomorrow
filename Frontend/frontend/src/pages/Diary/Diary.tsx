@@ -168,6 +168,9 @@ function Diary() {
     setCompleteTitle(e.currentTarget.value);
     setIsCompleteTitleValid(e.currentTarget.value.length > 0);
   };
+  const moveToSurvey = () => {
+    navigate('/survey');
+  };
   useEffect(() => {
     // console.log(diarys.length);
     if (diarys.length === 0) {
@@ -189,7 +192,12 @@ function Diary() {
       <Container>
         <div className="flex w-full justify-between">
           <LogoContainer src={IIDT} />
-          <img className="mt-[60px]" src={surveyIcon} alt="" />
+          <img
+            className="mt-[60px]"
+            src={surveyIcon}
+            onClick={moveToSurvey}
+            alt="survey_icon"
+          />
         </div>
         <Calendar
           showDetailsHandle={showDetailsHandle}
