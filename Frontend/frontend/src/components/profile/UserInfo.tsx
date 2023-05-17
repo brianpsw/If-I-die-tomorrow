@@ -62,6 +62,26 @@ function UserInfo() {
     }
   };
 
+  let deferredPrompt: any;
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+  });
+
+  const handlePwaInstall = async () => {
+    if (!deferredPrompt) {
+      alert('이미 앱이 설치되어있거나 지원되지 않는 환경입니다.');
+      return;
+    }
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    deferredPrompt = null;
+  };
+
   return (
     <div>
       <MyProfile>
@@ -80,6 +100,8 @@ function UserInfo() {
           <p className="text-p1">이메일: {loggedInUserEmail}</p>
           <br />
           <button onClick={handleLogout}>로그아웃</button>
+          <br />
+          <button onClick={handlePwaInstall}> 앱 설치하기 </button>
         </SettingBox>
         <WillServiceWrap>
           <Link to="/will">
