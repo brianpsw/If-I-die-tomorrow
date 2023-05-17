@@ -493,6 +493,29 @@ class CommunityServiceImplTest {
 				then(commentRepository).shouldHaveNoInteractions();
 			}
 
+			@Test
+			@DisplayName("빈 댓글 작성 시 예외처리")
+			void throwsExceptionWhenEmptyComment() {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(true);
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.createComment(req))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용이 없습니다.");
+
+				then(commentRepository).shouldHaveNoInteractions();
+
+			}
+
+
 		}
 
 	}
@@ -536,7 +559,7 @@ class CommunityServiceImplTest {
 		class ExceptionScenario {
 
 			@Test
-			void throwsExceptionWhenWrongCommentId() throws NotFoundException, UnAuthorizedException {
+			void throwsExceptionWhenWrongCommentId() {
 				// Given
 				Long commentId = 1L;
 
