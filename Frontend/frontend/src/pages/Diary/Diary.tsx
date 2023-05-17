@@ -52,7 +52,7 @@ const FormContainer = styled.div`
 `;
 
 const TitleInputContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p1 h-[33px] p-[8px] rounded border-black break-all mt-[16px]`}
+  ${tw`flex flex-wrap w-full pt-[4px] h-[33px] text-p2 bg-white rounded border-black break-all my-[16px] px-[6px]`}
 `;
 
 const ContentInputContainer = styled.textarea`
@@ -63,6 +63,9 @@ const PhotoContainer = styled.div`
 `;
 const FeedCheckContainer = styled.div`
   ${tw`flex items-center w-full h-[24px] my-[8px]`}
+`;
+const DeleteBtn = styled.div`
+  ${tw`fill-black w-[30px] absolute h-[30px] right-[4px] top-[4px] cursor-pointer`}
 `;
 interface Diary {
   diaryId: number;
@@ -91,7 +94,7 @@ function Diary() {
   const [isValid, setIsValid] = useState(false);
   const [isCompleteTitleValid, setIsCompleteTitleValid] = useState(false);
   const [isCompleteContentValid, setIsCompleteContentValid] = useState(false);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   useEffect(() => {
     if (isCompleteContentValid && isCompleteTitleValid) {
       setIsValid(true);
@@ -140,6 +143,11 @@ function Diary() {
     };
     post_diary();
   };
+  const handleDeleteItemImage = () => {
+    setPhoto(null);
+    setImageUrl(null);
+  };
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -261,12 +269,22 @@ function Diary() {
             <PhotoContainer>
               <div className="image-upload-container w-full h-full">
                 {imageUrl ? (
-                  <img
-                    className="image-upload-preview w-full h-full bg-auto "
-                    src={imageUrl}
-                    alt="upload-preview"
-                    onClick={handleClick}
-                  />
+                  <div className="relative">
+                    <DeleteBtn onClick={handleDeleteItemImage}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 512 512"
+                      >
+                        <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
+                      </svg>
+                    </DeleteBtn>
+                    <img
+                      className="image-upload-preview w-full h-full bg-auto "
+                      src={imageUrl}
+                      alt="upload-preview"
+                      onClick={handleClick}
+                    />
+                  </div>
                 ) : (
                   <div
                     className="image-upload-placeholder h-full"
