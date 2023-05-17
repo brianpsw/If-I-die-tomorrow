@@ -83,7 +83,9 @@ function Bucket() {
         const response = await defaultApi.get(requests.GET_USER_BUCKET(), {
           withCredentials: true,
         });
-        setBuckets(response.data);
+        if (typeof response.data === 'object') {
+          setBuckets(response.data);
+        }
         return console.log(response.data);
       } catch (error) {
         throw error;
@@ -122,6 +124,7 @@ function Bucket() {
         />
       ) : null}
       {/* <Background> */}
+
       <Container>
         <LogoContainer src={IIDT} />
         {buckets &&
