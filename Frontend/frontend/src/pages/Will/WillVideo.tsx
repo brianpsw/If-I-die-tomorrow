@@ -8,7 +8,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
 import './Will.css';
-import AppTitle from '../../assets/images/app_title.svg';
+import AppTitle from '../../assets/images/text_logo.png';
 import Swal from 'sweetalert2';
 
 const Container = styled.div`
