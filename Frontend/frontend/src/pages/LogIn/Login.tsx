@@ -10,7 +10,7 @@ import KakaoLoginButton from '../../assets/images/kakao_login.svg';
 const Container = styled.div`
   ${tw`flex items-center flex-col w-full h-[100vh] justify-between`}
 `;
-export const LogoContainer = styled.div`
+const LogoContainer = styled.div`
   ${tw`flex items-center flex-col w-full mt-[146px] space-y-6 `}
 `;
 const LogInContainer = styled.div`

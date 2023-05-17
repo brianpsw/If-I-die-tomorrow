@@ -26,16 +26,22 @@ import NavBar from './components/common/NavBar';
 import WillText from './pages/Will/WillText';
 import WillSign from './pages/Will/WillSign';
 import WillVideo from './pages/Will/WillVideo';
-import { LogoContainer } from './pages/LogIn/Login';
+
+import styled from 'styled-components';
+import tw from 'twin.macro';
 import Logo from './assets/icons/logo.svg';
 import AppTitle from './assets/images/app_title.svg';
+
+const LogoContainer = styled.div`
+  ${tw`flex items-center flex-col w-full mt-[146px] space-y-6 `}
+`;
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <div className="App min-w-[300px]">
-          <div className="fixed min-[451px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
+          <div className="fixed min-[501px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
             <LogoContainer>
               <img src={Logo} width={82} height={102} alt="" />
               <img src={AppTitle} width={213} height={30} alt="" />
