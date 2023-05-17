@@ -535,6 +535,21 @@ class CommunityServiceImplTest {
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
 
+			@Test
+			void throwsExceptionWhenWrongCommentId() throws NotFoundException, UnAuthorizedException {
+				// Given
+				Long commentId = 1L;
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.empty());
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.deleteComment(commentId))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 댓글 아이디입니다.");
+				then(commentRepository).should(never()).delete(any(Comment.class));
+
+			}
+
 		}
 
 	}
