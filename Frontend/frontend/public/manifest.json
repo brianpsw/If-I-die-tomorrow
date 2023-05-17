@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "IIDT",
+  "name": "If I Die Tomorrow",
   "icons": [
     {
       "src": "favicon.ico",
@@ -18,8 +18,30 @@
       "sizes": "512x512"
     }
   ],
+  "id": "/",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#4C4EA2",
+  "description": "웰다잉 서비스: If I Die Tomorrow",
+  "screenshots": [
+    {
+      "src": "/images/iidt_screenshot_1.jpg",
+      "type":"image/jpg",
+      "sizes": "540x1099",
+      "form-factor": "narrow"
+    },
+    {
+      "src": "/images/iidt_screenshot_2.jpg",
+      "type":"image/jpg",
+      "sizes": "540x1099",
+      "form-factor": "narrow"
+    },
+    {
+      "src": "/images/iidt_screenshot_3.jpg",
+      "type":"image/jpg",
+      "sizes": "540x1099",
+      "form-factor": "narrow"
+    }
+  ]
 }
