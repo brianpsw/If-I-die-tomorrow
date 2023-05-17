@@ -8,7 +8,7 @@ interface ButtonProps {
 }
 
 const Button = styled.button<ButtonProps>`
-  ${tw`rounded-full shadow-sm font-medium text-white cursor-pointer `}
+  ${tw`rounded-full shadow-sm min-w-[130px] font-medium text-white cursor-pointer `}
   background-color: ${(props) => props.color};
   width: ${(props) => {
     if (props.size === 'sm') return '8rem';
