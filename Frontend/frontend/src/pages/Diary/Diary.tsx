@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Icon } from '@iconify/react';
 import { useRecoilState } from 'recoil';
 import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
@@ -16,6 +15,7 @@ import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
+import surveyIcon from '../../assets/icons/survey.svg';
 
 import {
   CardWrap,
@@ -187,7 +187,10 @@ function Diary() {
     <div className="w-full">
       {/* <Background> */}
       <Container>
-        <LogoContainer src={IIDT} />
+        <div className="flex w-full justify-between">
+          <LogoContainer src={IIDT} />
+          <img className="mt-[60px]" src={surveyIcon} alt="" />
+        </div>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}
