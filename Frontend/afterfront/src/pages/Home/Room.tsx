@@ -8,7 +8,7 @@ import Modal from '../../components/common/Modal';
 import Button from '../../components/common/Button';
 import Scene from '../../components/home/Scene';
 import { Icon } from '@iconify/react';
-import Map from '../../assets/images/test2.png';
+import Map from '../../assets/images/minimap.png';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 
