@@ -561,7 +561,7 @@ function Comment({
         />
       )}
       <CommentBox>
-        <div>
+        <div className="w-full">
           <CommentNick>{comment.nickname}</CommentNick>
           <CommentDate>
             {new Date(comment.createdAt).toISOString().split('T')[0]}
