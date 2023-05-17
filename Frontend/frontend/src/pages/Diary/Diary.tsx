@@ -214,7 +214,9 @@ function Diary() {
           >
             <NickDateWrap>
               <Nickname>{userInfo[0]?.nickname}</Nickname>
-              <DateWrap>{data.createdAt}</DateWrap>
+              <DateWrap>
+                {new Date(data.createdAt).toISOString().split('T')[0]}
+              </DateWrap>
             </NickDateWrap>
             <ContentImg>
               <TitleContent
