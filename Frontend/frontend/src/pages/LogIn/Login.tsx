@@ -17,7 +17,7 @@ const LogInContainer = styled.div`
   ${tw`flex items-center flex-col w-full mb-[180px] space-y-6 `}
 `;
 const InfoText = styled.span`
-  ${tw`w-full text-center mx-6`}
+  ${tw`w-full text-center text-p1 mx-6`}
 `;
 
 function Login() {
