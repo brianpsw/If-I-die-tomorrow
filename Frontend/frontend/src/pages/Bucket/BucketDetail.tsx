@@ -141,7 +141,7 @@ const CommentBox = styled.div`
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`text-p1 mb-6 flex w-full mx-auto`}
+  ${tw`text-p2 mb-6 flex w-full mx-auto`}
   color: white;
   position: relative;
   // border: solid 1px red;
@@ -149,7 +149,7 @@ const StyledCommentForm = styled.form`
 `;
 
 const StyledInput = styled.input`
-  ${tw``}
+  ${tw`text-p3`}
   // padding-right: 50px;
   padding-left: 2%;
   // font-size: 1.5rem;
@@ -161,7 +161,7 @@ const StyledInput = styled.input`
 `;
 
 const StyledButton = styled.button`
-  ${tw`px-4 py-2 rounded flex`}
+  ${tw` px-4 py-2 rounded flex`}
   justify-content: center;
   background-color: white;
   align-items: center;
@@ -178,14 +178,13 @@ const StyledButton = styled.button`
 `;
 
 const CommentNick = styled.div`
-  ${tw``}
+  ${tw`text-p1`}
   font-weight: bold;
-  font-size: 14px;
+  // font-size: 14px;
 `;
 
 const CommentDate = styled.div`
-  ${tw`mb-2`}
-  font-size: 12px;
+  ${tw`mb-2 text-smT`}// font-size: 12px;
 `;
 
 const CommentContent = styled.div`
