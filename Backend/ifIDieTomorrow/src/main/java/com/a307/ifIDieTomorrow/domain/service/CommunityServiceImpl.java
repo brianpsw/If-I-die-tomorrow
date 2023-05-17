@@ -120,7 +120,7 @@ public class CommunityServiceImpl implements CommunityService{
 
 //		댓글
 		Comment comment = commentRepository.findById(commentId)
-				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+				.orElseThrow(() -> new NotFoundException("잘못된 댓글 아이디입니다."));
 
 //		유저 정보 파싱
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -139,7 +139,7 @@ public class CommunityServiceImpl implements CommunityService{
 
 		//		댓글
 		Comment comment = commentRepository.findById(req.getCommentId())
-				.orElseThrow(() -> new NotFoundException("잘못된 다이어리 아이디입니다."));
+				.orElseThrow(() -> new NotFoundException("잘못된 댓글 아이디입니다."));
 		
 		if ("".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
 
