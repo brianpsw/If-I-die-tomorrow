@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
@@ -10,6 +10,7 @@ import { userState } from '../../states/UserState';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
 
+import Swal from 'sweetalert2';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
@@ -30,6 +31,7 @@ interface DeleteModalProps {
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
   categoryOwner: number;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
@@ -40,6 +42,7 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     setDeleteCategory,
     setDeleteContent,
     categoryOwner,
+    setIsLoading,
   } = props;
   const [category, setCategory] = useRecoilState(categoryState);
   const user = useRecoilValue(userState);
@@ -47,6 +50,7 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const fetchData = async () => {
+    setIsLoading(() => true);
     try {
       const get_all_category = await defaultApi.get(
         requests.GET_ALL_CATEGORY(),
@@ -55,6 +59,7 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
         },
       );
       if (get_all_category.status === 200) {
+        setIsLoading(() => false);
         setCategory(() => get_all_category.data);
         return get_all_category.data;
       }
@@ -64,6 +69,8 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
   };
 
   const deleteCategory = async (id: string) => {
+    onClose?.();
+    setIsLoading(() => true);
     if (categoryOwner === user!.userId) {
       try {
         const delete_category = await defaultApi.delete(
@@ -71,22 +78,36 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
           { withCredentials: true },
         );
         if (delete_category.status === 204) {
+          setDeleteCategory(true);
+          setIsLoading(() => false);
+          Swal.fire({
+            title: '카테고리 삭제 성공!',
+            icon: 'success',
+            timer: 1000,
+            showConfirmButton: false,
+          });
           const res = fetchData();
           const getData = () => {
             res.then((data) => {
               if (data.length > 0) {
-                navigate(`/photo-cloud/${data[0].categoryId}`);
+                navigate(`/photo-cloud/${data[0].categoryId}`, {
+                  replace: true,
+                });
               } else {
                 navigate('/');
               }
             });
           };
           getData();
-          setDeleteCategory(true);
-          onClose?.();
         }
       } catch (err) {
         console.error(err);
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '카테고리 삭제 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
       }
     } else {
       alert('본인의 카테고리만 삭제할 수 있습니다.');
@@ -94,16 +115,30 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
   };
 
   const deletePhoto = async (id: string) => {
+    onClose?.();
+    setIsLoading(() => true);
     try {
       const delete_photo = await defaultApi.delete(requests.DELETE_PHOTO(id), {
         withCredentials: true,
       });
       if (delete_photo.status === 204) {
         setDeleteContent(true);
-        onClose?.();
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '사진 삭제 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       }
     } catch (err) {
       console.error(err);
+      setIsLoading(() => false);
+      Swal.fire({
+        title: '사진 삭제 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
 
@@ -114,7 +149,6 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     } else if (epic === '내용') {
       deletePhoto(targetId);
     }
-    // props.onClose?.();
   };
   const handleClose = () => {
     onClose?.();

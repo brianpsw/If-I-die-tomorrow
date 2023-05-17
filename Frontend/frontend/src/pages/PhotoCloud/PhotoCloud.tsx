@@ -11,6 +11,7 @@ import PhotoCloudCategory from '../../components/PhotoCloud/PhotoCloudCategory';
 import PhotoCloudDetail from '../../components/PhotoCloud/PhotoCloudDetail';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
+import TopBar from '../../components/common/TopBar';
 
 interface EditOrDeleteEpic {
   titleEdit: boolean;
@@ -37,9 +38,9 @@ function PhotoCloud() {
   const [editCategoryThumbnail, setEditCategoryThumbnail] =
     useState<boolean>(false);
   const [deleteContent, setDeleteContent] = useState<boolean>(false);
-  const [categoryLoading, setCategoryLoading] = useState<boolean>(false);
-  const [photoLoading, setPhotoLoading] = useState<boolean>(false);
 
+  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
+  const [isCloudLoading, setIsCloudLoading] = useState<boolean>(false);
   const params = useParams();
 
   useEffect(() => {
@@ -47,6 +48,7 @@ function PhotoCloud() {
   }, [params.categoryId]);
 
   const fetchData = async () => {
+    setIsCloudLoading(() => true);
     try {
       const get_all_category = await defaultApi.get(
         requests.GET_ALL_CATEGORY(),
@@ -60,6 +62,7 @@ function PhotoCloud() {
     } catch (err) {
       console.error(err);
     }
+    setIsCloudLoading(() => false);
   };
 
   useEffect(() => {
@@ -115,10 +118,10 @@ function PhotoCloud() {
   const onDeleteModalClose = () => {
     setDeleteModalOpen(false);
   };
-
   return (
     <div>
-      {!photoLoading && !categoryLoading ? <Loading /> : null}
+      {isDeleteLoading && <Loading />}
+      {isCloudLoading && <Loading />}
       <div>
         {openEditOrDeleteModal ? (
           <EditOrDeleteModal
@@ -135,15 +138,16 @@ function PhotoCloud() {
             setDeleteCategory={setDeleteCategory}
             setDeleteContent={setDeleteContent}
             categoryOwner={categoryOwner!}
+            setIsLoading={setIsDeleteLoading}
           />
         ) : null}
+        <TopBar title="포토 클라우드" />
         <PhotoCloudCategory
           setDeleteCategory={setDeleteCategory}
           deleteCategory={deleteCategory}
           cancelEdit={cancelEdit}
           setEditCategoryThumbnail={setEditCategoryThumbnail}
           editCategoryThumbnail={editCategoryThumbnail}
-          setCategoryLoading={setCategoryLoading}
         ></PhotoCloudCategory>
         {selectedCategory && (
           <PhotoCloudDetail
@@ -162,7 +166,6 @@ function PhotoCloud() {
             cancelEdit={cancelEdit}
             setCategoryOwner={setCategoryOwner}
             setEditCategoryThumbnail={setEditCategoryThumbnail}
-            setPhotoLoading={setPhotoLoading}
           ></PhotoCloudDetail>
         )}
       </div>

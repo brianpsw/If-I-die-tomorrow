@@ -11,14 +11,14 @@ const Button = styled.button<ButtonProps>`
   ${tw`rounded-full shadow-sm font-medium text-white cursor-pointer `}
   background-color: ${(props) => props.color};
   width: ${(props) => {
-    if (props.size === 'sm') return '7.2rem';
-    if (props.size === 'md') return '11rem';
+    if (props.size === 'sm') return '8rem';
+    if (props.size === 'md') return '13rem';
     if (props.size === 'lg') return '21rem';
     return '175px';
   }};
-  font-size: 1rem;
+  font-size: 1.4rem;
   border: none;
-  height: 38px;
+  height: 4.5rem;
   display: flex;
   justify-content: center;
   align-items: center;

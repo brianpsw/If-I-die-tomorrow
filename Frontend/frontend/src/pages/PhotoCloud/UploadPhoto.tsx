@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
+import Swal from 'sweetalert2';
+import Loading from '../../components/common/Loading';
 import PhotoInput from '../../components/PhotoCloud/PhotoInput';
-import { Background } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import Button from '../../components/common/Button';
 
 const ContentWrapper = styled.div`
@@ -23,21 +24,7 @@ function UploadPhoto() {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [content, setContent] = useState<string>('');
   const params = useParams();
-  // const handleInputPhoto = (e: any) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setImgUrl(imageUrl);
-  //     setPhotoFile(file);
-  //   }
-  // };
-
-  // const handlePhotoUpload = (e: any) => {
-  //   const photoInput = document.getElementById('photo-input');
-  //   if (photoInput) {
-  //     photoInput.click();
-  //   }
-  // };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleContent = (e: any) => {
     setContent(e.target.value);
@@ -47,6 +34,7 @@ function UploadPhoto() {
   };
 
   const submitPhoto = async () => {
+    setIsLoading(() => true);
     try {
       const formData = new FormData();
 
@@ -74,10 +62,33 @@ function UploadPhoto() {
       );
 
       if (post_all_photo.status === 201) {
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '사진 업로드 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
         navigate(`/photo-cloud/${params.categoryId}`);
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      if (err.response.status === 500) {
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '사진 업로드 실패...',
+          text: '사진에 데이터가 없습니다. 다른 사진으로 교체해주세요.',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
+      } else if (err.response.status === 400) {
+        setIsLoading(() => false);
+        Swal.fire({
+          title: '사진 업로드 실패...',
+          text: '지원하지 않는 확장자입니다. 다른 사진으로 교체해주세요.',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
+      }
     }
   };
 
@@ -90,7 +101,8 @@ function UploadPhoto() {
   };
 
   return (
-    <Background>
+    <div>
+      {isLoading && <Loading />}
       <div style={{ padding: '16px 24px' }}>
         <Icon
           icon="ph:x-bold"
@@ -108,40 +120,6 @@ function UploadPhoto() {
           photoFile={photoFile}
           setPhotoFile={setPhotoFile}
         />
-        {/* <PhotoUploadWrapper onClick={handlePhotoUpload}>
-          <div
-            style={{
-              width: '100%',
-              minHeight: '192px',
-              border: '2px #111111',
-              borderStyle: 'dashed ',
-              borderRadius: '10px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            {imgUrl ? (
-              <img
-                className="image-upload-preview w-full h-full bg-auto"
-                src={imgUrl}
-                alt="upload-preview"
-              />
-            ) : (
-              <Icon
-                icon="ic:round-photo-camera"
-                style={{ fontSize: '30px', color: '#111111' }}
-              />
-            )}
-          </div>
-          <input
-            id="photo-input"
-            type="file"
-            accept="image/*"
-            onChange={handleInputPhoto}
-            hidden
-          />
-        </PhotoUploadWrapper> */}
         <ContentWrapper>
           <textarea
             rows={5}
@@ -160,7 +138,7 @@ function UploadPhoto() {
           사진 올리기
         </Button>
       </div>
-    </Background>
+    </div>
   );
 }
 
