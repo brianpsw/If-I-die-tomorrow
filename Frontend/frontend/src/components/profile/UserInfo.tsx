@@ -7,10 +7,15 @@ import ServiceAgreeModal from './ServiceAgreeModal';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Swal from 'sweetalert2';
+import Lottie from 'react-lottie-player';
+import WillAnimation3 from '../../../src/assets/animation/many-papers.json';
+import WillAnimation4 from '../../../src/assets/animation/preview-animation.json';
 import {
   MyProfile,
   SettingBox,
   IconWithText,
+  WillServiceWrap,
+  WillContent,
 } from '../../pages/Profile/MyPageEmotion';
 
 function UserInfo() {
@@ -59,28 +64,40 @@ function UserInfo() {
   return (
     <div>
       <MyProfile>
-        <h4 className="text-h4">{loggedInUserNickname}님, 환영합니다</h4>
-        <Link to="/will">
-          <IconWithText>
-            <Icon icon="line-md:clipboard-list" />
-            <span>유언장 작성하러 가기</span>
-          </IconWithText>
-        </Link>
-        <Link to="/after" target="_self" reloadDocument={true} replace={true}>
-          <IconWithText>
-            <Icon icon="line-md:clipboard-list" />
-            <span>사후 페이지 보러가기</span>
-          </IconWithText>
-        </Link>
+        <h4 className="text-h4">{loggedInUserNickname}</h4>
+        <SettingBox>
+          <h4 className="text-h4">내 정보</h4>
+          <br />
+          <p className="text-p1">이름: {loggedInUserName}</p>
+          <p className="text-p1">이메일: {loggedInUserEmail}</p>
+          <br />
+          <button onClick={handleLogout}>로그아웃</button>
+        </SettingBox>
+        <WillServiceWrap>
+          <Link to="/will">
+            <WillContent>
+              <Lottie
+                animationData={WillAnimation3}
+                play
+                loop
+                style={{ width: 120, height: 120, margin: '0 auto' }}
+              />
+              <p className="text-p2">유언장 작성하러 가기</p>
+            </WillContent>
+          </Link>
+          <Link to="/after" target="_self" reloadDocument={true} replace={true}>
+            <WillContent>
+              <Lottie
+                animationData={WillAnimation4}
+                play
+                loop
+                style={{ width: 120, height: 120, margin: '0 auto' }}
+              />
+              <p className="text-p2">사후 페이지 미리보기</p>
+            </WillContent>
+          </Link>
+        </WillServiceWrap>
       </MyProfile>
-      <SettingBox>
-        <h4 className="text-h4">내 정보</h4>
-        <br />
-        <p className="text-p1">이름: {loggedInUserName}</p>
-        <p className="text-p1">이메일: {loggedInUserEmail}</p>
-        <br />
-        <button onClick={handleLogout}>로그아웃</button>
-      </SettingBox>
     </div>
   );
 }

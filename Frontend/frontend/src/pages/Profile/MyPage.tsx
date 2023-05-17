@@ -23,6 +23,9 @@ import {
   StyledButton,
   IconWithText,
   IconContainer,
+  ReceiverTextWrap,
+  NameText,
+  PhoneText,
 } from './MyPageEmotion';
 
 function MyPage() {
@@ -207,8 +210,8 @@ function MyPage() {
           ...receiverTexts,
           {
             receiverId: addedReceiver.receiverId,
-            name: `이름 : ${addedReceiver.name}`,
-            phone: `전화번호 : ${addedReceiver.phoneNumber}`,
+            name: `${addedReceiver.name}`,
+            phone: `${addedReceiver.phoneNumber}`,
           },
         ]);
         setReceivers([
@@ -246,8 +249,8 @@ function MyPage() {
         setReceiverTexts(
           fetchedReceivers.map((receiver) => ({
             receiverId: receiver.receiverId,
-            name: `이름 : ${receiver.name}`,
-            phone: `전화번호 : ${receiver.phoneNumber}`,
+            name: `${receiver.name}`,
+            phone: `${receiver.phoneNumber}`,
           })),
         );
       }
@@ -287,8 +290,8 @@ function MyPage() {
         setReceiverTexts(
           newReceivers.map((receiver) => ({
             receiverId: receiver.receiverId,
-            name: `이름 : ${receiver.name}`,
-            phone: `전화번호 : ${receiver.phoneNumber}`,
+            name: `${receiver.name}`,
+            phone: `${receiver.phoneNumber}`,
           })),
         );
       }
@@ -332,8 +335,8 @@ function MyPage() {
   const createNewReceiverTexts = (validReceivers: any) =>
     validReceivers.map((receiver: any) => ({
       receiverId: receiver.receiverId,
-      name: `이름 : ${receiver.name}`,
-      phone: `전화번호 : ${receiver.phone}`,
+      name: `${receiver.name}`,
+      phone: `${receiver.phone}`,
     }));
 
   const focusOnInvalidReceiver = (invalidIndex: any) => {
@@ -442,7 +445,7 @@ function MyPage() {
             <h4 className="text-h4">사후 전송 서비스 설정</h4>
             <br />
             <IconWithText>
-              <p className="text-p3" style={{ fontWeight: 'bold' }}>
+              <p className="text-p1" style={{ fontWeight: 'bold' }}>
                 생존 여부 알림
               </p>
               <Icon
@@ -487,7 +490,10 @@ function MyPage() {
               </div>
             )}
             <IconWithText>
-              <p className="text-p3" style={{ fontWeight: 'bold' }}>
+              <p
+                className="text-p1"
+                style={{ fontWeight: 'bold', marginTop: '3%' }}
+              >
                 내 기록 받아볼 사람
               </p>
               <Icon
@@ -495,6 +501,7 @@ function MyPage() {
                 onClick={openBottomModal}
               />
             </IconWithText>
+            <span>리시버는 최대 3명까지 등록 가능합니다.</span>
             {receivers &&
               receivers.map(
                 (receiver, index) =>
@@ -506,7 +513,11 @@ function MyPage() {
                         ref={inputRefs[index].name}
                         value={receiver.name}
                         onChange={(e) => handleReceiverChange(index, 'name', e)}
-                        disabled={!serviceEnabled || receiverDisabled}
+                        disabled={
+                          !serviceEnabled ||
+                          receiverDisabled ||
+                          receiverTexts.length >= 3
+                        }
                       />
 
                       <input
@@ -517,12 +528,43 @@ function MyPage() {
                         onChange={(e) =>
                           handleReceiverChange(index, 'phone', e)
                         }
-                        disabled={!serviceEnabled || receiverDisabled}
+                        disabled={
+                          !serviceEnabled ||
+                          receiverDisabled ||
+                          receiverTexts.length >= 3
+                        }
                       />
+                      {receivers.length < 3 && (
+                        <IconContainer>
+                          <Icon
+                            icon="line-md:plus-circle"
+                            onClick={
+                              receiverDisabled || receiverTexts.length >= 3
+                                ? undefined
+                                : addReceiver
+                            }
+                            style={
+                              receiverDisabled || receiverTexts.length >= 3
+                                ? { color: '#A9A9A9' }
+                                : {}
+                            }
+                          />
+                        </IconContainer>
+                      )}
                     </InputRow>
                   ),
               )}
-            {receiverTexts &&
+            <p
+              className="text-p1"
+              style={{
+                fontWeight: 'bold',
+                marginBottom: '4%',
+                marginTop: '6%',
+              }}
+            >
+              등록된 리시버
+            </p>
+            {receiverTexts && receiverTexts.length > 0 ? (
               receiverTexts.map((text, index) => (
                 <Receiver
                   key={index}
@@ -530,11 +572,11 @@ function MyPage() {
                     color: receiverDisabled ? '#A9A9A9' : 'inherit',
                   }}
                 >
-                  <div>
-                    <p>{text.name}</p>
+                  <ReceiverTextWrap>
+                    <NameText>{text.name}</NameText>
 
-                    <p>{text.phone}</p>
-                  </div>
+                    <PhoneText>{text.phone}</PhoneText>
+                  </ReceiverTextWrap>
                   <Icon
                     icon="line-md:remove"
                     onClick={
@@ -547,15 +589,9 @@ function MyPage() {
                     }
                   />
                 </Receiver>
-              ))}
-            {receivers.length < 3 && receiverTexts.length < 3 && (
-              <IconContainer>
-                <Icon
-                  icon="line-md:plus-circle"
-                  onClick={receiverDisabled ? undefined : addReceiver}
-                  style={receiverDisabled ? { color: '#A9A9A9' } : {}}
-                />
-              </IconContainer>
+              ))
+            ) : (
+              <p>등록된 리시버가 없습니다.</p>
             )}
           </SettingBox>
           <Withdrawal></Withdrawal>
