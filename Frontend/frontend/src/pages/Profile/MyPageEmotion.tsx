@@ -160,7 +160,10 @@ export const ReceiverTextWrap = styled.div`
 `;
 export const NameText = styled.p`
   ${tw`mr-20 ml-2`}
+  width: 40%;
 `;
 export const PhoneText = styled.p`
-  ${tw``}
+  ${tw`flex`}
+  width: 60%;
+  align-items: center;
 `;
