@@ -90,6 +90,7 @@ public class AfterServiceImpl implements AfterService{
                 }
             }
         }
+        fileUtil.saveHashMapToJson(result, commonDirectory + "data.json");
         fileUtil.zipDirectory(commonDirectory, basicDirectory + uuid + ".zip" );
 
         return basicDirectory + uuid + ".zip";

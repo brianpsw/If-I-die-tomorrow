@@ -1,5 +1,7 @@
 package com.a307.ifIDieTomorrow.global.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -10,6 +12,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.*;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -106,5 +109,10 @@ public class FileUtil {
             e.printStackTrace();
         }
 
+    }
+
+    public void saveHashMapToJson(Map<String, Object> hashMap, String filePath) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        objectMapper.writeValue(new File(filePath), hashMap);
     }
 }
