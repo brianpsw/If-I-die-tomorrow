@@ -52,13 +52,12 @@ public class ImageProcess {
 			// IOException, ImageProcessingException 발생 가능
 			Metadata metadata = ImageMetadataReader.readMetadata(multipartFile.getInputStream());
 			Directory directory = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
-			
-			if (metadata != null && directory != null) {
-				int rotate = 1;
-				rotate = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+			if (metadata != null && directory != null && directory.containsTag(ExifIFD0Directory.TAG_ORIENTATION)) {
+				int rotate = directory.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 				
 				// Metadata 기반으로 사진을 회전시킴
 				switch (rotate) {
+					default:
 					case 1:
 						break;
 					case 3:
