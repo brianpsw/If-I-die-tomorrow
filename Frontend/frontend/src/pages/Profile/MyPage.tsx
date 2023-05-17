@@ -189,6 +189,11 @@ function MyPage() {
     const lastIndex = receivers.length - 1;
     const lastReceiver = receivers[lastIndex];
 
+    // 리시버가 이미 3명인지 확인
+    if (receiverTexts.length >= 3) {
+      return;
+    }
+
     // 유효성 검사를 추가
     if (!isPhoneNumberValid(lastReceiver.phone)) {
       alert('전화번호는 "-"을 제외한 10자리 또는 11자리의 숫자여야 합니다.');
@@ -501,55 +506,51 @@ function MyPage() {
           </IconWithText>
           <span>리시버는 최대 3명까지 등록 가능합니다.</span>
           {receivers &&
-            receivers.map(
-              (receiver, index) =>
-                receiverTexts.length < 3 && (
-                  <InputRow key={index}>
-                    <input
-                      type="text"
-                      placeholder="이름"
-                      ref={inputRefs[index].name}
-                      value={receiver.name}
-                      onChange={(e) => handleReceiverChange(index, 'name', e)}
-                      disabled={
-                        !serviceEnabled ||
-                        receiverDisabled ||
-                        receiverTexts.length >= 3
-                      }
-                    />
+            receivers.map((receiver, index) => (
+              <InputRow key={index}>
+                <input
+                  type="text"
+                  placeholder="이름"
+                  ref={inputRefs[index].name}
+                  value={receiver.name}
+                  onChange={(e) => handleReceiverChange(index, 'name', e)}
+                  disabled={
+                    !serviceEnabled ||
+                    receiverDisabled ||
+                    receiverTexts.length >= 3
+                  }
+                />
 
-                    <input
-                      type="tel"
-                      placeholder="전화번호"
-                      ref={inputRefs[index].phone}
-                      value={receiver.phone}
-                      onChange={(e) => handleReceiverChange(index, 'phone', e)}
-                      disabled={
-                        !serviceEnabled ||
-                        receiverDisabled ||
-                        receiverTexts.length >= 3
-                      }
-                    />
-                    {receivers.length < 3 && (
-                      <IconContainer>
-                        <Icon
-                          icon="line-md:plus-circle"
-                          onClick={
-                            receiverDisabled || receiverTexts.length >= 3
-                              ? undefined
-                              : addReceiver
-                          }
-                          style={
-                            receiverDisabled || receiverTexts.length >= 3
-                              ? { color: '#A9A9A9' }
-                              : {}
-                          }
-                        />
-                      </IconContainer>
-                    )}
-                  </InputRow>
-                ),
-            )}
+                <input
+                  type="tel"
+                  placeholder="전화번호"
+                  ref={inputRefs[index].phone}
+                  value={receiver.phone}
+                  onChange={(e) => handleReceiverChange(index, 'phone', e)}
+                  disabled={
+                    !serviceEnabled ||
+                    receiverDisabled ||
+                    receiverTexts.length >= 3
+                  }
+                />
+
+                <IconContainer>
+                  <Icon
+                    icon="line-md:plus-circle"
+                    onClick={
+                      receiverDisabled || receiverTexts.length >= 3
+                        ? undefined
+                        : addReceiver
+                    }
+                    style={
+                      receiverDisabled || receiverTexts.length >= 3
+                        ? { color: '#A9A9A9' }
+                        : {}
+                    }
+                  />
+                </IconContainer>
+              </InputRow>
+            ))}
           <p
             className="text-p1"
             style={{
