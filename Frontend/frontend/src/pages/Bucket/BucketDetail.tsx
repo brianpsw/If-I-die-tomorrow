@@ -147,23 +147,28 @@ const StyledCommentForm = styled.form`
 
 const StyledInput = styled.input`
   ${tw``}
-  padding-right: 50px;
+  // padding-right: 50px;
   padding-left: 2%;
-  font-size: 1.5rem;
+  // font-size: 1.5rem;
   width: 100%;
   color: black;
   border-radius: 10px;
 `;
 
 const StyledButton = styled.button`
-  ${tw`px-4 py-2 rounded`}
+  ${tw`text-p1 px-4 py-2 rounded flex`}
+  justify-content: center;
+  background-color: white;
+  align-items: center;
   position: absolute;
-  font-size: 1.5rem;
+  border-radius: 10px;
+  // font-size: 1.5rem;
   font-weight: bold;
   color: gray;
   height: 100%;
   width: 50px;
   right: 0;
+  white-space: nowrap;
   // border: solid 1px black;
 `;
 
@@ -179,20 +184,20 @@ const CommentDate = styled.div`
 `;
 
 const CommentContent = styled.div`
-  ${tw``}
-  width: 280px;
-  font-size: 15px;
+  ${tw`text-p3`}
+  max-width: 90%;
 `;
 
 const EditContentForm = styled.form`
-  ${tw`flex flex-col`}
+  ${tw`flex flex-col text-p3`}
   align-items: flex-end;
+  width: 73vw;
 `;
 
 const EditContentInput = styled.textarea`
-  ${tw`p-1`}
-  width: 270px;
-  font-size: 15px;
+  ${tw`text-smT p-1`}
+  width: 100%;
+  // font-size: 15px;
   height: auto;
   border-radius: 5px;
 `;
