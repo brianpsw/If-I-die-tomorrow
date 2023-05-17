@@ -139,19 +139,21 @@ function CreateCategory() {
                       className="inline-block bg-[#f6f6f6b3] px-8 py-4 rounded-[10px] m-3 cursor-pointer"
                       onClick={() => handleCategory(rec)}
                     >
-                      <p className="text-center text-green_800">{rec}</p>
+                      <p className="text-center text-green_800 text-p1">
+                        {rec}
+                      </p>
                     </div>
                   );
                 })}
             </div>
-            <p className="text-white text-center my-6">
+            <p className="text-white text-center my-6 text-p1">
               마음에 드는 카테고리가 없나요?
               <br /> 직접 카테고리를 만들어보세요!
             </p>
 
             <div className="flex justify-center">
               <input
-                className="text-green_800 text-center w-full md:max-w-[60%] sm:max-w-[80%] bg-[#f6f6f6b3] px-4 py-8 my-10 rounded-[10px]"
+                className="text-green_800 text-center text-p1 w-full md:max-w-[60%] sm:max-w-[80%] bg-[#f6f6f6b3] px-4 py-8 my-10 rounded-[10px]"
                 defaultValue={customTitle}
                 placeholder="나만의 카테고리를 넣어주세요."
                 onChange={(e: any) => handleTitle(e)}
