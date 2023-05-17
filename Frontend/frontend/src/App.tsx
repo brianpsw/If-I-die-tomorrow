@@ -8,7 +8,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Carousel from './components/common/Carousel';
 import Home from './pages/Home/Home';
-import Room from './pages/Home/Room';
 import Bucket from './pages/Bucket/Bucket';
 import Diary from './pages/Diary/Diary';
 import Login from './pages/LogIn/Login';
@@ -27,12 +26,25 @@ import NavBar from './components/common/NavBar';
 import WillText from './pages/Will/WillText';
 import WillSign from './pages/Will/WillSign';
 import WillVideo from './pages/Will/WillVideo';
+import { LogoContainer } from './pages/LogIn/Login';
+import Logo from './assets/icons/logo.svg';
+import AppTitle from './assets/images/app_title.svg';
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
         <div className="App min-w-[300px]">
+          <div className="fixed min-[451px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
+            <LogoContainer>
+              <img src={Logo} width={82} height={102} alt="" />
+              <img src={AppTitle} width={213} height={30} alt="" />
+            </LogoContainer>
+            <p className="text-center text-p1 mt-8 text-white">
+              저희 서비스는 모바일에 최적화 되어있습니다.
+              <br /> 화면의 크기를 줄여주세요.
+            </p>
+          </div>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
