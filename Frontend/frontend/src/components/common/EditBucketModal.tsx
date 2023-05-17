@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import uploadIcon from '../../assets/icons/camera_alt.svg';

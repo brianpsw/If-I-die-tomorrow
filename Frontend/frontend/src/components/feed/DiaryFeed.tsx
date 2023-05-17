@@ -1,9 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import axios from 'axios';
 import { defaultApi } from '../../api/axios';
 import requests from '../../api/config';
-import DiaryDetail from '../../pages/Diary/DiaryDetail';
 import { Link } from 'react-router-dom';
 import {
   Container,

@@ -1,9 +1,7 @@
-import React, { useState, ChangeEvent } from 'react';
-import { Icon } from '@iconify/react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
-import ServiceAgreeModal from './ServiceAgreeModal';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Swal from 'sweetalert2';
@@ -13,7 +11,6 @@ import WillAnimation4 from '../../../src/assets/animation/preview-animation.json
 import {
   MyProfile,
   SettingBox,
-  IconWithText,
   WillServiceWrap,
   WillContent,
 } from '../../pages/Profile/MyPageEmotion';

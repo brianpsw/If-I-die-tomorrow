@@ -4,14 +4,12 @@ import { Link } from 'react-router-dom';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { useRecoilValue } from 'recoil';
-import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
 import BottomModal from '../../components/profile/MyPageModal';
 import UserInfo from '../../components/profile/UserInfo';
 import Withdrawal from '../../components/profile/Withdrawal';
 import ServiceAgreeModal from '../../components/profile/ServiceAgreeModal';
 import {
-  Background,
   Logo,
   Container,
   SettingBox,
@@ -20,7 +18,6 @@ import {
   RadioButton,
   InputRow,
   Receiver,
-  StyledButton,
   IconWithText,
   IconContainer,
   ReceiverTextWrap,

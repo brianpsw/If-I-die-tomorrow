@@ -1,7 +1,6 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import Button from '../common/Button';
 import Swal from 'sweetalert2';
 
 interface SubmitConfirmModalProps {

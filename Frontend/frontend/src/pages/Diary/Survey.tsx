@@ -7,7 +7,6 @@ import backgroundImg from '../../assets/images/diary_bg.png';
 import TopBar from '../../components/common/TopBar';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 

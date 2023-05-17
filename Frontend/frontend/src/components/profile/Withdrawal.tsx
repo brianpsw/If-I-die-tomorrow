@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { userState } from '../../states/UserState';
 import { defaultApi } from '../../api/axios';

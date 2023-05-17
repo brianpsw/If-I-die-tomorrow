@@ -1,26 +1,24 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Icon } from '@iconify/react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/feed.png';
-import Button from '../../components/common/Button';
+// import backgroundImg from '../../assets/images/feed.png';
 import DiaryFeed from '../../components/feed/DiaryFeed';
 import BucketFeed from '../../components/feed/BucketFeed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopButton from '../../components/common/ScrollToTopButton';
 import textLogoImg from '../../assets/images/text_logo.png';
 
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  background-attachment: fixed;
-`;
+// const Background = styled.div`
+//   background-image: url(${backgroundImg});
+//   background-size: cover;
+//   background-position: center;
+//   background-repeat: no-repeat;
+//   min-height: 100vh;
+//   width: 100%;
+//   position: relative;
+//   background-attachment: fixed;
+// `;
 
 const Logo = styled.div`
   background-image: url(${textLogoImg});
