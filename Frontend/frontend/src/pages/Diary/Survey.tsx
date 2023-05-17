@@ -9,6 +9,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const questions = [
   '나는 새로운 사람들을 만나는 것이 흥미롭다.',
@@ -80,7 +81,11 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
 
     // 모든 문항에 대한 응답이 없는 경우
     if (!allQuestionsAnswered()) {
-      alert('모든 문항을 선택해주세요!');
+      Swal.fire({
+        title: '모든 문항을 선택해주세요!',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
       return;
     }
 
@@ -135,7 +140,12 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
         { withCredentials: true },
       );
       console.log(response.data);
-      alert('설문이 제출되었습니다.');
+      Swal.fire({
+        title: '설문이 제출되었습니다.',
+        icon: 'success',
+        timer: 1000,
+        showConfirmButton: false,
+      });
       navigate('/diary');
     } catch (error) {
       console.error(error);
