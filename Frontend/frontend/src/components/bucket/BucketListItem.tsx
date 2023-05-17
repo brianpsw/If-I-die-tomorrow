@@ -7,7 +7,7 @@ import { defaultApi } from '../../api/axios';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-
+import Swal from 'sweetalert2';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 import Button from '../common/Button';
@@ -138,8 +138,18 @@ function BucketListItem({
         });
 
         get_user_bucket();
-        setIsClicked(false);
+        Swal.fire({
+          title: '버킷 완료 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        Swal.fire({
+          title: '버킷 완료 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
