@@ -154,7 +154,9 @@ const StyledInput = styled.input`
 `;
 
 const StyledButton = styled.button`
-  ${tw`text-p2 px-4 py-2 rounded`}
+  ${tw`text-p1 px-4 py-2 rounded flex`}
+  justify-content: center;
+  align-items: center;
   position: absolute;
   // font-size: 1.5rem;
   font-weight: bold;
@@ -177,21 +179,21 @@ const CommentDate = styled.div`
   font-size: 12px;
 `;
 
-const CommentContent = styled.div`
-  ${tw``}
-  width: 280px;
-  font-size: 15px;
+const CommentContent = styled.p`
+  ${tw`text-smT`}
+  width: 90%;
 `;
 
 const EditContentForm = styled.form`
   ${tw`flex flex-col`}
   align-items: flex-end;
+  width: 73vw;
 `;
 
 const EditContentInput = styled.textarea`
-  ${tw`p-1`}
-  width: 270px;
-  font-size: 15px;
+  ${tw`text-smT p-1`}
+  width: 100%;
+  // font-size: 15px;
   height: auto;
   border-radius: 5px;
 `;
