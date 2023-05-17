@@ -4,6 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
@@ -539,8 +540,6 @@ class CommunityServiceImplTest {
 						.userId(user.getUserId())
 						.build();
 
-
-
 				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
 				// When
@@ -571,7 +570,6 @@ class CommunityServiceImplTest {
 						.userId(anotherUserId)
 						.build();
 
-
 				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
 
 				// When & Then
@@ -585,6 +583,7 @@ class CommunityServiceImplTest {
 			@Test
 			@DisplayName("존재하지 않는 댓글 삭제 시 예외처리")
 			void throwsExceptionWhenWrongCommentId() {
+
 				// Given
 				Long commentId = 1L;
 
@@ -595,9 +594,7 @@ class CommunityServiceImplTest {
 						.isInstanceOf(NotFoundException.class)
 						.hasMessage("잘못된 댓글 아이디입니다.");
 				then(commentRepository).should(never()).delete(any(Comment.class));
-
 			}
-
 		}
 
 	}
@@ -609,6 +606,46 @@ class CommunityServiceImplTest {
 		@Nested
 		@DisplayName("성공 케이스")
 		class NormalScenario {
+
+			@Test
+			@DisplayName("정상적으로 댓글 수정")
+			void updateComment() throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
+
+				// Given
+				Long commentId = 1L;
+
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("New Content")
+						.build();
+
+				Comment updatedComment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("New Content")
+						.build();
+
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+				given(userRepository.findById(user.getUserId())).willReturn(Optional.of(user));
+				given(commentRepository.save(any(Comment.class))).willReturn(updatedComment);
+
+				// When
+				CreateCommentResDto result = communityService.updateComment(req);
+
+				// Then
+				then(commentRepository).should().save(any(Comment.class));
+
+				assertThat(result.getContent()).isEqualTo("New Content");
+
+			}
 
 		}
 
