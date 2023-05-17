@@ -91,10 +91,12 @@ function BucketListItem({
     } else {
       setBucketTitle(title);
     }
-  }, []);
+  }, [bucket]);
   useEffect(() => {
     if (isCompleteContentValid && isCompleteDateValid) {
       setIsValid(true);
+    } else {
+      setIsValid(false);
     }
   }, [isCompleteDateValid, isCompleteContentValid]);
   const handleSubmit = () => {
@@ -192,7 +194,7 @@ function BucketListItem({
           <img onClick={handleBucketClick} src={UnCheckedIcon} alt="" />
         )}
         <ContentContainer onClick={handleBucketClick}>
-          <span className="text-p1">{bucket.title}</span>
+          <span className="text-p1">{bucketTitle}</span>
         </ContentContainer>
         <div onClick={handleEditModalOpen}>
           <img className="cursor-pointer" src={TreeDot} alt="" />
@@ -201,7 +203,7 @@ function BucketListItem({
 
       {isClicked ? (
         <FormContainer>
-          <TitleContainer value={bucket.title} disabled />
+          <TitleContainer value={bucketTitle} disabled />
           <DatePicker
             label="버킷 완료 일자 선택"
             className="flex w-full"
