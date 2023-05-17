@@ -18,6 +18,7 @@ import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
@@ -33,10 +34,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -506,6 +504,30 @@ class CommunityServiceImplTest {
 		@Nested
 		@DisplayName("성공 케이스")
 		class NormalScenario {
+
+			@Test
+			@DisplayName("댓글 정상적으로 삭제")
+			void deleteComment() throws NotFoundException, UnAuthorizedException {
+				// Given
+				Long commentId = 1L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.build();
+
+
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When
+				Long deletedCommentId = communityService.deleteComment(commentId);
+
+				// Then
+				then(commentRepository).should().delete(any(Comment.class));
+				assertThat(deletedCommentId).isEqualTo(commentId);
+			}
+
 
 		}
 
