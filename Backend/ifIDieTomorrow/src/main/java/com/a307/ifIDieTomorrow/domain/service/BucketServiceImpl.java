@@ -99,6 +99,9 @@ public class BucketServiceImpl implements BucketService {
 		if (bucket.getSecret() && bucket.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new UnAuthorizedException("해당 버킷을 수정할 권한이 없습니다.");
 		
+		if(data.getTitle() == null || "".equals(data.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
+		if((data.getContent() == null || "".equals(data.getContent().trim())) && (photo == null || photo.isEmpty())) throw new IllegalArgumentException("내용과 사진이 모두 없습니다.");
+		
 		LocalDate then  = LocalDate.parse(data.getComplete(), DateTimeFormatter.ISO_DATE);
 		if (LocalDate.now().isBefore(then)) throw new IllegalArgumentException("버킷 완료 날짜는 오늘 이후일 수 없습니다.");
 		
