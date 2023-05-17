@@ -206,9 +206,13 @@ function BucketListItem({
         <ContentContainer onClick={handleBucketClick}>
           <span className="text-p1">{bucketTitle}</span>
         </ContentContainer>
-        <div onClick={handleEditModalOpen}>
-          <img className="cursor-pointer" src={TreeDot} alt="" />
-        </div>
+        {bucket.complete ? (
+          ''
+        ) : (
+          <div onClick={handleEditModalOpen}>
+            <img className="cursor-pointer" src={TreeDot} alt="" />
+          </div>
+        )}
       </BucketContainer>
 
       {isClicked ? (
