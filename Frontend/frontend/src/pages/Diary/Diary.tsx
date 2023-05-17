@@ -11,7 +11,7 @@ import { defaultApi } from '../../api/axios';
 import './CalendarStyles.css';
 import Calendar from '../../components/diary/Calendar';
 import backgroundImg from '../../assets/images/bucket_bg.png';
-import IIDT from '../../assets/images/app_title.svg';
+import IIDT from '../../assets/images/text_logo.png';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
