@@ -20,7 +20,7 @@ public interface CommunityService {
 
 	GetPageDto getDiaryWithComments(Integer pageNo, Integer pageSize);
 
-	CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException;
+	CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException;
 
 	Long deleteComment(Long commentId) throws NotFoundException, UnAuthorizedException;
 

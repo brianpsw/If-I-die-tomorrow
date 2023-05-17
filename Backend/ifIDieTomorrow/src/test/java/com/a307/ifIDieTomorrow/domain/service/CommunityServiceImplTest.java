@@ -1,18 +1,27 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
 import com.a307.ifIDieTomorrow.domain.dto.bucket.GetBucketResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentReqDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.CreateCommentResDto;
 import com.a307.ifIDieTomorrow.domain.dto.comment.GetCommentResDto;
+import com.a307.ifIDieTomorrow.domain.dto.comment.UpdateCommentReqDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
 import com.a307.ifIDieTomorrow.domain.repository.DiaryRepository;
+import com.a307.ifIDieTomorrow.domain.repository.UserRepository;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
+import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
+import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -26,10 +35,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.*;
@@ -47,6 +53,8 @@ class CommunityServiceImplTest {
 	private DiaryRepository diaryRepository;
 	@Mock
 	private CommentRepository commentRepository;
+	@Mock
+	private UserRepository userRepository;
 	@Mock
 	private AdminUtil adminUtil;
 	private User user;
@@ -383,11 +391,131 @@ class CommunityServiceImplTest {
 		@DisplayName("성공 케이스")
 		class NormalScenario {
 
+			@Test
+			@DisplayName("다이어리에 댓글 생성")
+			void createCommentForDiary() throws NotFoundException, IllegalArgumentException {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				Comment comment = Comment.builder()
+						.commentId(1L)
+						.content(req.getContent())
+						.userId(1L)
+						.type(req.getType())
+						.typeId(req.getTypeId())
+						.build();
+
+				ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(true);
+				given(commentRepository.save(any(Comment.class))).willReturn(comment);
+				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+
+				// When
+				CreateCommentResDto res = communityService.createComment(req);
+
+				// Then
+				then(commentRepository).should().save(commentCaptor.capture());
+
+				assertThat(user.getUserId()).isEqualTo(commentCaptor.getValue().getUserId());
+				assertThat(req.getContent()).isEqualTo(commentCaptor.getValue().getContent());
+				assertThat(res.getCommentId()).isEqualTo(comment.getCommentId());
+				assertThat(res.getNickname()).isEqualTo(user.getNickname());
+
+			}
+
+			@Test
+			@DisplayName("버킷에 댓글 생성")
+			void createCommentForBucket() throws NotFoundException, IllegalArgumentException {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(false)
+						.typeId(1L)
+						.build();
+
+				Comment comment = Comment.builder()
+						.commentId(1L)
+						.content(req.getContent())
+						.userId(1L)
+						.type(req.getType())
+						.typeId(req.getTypeId())
+						.build();
+
+				ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
+
+				given(bucketRepository.existsById(req.getTypeId())).willReturn(true);
+				given(commentRepository.save(any(Comment.class))).willReturn(comment);
+				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+
+				// When
+				CreateCommentResDto res = communityService.createComment(req);
+
+				// Then
+				then(commentRepository).should().save(commentCaptor.capture());
+
+				assertThat(user.getUserId()).isEqualTo(commentCaptor.getValue().getUserId());
+				assertThat(req.getContent()).isEqualTo(commentCaptor.getValue().getContent());
+				assertThat(res.getCommentId()).isEqualTo(comment.getCommentId());
+				assertThat(res.getNickname()).isEqualTo(user.getNickname());
+
+			}
+
 		}
 
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
+
+			@Test
+			@DisplayName("존재하지 않는 게시글에 댓글 생성 시 예외처리")
+			void throwsExceptionWhenArticleDoesntExist(){
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("Test content")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(false);
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.createComment(req))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("존재하지 않는 게시글입니다.");
+
+				then(commentRepository).shouldHaveNoInteractions();
+			}
+
+			@Test
+			@DisplayName("빈 댓글 작성 시 예외처리")
+			void throwsExceptionWhenEmptyComment() {
+
+				// Given
+				CreateCommentReqDto req = CreateCommentReqDto.builder()
+						.content("")
+						.type(true)
+						.typeId(1L)
+						.build();
+
+				given(diaryRepository.existsById(req.getTypeId())).willReturn(true);
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.createComment(req))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용이 없습니다.");
+
+				then(commentRepository).shouldHaveNoInteractions();
+
+			}
+
 
 		}
 
@@ -401,12 +529,72 @@ class CommunityServiceImplTest {
 		@DisplayName("성공 케이스")
 		class NormalScenario {
 
+			@Test
+			@DisplayName("댓글 정상적으로 삭제")
+			void deleteComment() throws NotFoundException, UnAuthorizedException {
+				// Given
+				Long commentId = 1L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When
+				Long deletedCommentId = communityService.deleteComment(commentId);
+
+				// Then
+				then(commentRepository).should().delete(any(Comment.class));
+				assertThat(deletedCommentId).isEqualTo(commentId);
+			}
+
+
 		}
 
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
 
+			@Test
+			@DisplayName("내가 작성하지 않은 댓글 삭제 시 예외처리")
+			void throwsExceptionWhenNotMyComment() {
+				// Given
+				Long commentId = 1L;
+				Long anotherUserId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.content("comment content")
+						.userId(anotherUserId)
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.deleteComment(commentId))
+						.isInstanceOf(UnAuthorizedException.class)
+						.hasMessage("내가 작성한 댓글이 아닙니다.");
+				then(commentRepository).should(never()).delete(any(Comment.class));
+
+			}
+
+			@Test
+			@DisplayName("존재하지 않는 댓글 삭제 시 예외처리")
+			void throwsExceptionWhenWrongCommentId() {
+
+				// Given
+				Long commentId = 1L;
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.empty());
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.deleteComment(commentId))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 댓글 아이디입니다.");
+				then(commentRepository).should(never()).delete(any(Comment.class));
+			}
 		}
 
 	}
@@ -419,11 +607,138 @@ class CommunityServiceImplTest {
 		@DisplayName("성공 케이스")
 		class NormalScenario {
 
+			@Test
+			@DisplayName("정상적으로 댓글 수정")
+			void updateComment() throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
+
+				// Given
+				Long commentId = 1L;
+
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("New Content")
+						.build();
+
+				Comment updatedComment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("New Content")
+						.build();
+
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+				given(userRepository.findById(user.getUserId())).willReturn(Optional.of(user));
+				given(commentRepository.save(any(Comment.class))).willReturn(updatedComment);
+
+				// When
+				CreateCommentResDto result = communityService.updateComment(req);
+
+				// Then
+				then(commentRepository).should().save(any(Comment.class));
+
+				assertThat(result.getContent()).isEqualTo("New Content");
+
+			}
+
 		}
 
 		@Nested
 		@DisplayName("예외 케이스")
 		class ExceptionScenario {
+
+			@Test
+			@DisplayName("존재하지 않는 댓글 수정 시 예외처리")
+			void ThrowsExceptionWhenWrongCommentId() {
+				// Given
+				Long commentId = 1L;
+				Long WrongId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(WrongId)
+						.content("New Content")
+						.build();
+
+				given(commentRepository.findById(WrongId)).willReturn(Optional.empty());
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(NotFoundException.class)
+						.hasMessage("잘못된 댓글 아이디입니다.");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+			}
+
+			@Test
+			@DisplayName("내가 작성하지 않은 댓글 수정 시 예외처리")
+			void ThrowsExceptionWhenNotMyComment() {
+				// Given
+				Long commentId = 1L;
+				Long anotherUserId = 2L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(anotherUserId)
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("New Content")
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+				given(userRepository.findById(user.getUserId())).willReturn(Optional.of(user));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(UnAuthorizedException.class)
+						.hasMessage("내가 작성한 댓글이 아닙니다");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+			}
+
+			@Test
+			@DisplayName("빈 댓글 작성 시 예외처리")
+			void throwsExceptionWhenEmptyComment() {
+
+				// Given
+				Long commentId = 1L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("")
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용이 없습니다.");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+
+			}
+
 
 		}
 
