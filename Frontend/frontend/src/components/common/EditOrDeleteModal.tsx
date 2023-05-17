@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import tw from 'twin.macro';
 import DeleteIcon from '../../assets/icons/deleteIcon.svg';
 import EditIcon from '../../assets/icons/editIcon.svg';
@@ -11,10 +11,24 @@ const ModalOverlay = styled.div`
   top: 0;
 `;
 
-const ModalWrapper = styled.div`
-  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-full shadow mt-[50%] font-sans`}
+const slideUp = keyframes`
+from {
+    bottom: -125px;
+}
+to {
   bottom: 0;
+}
 `;
+
+const ModalWrapper = styled.div`
+  ${tw`bg-white flex flex-col items-center absolute border-solid rounded-xl h-auto w-full shadow font-sans`}
+  bottom: 0;
+  animation-duration: 0.3s;
+  animation-timing-function: ease-in-out;
+  animation-name: ${slideUp};
+  animation-fill-mode: forwards;
+`;
+
 const ContentContainer = styled.div`
   ${tw`m-8 flex w-full justify-center space-x-2 cursor-pointer`}
 `;
