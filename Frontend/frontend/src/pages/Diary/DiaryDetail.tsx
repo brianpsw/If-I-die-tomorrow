@@ -146,23 +146,23 @@ const StyledCommentForm = styled.form`
 
 const StyledInput = styled.input`
   ${tw``}
-  padding-right: 50px;
   padding-left: 2%;
-  font-size: 1.5rem;
+  // font-size: 1.5rem;
   width: 100%;
   color: black;
   border-radius: 10px;
 `;
 
 const StyledButton = styled.button`
-  ${tw`px-4 py-2 rounded`}
+  ${tw`text-p2 px-4 py-2 rounded`}
   position: absolute;
-  font-size: 1.5rem;
+  // font-size: 1.5rem;
   font-weight: bold;
   color: gray;
   height: 100%;
   width: 50px;
-  right: 0;
+  right: 1%;
+  white-space: nowrap;
   // border: solid 1px black;
 `;
 
