@@ -98,9 +98,7 @@ export default function Home() {
         setUserData(jsonData);
       } catch (error) {}
     }
-    if (Object.keys(userData).length === 0) {
-      fetchData();
-    }
+    fetchData();
   }, []);
 
   if (Object.keys(userData).length === 0) {
