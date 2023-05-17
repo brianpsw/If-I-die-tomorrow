@@ -26,6 +26,12 @@ const Slide = styled.div<{ imgUrl: string }>`
   ${tw`w-full h-full bg-contain bg-no-repeat bg-center flex-none`}
   ${({ imgUrl }) => css`
     background-image: url(${imgUrl});
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    width: 100%;
+    background-attachment: fixed;
   `}
 `;
 
@@ -44,18 +50,18 @@ const Carousel = () => {
       location.startsWith('/photo-cloud') ||
       location === '/'
     ) {
-      setCurrentIndex(3);
+      setCurrentIndex(2);
     } else if (
       location.startsWith('/diary') ||
       location.startsWith('/survey')
     ) {
-      setCurrentIndex(1);
+      setCurrentIndex(0);
     } else if (location.startsWith('/bucket')) {
-      setCurrentIndex(2);
+      setCurrentIndex(1);
     } else if (location.startsWith('/feed')) {
+      setCurrentIndex(3);
+    } else if (location.startsWith('/mypage') || location.startsWith('/will')) {
       setCurrentIndex(4);
-    } else if (location.startsWith('/mypage' || location.startsWith('will'))) {
-      setCurrentIndex(5);
     }
   }, [location]);
   const backgroundImage = [Image1, Image2, Image3, Image4, Image5];

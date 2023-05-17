@@ -2,7 +2,7 @@ import tw from 'twin.macro';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
-import AppTitle from '../../assets/images/app_title.svg';
+import AppTitle from '../../assets/images/text_logo.png';
 
 const Container = styled.div`
   ${tw`flex flex-col justify-center rounded-xl items-center p-[8px] m-[24px] bg-gray-100/80`}

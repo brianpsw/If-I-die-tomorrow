@@ -436,167 +436,131 @@ function MyPage() {
       {isBottomModalOpen ? (
         <BottomModal onClose={onLogoutClose} children="생존 여부 알림" />
       ) : null}
-      <Background>
-        <Logo />
-        <Container>
-          <UserInfo />
 
-          <SettingBox>
-            <h4 className="text-h4">사후 전송 서비스 설정</h4>
-            <br />
-            <IconWithText>
-              <p className="text-p1" style={{ fontWeight: 'bold' }}>
-                생존 여부 알림
-              </p>
-              <Icon
-                icon="line-md:question-circle-twotone"
-                onClick={openBottomModal}
+      <Logo />
+      <Container>
+        <UserInfo />
+
+        <SettingBox>
+          <h4 className="text-h4">사후 전송 서비스 설정</h4>
+          <br />
+          <IconWithText>
+            <p className="text-p3" style={{ fontWeight: 'bold' }}>
+              생존 여부 알림
+            </p>
+            <Icon
+              icon="line-md:question-circle-twotone"
+              onClick={openBottomModal}
+            />
+          </IconWithText>
+          <RadioContainer>
+            <RadioButtonLabel>
+              동의
+              <RadioButton
+                name="consent"
+                value="agree"
+                checked={consent === 'agree'}
+                onChange={handleConsentChange}
+                onClick={() => setShowModal(true)}
+                disabled={!serviceEnabled}
               />
-            </IconWithText>
-            <RadioContainer>
-              <RadioButtonLabel>
-                동의
-                <RadioButton
-                  name="consent"
-                  value="agree"
-                  checked={consent === 'agree'}
-                  onChange={handleConsentChange}
-                  onClick={() => setShowModal(true)}
-                  disabled={!serviceEnabled}
-                />
-              </RadioButtonLabel>
-              <RadioButtonLabel>
-                비동의
-                <RadioButton
-                  name="consent"
-                  value="disagree"
-                  checked={consent === 'disagree'}
-                  onChange={handleConsentChange}
-                  disabled={!serviceEnabled}
-                />
-              </RadioButtonLabel>
-            </RadioContainer>
-            {submitted && (
-              <div
+            </RadioButtonLabel>
+            <RadioButtonLabel>
+              비동의
+              <RadioButton
+                name="consent"
+                value="disagree"
+                checked={consent === 'disagree'}
+                onChange={handleConsentChange}
+                disabled={!serviceEnabled}
+              />
+            </RadioButtonLabel>
+          </RadioContainer>
+          {submitted && (
+            <div
+              style={{
+                color: receiverDisabled ? '#A9A9A9' : 'inherit',
+              }}
+            >
+              <p className="text-p1">내 번호 : {phone}</p>
+              <p className="text-p1" style={{ fontSize: '0.8rem' }}>
+                개인정보 이용 및 수집에 동의하셨습니다.
+              </p>
+              <br />
+            </div>
+          )}
+          <IconWithText>
+            <p className="text-p3" style={{ fontWeight: 'bold' }}>
+              내 기록 받아볼 사람
+            </p>
+            <Icon
+              icon="line-md:question-circle-twotone"
+              onClick={openBottomModal}
+            />
+          </IconWithText>
+          {receivers &&
+            receivers.map(
+              (receiver, index) =>
+                receiverTexts.length < 3 && (
+                  <InputRow key={index}>
+                    <input
+                      type="text"
+                      placeholder="이름"
+                      ref={inputRefs[index].name}
+                      value={receiver.name}
+                      onChange={(e) => handleReceiverChange(index, 'name', e)}
+                      disabled={!serviceEnabled || receiverDisabled}
+                    />
+
+                    <input
+                      type="tel"
+                      placeholder="전화번호"
+                      ref={inputRefs[index].phone}
+                      value={receiver.phone}
+                      onChange={(e) => handleReceiverChange(index, 'phone', e)}
+                      disabled={!serviceEnabled || receiverDisabled}
+                    />
+                  </InputRow>
+                ),
+            )}
+          {receiverTexts &&
+            receiverTexts.map((text, index) => (
+              <Receiver
+                key={index}
                 style={{
                   color: receiverDisabled ? '#A9A9A9' : 'inherit',
                 }}
               >
-                <p className="text-p1">내 번호 : {phone}</p>
-                <p className="text-p1" style={{ fontSize: '0.8rem' }}>
-                  개인정보 이용 및 수집에 동의하셨습니다.
-                </p>
-                <br />
-              </div>
-            )}
-            <IconWithText>
-              <p
-                className="text-p1"
-                style={{ fontWeight: 'bold', marginTop: '3%' }}
-              >
-                내 기록 받아볼 사람
-              </p>
+                <div>
+                  <p>{text.name}</p>
+
+                  <p>{text.phone}</p>
+                </div>
+                <Icon
+                  icon="line-md:remove"
+                  onClick={
+                    receiverDisabled ? undefined : () => handleDelete(index)
+                  }
+                  style={
+                    receiverDisabled
+                      ? { color: '#A9A9A9', cursor: 'default' }
+                      : { cursor: 'pointer' }
+                  }
+                />
+              </Receiver>
+            ))}
+          {receivers.length < 3 && receiverTexts.length < 3 && (
+            <IconContainer>
               <Icon
-                icon="line-md:question-circle-twotone"
-                onClick={openBottomModal}
+                icon="line-md:plus-circle"
+                onClick={receiverDisabled ? undefined : addReceiver}
+                style={receiverDisabled ? { color: '#A9A9A9' } : {}}
               />
-            </IconWithText>
-            <span>리시버는 최대 3명까지 등록 가능합니다.</span>
-            {receivers &&
-              receivers.map(
-                (receiver, index) =>
-                  receiverTexts.length < 3 && (
-                    <InputRow key={index}>
-                      <input
-                        type="text"
-                        placeholder="이름"
-                        ref={inputRefs[index].name}
-                        value={receiver.name}
-                        onChange={(e) => handleReceiverChange(index, 'name', e)}
-                        disabled={
-                          !serviceEnabled ||
-                          receiverDisabled ||
-                          receiverTexts.length >= 3
-                        }
-                      />
-
-                      <input
-                        type="tel"
-                        placeholder="전화번호"
-                        ref={inputRefs[index].phone}
-                        value={receiver.phone}
-                        onChange={(e) =>
-                          handleReceiverChange(index, 'phone', e)
-                        }
-                        disabled={
-                          !serviceEnabled ||
-                          receiverDisabled ||
-                          receiverTexts.length >= 3
-                        }
-                      />
-                      {receivers.length < 3 && (
-                        <IconContainer>
-                          <Icon
-                            icon="line-md:plus-circle"
-                            onClick={
-                              receiverDisabled || receiverTexts.length >= 3
-                                ? undefined
-                                : addReceiver
-                            }
-                            style={
-                              receiverDisabled || receiverTexts.length >= 3
-                                ? { color: '#A9A9A9' }
-                                : {}
-                            }
-                          />
-                        </IconContainer>
-                      )}
-                    </InputRow>
-                  ),
-              )}
-            <p
-              className="text-p1"
-              style={{
-                fontWeight: 'bold',
-                marginBottom: '4%',
-                marginTop: '6%',
-              }}
-            >
-              등록된 리시버
-            </p>
-            {receiverTexts && receiverTexts.length > 0 ? (
-              receiverTexts.map((text, index) => (
-                <Receiver
-                  key={index}
-                  style={{
-                    color: receiverDisabled ? '#A9A9A9' : 'inherit',
-                  }}
-                >
-                  <ReceiverTextWrap>
-                    <NameText>{text.name}</NameText>
-
-                    <PhoneText>{text.phone}</PhoneText>
-                  </ReceiverTextWrap>
-                  <Icon
-                    icon="line-md:remove"
-                    onClick={
-                      receiverDisabled ? undefined : () => handleDelete(index)
-                    }
-                    style={
-                      receiverDisabled
-                        ? { color: '#A9A9A9', cursor: 'default' }
-                        : { cursor: 'pointer' }
-                    }
-                  />
-                </Receiver>
-              ))
-            ) : (
-              <p>등록된 리시버가 없습니다.</p>
-            )}
-          </SettingBox>
-          <Withdrawal></Withdrawal>
-        </Container>
-      </Background>
+            </IconContainer>
+          )}
+        </SettingBox>
+        <Withdrawal></Withdrawal>
+      </Container>
     </div>
   );
 }

@@ -96,8 +96,7 @@ function Feed() {
   };
 
   return (
-    <Background>
-      <Logo />
+    <div>
       <Container>
         <FeedTab>
           <Tab
@@ -116,7 +115,7 @@ function Feed() {
         {feedType === 'diary' ? <DiaryFeed /> : <BucketFeed />}
       </Container>
       {showScrollToTop && <TopButton scrollToTop={scrollToTop} />}
-    </Background>
+    </div>
   );
 }
 

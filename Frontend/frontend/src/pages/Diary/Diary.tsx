@@ -10,11 +10,12 @@ import { defaultApi } from '../../api/axios';
 import './CalendarStyles.css';
 import Calendar from '../../components/diary/Calendar';
 import backgroundImg from '../../assets/images/bucket_bg.png';
-import IIDT from '../../assets/icons/IIDT.svg';
+import IIDT from '../../assets/images/text_logo.png';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
+import surveyIcon from '../../assets/icons/survey.svg';
 
 import {
   CardWrap,
@@ -43,7 +44,7 @@ const Container = styled.div`
   padding-bottom: 10%;
 `;
 const LogoContainer = styled.img`
-  ${tw`self-start mt-[60px] w-[71px] h-[44px] my-[8px]`}
+  ${tw`self-start mt-[60px] my-[8px]`}
 `;
 
 const FormContainer = styled.div`
@@ -167,6 +168,9 @@ function Diary() {
     setCompleteTitle(e.currentTarget.value);
     setIsCompleteTitleValid(e.currentTarget.value.length > 0);
   };
+  const moveToSurvey = () => {
+    navigate('/survey');
+  };
   useEffect(() => {
     // console.log(diarys.length);
     if (diarys.length === 0) {
@@ -186,7 +190,15 @@ function Diary() {
     <div className="w-full">
       {/* <Background> */}
       <Container>
-        <LogoContainer src={IIDT} />
+        <div className="flex w-full justify-between">
+          <LogoContainer src={IIDT} />
+          <img
+            className="mt-[60px]"
+            src={surveyIcon}
+            onClick={moveToSurvey}
+            alt="survey_icon"
+          />
+        </div>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}
@@ -287,7 +299,7 @@ function Diary() {
             <div className="flex w-full justify-center my-4">
               <Button
                 onClick={handleSubmit}
-                color="#B3E9EB"
+                color={isValid ? '#0E848A' : '#B3E9EB'}
                 size="sm"
                 disabled={isValid ? false : true}
               >
