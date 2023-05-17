@@ -37,8 +37,26 @@ function Room() {
     setLeftPosition(() => tmpLeft);
   }, [tmpTop, tmpLeft]);
 
-  const downloadWill = () => {
-    console.log('여기에 api연결해줘');
+  const downloadWill = async () => {
+    try {
+      const response = await fetch(
+        'https://ifidietomorrow.duckdns.org/api/after/download',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/octet-stream',
+          },
+          credentials: 'include',
+        },
+      );
+      const blob = await response.blob();
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'IIDT.zip';
+      downloadLink.click();
+    } catch (error) {
+      console.error('Error: ', error);
+    }
   };
 
   return (
@@ -91,7 +109,7 @@ function Room() {
         )}
         {userData && userData.preview ? (
           <div
-            className="min-w-[120px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center"
+            className="min-w-[120px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center cursor-pointer"
             onClick={() => downloadWill()}
           >
             <Icon
