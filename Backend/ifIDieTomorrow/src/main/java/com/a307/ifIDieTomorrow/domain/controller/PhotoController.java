@@ -45,6 +45,7 @@ public class PhotoController {
 	public ResponseEntity<CreateCategoryResDto> createCategory(
 			@RequestPart CreateCategoryDto data,
 			@RequestPart MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException {
+		if (image != null && !FileChecker.imageCheck(image.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createCategory(data, image));
 	}
 	
@@ -86,7 +87,7 @@ public class PhotoController {
 	public ResponseEntity<CreatePhotoResDto> createPhoto(
 			@RequestPart CreatePhotoDto data,
 			@RequestPart MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
-		if (!FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		if (!FileChecker.imageCheck(photo.getInputStream()) && !FileChecker.videoCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createPhoto(data, photo));
 	}
 	
