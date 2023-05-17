@@ -7,6 +7,7 @@ import com.a307.ifIDieTomorrow.global.util.FileUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Tag(name = "사후 페이지", description = "APIs for AFTER")
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/after")
 public class AfterController {
@@ -56,7 +58,7 @@ public class AfterController {
         try {
             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
         // Fallback to the default content type if type could not be determined

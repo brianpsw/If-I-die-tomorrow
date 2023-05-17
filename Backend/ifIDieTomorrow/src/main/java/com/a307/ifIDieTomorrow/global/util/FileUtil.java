@@ -2,6 +2,7 @@ package com.a307.ifIDieTomorrow.global.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,6 +18,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Component
+@Slf4j
 public class FileUtil {
 
     public void zipDirectory(String sourceDir, String zipFilePath) throws IOException {
@@ -106,7 +108,7 @@ public class FileUtil {
         try {
             FileUtils.copyDirectory(sourcePath, destinationPath);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
