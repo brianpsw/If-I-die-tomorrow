@@ -710,6 +710,35 @@ class CommunityServiceImplTest {
 				then(commentRepository).should(never()).save(any(Comment.class));
 			}
 
+			@Test
+			@DisplayName("빈 댓글 작성 시 예외처리")
+			void throwsExceptionWhenEmptyComment() {
+
+				// Given
+				Long commentId = 1L;
+
+				Comment comment = Comment.builder()
+						.commentId(commentId)
+						.userId(user.getUserId())
+						.content("Old content")
+						.build();
+
+				UpdateCommentReqDto req = UpdateCommentReqDto.builder()
+						.commentId(commentId)
+						.content("")
+						.build();
+
+				given(commentRepository.findById(commentId)).willReturn(Optional.of(comment));
+
+				// When & Then
+				BDDAssertions.thenThrownBy(() -> communityService.updateComment(req))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용이 없습니다.");
+
+				then(commentRepository).should(never()).save(any(Comment.class));
+
+			}
+
 
 		}
 
