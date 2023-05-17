@@ -39,6 +39,11 @@ function BucketEditModal({
 }: BucketEditModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [contentValue, setContentValue] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContentValue(e.currentTarget.value);
+    setIsValid(e.currentTarget.value.length > 0);
+  };
   useEffect(() => {
     setContentValue(selectedBucketContent);
   }, [selectedBucketContent]);
@@ -111,12 +116,17 @@ function BucketEditModal({
     <ModalOverlay>
       <ModalWrapper ref={modalRef}>
         <ContentInputContainer
-          onChange={(e) => setContentValue(e.target.value)}
+          onChange={handleContentChange}
           value={contentValue}
           placeholder={selectedBucketContent}
         />
         <div className="flex w-full justify-center my-4">
-          <Button onClick={handleEditSubmit} color="#B3E9EB" size="sm">
+          <Button
+            onClick={handleEditSubmit}
+            color={isValid ? '#0E848A' : '#B3E9EB'}
+            size="sm"
+            disabled={isValid ? false : true}
+          >
             수정 완료
           </Button>
         </div>
