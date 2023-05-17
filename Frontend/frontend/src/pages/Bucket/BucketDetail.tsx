@@ -188,7 +188,7 @@ const CommentDate = styled.div`
 `;
 
 const CommentContent = styled.div`
-  ${tw`text-p3`}
+  ${tw`text-p1`}
   max-width: 90%;
   word-break: break-word;
 `;
