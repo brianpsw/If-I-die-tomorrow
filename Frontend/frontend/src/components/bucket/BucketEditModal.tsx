@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../common/Button';
+import Loading from '../common/Loading';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -40,6 +41,7 @@ function BucketEditModal({
   const modalRef = useRef<HTMLDivElement>(null);
   const [contentValue, setContentValue] = useState('');
   const [isValid, setIsValid] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContentValue(e.currentTarget.value);
     setIsValid(e.currentTarget.value.length > 0);
@@ -47,7 +49,8 @@ function BucketEditModal({
   useEffect(() => {
     setContentValue(selectedBucketContent);
   }, [selectedBucketContent]);
-  const handleEditSubmit = () => {
+  const handleEditSubmit = async () => {
+    setIsLoading(true);
     //버킷리스트 수정 api 연결
     const get_user_bucket = async () => {
       try {
@@ -72,7 +75,7 @@ function BucketEditModal({
             withCredentials: true,
           },
         );
-        get_user_bucket();
+        await get_user_bucket();
         Swal.fire({
           title: '버킷 수정 성공!',
           icon: 'success',
@@ -86,9 +89,11 @@ function BucketEditModal({
           confirmButtonText: '확인',
         });
         throw error;
+      } finally {
+        setIsLoading(false);
       }
     };
-    patch_bucket();
+    await patch_bucket();
     onClose?.();
   };
   const handleClose = () => {
@@ -114,23 +119,27 @@ function BucketEditModal({
 
   return (
     <ModalOverlay>
-      <ModalWrapper ref={modalRef}>
-        <ContentInputContainer
-          onChange={handleContentChange}
-          value={contentValue}
-          placeholder={selectedBucketContent}
-        />
-        <div className="flex w-full justify-center my-4">
-          <Button
-            onClick={handleEditSubmit}
-            color={isValid ? '#0E848A' : '#B3E9EB'}
-            size="sm"
-            disabled={isValid ? false : true}
-          >
-            수정 완료
-          </Button>
-        </div>
-      </ModalWrapper>
+      {isLoading ? (
+        <Loading /> // 로딩 상태가 true일 경우 Loading 컴포넌트를 렌더링합니다.
+      ) : (
+        <ModalWrapper ref={modalRef}>
+          <ContentInputContainer
+            onChange={handleContentChange}
+            value={contentValue}
+            placeholder={selectedBucketContent}
+          />
+          <div className="flex w-full justify-center my-4">
+            <Button
+              onClick={handleEditSubmit}
+              color={isValid ? '#0E848A' : '#B3E9EB'}
+              size="sm"
+              disabled={isValid ? false : true}
+            >
+              수정 완료
+            </Button>
+          </div>
+        </ModalWrapper>
+      )}
     </ModalOverlay>
   );
 }

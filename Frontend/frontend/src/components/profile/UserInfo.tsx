@@ -67,14 +67,12 @@ function UserInfo() {
         <h4 className="text-h4">{loggedInUserNickname}</h4>
         <SettingBox>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img
+            {/* <img
               src={Myprofile}
               alt="myprofile-icon"
               style={{ marginRight: '3%' }}
-            />
-            <h4 className="text-h4" style={{ color: '#04373B' }}>
-              내 정보
-            </h4>
+            /> */}
+            <h4 className="text-h4">내 정보</h4>
           </div>
           <br />
           <p className="text-p1">이름: {loggedInUserName}</p>

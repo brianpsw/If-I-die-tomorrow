@@ -13,6 +13,7 @@ import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 import Button from '../common/Button';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
+import Loading from '../common/Loading';
 const Container = styled.div`
   ${tw`flex flex-col items-center w-full my-2`}
 `;
@@ -82,6 +83,7 @@ function BucketListItem({
   const [isCompleteDateValid, setIsCompleteDateValid] = useState(false);
   const [isCompleteContentValid, setIsCompleteContentValid] = useState(false);
   const [bucketTitle, setBucketTitle] = useState(bucket.title);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => {
     const title = bucket.title;
     const maxLength = 18;
@@ -99,7 +101,8 @@ function BucketListItem({
       setIsValid(false);
     }
   }, [isCompleteDateValid, isCompleteContentValid]);
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsLoading(true);
     //버킷 완료 api 연결
     const formData = new FormData();
     let updatePhoto = false;
@@ -151,10 +154,12 @@ function BucketListItem({
           confirmButtonText: '확인',
         });
         throw error;
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    put_bucket();
+    await put_bucket();
   };
   const handleDeleteItemImage = () => {
     setPhoto(null);
@@ -196,6 +201,7 @@ function BucketListItem({
 
   return (
     <Container>
+      {isLoading && <Loading />}
       {/* <BucketContainer state={BucketState}> isClicked={isClicked}*/}
       <BucketContainer>
         {bucket.complete ? (
