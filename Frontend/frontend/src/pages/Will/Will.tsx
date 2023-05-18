@@ -1,6 +1,6 @@
 import tw from 'twin.macro';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import TopBar from '../../components/common/TopBar';
 import AppTitle from '../../assets/images/text_logo.png';
 import Lottie from 'react-lottie-player';
@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 const LinkWrapper = styled.div`
   ${tw`flex flex-col w-full text-h3 items-center my-[8px]`}
-  height: 17vh;
+  height: 120px;
   justify-content: center;
 `;
 const SmallBox = styled.div`
@@ -33,9 +33,8 @@ const TextBox = styled.div`
 `;
 
 function Will(): JSX.Element {
-  const navigate = useNavigate();
   return (
-    <div style={{ paddingBottom: '30%' }}>
+    <div className="min-h-[100vh]" style={{ paddingBottom: '30%' }}>
       <TopBar title="유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
