@@ -10,6 +10,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
 import AppTitle from '../../assets/images/text_logo.png';
+import Loading from '../../components/common/Loading';
 const Container = styled.div`
   ${tw`flex flex-col justify-center rounded-xl items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
@@ -24,6 +25,7 @@ const CanvasButtonContainer = styled.div`
   ${tw`flex justify-center items-center`}
 `;
 function WillSign(): JSX.Element {
+  const [loadingOpen, setLoadingOpen] = useState<boolean>(false);
   const userInfo = useRecoilState(userState);
   const [sign, setSign] = useState<File | null>(null);
   const [defaultSign, setDefaultSign] = useState('');
@@ -53,6 +55,7 @@ function WillSign(): JSX.Element {
       formData.append('photo', sign);
     }
     const patch_will_sign = async () => {
+      setLoadingOpen(true);
       try {
         await defaultApi.patch(requests.PATCH_WILL_SIGN(), formData, {
           withCredentials: true,
@@ -60,6 +63,7 @@ function WillSign(): JSX.Element {
         get_will();
         setEditSign(false);
         setIsValid(false);
+        setLoadingOpen(false);
         Swal.fire({
           title: '서명 등록 성공!',
           icon: 'success',
@@ -67,6 +71,7 @@ function WillSign(): JSX.Element {
           showConfirmButton: false,
         });
       } catch (error) {
+        setLoadingOpen(false);
         Swal.fire({
           title: '서명 등록 실패...',
           icon: 'error',
