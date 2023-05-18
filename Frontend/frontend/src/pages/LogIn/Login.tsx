@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import requests from '../../api/config';
-// import { defaultApi } from '../../api/axios';
+import { useSetRecoilState } from 'recoil';
+import { loginState } from '../../states/UserState';
 import tw from 'twin.macro';
 import Logo from '../../assets/icons/logo.svg';
 import AppTitle from '../../assets/images/app_title.svg';
@@ -21,11 +22,14 @@ const InfoText = styled.p`
 `;
 
 function Login() {
+  const setIsLogin = useSetRecoilState(loginState);
   const kakaoLogin = () => {
+    setIsLogin(() => true);
     window.location.href = requests.KAKAO_LOGIN!;
   };
 
   const naverLogin = () => {
+    setIsLogin(() => true);
     window.location.href = requests.NAVER_LOGIN!;
   };
   return (

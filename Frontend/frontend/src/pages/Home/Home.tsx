@@ -2,7 +2,7 @@ import React, { Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useSetRecoilState, useRecoilState } from 'recoil';
-import { userState } from '../../states/UserState';
+import { userState, loginState } from '../../states/UserState';
 import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
@@ -14,6 +14,7 @@ import Loading from '../../components/common/Loading';
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
   const setCategory = useSetRecoilState(categoryState);
   const navigate = useNavigate();
 
@@ -55,7 +56,7 @@ function Home() {
   };
 
   useEffect(() => {
-    if (user?.name === undefined) {
+    if (user?.name === undefined && isLogin === false) {
       navigate('/login');
     } else {
       get_user();

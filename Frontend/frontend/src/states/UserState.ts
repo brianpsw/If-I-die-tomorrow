@@ -21,3 +21,9 @@ export const userState = atom<User | null>({
   default: null,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const loginState = atom<boolean>({
+  key: 'loginState',
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
