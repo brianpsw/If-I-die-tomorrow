@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
-import RecordRTC, { CanvasRecorder } from 'recordrtc';
+import RecordRTC from 'recordrtc';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import TopBar from '../../components/common/TopBar';
@@ -10,11 +10,13 @@ import Button from '../../components/common/Button';
 import './Will.css';
 import AppTitle from '../../assets/images/text_logo.png';
 import Swal from 'sweetalert2';
+import Loading from '../../components/common/Loading';
 
 const Container = styled.div`
   ${tw`flex flex-col justify-center rounded-lg items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
 function WillVideo(): JSX.Element {
+  const [loadingOpen, setLoadingOpen] = useState<boolean>(false);
   const webcamRef = useRef<Webcam>(null);
   const recordRef = useRef<RecordRTC | null>(null);
   const previewRef = useRef<HTMLVideoElement>(null);
@@ -40,20 +42,23 @@ function WillVideo(): JSX.Element {
   }, []);
   const handleDelete = () => {
     const delete_will_video = async () => {
+      setLoadingOpen(true);
       try {
         await defaultApi.delete(requests.DELETE_WILL_VIDEO(), {
           withCredentials: true,
         });
         get_will();
+        setLoadingOpen(false);
         Swal.fire({
-          title: '동영상 등록 성공!',
+          title: '동영상 삭제 성공!',
           icon: 'success',
           timer: 1000,
           showConfirmButton: false,
         });
       } catch (error) {
+        setLoadingOpen(false);
         Swal.fire({
-          title: '동영상 등록 실패...',
+          title: '동영상 삭제 실패...',
           icon: 'error',
           confirmButtonText: '확인',
         });
@@ -69,6 +74,7 @@ function WillVideo(): JSX.Element {
       formData.append('video', video);
     }
     const patch_will_video = async () => {
+      setLoadingOpen(true);
       try {
         await defaultApi.patch(requests.PATCH_WILL_VIDEO(), formData, {
           withCredentials: true,
@@ -76,7 +82,20 @@ function WillVideo(): JSX.Element {
         get_will();
         setEditVideo(false);
         setIsRecorded(false);
+        setLoadingOpen(false);
+        Swal.fire({
+          title: '서명 등록 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
       } catch (error) {
+        setLoadingOpen(false);
+        Swal.fire({
+          title: '서명 등록 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -164,7 +183,8 @@ function WillVideo(): JSX.Element {
     setIsRecorded(false);
   };
   return (
-    <div className="pb-[70px]">
+    <div className="min-h-[100vh] pb-[70px]">
+      {loadingOpen ? <Loading /> : ''}
       <TopBar title="동영상 유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />

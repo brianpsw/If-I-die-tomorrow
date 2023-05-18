@@ -53,21 +53,25 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dateFormat = 'yyyy.MM';
+  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
 
   useEffect(() => {
-    const today = new Date();
-    if (typeof diarys === 'object') {
-      const diary = diarys.find((diary) =>
-        isSameDay(today, new Date(diary.createdAt)),
-      );
-      setSameDay(true);
-      if (diary) {
-        setSelectedDate(new Date(diary.createdAt));
-        showDetailsHandle(diary);
-      } else {
-        showDetailsHandle(null);
+    if (isFirstRender === false) {
+      const today = new Date();
+      if (typeof diarys === 'object') {
+        const diary = diarys.find((diary) =>
+          isSameDay(today, new Date(diary.createdAt)),
+        );
+        setSameDay(true);
+        if (diary) {
+          setSelectedDate(new Date(diary.createdAt));
+          showDetailsHandle(diary);
+        } else {
+          showDetailsHandle(null);
+        }
       }
     }
+    setIsFirstRender(false);
   }, [diarys]);
 
   // useEffect(() => {
@@ -82,11 +86,9 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
-      console.log(currentMonth);
     }
     if (btnType === 'next') {
       setCurrentMonth(addWeeks(currentMonth, 1));
-      console.log(currentMonth);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
@@ -7,6 +7,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
 import AppTitle from '../../assets/images/text_logo.png';
+import Loading from '../../components/common/Loading';
 const Container = styled.div`
   ${tw`flex flex-col h-[70vh] justify-center rounded-xl items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
@@ -14,10 +15,12 @@ const WillContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full h-[500px] text-p1 p-[16px] rounded border-black break-all mb-[16px]`}
 `;
 function WillText(): JSX.Element {
+  const [loadingOpen, setLoadingOpen] = useState<boolean>(false);
   const [content, setContent] = useState('');
   const [defaultContent, setDefaultContent] = useState('');
   const [isValid, setIsValid] = useState<Boolean>(false);
   const patch_will_text = async () => {
+    setLoadingOpen(true);
     try {
       await defaultApi.patch(
         requests.PATCH_WILL_TEXT(),
@@ -28,13 +31,22 @@ function WillText(): JSX.Element {
           withCredentials: true,
         },
       );
+      setIsValid(false);
+      setLoadingOpen(false);
       Swal.fire({
-        title: '유언장 등록 성공!',
+        title: '유언장 작성 성공!',
         icon: 'success',
         timer: 1000,
         showConfirmButton: false,
       });
     } catch (error) {
+      setLoadingOpen(false);
+
+      Swal.fire({
+        title: '유언장 작성 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
       throw error;
     }
   };
@@ -67,7 +79,8 @@ function WillText(): JSX.Element {
     }
   }, [content, defaultContent]);
   return (
-    <div className="pb-[70px]">
+    <div className="min-h-[100vh] pb-[70px]">
+      {loadingOpen ? <Loading /> : ''}
       <TopBar title="유언장 작성" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />

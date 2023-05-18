@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-// import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import './CalendarStyles.css';
 import Calendar from '../../components/diary/Calendar';
-import backgroundImg from '../../assets/images/bucket_bg.png';
 import IIDT from '../../assets/images/text_logo.png';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
 import CheckedIcon from '../../assets/icons/checked_box.svg';
 import UnCheckedIcon from '../../assets/icons/unchecked_box.svg';
 import surveyIcon from '../../assets/icons/survey.svg';
+import Loading from '../../components/common/Loading';
 
 import {
   CardWrap,
@@ -30,8 +30,6 @@ import {
   Comments,
   DateWrap,
 } from '../../components/feed/FeedEmotion';
-import { isSameDay } from 'date-fns';
-
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
@@ -83,6 +81,7 @@ function Diary() {
   const [insight, setInsight] = useState<string | null>('');
   const [sameDay, setSameDay] = useState<boolean>(false);
   //Form controller
+  const [loadingOpen, setLoadingOpen] = useState<boolean>(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
@@ -125,6 +124,7 @@ function Diary() {
     );
 
     const post_diary = async () => {
+      setLoadingOpen(true);
       try {
         await defaultApi.post(requests.POST_DIARY(), formData, {
           withCredentials: true,
@@ -132,9 +132,22 @@ function Diary() {
             'Content-Type': 'multipart/form-data',
           },
         });
+        setLoadingOpen(false);
 
+        Swal.fire({
+          title: '다이어리 완료 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
+        });
         get_user_diary();
       } catch (error) {
+        setLoadingOpen(false);
+        Swal.fire({
+          title: '다이어리 완료 실패...',
+          icon: 'error',
+          confirmButtonText: '확인',
+        });
         throw error;
       }
     };
@@ -190,7 +203,6 @@ function Diary() {
         // console.log(response.data);
       } catch (error: any) {
         if (error.response.status === 404) {
-          console.log('설문조사 안했어');
         }
         throw error;
       }
@@ -205,6 +217,7 @@ function Diary() {
     if (diaryData) {
       setData(diaryData);
       setFormOpen(false);
+      // setFormOpen2(false);
     } else {
       setData(diaryData);
       setFormOpen(true);
@@ -219,8 +232,9 @@ function Diary() {
   //   }
   // }, [data, sameDay]);
   return (
-    <div className="w-full">
+    <div className="min-h-[100vh]">
       {/* <Background> */}
+      {loadingOpen ? <Loading /> : ''}
       <Container>
         <div className="flex w-full justify-between">
           <LogoContainer src={IIDT} />
@@ -276,7 +290,7 @@ function Diary() {
         ) : (
           ''
         )}
-        {formOpen && sameDay && data ? (
+        {formOpen && sameDay && !data ? (
           <FormContainer>
             <form action="submit">
               <TitleInputContainer
