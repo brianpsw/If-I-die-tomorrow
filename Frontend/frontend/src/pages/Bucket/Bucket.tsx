@@ -15,7 +15,10 @@ const Container = styled.div`
   padding-bottom: 10%;
 `;
 const LogoContainer = styled.img`
-  ${tw`self-start mt-[60px] my-[8px]`}
+  ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
+`;
+const TopTitle = styled.div`
+  ${tw`flex w-full text-h2 text-white justify-center`}
 `;
 interface Bucket {
   bucketId: number;
@@ -110,6 +113,10 @@ function Bucket() {
 
       <Container>
         <LogoContainer src={IIDT} />
+        <TopTitle>
+          <span>버킷리스트 페이지</span>
+        </TopTitle>
+
         {buckets &&
           buckets.map((bucket) => (
             <BucketListItem
@@ -121,7 +128,14 @@ function Bucket() {
               setBuckets={setBuckets}
             />
           ))}
-
+        {buckets.length === 0 ? (
+          <div className="mt-[100px] text-center text-h2">
+            생성된 버킷리스트가 없습니다. <br /> 우측 하단의 버튼을 눌러
+            버킷리스트를 생성해 보세요
+          </div>
+        ) : (
+          ''
+        )}
         <img
           onClick={handleCreateModalOpen}
           className="fixed bottom-[78px] right-[10px] cursor-pointer"
