@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-// import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -10,7 +9,6 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import './CalendarStyles.css';
 import Calendar from '../../components/diary/Calendar';
-import backgroundImg from '../../assets/images/bucket_bg.png';
 import IIDT from '../../assets/images/text_logo.png';
 import Button from '../../components/common/Button';
 import uploadIcon from '../../assets/icons/camera_alt.svg';
@@ -32,8 +30,6 @@ import {
   Comments,
   DateWrap,
 } from '../../components/feed/FeedEmotion';
-import { isSameDay } from 'date-fns';
-
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
@@ -87,7 +83,6 @@ function Diary() {
   //Form controller
   const [loadingOpen, setLoadingOpen] = useState<boolean>(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
-  const [formOpen2, setFormOpen2] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
   const [completeTitle, setCompleteTitle] = useState('');
@@ -208,7 +203,6 @@ function Diary() {
         // console.log(response.data);
       } catch (error: any) {
         if (error.response.status === 404) {
-          console.log('설문조사 안했어');
         }
         throw error;
       }
