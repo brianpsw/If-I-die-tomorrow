@@ -30,9 +30,14 @@ import {
   Comments,
   DateWrap,
 } from '../../components/feed/FeedEmotion';
+
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
+`;
+
+const TopTitle = styled.div`
+  ${tw`flex w-full text-center text-h2 text-white`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[60px] my-[8px]`}
@@ -72,12 +77,11 @@ interface Diary {
 function Diary() {
   const navigate = useNavigate();
   const userInfo = useRecoilState(userState);
-  const [prevSelectedDate, setPrevSelectedDate] = useState<Date>(new Date());
-  const [prevSelectedMonth, setPrevSelectedMonth] = useState<Date>(new Date());
   const [data, setData] = useState<Diary | null>();
   const [diarys, setDiarys] = useState<Diary[]>([]);
   const [sameDay, setSameDay] = useState<boolean>(false);
   //Form controller
+  const [formOpen, setFormOpen] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
   const [completeTitle, setCompleteTitle] = useState('');
@@ -184,7 +188,14 @@ function Diary() {
       return setData(null);
     }
   };
-
+  useEffect(() => {
+    // console.log(diarys.length);
+    if (data) {
+      setFormOpen(true);
+    } else {
+      setFormOpen(false);
+    }
+  }, [data]);
   return (
     <div className="w-full">
       {/* <Background> */}
@@ -198,12 +209,11 @@ function Diary() {
             alt="survey_icon"
           />
         </div>
+        <TopTitle>다이어리 페이지</TopTitle>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}
           setSameDay={setSameDay}
-          setPrevSelectedDate={setPrevSelectedDate}
-          setPrevSelectedMonth={setPrevSelectedMonth}
         />
         {/* 해당 날짜에 데이터가 있을경우 다이어리 피드 보여주기 */}
         {data ? (
@@ -241,7 +251,7 @@ function Diary() {
         ) : (
           ''
         )}
-        {!data && sameDay ? (
+        {!data && sameDay && formOpen ? (
           <FormContainer>
             <form action="submit">
               <TitleInputContainer
