@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 const LinkWrapper = styled.div`
   ${tw`flex flex-col w-full text-h3 items-center my-[8px]`}
-  height: 15vh;
+  height: 17vh;
   justify-content: center;
 `;
 const SmallBox = styled.div`
@@ -52,7 +52,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <span>유언장 등록</span>
+              <p className="text-p3">유언장 등록</p>
             </TextBox>
           </LinkWrapper>
         </Link>
@@ -69,7 +69,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <span>서명 등록</span>
+              <p className="text-p3">서명 등록</p>
             </TextBox>
           </LinkWrapper>
         </Link>
@@ -86,7 +86,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <span>동영상 유언장</span>
+              <p className="text-p3">동영상 유언장</p>
             </TextBox>
           </LinkWrapper>
         </Link>
