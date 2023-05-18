@@ -55,7 +55,7 @@ const DiaryWrap = styled.div`
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  border: solid 2px #9e9e9e;
+  // border: solid 2px #9e9e9e;
   border-radius: 10px;
   position: relative;
 `;
@@ -134,7 +134,7 @@ const CommentBox = styled.div`
   color: black;
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  border: solid 1px #9e9e9e;
+  // border: solid 1px #9e9e9e;
   border-radius: 10px;
   position: relative;
 `;

@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import Lottie from 'react-lottie-player';
 import WillAnimation3 from '../../../src/assets/animation/many-papers.json';
 import WillAnimation4 from '../../../src/assets/animation/preview-animation.json';
+import Myprofile from '../../assets/icons/myprofile.svg';
 import {
   MyProfile,
   SettingBox,
@@ -65,7 +66,16 @@ function UserInfo() {
       <MyProfile>
         <h4 className="text-h4">{loggedInUserNickname}</h4>
         <SettingBox>
-          <h4 className="text-h4">내 정보</h4>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img
+              src={Myprofile}
+              alt="myprofile-icon"
+              style={{ marginRight: '3%' }}
+            />
+            <h4 className="text-h4" style={{ color: '#04373B' }}>
+              내 정보
+            </h4>
+          </div>
           <br />
           <p className="text-p1">이름: {loggedInUserName}</p>
           <p className="text-p1">이메일: {loggedInUserEmail}</p>

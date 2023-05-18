@@ -16,8 +16,8 @@ const LogoContainer = styled.div`
 const LogInContainer = styled.div`
   ${tw`flex items-center flex-col w-full mb-[180px] space-y-6 `}
 `;
-const InfoText = styled.span`
-  ${tw`text-center text-white text-p1 mx-6`}
+const InfoText = styled.p`
+  ${tw`text-center text-white text-p1 mx-6 mb-4`}
 `;
 
 function Login() {
@@ -36,9 +36,9 @@ function Login() {
       </LogoContainer>
       <LogInContainer>
         <InfoText>
-          당신의 남은 인생을 잘 정리해보고 싶나요?
+          당신의 남은 인생을 조금 더 알차고 가치있게,
           <br />
-          당신의 인생 저희 If I die tomorrow가 정리해드릴게요!
+          If I die tomorrow와 함께해요!
         </InfoText>
         <img
           className="cursor-pointer"

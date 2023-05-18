@@ -52,7 +52,7 @@ export const SettingBox = styled.div`
   ${tw`mb-4 mt-6 p-4 bg-white shadow rounded`}
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  border: solid 2px #9e9e9e;
+  // border: solid 2px #9e9e9e;
   border-radius: 10px;
   color: black;
   // width: 342px;
@@ -79,7 +79,7 @@ export const WillContent = styled.div`
   text-align: center;
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  border: solid 2px #9e9e9e;
+  // border: solid 2px #9e9e9e;
   border-radius: 10px;
   color: black;
   width: 43vw;
