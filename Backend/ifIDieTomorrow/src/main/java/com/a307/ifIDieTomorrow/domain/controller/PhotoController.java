@@ -73,13 +73,13 @@ public class PhotoController {
 	@DeleteMapping("/category/{categoryId}")
 	@Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
 	public ResponseEntity<Long> deleteCategory(
-			@PathVariable Long categoryId) throws NotFoundException {
+			@PathVariable Long categoryId) throws NotFoundException, IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(photoService.deleteCategory(categoryId));
 	}
 	
 	//////////////////////////
 	// APIs For PHOTO CLOUD //
-	////////////////////////// 이연수 똥멍청이
+	//////////////////////////
 	
 	@PostMapping(value = "", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE}) // 메타데이터의 takeAt? 추가 할 것
 	@Operation(summary = "포토 클라우드 작성", description = "포토 클라우드를 작성합니다.")

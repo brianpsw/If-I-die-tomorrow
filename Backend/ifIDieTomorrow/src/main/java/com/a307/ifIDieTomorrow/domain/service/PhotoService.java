@@ -24,7 +24,7 @@ public interface PhotoService {
 	
 	CreateCategoryResDto updateCategoryName (UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException;
 	
-	Long deleteCategory (Long categoryId) throws NotFoundException;
+	Long deleteCategory (Long categoryId) throws NotFoundException, IllegalArgumentException;
 	
 	List<CreateCategoryResDto> getCategory ();
 	

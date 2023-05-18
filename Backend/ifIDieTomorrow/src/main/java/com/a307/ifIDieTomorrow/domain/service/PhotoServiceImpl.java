@@ -96,7 +96,7 @@ public class PhotoServiceImpl implements PhotoService {
 		if (category.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
 			throw new IllegalArgumentException("카테고리 수정 권한이 없습니다.");
 		
-		if (image == null) throw new NoPhotoException("사진이 없습니다.");
+		if (image == null || image.isEmpty()) throw new NoPhotoException("사진이 없습니다.");
 		
 		s3Upload.delete(category.getImageUrl());
 		category.updateCategoryThumbnail(s3Upload.upload(imageProcess.resizeImage(image, 100), CATEGORY));
@@ -105,9 +105,12 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 	
 	@Override
-	public Long deleteCategory (Long categoryId) throws NotFoundException {
+	public Long deleteCategory (Long categoryId) throws NotFoundException, IllegalArgumentException {
 		Category category = categoryRepository.findByCategoryId(categoryId)
 				.orElseThrow(() -> new NotFoundException("존재하지 않는 카테고리 ID 입니다."));
+		
+		if (category.getUserId() != ((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId())
+			throw new IllegalArgumentException("카테고리 수정 권한이 없습니다.");
 		
 		// 카테고리에 엮인 사진 모두 삭제
 		photoRepository.deleteAllByCategory_CategoryId(categoryId);
