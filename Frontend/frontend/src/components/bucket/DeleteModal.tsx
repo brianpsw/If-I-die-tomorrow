@@ -28,12 +28,14 @@ interface DeleteModalProps {
   setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
   selectedBucketId: number | null;
   onClose?: () => void;
+  setNoticeOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function DeleteModal({
   selectedBucketId,
   setBuckets,
   onClose,
+  setNoticeOpen,
 }: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
@@ -46,6 +48,11 @@ function DeleteModal({
           withCredentials: true,
         });
         setBuckets(response.data);
+        if (response.data.length > 0) {
+          setNoticeOpen(() => false);
+        } else {
+          setNoticeOpen(() => true);
+        }
       } catch (error) {
         throw error;
       }
