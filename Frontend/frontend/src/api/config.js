@@ -71,8 +71,8 @@ const requests = {
   POST_DIARY() {
     return `/api/diary`;
   },
-  GET_INSIGHT() {
-    return `/api/insight`;
+  GET_INSIGHT(typeId) {
+    return `/api/insight/${typeId}`;
   },
   GET_USER_DIARY() {
     return `/api/diary`;
