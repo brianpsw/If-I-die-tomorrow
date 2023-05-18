@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 import Lottie from 'react-lottie-player';
-import LoadingFox from '../../assets/loading/loading_fox.json';
+import LoadingFox from '../../assets/animation/loading_fox.json';
 
 const LoadingWrappper = styled.div`
   ${tw`w-full bg-gray-100/70 flex flex-col justify-center z-10 fixed top-0`}

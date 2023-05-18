@@ -7,6 +7,7 @@ import { defaultApi } from '../../api/axios';
 
 import Swal from 'sweetalert2';
 import Loading from '../../components/common/Loading';
+import EmptyAlert from '../../components/common/EmptyAlert';
 import {
   PhotoWrapper,
   PhotoCardWrapper,
@@ -404,9 +405,15 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 );
               })
             ) : (
-              <p className="text-h3 text-white text-center mt-12">
-                사진이 없습니다.
-              </p>
+              <div
+                className="my-[20vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow w-5/6 mx-auto"
+                style={{ boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.25)' }}
+              >
+                <EmptyAlert
+                  text={`사진이 없습니다. 하단의 버튼을 눌러
+                사진을 추가해 보세요.`}
+                />
+              </div>
             )}
             {photos!.length < 3 ? (
               <Link to={`/photo-cloud/upload-photo/${categoryId}`}>

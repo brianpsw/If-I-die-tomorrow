@@ -6,7 +6,8 @@ export const PhotoWrapper = styled.div`
 `;
 
 export const PhotoCardWrapper = styled.div`
-  ${tw`md:max-w-[40%] sm:max-w-[60%] my-4 mx-auto p-6 rounded-[10px] bg-[#f6f6f6b3] relative`}
+  ${tw`md:max-w-[40%] sm:max-w-[60%] my-4 mx-auto p-6 rounded-[10px] bg-[#f6f6f6b3] shadow relative`}
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
   width: calc(100% - 48px);
 `;
 

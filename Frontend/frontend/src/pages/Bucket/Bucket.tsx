@@ -10,6 +10,7 @@ import IIDT from '../../assets/images/text_logo.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
+import EmptyAlert from '../../components/common/EmptyAlert';
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
@@ -18,7 +19,7 @@ const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
 `;
 const TopTitle = styled.div`
-  ${tw`flex w-full text-h2 text-white justify-center`}
+  ${tw`flex w-full text-white justify-center mt-4 text-p2`}
 `;
 interface Bucket {
   bucketId: number;
@@ -114,7 +115,7 @@ function Bucket() {
       <Container>
         <LogoContainer src={IIDT} />
         <TopTitle>
-          <span>버킷리스트 페이지</span>
+          <h4 className="text-h4">버킷리스트</h4>
         </TopTitle>
 
         {buckets &&
@@ -129,9 +130,14 @@ function Bucket() {
             />
           ))}
         {buckets.length === 0 ? (
-          <div className="mt-[100px] text-center text-h2">
-            생성된 버킷리스트가 없습니다. <br /> 우측 하단의 버튼을 눌러
-            버킷리스트를 생성해 보세요
+          <div
+            className="mt-[20vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow"
+            style={{ boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.25)' }}
+          >
+            <EmptyAlert
+              text={`생성된 버킷리스트가 없습니다. 우측 하단의 버튼을 눌러
+            버킷리스트를 생성해 보세요.`}
+            />
           </div>
         ) : (
           ''
