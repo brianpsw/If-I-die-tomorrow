@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import { useRecoilState } from 'recoil';
-import { calendarState } from '../../states/CalendarState';
 import {
   format,
   startOfWeek,
@@ -46,8 +44,6 @@ interface Diary {
 
 interface Props {
   showDetailsHandle: (diaryData: Diary | null) => void;
-  setPrevSelectedDate: React.Dispatch<React.SetStateAction<Date>>;
-  setPrevSelectedMonth: React.Dispatch<React.SetStateAction<Date>>;
   diarys: Diary[];
   setSameDay: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -96,8 +92,6 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
 
   const onDateClickHandle = (day: Date) => {
     setSelectedDate(day);
-    console.log(day);
-    console.log(selectedDate);
     if (typeof diarys === 'object') {
       const diary = diarys.find((diary) => {
         const createdAtDate: Date = new Date(diary.createdAt);
