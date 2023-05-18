@@ -1,4 +1,4 @@
-import { Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Route, Routes, BrowserRouter, Link } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Home from './pages/Home/Home';
@@ -23,7 +23,8 @@ const Background = styled.div`
 `;
 
 const Preview = styled.div`
-  ${tw`fixed z-10 bg-gray-100/50 p-4 rounded-[10px] bottom-4 left-6`}
+  ${tw`fixed z-10 bg-gray-100/50 py-4 px-8 rounded-[50px] bottom-4 left-6 shadow`}
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.25);
 `;
 
 function App() {
@@ -34,9 +35,16 @@ function App() {
         <div className="App min-w-[300px]">
           <Background>
             {userData && userData.preview ? (
-              <Preview>
-                <h3 className="text-h3 text-red">미리보기 페이지</h3>
-              </Preview>
+              <Link
+                to="https://ifidietomorrow.co.kr/mypage"
+                target="_self"
+                reloadDocument={true}
+                replace={true}
+              >
+                <Preview>
+                  <h4 className="text-h4 text-black">미리보기 끝내기</h4>
+                </Preview>
+              </Link>
             ) : null}
             <Routes>
               <Route path="/" element={<Home />} />
