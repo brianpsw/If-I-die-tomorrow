@@ -23,14 +23,10 @@ public class FileDelete implements HandlerInterceptor {
         String fileName = (String) request.getAttribute("fileName");
         try{
             Files.delete(Paths.get(fileName));
-            Files.walk(Paths.get((String) fileName.subSequence(0, fileName.lastIndexOf('.'))))
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
         }catch (Exception e){
             log.error(e.getMessage());
         };
-        try (Stream<Path> stream = Files.walk(Paths.get((String) fileName.subSequence(0, fileName.lastIndexOf('.'))))) {
+        try (Stream<Path> stream = Files.walk(Paths.get(fileName.substring(0, fileName.lastIndexOf('.'))))) {
             stream
                     .sorted(Comparator.reverseOrder())
                     .map(Path::toFile)
