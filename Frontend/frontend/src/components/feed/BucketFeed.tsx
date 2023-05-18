@@ -133,7 +133,11 @@ function BucketFeed() {
                   <NickDateWrap>
                     <Nickname>{bucket.nickname}</Nickname>
                     <DateWrap>
-                      {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                      {
+                        new Date(bucket.createdAt)
+                          .toLocaleDateString()
+                          .split('T')[0]
+                      }
                     </DateWrap>
                   </NickDateWrap>
                   <ContentImg>

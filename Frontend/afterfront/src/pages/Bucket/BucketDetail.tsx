@@ -87,7 +87,7 @@ function BucketDetail() {
               <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
               <Nickname>{bucket.nickname}</Nickname>
               <CreateDate>
-                {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                {new Date(bucket.createdAt).toLocaleDateString().split('T')[0]}
               </CreateDate>
             </div>
           </BucketHeader>

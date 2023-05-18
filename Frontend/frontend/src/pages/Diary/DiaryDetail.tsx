@@ -300,7 +300,7 @@ function DiaryDetail() {
               <Nickname>{diary.nickname}</Nickname>
 
               <CreateDate>
-                {new Date(diary.createdAt).toISOString().split('T')[0]}
+                {new Date(diary.createdAt).toLocaleDateString().split('T')[0]}
               </CreateDate>
             </div>
 
@@ -499,7 +499,7 @@ function Comment({
         <div className="w-full">
           <CommentNick>{comment.nickname}</CommentNick>
           <CommentDate>
-            {new Date(comment.createdAt).toISOString().split('T')[0]}
+            {new Date(comment.createdAt).toLocaleDateString().split('T')[0]}
           </CommentDate>
 
           {editing ? (
