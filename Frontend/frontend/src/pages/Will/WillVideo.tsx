@@ -164,7 +164,7 @@ function WillVideo(): JSX.Element {
     setIsRecorded(false);
   };
   return (
-    <div className="pb-[70px]">
+    <div className="min-h-[100vh] pb-[70px]">
       <TopBar title="동영상 유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
