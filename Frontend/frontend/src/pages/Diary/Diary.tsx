@@ -36,7 +36,7 @@ const Container = styled.div`
 `;
 
 const TopTitle = styled.div`
-  ${tw`flex w-full text-white justify-center mt-4 text-p2`}
+  ${tw`flex w-full text-white justify-center mt-4 text-p2 mb-8`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
@@ -248,7 +248,18 @@ function Diary() {
         <TopTitle>
           <h4 className="text-h4">다이어리</h4>
         </TopTitle>
-        <span>{insight}</span>
+        <p
+          className="text-p3"
+          style={{
+            color: 'white',
+            marginBottom: '1%',
+            // border: '1px solid white',
+            // borderRadius: '10px',
+            // padding: '2%',
+          }}
+        >
+          {insight}
+        </p>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}

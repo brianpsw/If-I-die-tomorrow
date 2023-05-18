@@ -108,7 +108,7 @@ function BucketFeed() {
         dataLength={items.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<Loading />}
+        loader={<div>Loading</div>}
         endMessage={
           <p
             style={{ textAlign: 'center', marginBottom: '5%', marginTop: '5%' }}
