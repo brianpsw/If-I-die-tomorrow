@@ -37,10 +37,10 @@ const Container = styled.div`
 `;
 
 const TopTitle = styled.div`
-  ${tw`flex w-full text-center text-h2 text-white`}
+  ${tw`flex w-full text-h2 text-white justify-center`}
 `;
 const LogoContainer = styled.img`
-  ${tw`self-start mt-[60px] my-[8px]`}
+  ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
 `;
 
 const FormContainer = styled.div`
@@ -209,7 +209,9 @@ function Diary() {
             alt="survey_icon"
           />
         </div>
-        <TopTitle>다이어리 페이지</TopTitle>
+        <TopTitle>
+          <span>다이어리 페이지</span>
+        </TopTitle>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}
