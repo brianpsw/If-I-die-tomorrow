@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import { useLocation } from 'react-router-dom';
 
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -22,60 +23,70 @@ const Navbar = styled.div`
 `;
 function NavBar() {
   const navigate = useNavigate();
+  const location = useLocation().pathname;
   const [isDiary, setIsDiary] = useState<boolean>(false);
   const [isBucket, setIsBucket] = useState<boolean>(false);
   const [isHome, setIsHome] = useState<boolean>(true);
   const [isFeed, setIsFeed] = useState<boolean>(false);
   const [isMypage, setIsMypage] = useState<boolean>(false);
   const [changeNav, setChangeNav] = useState<boolean>(false);
-
+  useEffect(() => {
+    if (
+      location.startsWith('/home') ||
+      location.startsWith('/photo-cloud') ||
+      location === '/'
+    ) {
+      setIsDiary(false);
+      setIsBucket(false);
+      setIsHome(true);
+      setIsFeed(false);
+      setIsMypage(false);
+    } else if (
+      location.startsWith('/diary') ||
+      location.startsWith('/survey')
+    ) {
+      setIsDiary(true);
+      setIsBucket(false);
+      setIsHome(false);
+      setIsFeed(false);
+      setIsMypage(false);
+    } else if (location.startsWith('/bucket')) {
+      setIsDiary(false);
+      setIsBucket(true);
+      setIsHome(false);
+      setIsFeed(false);
+      setIsMypage(false);
+    } else if (location.startsWith('/feed')) {
+      setIsDiary(false);
+      setIsBucket(false);
+      setIsHome(false);
+      setIsFeed(true);
+      setIsMypage(false);
+    } else if (location.startsWith('/mypage') || location.startsWith('/will')) {
+      setIsDiary(false);
+      setIsBucket(false);
+      setIsHome(false);
+      setIsFeed(false);
+      setIsMypage(true);
+    }
+  }, [location]);
   const handleDiary = () => {
-    setIsDiary(true);
-    setIsBucket(false);
-    setIsHome(false);
-    setIsFeed(false);
-    setIsMypage(false);
-
     navigate(`/diary`);
   };
 
   const handleBucket = () => {
-    setIsDiary(false);
-    setIsBucket(true);
-    setIsHome(false);
-    setIsFeed(false);
-    setIsMypage(false);
-
     navigate(`/bucket`);
   };
 
   const handleHome = () => {
-    setIsDiary(false);
-    setIsBucket(false);
-    setIsHome(true);
-    setIsFeed(false);
-    setIsMypage(false);
-
     navigate(`/home`);
   };
 
   const handleFeed = () => {
-    setIsDiary(false);
-    setIsBucket(false);
-    setIsHome(false);
-    setIsFeed(true);
-    setIsMypage(false);
-
     navigate(`/feed`);
   };
 
   const handleMypage = () => {
-    setIsDiary(false);
-    setIsBucket(false);
-    setIsHome(false);
-    setIsFeed(false);
-    setIsMypage(true);
-
     navigate(`/mypage`);
   };
 

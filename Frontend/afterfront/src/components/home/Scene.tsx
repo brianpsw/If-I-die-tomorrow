@@ -1,7 +1,9 @@
-import React, { Suspense, useState, useRef, RefObject, useEffect } from 'react';
+import React, { Suspense, useRef, RefObject } from 'react';
 
 import * as THREE from 'three';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame, useThree, extend } from '@react-three/fiber';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
 
@@ -11,6 +13,8 @@ interface roomProps {
   updatePosition: (position: THREE.Vector3) => void;
 }
 
+extend({ TextGeometry });
+
 function Scene(props: roomProps) {
   const { setIsModalOpen, setMoveUrl, updatePosition } = props;
   const foxRef = useRef<THREE.Object3D>(null);
@@ -18,7 +22,7 @@ function Scene(props: roomProps) {
   const { gl, scene, camera, raycaster, mouse } = useThree();
   let foxIsMoving = false;
   // Texture
-  const floorTexture = useTexture('images/test2.png');
+  const floorTexture = useTexture('images/map2.png');
 
   // canvas
   gl.setSize(window.innerWidth, window.innerHeight);
@@ -29,7 +33,8 @@ function Scene(props: roomProps) {
   //Camera
   const cameraPosition = new THREE.Vector3(1, 5, 5);
 
-  camera.zoom = 25;
+  camera.zoom = 17;
+
   camera.updateProjectionMatrix();
 
   // Mesh
@@ -110,13 +115,121 @@ function Scene(props: roomProps) {
   const honey = useGLTF('models/honey.glb');
   const bicycle = useGLTF('models/bicycle.glb');
   const blueberry = useGLTF('models/blueberry.glb');
-  const cake = useGLTF('models/cake.glb');
   const cooking = useGLTF('models/cooking.glb');
   const ethereum = useGLTF('models/ethereum.glb');
   const racket = useGLTF('models/racket.glb');
   const ball = useGLTF('models/tennis_ball.glb');
 
-  //렌더링 최적화를 위한 메모이제이션
+  // 꾸미는 오브젝트
+  const cake = useGLTF('models/cake.glb');
+  const cloud2 = useGLTF('models/cloud2.glb');
+  const cloud3 = useGLTF('models/cloud3.glb');
+  const cloud4 = useGLTF('models/cloud4.glb');
+  const cloud4_1 = useGLTF('models/cloud4_1.glb');
+  const ladder = useGLTF('models/ladder.glb');
+  const star = useGLTF('models/star.glb');
+  const star1 = useGLTF('models/star1.glb');
+  const star2 = useGLTF('models/star2.glb');
+  const ship = useGLTF('models/paper_ship.glb');
+
+  //3d text
+  const loader = new FontLoader();
+
+  loader.load(
+    'https://threejs.org/examples/fonts/helvetiker_regular.typeface.json',
+    function (font: any) {
+      let materialFront = new THREE.MeshBasicMaterial({ color: 0x36c2cc });
+      let materialSide = new THREE.MeshBasicMaterial({ color: 0x04373b });
+      let materialArray = [materialFront, materialSide];
+      const geometry1 = new TextGeometry('Welcome!', {
+        font: font,
+        size: 2,
+        height: 1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.3,
+        bevelOffset: 0.1,
+        bevelSegments: 3,
+      });
+
+      const welcome = new THREE.Mesh(geometry1, materialArray);
+      welcome.rotation.x = -Math.PI / 6;
+      welcome.position.set(-5.5, 0, -3);
+
+      let materialFront1 = new THREE.MeshBasicMaterial({ color: 0xf0c5ff });
+      let materialSide1 = new THREE.MeshBasicMaterial({ color: 0x4a1e76 });
+      let materialArray1 = [materialFront1, materialSide1];
+      const geometry2 = new TextGeometry('Photo Album', {
+        font: font,
+        size: 2,
+        height: 1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.3,
+        bevelOffset: 0.1,
+        bevelSegments: 3,
+      });
+      const geometry3 = new TextGeometry('Will', {
+        font: font,
+        size: 2,
+        height: 1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.3,
+        bevelOffset: 0.1,
+        bevelSegments: 3,
+      });
+
+      const geometry4 = new TextGeometry('Diary', {
+        font: font,
+        size: 2,
+        height: 1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.3,
+        bevelOffset: 0.1,
+        bevelSegments: 3,
+      });
+
+      const geometry5 = new TextGeometry('Bucket', {
+        font: font,
+        size: 2,
+        height: 1,
+        curveSegments: 12,
+        bevelEnabled: true,
+        bevelThickness: 0.1,
+        bevelSize: 0.3,
+        bevelOffset: 0.1,
+        bevelSegments: 3,
+      });
+
+      const photoAlbum = new THREE.Mesh(geometry2, materialArray1);
+      photoAlbum.rotation.x = -Math.PI / 6;
+      photoAlbum.position.set(25, 0, 20);
+
+      const will = new THREE.Mesh(geometry3, materialArray1);
+      will.rotation.x = -Math.PI / 6;
+      will.position.set(-23, 0, 28);
+
+      const diary = new THREE.Mesh(geometry4, materialArray1);
+      diary.rotation.x = -Math.PI / 6;
+      diary.position.set(-30, 0, -8);
+
+      const bucket = new THREE.Mesh(geometry5, materialArray1);
+      bucket.rotation.x = -Math.PI / 6;
+      bucket.position.set(12, 0, -26);
+
+      scene.add(welcome);
+      scene.add(photoAlbum);
+      scene.add(will);
+      scene.add(diary);
+      scene.add(bucket);
+    },
+  );
 
   const checkIntersects = () => {
     const meshes = [floorMesh, foxModelMesh];
@@ -280,9 +393,14 @@ function Scene(props: roomProps) {
       >
         <OrthographicCamera
           makeDefault
+          castShadow={true}
           position={[1, 5, 5]}
           far={2000}
-          near={-10}
+          near={-100}
+          left={-10}
+          right={10}
+          top={10}
+          bottom={-10}
         />
       </directionalLight>
       <mesh
@@ -291,7 +409,7 @@ function Scene(props: roomProps) {
         receiveShadow={true}
         position={[0, 0.05, 0]}
       >
-        <circleGeometry args={[1, 16]}></circleGeometry>
+        <circleGeometry args={[1, 16]} />
         <meshStandardMaterial transparent />
       </mesh>
 
@@ -300,36 +418,105 @@ function Scene(props: roomProps) {
         scale={[0.01, 0.01, 0.01]}
         position={[-25, 5, 10]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={blueberry.scene}
-        scale={[0.1, 0.1, 0.1]}
-        position={[20, 0, -20]}
+        scale={[0.2, 0.2, 0.2]}
+        position={[-5, 0, -10]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={cake.scene}
         scale={[50, 50, 50]}
-        position={[-20, 0, -20]}
+        position={[30, 0, 5]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud2.scene}
+        scale={[2.5, 2.5, 2.5]}
+        position={[-40, 10, 15]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud3.scene}
+        scale={[1.5, 1.5, 1.5]}
+        position={[40, 10, -5]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={ladder.scene}
+        scale={[4, 4, 4]}
+        position={[36, 3, 4]}
+        rotation={[-Math.PI / 6, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud4.scene}
+        scale={[0.5, 0.5, 0.5]}
+        position={[-40, 10, -10]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={cloud4_1.scene}
+        scale={[0.3, 0.3, 0.3]}
+        position={[-10, 10, 60]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={ship.scene}
+        scale={[1, 1, 1]}
+        position={[-10, 0, -30]}
+        rotation={[0, Math.PI / 2, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star.scene}
+        scale={[5, 5, 5]}
+        position={[0, 10, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star1.scene}
+        scale={[3, 3, 3]}
+        position={[5, 10, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
+      />
+      <primitive
+        object={star2.scene}
+        scale={[5, 5, 5]}
+        position={[5, 15, -30]}
+        rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={cooking.scene}
         scale={[1, 1, 1]}
-        position={[0, 0, -40]}
+        position={[35, 0, -20]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={ethereum.scene}
         scale={[1, 1, 1]}
-        position={[5, 5, 30]}
+        position={[5, 2, 20]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={honey.scene}
-        scale={[1, 1, 1]}
-        position={[30, 5, 30]}
+        scale={[2, 2, 2]}
+        position={[20, 0, 40]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         object={racket.scene}
@@ -342,6 +529,7 @@ function Scene(props: roomProps) {
         scale={[0.4, 0.4, 0.4]}
         position={[-35, 5.5, 40]}
         rotation={[0, 0, 0]}
+        receiveShadow={true}
       />
       <primitive
         ref={foxRef}
@@ -360,7 +548,7 @@ function Scene(props: roomProps) {
       />
       <primitive
         object={photo.scene}
-        scale={[0.6, 0.6, 0.6]}
+        scale={[0.8, 0.8, 0.8]}
         rotation={[0, -Math.PI / 1.5, 0]}
         position={[35.5, 0, 31]}
         receiveShadow={true}

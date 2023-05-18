@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
@@ -7,21 +7,9 @@ import BucketListItem from '../../components/bucket/BucketListItem';
 import CreateModal from '../../components/bucket/CreateModal';
 import DeleteModal from '../../components/bucket/DeleteModal';
 import IIDT from '../../assets/images/text_logo.png';
-import backgroundImg from '../../assets/images/bucket_bg.png';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
-import Carousel from '../../components/common/Carousel';
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  background-attachment: fixed;
-`;
-
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
@@ -44,10 +32,6 @@ function Bucket() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
   // 수정, 삭제 모달 open
-
-  const handleEditOrDeleteModalOpen = () => {
-    setOpenEditOrDeleteModal(true);
-  };
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {
     setOpenEditOrDeleteModal(false);
@@ -86,7 +70,6 @@ function Bucket() {
         if (typeof response.data === 'object') {
           setBuckets(response.data);
         }
-        return console.log(response.data);
       } catch (error) {
         throw error;
       }

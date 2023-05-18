@@ -48,6 +48,8 @@ function UserInfo() {
         icon: 'success',
         timer: 1000,
         showConfirmButton: false,
+      }).then(() => {
+        navigate('/login');
       });
     } catch (err) {
       console.error(err);
@@ -92,7 +94,12 @@ function UserInfo() {
               <p className="text-p2">유언장 작성하러 가기</p>
             </WillContent>
           </Link>
-          <Link to="/after" target="_self" reloadDocument={true} replace={true}>
+          <Link
+            to="/after/"
+            target="_self"
+            reloadDocument={true}
+            replace={true}
+          >
             <WillContent>
               <Lottie
                 animationData={WillAnimation4}
