@@ -135,7 +135,7 @@ pipeline {
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=. \
+                    -Dsonar.sources=Backend/ \
                     -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.host.url=${SONAR_URL} \
                     -Dsonar.login=${SONAR_TOKEN}
@@ -326,7 +326,7 @@ pipeline {
 
             }
             steps {
-                sh 'docker run -d -p 8000:8443 --name back-springboot --env-file .env --network my-network back-springboot'
+                sh 'docker run -d -p 8000:8443 --name back-springboot --env-file .env -e TZ=Asia/Seoul --network my-network back-springboot'
             }
 
             post {
@@ -355,7 +355,7 @@ pipeline {
 
             }
             steps {
-                sh 'docker run -d -p 3000:3000 --name front-react --network my-network front-react'
+                sh 'docker run -d -p 3000:3000 --name front-react --env-file .env -e TZ=Asia/Seoul --network my-network front-react'
             }
 
             post {
