@@ -37,7 +37,7 @@ function DeleteModal({
 }: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(false);
-  const handleDelete = async () => {
+  const handleDelete = () => {
     setLoading(true);
     //버킷리스트 삭제 api 연결
     const get_user_bucket = async () => {
@@ -78,7 +78,7 @@ function DeleteModal({
         setLoading(false); // End loading here
       }
     };
-    await delete_bucket();
+    delete_bucket();
     onClose?.();
   };
   const handleClose = () => {
