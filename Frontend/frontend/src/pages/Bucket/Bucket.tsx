@@ -13,7 +13,7 @@ import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 import EmptyAlert from '../../components/common/EmptyAlert';
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
-  padding-bottom: 10%;
+  padding-bottom: 20%;
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
