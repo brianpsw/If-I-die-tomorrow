@@ -66,7 +66,6 @@ function CreateCategory() {
   };
 
   // 카테고리 생성 api 보내기
-  let isCreateCategory = '';
   const sendCategory = async () => {
     setIsLoading(() => true);
     try {
@@ -114,7 +113,7 @@ function CreateCategory() {
   };
 
   return (
-    <div>
+    <div className="pb-[70px]">
       {isLoading && <Loading />}
       <div style={{ padding: '16px 24px' }}>
         <Icon
