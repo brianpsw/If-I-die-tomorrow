@@ -306,7 +306,7 @@ function BucketDetail() {
               <Nickname>{bucket.nickname}</Nickname>
 
               <CreateDate>
-                {new Date(bucket.createdAt).toISOString().split('T')[0]}
+                {new Date(bucket.createdAt).toLocaleDateString().split('T')[0]}
               </CreateDate>
             </div>
             <DotIcon>
@@ -504,7 +504,7 @@ function Comment({
         <div className="w-full">
           <CommentNick>{comment.nickname}</CommentNick>
           <CommentDate>
-            {new Date(comment.createdAt).toISOString().split('T')[0]}
+            {new Date(comment.createdAt).toLocaleDateString().split('T')[0]}
           </CommentDate>
 
           {editing ? (

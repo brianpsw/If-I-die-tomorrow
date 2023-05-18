@@ -129,7 +129,11 @@ function DiaryFeed() {
                   <NickDateWrap>
                     <Nickname>{diary.nickname}</Nickname>
                     <DateWrap>
-                      {new Date(diary.createdAt).toISOString().split('T')[0]}
+                      {
+                        new Date(diary.createdAt)
+                          .toLocaleDateString()
+                          .split('T')[0]
+                      }
                     </DateWrap>
                   </NickDateWrap>
                   <ContentImg>

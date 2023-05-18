@@ -98,7 +98,7 @@ function DiaryDetail() {
               <ContentTitle className="text-h3">{diary.title}</ContentTitle>
               <Nickname>{diary.nickname}</Nickname>
               <CreateDate>
-                {new Date(diary.createdAt).toISOString().split('T')[0]}
+                {new Date(diary.createdAt).toLocaleDateString().split('T')[0]}
               </CreateDate>
             </div>
           </DiaryHeader>

@@ -280,7 +280,7 @@ function Diary() {
             <NickDateWrap>
               <Nickname>{userInfo[0]?.nickname}</Nickname>
               <DateWrap>
-                {new Date(data.createdAt).toISOString().split('T')[0]}
+                {new Date(data.createdAt).toLocaleDateString().split('T')[0]}
               </DateWrap>
             </NickDateWrap>
             <ContentImg>
