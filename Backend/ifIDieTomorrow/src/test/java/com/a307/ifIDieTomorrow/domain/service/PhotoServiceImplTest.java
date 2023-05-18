@@ -1,17 +1,37 @@
 package com.a307.ifIDieTomorrow.domain.service;
 
+import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
+import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.PhotoRepository;
 import com.a307.ifIDieTomorrow.global.auth.ProviderType;
 import com.a307.ifIDieTomorrow.global.auth.UserPrincipal;
+import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
+import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
+import com.a307.ifIDieTomorrow.global.util.ImageProcess;
+import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.MetadataException;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.io.IOException;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 public class PhotoServiceImplTest {
@@ -24,6 +44,12 @@ public class PhotoServiceImplTest {
 	
 	@Mock
 	private PhotoRepository photoRepository;
+	
+	@Mock
+	private S3Upload s3Upload;
+	
+	@Mock
+	private ImageProcess imageProcess;
 	
 	private User user;
 	
@@ -69,8 +95,43 @@ public class PhotoServiceImplTest {
 				
 				@Test
 				@DisplayName("썸네일과 이름이 있는 카테고리 생성")
-				void createCategory() {
-				
+				void createCategory() throws ImageProcessingException, IOException, MetadataException, IllegalArgumentException, NoPhotoException {
+					
+					// Given
+					CreateCategoryDto data = new CreateCategoryDto("test name");
+					MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+					
+					Category category = Category.builder()
+							.categoryId(1L)
+							.userId(1L)
+							.name(data.getName())
+							.imageUrl("https://example.com/test.jpg")
+							.build();
+					
+					/* stubbing */
+					given(categoryRepository.save(any(Category.class))).willReturn(category);
+					given(s3Upload.upload(photo, "category")).willReturn("https://example.com/test.jpg");
+					given(imageProcess.resizeImage(photo, 100)).willReturn(photo);
+					
+					// When
+					CreateCategoryResDto result = photoService.createCategory(data, photo);
+					ArgumentCaptor<Category> categoryCaptor = ArgumentCaptor.forClass(Category.class);
+					
+					// Then
+					/* 동작 검증 */
+					then(s3Upload).should().upload(photo, "category");
+					then(categoryRepository).should().save(categoryCaptor.capture());
+					
+					/* 인자 검증 */
+					Category capturedCategory = categoryCaptor.getValue();
+					BDDAssertions.then(capturedCategory.getUserId()).isEqualTo(1L);
+					BDDAssertions.then(capturedCategory.getImageUrl()).isEqualTo("https://example.com/test.jpg");
+					
+					/* 결과 검증 */
+					BDDAssertions.then(result.getCategoryId()).isEqualTo(category.getCategoryId());
+					BDDAssertions.then(result.getUserId()).isEqualTo(category.getUserId());
+					BDDAssertions.then(result.getImageUrl()).isEqualTo(category.getImageUrl());
+					
 				}
 				
 			}
