@@ -39,8 +39,6 @@ function WillSign(): JSX.Element {
         withCredentials: true,
       });
       setDefaultSign(response.data.signUrl);
-
-      console.log(response);
     } catch (error) {
       throw error;
     }
