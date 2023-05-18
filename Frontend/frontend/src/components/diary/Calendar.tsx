@@ -86,11 +86,9 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   const changeWeekHandle = (btnType: 'prev' | 'next') => {
     if (btnType === 'prev') {
       setCurrentMonth(subWeeks(currentMonth, 1));
-      console.log(currentMonth);
     }
     if (btnType === 'next') {
       setCurrentMonth(addWeeks(currentMonth, 1));
-      console.log(currentMonth);
     }
   };
 
