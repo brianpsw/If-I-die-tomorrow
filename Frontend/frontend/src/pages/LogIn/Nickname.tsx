@@ -21,10 +21,10 @@ const NicknameContainer = styled.div`
   ${tw`flex items-center justify-between border-b shadow-md border-black w-full h-[40px] px-[16px] mt-[64px]`}
 `;
 const InfoText = styled.span`
-  ${tw`w-full mt-[24px] text-p2 text-white`}
+  ${tw`w-full mt-[24px] text-p1 text-white`}
 `;
 const CheckText = styled.span`
-  ${tw`w-full mt-[200px] text-p2 text-white`}
+  ${tw`w-full mt-[200px] text-p1 text-white`}
 `;
 
 const IIDT = styled.span`
