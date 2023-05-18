@@ -184,6 +184,7 @@ function WillVideo(): JSX.Element {
   };
   return (
     <div className="min-h-[100vh] pb-[70px]">
+      {loadingOpen ? <Loading /> : ''}
       <TopBar title="동영상 유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
