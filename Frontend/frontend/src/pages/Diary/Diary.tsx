@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { calendarState } from '../../states/CalendarState';
+// import { calendarState } from '../../states/CalendarState';
 import { userState } from '../../states/UserState';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -30,15 +30,6 @@ import {
   Comments,
   DateWrap,
 } from '../../components/feed/FeedEmotion';
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  background-attachment: fixed;
-`;
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
   padding-bottom: 10%;
