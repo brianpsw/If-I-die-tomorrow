@@ -1,7 +1,9 @@
 import React, { Suspense, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
-import { useRecoilState } from 'recoil';
-import { userState } from '../../states/UserState';
+import { useSetRecoilState, useRecoilState } from 'recoil';
+import { userState, loginState } from '../../states/UserState';
+import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
@@ -12,34 +14,54 @@ import Loading from '../../components/common/Loading';
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
-  const userInfo = useRecoilState(userState);
-  useEffect(() => {
-    const get_user = async () => {
-      try {
-        const response = await defaultApi.get(requests.GET_USER(), {
-          withCredentials: true,
-        });
-        const userSave = {
-          userId: response.data.userId,
-          name: response.data.name,
-          email: response.data.email,
-          age: response.data.age,
-          nickname: response.data.nickname,
-          sendAgree: response.data.sendAgree,
-          personalPage: response.data.personalPage,
-          personalityId: response.data.personalityId,
-          newCheck: response.data.newCheck,
-          deleted: response.data.deleted,
-          providerType: response.data.providerType,
-        };
-        setUser(userSave);
-        return console.log(response);
-      } catch (error) {
-        throw error;
+  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const setCategory = useSetRecoilState(categoryState);
+  const navigate = useNavigate();
+
+  const get_user = async () => {
+    try {
+      const response = await defaultApi.get(requests.GET_USER(), {
+        withCredentials: true,
+      });
+      const userSave = {
+        userId: response.data.userId,
+        name: response.data.name,
+        email: response.data.email,
+        age: response.data.age,
+        nickname: response.data.nickname,
+        sendAgree: response.data.sendAgree,
+        personalPage: response.data.personalPage,
+        personalityId: response.data.personalityId,
+        newCheck: response.data.newCheck,
+        deleted: response.data.deleted,
+        providerType: response.data.providerType,
+      };
+      setUser(userSave);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const get_all_category = async () => {
+    try {
+      const response = await defaultApi.get(requests.GET_ALL_CATEGORY(), {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        setCategory(response.data);
       }
-    };
-    get_user();
-    console.log(userInfo[0]?.nickname);
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  useEffect(() => {
+    if (user?.name === undefined && isLogin === false) {
+      navigate('/login');
+    } else {
+      get_user();
+      get_all_category();
+    }
   }, []);
 
   return (

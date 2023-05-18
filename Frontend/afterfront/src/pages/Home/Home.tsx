@@ -37,7 +37,6 @@ function LoginForm({ setIsLogin }: any) {
       );
       const jsonData = await response.json();
       jsonData.preview = false;
-      console.log(jsonData);
       setIsLogin(jsonData);
     } catch (error) {
       window.alert('로그인 실패!');
@@ -94,7 +93,6 @@ export default function Home() {
         );
         const jsonData = await response.json();
         jsonData.preview = true;
-        console.log(jsonData);
         setUserData(jsonData);
       } catch (error) {}
     }
@@ -102,7 +100,7 @@ export default function Home() {
   }, []);
 
   if (Object.keys(userData).length === 0) {
-    return <LoginForm setIsLogin={setUserData}></LoginForm>;
+    return <LoginForm setIsLogin={setUserData} />;
   } else {
     return <Room />;
   }

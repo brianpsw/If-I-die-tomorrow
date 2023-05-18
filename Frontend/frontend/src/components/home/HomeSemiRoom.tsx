@@ -1,19 +1,16 @@
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
 
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, OrbitControls, useTexture } from '@react-three/drei';
 
-import requests from '../../api/config';
-import { defaultApi } from '../../api/axios';
-
 import Loading from '../common/Loading';
 
 function HomeScene() {
-  const [category, setCategory] = useRecoilState(categoryState);
+  const category = useRecoilValue(categoryState);
   const navigate = useNavigate();
   const { gl, mouse } = useThree();
   // 기본 구성
@@ -30,26 +27,6 @@ function HomeScene() {
   useFrame((state, delta) => {
     mixer.update(delta);
   });
-
-  const fetchData = async () => {
-    try {
-      const get_all_category = await defaultApi.get(
-        requests.GET_ALL_CATEGORY(),
-        {
-          withCredentials: true,
-        },
-      );
-      if (get_all_category.status === 200) {
-        setCategory(get_all_category.data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   const clickStar = (e: any, id: number) => {
     if (!preventDragClick) navigate(`/photo-cloud/${id}`);

@@ -12,7 +12,6 @@ import Bucket from './pages/Bucket/Bucket';
 import Diary from './pages/Diary/Diary';
 import Login from './pages/LogIn/Login';
 import Nickname from './pages/LogIn/Nickname';
-import ServiceAgreement from './pages/Profile/ServiceAgreement';
 import Feed from './pages/Feed/Feed';
 import DiaryDetail from './pages/Diary/DiaryDetail';
 import BucketDetail from './pages/Bucket/BucketDetail';
@@ -26,26 +25,6 @@ import NavBar from './components/common/NavBar';
 import WillText from './pages/Will/WillText';
 import WillSign from './pages/Will/WillSign';
 import WillVideo from './pages/Will/WillVideo';
-
-import styled from 'styled-components';
-import tw from 'twin.macro';
-import Logo from './assets/icons/logo.svg';
-import AppTitle from './assets/images/app_title.svg';
-
-const LogoContainer = styled.div`
-  ${tw`flex items-center flex-col w-full mt-[146px] space-y-6 `}
-`;
-// 화면크기 커짐 방지 페이지
-// <div className="fixed min-[501px]:block hidden h-full w-full bg-gray-500 z-10 pt-[180px]">
-//   <LogoContainer>
-//     <img src={Logo} width={82} height={102} alt="" />
-//     <img src={AppTitle} width={213} height={30} alt="" />
-//   </LogoContainer>
-//   <p className="text-center text-p1 mt-8 text-white">
-//     저희 서비스는 모바일에 최적화 되어있습니다.
-//     <br /> 화면의 크기를 줄여주세요.
-//   </p>
-// </div>
 
 function App() {
   return (
