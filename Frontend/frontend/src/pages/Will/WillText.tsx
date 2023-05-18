@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import Swal from 'sweetalert2';
