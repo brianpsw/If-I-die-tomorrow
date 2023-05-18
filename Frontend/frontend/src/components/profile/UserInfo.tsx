@@ -47,6 +47,8 @@ function UserInfo() {
         icon: 'success',
         timer: 1000,
         showConfirmButton: false,
+      }).then(() => {
+        navigate('/login');
       });
     } catch (err) {
       console.error(err);

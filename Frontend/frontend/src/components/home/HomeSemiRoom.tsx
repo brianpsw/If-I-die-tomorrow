@@ -135,7 +135,7 @@ function HomeScene() {
         <sphereGeometry args={[50, 16]}></sphereGeometry>
         <meshStandardMaterial color="yellow" map={moonTexture} />
       </mesh>
-      {category && category.length > 0 ? (
+      {category && typeof category === 'object' && category.length > 0 ? (
         <>
           {category.map((cat, idx) => {
             const position = new THREE.Vector3(...spherePosition[idx]);
