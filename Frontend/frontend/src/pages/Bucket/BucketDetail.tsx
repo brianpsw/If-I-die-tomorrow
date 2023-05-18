@@ -6,7 +6,6 @@ import { useRecoilValue } from 'recoil';
 import { userState } from '../../states/UserState';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/bucket_bg.png';
 import Swal from 'sweetalert2';
 import TreeDot from '../../assets/icons/three_dot.svg';
 import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
@@ -37,52 +36,31 @@ interface Bucket {
   nickname: string;
 }
 
-const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  background-attachment: fixed;
-`;
-
 const Container = styled.div`
   ${tw`pt-12 pb-24`}
 `;
 
 const BucketWrap = styled.div`
-  ${tw`mb-6 p-6 flex flex-col mx-auto`}
+  ${tw`mb-6 p-6 flex flex-col mx-auto rounded-[10px] relative`}
   max-width: calc(100% - 48px);
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  // border: solid 2px #9e9e9e;
-  border-radius: 10px;
-  position: relative;
 `;
 
 const BucketHeader = styled.div`
-  ${tw`flex`}// justify-content: space-between;
+  ${tw`flex`}
 `;
 
 const DotIcon = styled.div`
-  ${tw`flex`}
-  position: absolute;
-  right: 5%;
-  top: 7%;
+  ${tw`flex absolute right-[5%] top-[7%]`}
 `;
 
 const CommentDotIcon = styled.div`
-  ${tw`flex`}
-  position: absolute;
-  right: 5%;
-  top: 40%;
+  ${tw`flex absolute right-[5%] top-[40%]`}
 `;
 
 const ContentTitle = styled.div`
-  ${tw``}
-  width: 100%;
-  word-break: break-all;
+  ${tw`w-full break-all`}
   text-overflow: ellipsis;
   word-wrap: break-word;
 `;
@@ -96,115 +74,68 @@ const CreateDate = styled.p`
 `;
 
 const BucketImg = styled.div`
-  ${tw`mt-2 mb-6 flex flex-col mx-auto`}
-  width: 100%;
+  ${tw`mt-2 mb-6 flex flex-col mx-auto w-full`}
 `;
 
 const SecretOrNotText = styled.p`
-  ${tw`text-p1`}
-  display: inline-block;
+  ${tw`text-p1 inline-block rounded-[10px]`}
   width: content;
-  border-radius: 10px;
-  // border: 1px solid black;
-  // background-color: #ffa9a9;
   font-weight: 400;
 `;
 
 const BucketText = styled.div`
-  ${tw`flex flex-col mx-auto`}
-  width: 100%;
+  ${tw`flex flex-col mx-auto w-full`}
   font-size: 15px;
 `;
 
 const CommentWrap = styled.div`
-  ${tw`mb-6 flex flex-col mx-auto`}
+  ${tw`mb-6 flex flex-col mx-auto rounded-[10px]`}
   max-width: calc(100% - 48px);
-  border-radius: 10px;
-  // color: white;
-  // border: solid 1px white;
 `;
 
 const CommentLine = styled.p`
-  ${tw`mb-6 mt-6 text-h3`}
-  color: white;
+  ${tw`mb-6 mt-6 text-h3 text-white`}
 `;
 
 const CommentBox = styled.div`
-  ${tw`mb-2 p-6 flex`}
-  justify-content: space-between;
-  color: black;
+  ${tw`mb-2 p-6 flex justify-between text-black rounded-[10px] relative`}
   background-color: rgba(246, 246, 246, 0.7);
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
-  // border: solid 1px #9e9e9e;
-  border-radius: 10px;
-  position: relative;
 `;
 
 const StyledCommentForm = styled.form`
-  ${tw`text-p2 mb-6 flex w-full mx-auto`}
-  color: white;
-  position: relative;
-  // border: solid 1px red;
-  height: 40px;
+  ${tw`text-p2 mb-6 flex w-full mx-auto relative text-white h-[40px]`}
 `;
 
 const StyledInput = styled.input`
-  ${tw`text-p3`}
-  // padding-right: 50px;
-  padding-left: 2%;
-  // font-size: 1.5rem;
-  width: 100%;
-  color: black;
-  border-radius: 10px;
+  ${tw`text-p3 pl-[2%] pr-[50px] w-full text-black rounded-[10px]`}
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
   border: solid 1px #9e9e9e;
 `;
 
 const StyledButton = styled.button`
-  ${tw` px-4 py-2 rounded flex`}
-  justify-content: center;
-  background-color: white;
-  align-items: center;
-  position: absolute;
-  border-radius: 10px;
-  // font-size: 1.5rem;
-  font-weight: bold;
-  color: gray;
-  height: 100%;
-  width: 50px;
-  right: 0;
+  ${tw` px-4 py-2 rounded flex justify-center bg-white items-center absolute rounded-[10px] font-bold text-gray_400 h-[88%] w-[50px] right-1 top-1`}
   white-space: nowrap;
-  // border: solid 1px black;
 `;
 
 const CommentNick = styled.div`
-  ${tw`text-p1`}
-  font-weight: bold;
-  // font-size: 14px;
+  ${tw`text-p1 font-bold`}
 `;
 
 const CommentDate = styled.div`
-  ${tw`mb-2 text-smT`}// font-size: 12px;
+  ${tw`mb-2 text-smT`}
 `;
 
 const CommentContent = styled.div`
-  ${tw`text-p1`}
-  max-width: 90%;
-  word-break: break-word;
+  ${tw`text-p1 max-w-[90%] break-words`}
 `;
 
 const EditContentForm = styled.form`
-  ${tw`flex flex-col text-p3`}
-  align-items: flex-end;
-  width: 73vw;
+  ${tw`flex flex-col text-p3 items-end w-[73vw]`}
 `;
 
 const EditContentInput = styled.textarea`
-  ${tw`text-smT p-1`}
-  width: 100%;
-  // font-size: 15px;
-  height: auto;
-  border-radius: 5px;
+  ${tw`text-smT p-1 w-full h-auto rounded-[5px]`}
 `;
 
 const EditButton = styled.button`
@@ -357,51 +288,50 @@ function BucketDetail() {
           onDelete={handleDelete}
         />
       )}
-      <Background>
-        <TopBar title="버킷리스트" />
-        <Container>
-          <BucketWrap>
-            <BucketHeader>
-              <div>
-                <SecretOrNotText>
-                  {bucket.secret ? <FaLock /> : <FaUnlock />}
-                </SecretOrNotText>
-                <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
-                <Nickname>{bucket.nickname}</Nickname>
 
-                <CreateDate>
-                  {new Date(bucket.createdAt).toISOString().split('T')[0]}
-                </CreateDate>
-              </div>
-              <DotIcon>
-                <img src={TreeDot} alt="" onClick={handleModalOpen} />
-              </DotIcon>
-            </BucketHeader>
-            <BucketImg>
-              {bucket.imageUrl && bucket.imageUrl !== '""' && (
-                <img src={bucket.imageUrl} alt="Bucket" />
-              )}
-            </BucketImg>
-            <BucketText>{bucket.content}</BucketText>
-          </BucketWrap>
-          <CommentWrap>
-            <CommentLine>댓글</CommentLine>
-            <CommentForm
-              bucketId={bucket.bucketId}
-              type={false}
-              onUpdate={() => fetchBucketDetail()}
-            />
-            {comments &&
-              comments.map((comment, index) => (
-                <Comment
-                  key={index}
-                  comment={comment}
-                  onUpdate={() => fetchBucketDetail()}
-                />
-              ))}
-          </CommentWrap>
-        </Container>
-      </Background>
+      <TopBar title="버킷리스트" />
+      <Container>
+        <BucketWrap>
+          <BucketHeader>
+            <div>
+              <SecretOrNotText>
+                {bucket.secret ? <FaLock /> : <FaUnlock />}
+              </SecretOrNotText>
+              <ContentTitle className="text-h3">{bucket.title}</ContentTitle>
+              <Nickname>{bucket.nickname}</Nickname>
+
+              <CreateDate>
+                {new Date(bucket.createdAt).toISOString().split('T')[0]}
+              </CreateDate>
+            </div>
+            <DotIcon>
+              <img src={TreeDot} alt="" onClick={handleModalOpen} />
+            </DotIcon>
+          </BucketHeader>
+          <BucketImg>
+            {bucket.imageUrl && bucket.imageUrl !== '""' && (
+              <img src={bucket.imageUrl} alt="Bucket" />
+            )}
+          </BucketImg>
+          <BucketText>{bucket.content}</BucketText>
+        </BucketWrap>
+        <CommentWrap>
+          <CommentLine>댓글</CommentLine>
+          <CommentForm
+            bucketId={bucket.bucketId}
+            type={false}
+            onUpdate={() => fetchBucketDetail()}
+          />
+          {comments &&
+            comments.map((comment, index) => (
+              <Comment
+                key={index}
+                comment={comment}
+                onUpdate={() => fetchBucketDetail()}
+              />
+            ))}
+        </CommentWrap>
+      </Container>
     </div>
   );
 }
