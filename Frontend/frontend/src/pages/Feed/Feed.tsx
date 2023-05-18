@@ -47,7 +47,7 @@ const FeedTab = styled.p`
   // font-size: 16px;
 `;
 
-const Tab = styled.p<{ isSelected: boolean }>`
+const Tab = styled.span<{ isSelected: boolean }>`
   ${tw`text-p1 cursor-pointer mb-12 inline-block pb-1`}
   ${({ isSelected }) => (isSelected ? tw`font-bold border-b-4` : null)}
   ${({ isSelected }) => (isSelected ? { borderColor: '#FFA9A9' } : null)}
