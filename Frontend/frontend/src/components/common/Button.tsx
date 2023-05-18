@@ -16,7 +16,7 @@ const Button = styled.button<ButtonProps>`
     if (props.size === 'lg') return '21rem';
     return '175px';
   }};
-  font-size: 1.4rem;
+  font-size: 18px;
   border: none;
   height: 4.5rem;
   display: flex;

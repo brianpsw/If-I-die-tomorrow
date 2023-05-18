@@ -164,7 +164,7 @@ function WillVideo(): JSX.Element {
     setIsRecorded(false);
   };
   return (
-    <div>
+    <div className="pb-[70px]">
       <TopBar title="동영상 유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
@@ -211,7 +211,7 @@ function WillVideo(): JSX.Element {
                 color={editVideo ? '#B3E9EB' : '#0E848A'}
                 size="sm"
                 disabled={editVideo ? true : false}
-                className="mx-[8px]"
+                className="mx-[8px] "
               >
                 동영상 재업로드
               </Button>
