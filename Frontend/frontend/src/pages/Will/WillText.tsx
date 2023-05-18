@@ -67,7 +67,7 @@ function WillText(): JSX.Element {
     }
   }, [content, defaultContent]);
   return (
-    <div className="pb-[70px]">
+    <div className="min-h-[100vh] pb-[70px]">
       <TopBar title="유언장 작성" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
