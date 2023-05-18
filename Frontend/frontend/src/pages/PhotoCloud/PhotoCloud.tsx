@@ -119,7 +119,7 @@ function PhotoCloud() {
     setDeleteModalOpen(false);
   };
   return (
-    <div>
+    <div className="min-h-[100vh]">
       {isDeleteLoading && <Loading />}
       {isCloudLoading && <Loading />}
       <div>

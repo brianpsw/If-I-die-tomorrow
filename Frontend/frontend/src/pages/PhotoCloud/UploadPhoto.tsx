@@ -101,7 +101,7 @@ function UploadPhoto() {
   };
 
   return (
-    <div className="pb-[70px]">
+    <div className="pb-[70px] min-h-[100vh]">
       {isLoading && <Loading />}
       <div style={{ padding: '16px 24px' }}>
         <Icon
