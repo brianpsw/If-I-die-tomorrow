@@ -5,6 +5,7 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import BucketDetail from '../../pages/Bucket/BucketDetail';
 import { Link } from 'react-router-dom';
+import Loading from '../common/Loading';
 import {
   Container,
   CardWrap,
@@ -107,7 +108,7 @@ function BucketFeed() {
         dataLength={items.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
+        loader={<Loading />}
         endMessage={
           <p
             style={{ textAlign: 'center', marginBottom: '5%', marginTop: '5%' }}

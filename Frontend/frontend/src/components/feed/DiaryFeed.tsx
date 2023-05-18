@@ -3,6 +3,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { defaultApi } from '../../api/axios';
 import requests from '../../api/config';
 import { Link } from 'react-router-dom';
+import Loading from '../common/Loading';
 import {
   Container,
   CardWrap,
@@ -103,7 +104,7 @@ function DiaryFeed() {
         dataLength={items.length}
         next={fetchMoreData}
         hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
+        loader={<Loading />}
         endMessage={
           <p
             style={{ textAlign: 'center', marginBottom: '5%', marginTop: '5%' }}
