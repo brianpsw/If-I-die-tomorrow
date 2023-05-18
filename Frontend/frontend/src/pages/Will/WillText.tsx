@@ -8,7 +8,7 @@ import { defaultApi } from '../../api/axios';
 import Button from '../../components/common/Button';
 import AppTitle from '../../assets/images/text_logo.png';
 const Container = styled.div`
-  ${tw`flex flex-col justify-center rounded-xl items-center p-[16px] m-[24px] bg-gray-100/80`}
+  ${tw`flex flex-col h-[70vh] justify-center rounded-xl items-center p-[16px] m-[24px] bg-gray-100/80`}
 `;
 const WillContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full h-[500px] text-p1 p-[16px] rounded border-black break-all mb-[16px]`}
@@ -67,7 +67,7 @@ function WillText(): JSX.Element {
     }
   }, [content, defaultContent]);
   return (
-    <div>
+    <div className="pb-[70px]">
       <TopBar title="유언장 작성" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
