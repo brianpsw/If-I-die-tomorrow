@@ -87,7 +87,7 @@ function Bucket() {
     get_user_bucket();
   }, []);
   return (
-    <div className="w-full">
+    <div className="w-full min-h-[100vh]">
       {/* 수정, 삭제 모달 */}
       {openEditOrDeleteModal ? (
         <EditOrDeleteModal
