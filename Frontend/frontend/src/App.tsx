@@ -25,11 +25,13 @@ import NavBar from './components/common/NavBar';
 import WillText from './pages/Will/WillText';
 import WillSign from './pages/Will/WillSign';
 import WillVideo from './pages/Will/WillVideo';
+import ScrollTop from './components/common/ScrollTop';
 
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>
+        <ScrollTop />
         <div className="App min-w-[300px]">
           <Routes>
             <Route path="/" element={<Home />} />
