@@ -148,7 +148,7 @@ public class UserServiceImpl extends DefaultOAuth2UserService implements UserSer
         user.setPersonality(personality.getPersonalityId());
 
         return PersonalityResDto.builder()
-                .personalityId(personality.getPersonalityId())
+                .personalityId(userRepository.save(user).getPersonalityId())
                 .name(personality.getName())
                 .build();
 
