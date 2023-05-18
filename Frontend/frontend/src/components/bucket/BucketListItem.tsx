@@ -20,6 +20,7 @@ const Container = styled.div`
 
 const BucketContainer = styled.div`
   ${tw`flex items-center w-full h-[64px] bg-gray-100/80 px-[16px] my-[4px] border-l-[8px]`}
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
 `;
 const FormContainer = styled.div`
   ${tw`flex flex-col w-full bg-gray-100/80 mt-[16px] pt-[16px] px-[16px]`}

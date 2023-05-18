@@ -14,6 +14,7 @@ import {
   SettingBox,
   WillServiceWrap,
   WillContent,
+  FillingText,
 } from '../../pages/Profile/MyPageEmotion';
 
 function UserInfo() {
@@ -64,7 +65,7 @@ function UserInfo() {
   return (
     <div>
       <MyProfile>
-        <h4 className="text-h4">{loggedInUserNickname}</h4>
+        <FillingText className="text-h4">{loggedInUserNickname}</FillingText>
         <SettingBox>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {/* <img

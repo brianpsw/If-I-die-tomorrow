@@ -36,14 +36,20 @@ const Container = styled.div`
 `;
 
 const TopTitle = styled.div`
-  ${tw`flex w-full text-white justify-center mt-4 text-p2 mb-8`}
+  ${tw`flex w-full text-white justify-center mt-8 text-p2 mb-10`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
 `;
 
+const FillingText = styled.h4`
+  ${tw`text-white`}
+  text-shadow: 4px 4px 4px #111111;
+`;
+
 const FormContainer = styled.div`
   ${tw`flex flex-col w-full rounded-lg bg-gray-100/80 mt-[16px] px-[16px]`}
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
 `;
 
 const TitleInputContainer = styled.textarea`
@@ -246,7 +252,7 @@ function Diary() {
           />
         </div>
         <TopTitle>
-          <h4 className="text-h4">다이어리</h4>
+          <FillingText className="text-h4">다이어리</FillingText>
         </TopTitle>
         <p
           className="text-p3"
