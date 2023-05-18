@@ -9,7 +9,7 @@ import AppTitle from '../../assets/images/app_title.svg';
 import NaverLoginButton from '../../assets/images/naver_login.svg';
 import KakaoLoginButton from '../../assets/images/kakao_login.svg';
 const Container = styled.div`
-  ${tw`flex items-center flex-col w-full h-[100vh] justify-between`}
+  ${tw`flex items-center flex-col w-full min-h-[100vh] justify-between`}
 `;
 const LogoContainer = styled.div`
   ${tw`flex items-center flex-col w-full mt-[146px] space-y-6 `}

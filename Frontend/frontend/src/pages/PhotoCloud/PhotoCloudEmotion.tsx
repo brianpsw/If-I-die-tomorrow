@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 export const PhotoWrapper = styled.div`
-  ${tw`pb-[10px] mb-[70px]`}
+  ${tw`pb-[10px] mb-[70px] min-h-[100vh]`}
 `;
 
 export const PhotoCardWrapper = styled.div`
