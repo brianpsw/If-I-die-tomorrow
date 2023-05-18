@@ -30,7 +30,7 @@ const ContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full text-p2 h-[86px] p-[8px] rounded border-black break-all my-[16px]`}
 `;
 const TitleContainer = styled.textarea`
-  ${tw`flex flex-wrap w-full text-p1 rounded border-black break-all p-[8px] my-[8px]`}
+  ${tw`flex flex-wrap w-full  h-[40px] text-p1 rounded border-black break-all p-[8px] my-[8px]`}
 `;
 const PhotoContainer = styled.div`
   ${tw`items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
@@ -224,13 +224,6 @@ function BucketListItem({
             onChange={handleDateChange}
             disableFuture
           />
-          <form action="submit">
-            <ContentInputContainer
-              onChange={handleContentChange}
-              value={completeContent}
-              placeholder="버킷리스트 달성 과정과 느낀점을 입력해주세요."
-            />
-          </form>
           <PhotoContainer>
             <div className="image-upload-container w-full h-full">
               {imageUrl ? (
@@ -269,6 +262,13 @@ function BucketListItem({
               />
             </div>
           </PhotoContainer>
+          <form action="submit">
+            <ContentInputContainer
+              onChange={handleContentChange}
+              value={completeContent}
+              placeholder="버킷리스트 달성 과정과 느낀점을 입력해주세요."
+            />
+          </form>
           <FeedCheckContainer>
             {isChecked ? (
               <img onClick={handleFeedCheckClick} src={CheckedIcon} alt="" />
