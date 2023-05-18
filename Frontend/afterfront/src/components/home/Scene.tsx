@@ -7,6 +7,8 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { OrthographicCamera, useGLTF, useTexture } from '@react-three/drei';
 import gsap from 'gsap';
 
+import Loading from '../common/Loading';
+
 interface roomProps {
   setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setMoveUrl: React.Dispatch<React.SetStateAction<string>>;
@@ -383,7 +385,7 @@ function Scene(props: roomProps) {
   });
 
   return (
-    <Suspense fallback={<div>loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <ambientLight intensity={0.7} />
       <directionalLight
         position={[1, 5, 1]}
