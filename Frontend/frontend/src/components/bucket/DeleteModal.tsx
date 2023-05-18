@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import Button from '../common/Button';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
+import Loading from '../common/Loading';
 
 const ModalOverlay = styled.div`
   ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
@@ -35,7 +36,9 @@ function DeleteModal({
   onClose,
 }: DeleteModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
-  const handleDelete = () => {
+  const [loading, setLoading] = useState(false);
+  const handleDelete = async () => {
+    setLoading(true);
     //버킷리스트 삭제 api 연결
     const get_user_bucket = async () => {
       try {
@@ -57,7 +60,7 @@ function DeleteModal({
           },
         );
 
-        get_user_bucket();
+        await get_user_bucket();
         Swal.fire({
           title: '버킷 삭제 성공!',
           icon: 'success',
@@ -71,9 +74,11 @@ function DeleteModal({
           confirmButtonText: '확인',
         });
         throw error;
+      } finally {
+        setLoading(false); // End loading here
       }
     };
-    delete_bucket();
+    await delete_bucket();
     onClose?.();
   };
   const handleClose = () => {
@@ -98,35 +103,38 @@ function DeleteModal({
   }, []);
 
   return (
-    <ModalOverlay>
-      <ModalWrapper ref={modalRef}>
-        <ContentContainer>
-          <p style={{ margin: '0 auto', textAlign: 'center' }}>
-            정말 삭제하시겠습니까?
-            <br />
-            삭제된 버킷리스트는 되돌릴 수 없습니다.
-          </p>
-        </ContentContainer>
-        <div className="flex w-full justify-evenly my-4">
-          <Button
-            onClick={handleDelete}
-            color="#ff0000"
-            size="sm"
-            style={{ color: '#f6f6f6' }}
-          >
-            삭제하기
-          </Button>
-          <Button
-            onClick={onClose}
-            color="#B3E9EB"
-            size="sm"
-            style={{ color: '#04373B' }}
-          >
-            취소
-          </Button>
-        </div>
-      </ModalWrapper>
-    </ModalOverlay>
+    <div>
+      {loading && <Loading />}
+      <ModalOverlay>
+        <ModalWrapper ref={modalRef}>
+          <ContentContainer>
+            <p style={{ margin: '0 auto', textAlign: 'center' }}>
+              정말 삭제하시겠습니까?
+              <br />
+              삭제된 버킷리스트는 되돌릴 수 없습니다.
+            </p>
+          </ContentContainer>
+          <div className="flex w-full justify-evenly my-4">
+            <Button
+              onClick={handleDelete}
+              color="#ff0000"
+              size="sm"
+              style={{ color: '#f6f6f6' }}
+            >
+              삭제하기
+            </Button>
+            <Button
+              onClick={onClose}
+              color="#B3E9EB"
+              size="sm"
+              style={{ color: '#04373B' }}
+            >
+              취소
+            </Button>
+          </div>
+        </ModalWrapper>
+      </ModalOverlay>
+    </div>
   );
 }
 

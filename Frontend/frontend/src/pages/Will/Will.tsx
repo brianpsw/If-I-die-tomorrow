@@ -35,7 +35,7 @@ const TextBox = styled.div`
 function Will(): JSX.Element {
   const navigate = useNavigate();
   return (
-    <div>
+    <div style={{ paddingBottom: '30%' }}>
       <TopBar title="유언장" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
