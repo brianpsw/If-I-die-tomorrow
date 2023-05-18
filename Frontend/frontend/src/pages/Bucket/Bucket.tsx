@@ -13,13 +13,18 @@ import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 import EmptyAlert from '../../components/common/EmptyAlert';
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
-  padding-bottom: 10%;
+  padding-bottom: 20%;
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
 `;
 const TopTitle = styled.div`
-  ${tw`flex w-full text-white justify-center mt-4 text-p2`}
+  ${tw`flex w-full text-white justify-center mt-8 text-p2 mb-10`}
+`;
+
+const FillingText = styled.h4`
+  ${tw`text-white`}
+  text-shadow: 4px 4px 4px #111111;
 `;
 interface Bucket {
   bucketId: number;
@@ -121,7 +126,7 @@ function Bucket() {
       <Container>
         <LogoContainer src={IIDT} />
         <TopTitle>
-          <h4 className="text-h4">버킷리스트</h4>
+          <FillingText className="text-h4">버킷리스트</FillingText>
         </TopTitle>
 
         {buckets &&

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import EmptyAlert from '../common/EmptyAlert';
 import {
   format,
   startOfWeek,
@@ -15,6 +16,7 @@ import NextVector from '../../assets/icons/next_vector.svg';
 import PreviousVector from '../../assets/icons/previous_vector.svg';
 const CalenderContainer = styled.div`
   ${tw`flex flex-col w-full text-p1 rounded-lg bg-gray-100/80 mt-[16px] py-[16px] px-[16px]`}
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
 `;
 const CalenderHeader = styled.div`
   ${tw`flex items-center justify-between`}
@@ -54,6 +56,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dateFormat = 'yyyy.MM';
   const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const [showEmptyAlert, setShowEmptyAlert] = useState(false);
 
   useEffect(() => {
     if (isFirstRender === false) {
@@ -93,20 +96,52 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
   };
 
   const onDateClickHandle = (day: Date) => {
+    const today = new Date();
+
+    // 선택된 날짜가 오늘이고 다이어리가 없는 경우에만 다이어리 작성폼을 보여주기
+    if (isSameDay(day, today)) {
+      const diaryExists = diarys.find((diary) =>
+        isSameDay(today, new Date(diary.createdAt)),
+      );
+
+      if (!diaryExists) {
+        setSameDay(true);
+        setShowEmptyAlert(false);
+        showDetailsHandle(null);
+      } else {
+        setSameDay(false);
+        showDetailsHandle(diaryExists);
+        setShowEmptyAlert(false);
+      }
+      return;
+    }
+
+    // 선택된 날짜가 미래의 날짜라면, 모든 것을 숨김
+    if (day > today) {
+      setSameDay(false);
+      setShowEmptyAlert(false);
+      showDetailsHandle(null);
+      return;
+    }
+
     setSelectedDate(day);
+
     if (typeof diarys === 'object') {
       const diary = diarys.find((diary) => {
         const createdAtDate: Date = new Date(diary.createdAt);
         return isSameDay(day, createdAtDate);
       });
-      const today = new Date();
-      if (isSameDay(today, day)) {
-        setSameDay(true);
-      } else {
-        setSameDay(false);
-      }
 
-      showDetailsHandle(diary ? diary : null);
+      setSameDay(false);
+
+      // diary가 있으면 상세 정보를 보여주고, 그렇지 않으면 EmptyAlert를 보여줌
+      if (diary) {
+        showDetailsHandle(diary);
+        setShowEmptyAlert(false); // diary가 있으면 EmptyAlert를 숨김
+      } else {
+        showDetailsHandle(null);
+        setShowEmptyAlert(true); // diary가 없으면 EmptyAlert를 보여줌
+      }
     }
   };
 
@@ -197,6 +232,14 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
       </CalenderHeader>
       {renderDays()}
       {renderCells()}
+      {showEmptyAlert && (
+        <div
+          className="text-smT mt-[5vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow"
+          style={{ boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.25)' }}
+        >
+          <EmptyAlert text={`생성된 다이어리가 없습니다.`} />
+        </div>
+      )}
     </CalenderContainer>
   );
 };

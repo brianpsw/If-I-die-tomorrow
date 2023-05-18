@@ -15,6 +15,7 @@ import ReportModal from '../../components/common/bucketReportModal';
 import CommentConfirmModal from '../../components/common/CommentConfirmModal';
 import TopBar from '../../components/common/TopBar';
 import { FaUnlock, FaLock } from 'react-icons/fa';
+import Loading from '../../components/common/Loading';
 
 interface Comment {
   commentId: bigint;
@@ -249,7 +250,11 @@ function BucketDetail() {
   }, [bucketId]);
 
   if (!bucketDetail) {
-    return <div>Loading...</div>;
+    return (
+      <div>
+        <Loading />
+      </div>
+    );
   }
 
   const bucket = bucketDetail;

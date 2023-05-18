@@ -43,6 +43,11 @@ export const HeadText = styled.h1`
   color: white;
 `;
 
+export const FillingText = styled.h4`
+  ${tw`text-white`}
+  text-shadow: 4px 4px 4px #111111;
+`;
+
 export const MyProfile = styled.div`
   ${tw`mt-12`}
   color: white;

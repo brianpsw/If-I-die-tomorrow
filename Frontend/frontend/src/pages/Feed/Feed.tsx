@@ -44,6 +44,7 @@ const FeedTab = styled.p`
   ${tw`flex`}
   justify-content: space-evenly;
   color: white;
+  text-shadow: 4px 4px 4px #111111;
   // font-size: 16px;
 `;
 
