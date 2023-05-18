@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import Webcam from 'react-webcam';
-import RecordRTC, { CanvasRecorder } from 'recordrtc';
+import RecordRTC from 'recordrtc';
 import tw from 'twin.macro';
 import styled from 'styled-components';
 import TopBar from '../../components/common/TopBar';
