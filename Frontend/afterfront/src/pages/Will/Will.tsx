@@ -82,7 +82,7 @@ function Will(): React.JSX.Element {
       <Navigation />
       <Container>
         <div className="flex flex-col justify-center items-center text-p2 bg-gray-100/80 rounded-[10px] max-w-[700px] mx-auto min-h-[85vh]">
-          <img src={PenIcon} />
+          <img src={PenIcon} alt="pen icon" />
           <Content className="my-8">
             {userData.will.name}님께서 남기신 유언장입니다.
           </Content>
@@ -95,11 +95,13 @@ function Will(): React.JSX.Element {
               className="cursor-pointer"
               src={WillDoc}
               onClick={onWillDocModalOpen}
+              alt="will document"
             />
             <img
               className="cursor-pointer"
               src={WillVideo}
               onClick={onWillVideoModalOpen}
+              alt="will video"
             />
           </div>
         </div>

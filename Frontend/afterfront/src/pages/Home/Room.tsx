@@ -32,7 +32,6 @@ function Room() {
   };
 
   useEffect(() => {
-    console.log(topPosition + ' ' + leftPosition);
     setTopPosition(() => tmpTop);
     setLeftPosition(() => tmpLeft);
   }, [tmpTop, tmpLeft]);
@@ -117,7 +116,6 @@ function Room() {
               style={{ fontSize: '30px', color: 'white' }}
             />
             <p className="text-p2 text-white text-center ml-2">
-              {' '}
               오프라인 다운로드
             </p>
           </div>
