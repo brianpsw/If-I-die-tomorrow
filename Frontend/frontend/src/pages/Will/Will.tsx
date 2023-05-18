@@ -52,7 +52,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <p className="text-p3">유언장 등록</p>
+              <p className="text-smT">유언장 등록</p>
             </TextBox>
           </LinkWrapper>
         </Link>
@@ -69,7 +69,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <p className="text-p3">서명 등록</p>
+              <p className="text-smT">서명 등록</p>
             </TextBox>
           </LinkWrapper>
         </Link>
@@ -86,7 +86,7 @@ function Will(): JSX.Element {
               />
             </SmallBox>
             <TextBox>
-              <p className="text-p3">동영상 유언장</p>
+              <p className="text-smT">동영상 유언장</p>
             </TextBox>
           </LinkWrapper>
         </Link>
