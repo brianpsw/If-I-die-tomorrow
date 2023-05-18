@@ -43,28 +43,26 @@ const Carousel = () => {
   // 슬라이드 이동
   const location = useLocation().pathname;
   const [currentIndex, setCurrentIndex] = useState(0);
+  const backgroundImage = [Image3, Image2, Image1, Image4, Image5];
   useEffect(() => {
-    if (
+    if (location.startsWith('/diary') || location.startsWith('/survey')) {
+      setCurrentIndex(0);
+      console.log(backgroundImage);
+    } else if (location.startsWith('/bucket')) {
+      setCurrentIndex(1);
+    } else if (
       location.startsWith('/login') ||
       location.startsWith('/home') ||
       location.startsWith('/photo-cloud') ||
       location === '/'
     ) {
       setCurrentIndex(2);
-    } else if (
-      location.startsWith('/diary') ||
-      location.startsWith('/survey')
-    ) {
-      setCurrentIndex(0);
-    } else if (location.startsWith('/bucket')) {
-      setCurrentIndex(1);
     } else if (location.startsWith('/feed')) {
       setCurrentIndex(3);
     } else if (location.startsWith('/mypage') || location.startsWith('/will')) {
       setCurrentIndex(4);
     }
   }, [location]);
-  const backgroundImage = [Image1, Image2, Image3, Image4, Image5];
 
   return (
     <Window id="window">
