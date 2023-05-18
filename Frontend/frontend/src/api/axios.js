@@ -24,7 +24,13 @@ const handleResponse = (response) => {
     response.headers['content-type'] &&
     response.headers['content-type'].includes('text/html')
   ) {
-    window.location.href = '/login';
+    Swal.fire({
+      title: '로그인이 필요합니다',
+      icon: 'error',
+      confirmButtonText: '확인',
+    }).then(() => {
+      window.location.href = '/login';
+    });
   }
   return response;
 };
