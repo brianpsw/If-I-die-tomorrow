@@ -18,6 +18,6 @@ ENV APP_HOME=/apps
 
 ARG JAR_FILE=build/libs/*.jar
 COPY --from=builder ${APP_HOME}/${JAR_FILE} app.jar
-
+COPY ./IIDT ./IIDT
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "/app.jar"]
