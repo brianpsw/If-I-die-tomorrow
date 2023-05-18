@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
 import { userState, loginState } from '../../states/UserState';
 import { categoryState } from '../../states/CategoryState';
 
@@ -14,7 +14,7 @@ import Loading from '../../components/common/Loading';
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
-  const [isLogin, setIsLogin] = useRecoilState(loginState);
+  const isLogin = useRecoilValue(loginState);
   const setCategory = useSetRecoilState(categoryState);
   const navigate = useNavigate();
 

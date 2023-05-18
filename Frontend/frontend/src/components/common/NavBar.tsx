@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useLocation } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userState } from '../../states/UserState';
 
 import styled from 'styled-components';
 import tw from 'twin.macro';
@@ -16,7 +18,6 @@ import feedActive from '../../assets/icons/feed_active.svg';
 import mypageInactive from '../../assets/icons/mypage_inactive.svg';
 import mypageActive from '../../assets/icons/mypage_active.svg';
 
-import Button from './Button';
 const Navbar = styled.div`
   ${tw`flex bg-gray_100 justify-between fixed bottom-0 w-full h-[70px] min-w-[300px]`}
   padding: 9px 31px;
@@ -29,11 +30,13 @@ function NavBar() {
   const [isHome, setIsHome] = useState<boolean>(true);
   const [isFeed, setIsFeed] = useState<boolean>(false);
   const [isMypage, setIsMypage] = useState<boolean>(false);
-  const [changeNav, setChangeNav] = useState<boolean>(false);
+  const user = useRecoilValue(userState);
+
   useEffect(() => {
     if (
       location.startsWith('/home') ||
       location.startsWith('/photo-cloud') ||
+      location.startsWith('/login') ||
       location === '/'
     ) {
       setIsDiary(false);
@@ -71,23 +74,23 @@ function NavBar() {
     }
   }, [location]);
   const handleDiary = () => {
-    navigate(`/diary`);
+    if (user?.name !== undefined) navigate(`/diary`);
   };
 
   const handleBucket = () => {
-    navigate(`/bucket`);
+    if (user?.name !== undefined) navigate(`/bucket`);
   };
 
   const handleHome = () => {
-    navigate(`/home`);
+    if (user?.name !== undefined) navigate(`/home`);
   };
 
   const handleFeed = () => {
-    navigate(`/feed`);
+    if (user?.name !== undefined) navigate(`/feed`);
   };
 
   const handleMypage = () => {
-    navigate(`/mypage`);
+    if (user?.name !== undefined) navigate(`/mypage`);
   };
 
   const onlyMovePage = (page: string) => {
@@ -96,7 +99,7 @@ function NavBar() {
     } else if (page === 'bucket') {
       navigate(`/bucket`);
     } else if (page === 'home') {
-      navigate(`/home`);
+      if (user?.name !== undefined) navigate(`/home`);
     } else if (page === 'feed') {
       navigate(`/feed`);
     } else {
