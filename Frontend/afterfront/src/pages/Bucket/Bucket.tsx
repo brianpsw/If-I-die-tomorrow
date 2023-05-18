@@ -102,7 +102,7 @@ function BucketFeed() {
             endMessage={
               <p style={{ textAlign: 'center' }}>
                 <b style={{ color: 'white' }}>
-                  모든 버킷리스트를 불러왔습니다.
+                  {items.length ? '모든 버킷리스트를 불러왔습니다.' : ''}
                 </b>
               </p>
             }

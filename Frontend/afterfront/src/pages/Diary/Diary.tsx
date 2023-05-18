@@ -99,7 +99,9 @@ function DiaryFeed() {
             loader={<h4>Loading...</h4>}
             endMessage={
               <p style={{ textAlign: 'center' }}>
-                <b style={{ color: 'white' }}>모든 다이어리를 불러왔습니다.</b>
+                <b style={{ color: 'white' }}>
+                  {items.length ? '모든 다이어리를 불러왔습니다.' : ''}
+                </b>
               </p>
             }
           >
