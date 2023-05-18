@@ -119,6 +119,7 @@ function WillSign(): JSX.Element {
 
   return (
     <div className="min-h-[100vh] pb-[70px]">
+      {loadingOpen ? <Loading /> : ''}
       <TopBar title="유언장 서명 등록" />
       <div className="flex justify-center my-[30px]">
         <img src={AppTitle} alt="" />
