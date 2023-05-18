@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
-import AppTitle from '../../assets/images/app_title.svg';
+import AppTitle from '../../assets/images/text_logo.png';
 import RefreshButton from '../../assets/icons/refresh_button.svg';
 import Button from '../../components/common/Button';
 const Container = styled.div`
