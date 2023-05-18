@@ -12,9 +12,12 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from './states/UserDataState';
+import PurpleBg from '../src/assets/images/purple_sky.jpg';
 
 const Background = styled.div`
-  background-color: pink;
+  background-image: url(${PurpleBg});
+  background-size: cover;
+  background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
 `;

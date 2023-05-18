@@ -1,4 +1,4 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
@@ -10,17 +10,12 @@ import { useGLTF, OrbitControls, useTexture } from '@react-three/drei';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
-interface CategoryInfo {
-  categoryId: number;
-  name: string;
-  userId: number;
-  imageUrl: string;
-}
+import Loading from '../common/Loading';
 
 function HomeScene() {
   const [category, setCategory] = useRecoilState(categoryState);
   const navigate = useNavigate();
-  const { gl, mouse, scene } = useThree();
+  const { gl, mouse } = useThree();
   // 기본 구성
   const fox = useGLTF('models/fox_2.glb');
   const rose = useGLTF('models/low_poly_rose_in_glass_jar.glb', true);
@@ -128,11 +123,11 @@ function HomeScene() {
   ];
 
   return (
-    <Suspense fallback={<div>loading...</div>}>
+    <Suspense fallback={<Loading />}>
       <directionalLight position={[200, 50, 100]} intensity={1.2} />
       <ambientLight intensity={0.6} />
       <mesh rotation={[0, 0, 0]} position={[10, -78, 10]}>
-        <sphereGeometry args={[50, 16]}></sphereGeometry>
+        <sphereGeometry args={[50, 16]} />
         <meshStandardMaterial color="yellow" map={moonTexture} />
       </mesh>
       {category && typeof category === 'object' && category.length > 0 ? (
@@ -150,12 +145,12 @@ function HomeScene() {
                   rotation={[0, -Math.PI / 4, Math.PI / 9]}
                   position={position}
                 >
-                  <boxGeometry args={[15, 15, 15]}></boxGeometry>
+                  <boxGeometry args={[15, 15, 15]} />
                   <meshStandardMaterial opacity={0} transparent={true} />
                 </mesh>
 
                 <mesh rotation={[0, 0, 0]} position={position}>
-                  <sphereGeometry args={[5, 16]}></sphereGeometry>
+                  <sphereGeometry args={[5, 16]} />
                   <meshStandardMaterial map={texture} />
                 </mesh>
               </group>
@@ -168,7 +163,7 @@ function HomeScene() {
           position={[0, 0, 0]}
           onClick={() => navigate('/photo-cloud/create-category')}
         >
-          <planeGeometry args={[50, 9, 1]}></planeGeometry>
+          <planeGeometry args={[50, 9, 1]} />
           <meshStandardMaterial side={THREE.DoubleSide} map={createTexture} />
         </mesh>
       )}

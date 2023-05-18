@@ -104,6 +104,6 @@ export default function Home() {
   if (Object.keys(userData).length === 0) {
     return <LoginForm setIsLogin={setUserData}></LoginForm>;
   } else {
-    return <Room></Room>;
+    return <Room />;
   }
 }

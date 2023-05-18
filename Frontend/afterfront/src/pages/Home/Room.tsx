@@ -86,7 +86,7 @@ function Room() {
         </Modal>
       ) : null}
 
-      <div className="fixed z-10 top-0 w-full h-[80px] flex justify-around items-center">
+      <div className="fixed z-10 top-0 w-full h-[80px] flex justify-between items-center px-6">
         <div
           className="cursor-pointer"
           onClick={() => {
@@ -99,7 +99,7 @@ function Room() {
           />
         </div>
         {isMapShow && (
-          <div className="fixed mt-[60px] w-[200px] h-[200px] border-2 border-black top-0 left-[24px]">
+          <div className="fixed mt-[80px] w-[200px] h-[200px] border-2 border-black top-0 left-[24px]">
             <img src={Map} alt="미니맵" className="relative" />
             <div
               className="bg-red w-2 h-2 absolute rounded-[10px]"
@@ -109,7 +109,7 @@ function Room() {
         )}
         {userData && userData.preview ? (
           <div
-            className="min-w-[120px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center cursor-pointer"
+            className="min-w-[150px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center items-center cursor-pointer"
             onClick={() => downloadWill()}
           >
             <Icon
@@ -122,13 +122,6 @@ function Room() {
             </p>
           </div>
         ) : null}
-
-        <div className="">
-          <Icon
-            icon="ic:round-volume-up"
-            style={{ fontSize: '30px', color: '#111111' }}
-          />
-        </div>
       </div>
 
       <Canvas>
