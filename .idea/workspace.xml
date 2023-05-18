@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="3e0baba2-ef1f-4b59-aebc-5a6ff0fe474a" name="Changes" comment="🍤[FE: feat] Title&#10;Content&#10;JIRA Code :&#10;&#10;################&#10;# &lt;타입&gt; : &lt;제목&gt; 의 형식으로 제목을 아래 공백줄에 작성&#10;# 제목은 50자 이내 / 변경사항이 &quot;무엇&quot;인지 명확히 작성 / 끝에 마침표 금지&#10;# 예) feat : 로그인 기능 추가&#10;&#10;# 바로 아래 공백은 지우지 마세요 (제목과 본문의 분리를 위함)&#10;&#10;################&#10;# 본문(구체적인 내용)을 아랫줄에 작성&#10;# 여러 줄의 메시지를 작성할 땐 &quot;-&quot;로 구분 (한 줄은 72자 이내)&#10;&#10;################&#10;# 꼬릿말(footer)을 아랫줄에 작성 (현재 커밋과 관련된 이슈 번호 추가 등)&#10;# 예) Close #7&#10;&#10;################&#10;# feat : 새로운 기능 추가&#10;# fix : 버그 수정&#10;# docs : 문서 수정&#10;# test : 테스트 코드 추가&#10;# refact : 코드 리팩토링&#10;# style : 코드 의미에 영향을 주지 않는 변경사항&#10;# chore : 빌드 부분 혹은 패키지 매니저 수정사항&#10;################" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2OX1MjbIPfNXb53EzQFEJHwVOgx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3e0baba2-ef1f-4b59-aebc-5a6ff0fe474a" name="Changes" comment="" />
+      <created>1681692067031</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681692067031</updated>
+      <workItem from="1681692069214" duration="1243000" />
+      <workItem from="1681775271888" duration="6088000" />
+      <workItem from="1681802219145" duration="3152000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+</project>

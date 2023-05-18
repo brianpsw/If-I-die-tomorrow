@@ -1,0 +1,64 @@
+import React from 'react';
+import styled from 'styled-components';
+import tw from 'twin.macro';
+import Button from '../common/Button';
+
+const ModalOverlay = styled.div`
+  ${tw`flex items-center justify-center z-50 bg-neutral-400/80 h-full w-full fixed`}
+`;
+
+const ModalWrapper = styled.div`
+  ${tw`text-p1 bg-gray-100 flex flex-col w-full mx-4 px-[16px] items-center border-solid rounded-xl shadow `}
+`;
+const ContentContainer = styled.div`
+  ${tw`flex flex-wrap w-full pt-4 h-[60px] bg-white rounded border-black my-4 px-[6px]`}
+`;
+
+interface DeleteConfirmModalProps {
+  onClose: () => void;
+  onDelete: () => void;
+}
+
+const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
+  onClose,
+  onDelete,
+}) => {
+  const handleConfirm = () => {
+    onDelete();
+    onClose();
+  };
+
+  return (
+    <ModalOverlay>
+      <ModalWrapper>
+        <ContentContainer>
+          <p style={{ margin: '0 auto', textAlign: 'center' }}>
+            정말 삭제하시겠습니까?
+            <br />
+            삭제된 버킷리스트는 되돌릴 수 없습니다.
+          </p>
+        </ContentContainer>
+        <div className="flex w-full justify-evenly my-4">
+          <Button
+            onClick={handleConfirm}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
+            삭제하기
+          </Button>
+          <Button
+            onClick={onClose}
+            color="#B3E9EB"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
+            취소
+          </Button>
+        </div>
+      </ModalWrapper>
+    </ModalOverlay>
+  );
+};
+
+export default DeleteConfirmModal;
