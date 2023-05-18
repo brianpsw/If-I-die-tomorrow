@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import PenIcon from '../../assets/icons/pen_docu.svg';
 import WillDoc from '../../assets/images/will_doc.svg';
 import WillVideo from '../../assets/images/will_video.svg';
+import NotFound from '../../assets/images/NotFound.png';
 import React, { useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
@@ -17,6 +18,10 @@ const Container = styled.div`
 const Content = styled.p`
   ${tw`flex justify-center w-full text-center items-center text-p2`}
 `;
+
+const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+  event.currentTarget.src = NotFound;
+};
 
 function Will(): React.JSX.Element {
   const [onWillVideo, setOnWillVideo] = useState<boolean>(false);
@@ -45,33 +50,38 @@ function Will(): React.JSX.Element {
     <AuthWrapper>
       {onWillVideo ? (
         <WillModal onClose={onWillVideoModalClose}>
-          <video
-            src={userData.will.videoUrl}
-            controls
-            poster={userData.will.videoUrl ? '' : undefined}
-          />
+          {userData.will.videoUrl ? (
+            <video
+              src={userData.will.videoUrl}
+              controls
+              poster={userData.will.videoUrl ? '' : undefined}
+            />
+          ) : (
+            <img className="h-32" src={NotFound} alt="동영상 없음" />
+          )}
         </WillModal>
       ) : null}
       {onWillDoc ? (
         <WillModal onClose={onWillDocModalClose}>
-          {/* <WillContentInputContainer
-            value={userData.will.content}
-            placeholder="가족, 지인들에게 남기고 싶은 말을 적어주세요."
-            readOnly
-          /> */}
           <div className="container mx-auto p-4">
             <div className="bg-neutral-50 p-8 handwritten">
               <div className="prose lg:prose-lg xl:prose-xl">
                 <p className="text-xl font-semibold mb-4">유언장</p>
                 <p className="text-lg leading-relaxed mb-6 whitespace-pre-wrap">
-                  {userData.will.content}
+                  {userData.will.content
+                    ? userData.will.content
+                    : '유언장 내용이 없습니다.'}
                 </p>
                 <div className="flex w-full justify-end">
-                  <img
-                    className="h-32"
-                    src={userData.will.signUrl}
-                    alt="사인"
-                  />
+                  {userData.will.signUrl ? (
+                    <img
+                      className="h-32"
+                      src={userData.will.signUrl}
+                      alt="사인"
+                    />
+                  ) : (
+                    <img className="h-32" src={NotFound} alt="사인 없음" />
+                  )}
                 </div>
                 {/* More paragraphs... */}
               </div>
