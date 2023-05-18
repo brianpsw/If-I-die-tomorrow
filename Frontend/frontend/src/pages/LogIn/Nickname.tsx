@@ -74,7 +74,7 @@ function Nickname() {
     };
 
     patch_usernickname();
-    navigate('/home');
+    navigate('/survey');
   };
   return (
     <div className="flex h-full">

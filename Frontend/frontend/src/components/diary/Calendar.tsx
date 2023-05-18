@@ -127,7 +127,7 @@ const Calendar = ({ showDetailsHandle, diarys, setSameDay }: Props) => {
         const diary = diarys.find((diary) =>
           isSameDay(day, new Date(diary.createdAt)),
         );
-        return diary ? '#36C2CC' : '';
+        return diary && !isSameDay(day, new Date()) ? '#36C2CC' : '';
       }
     };
     const startDate = startOfWeek(currentMonth, { weekStartsOn: 1 });

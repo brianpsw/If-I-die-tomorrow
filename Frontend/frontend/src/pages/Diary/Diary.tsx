@@ -30,6 +30,7 @@ import {
   Comments,
   DateWrap,
 } from '../../components/feed/FeedEmotion';
+import { isSameDay } from 'date-fns';
 
 const Container = styled.div`
   ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
@@ -37,7 +38,7 @@ const Container = styled.div`
 `;
 
 const TopTitle = styled.div`
-  ${tw`flex w-full text-h2 text-white justify-center`}
+  ${tw`flex w-full text-white justify-center mt-4 text-p2`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
@@ -79,6 +80,7 @@ function Diary() {
   const userInfo = useRecoilState(userState);
   const [data, setData] = useState<Diary | null>();
   const [diarys, setDiarys] = useState<Diary[]>([]);
+  const [insight, setInsight] = useState<string | null>('');
   const [sameDay, setSameDay] = useState<boolean>(false);
   //Form controller
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -176,6 +178,24 @@ function Diary() {
   };
   useEffect(() => {
     // console.log(diarys.length);
+    const get_insight = async () => {
+      try {
+        const response = await defaultApi.get(
+          requests.GET_INSIGHT(userInfo[0]?.personalityId),
+          {
+            withCredentials: true,
+          },
+        );
+        setInsight(response.data.content);
+        // console.log(response.data);
+      } catch (error: any) {
+        if (error.response.status === 404) {
+          console.log('설문조사 안했어');
+        }
+        throw error;
+      }
+    };
+    get_insight();
     if (diarys.length === 0) {
       get_user_diary();
     }
@@ -183,19 +203,21 @@ function Diary() {
 
   const showDetailsHandle = (diaryData: Diary | null) => {
     if (diaryData) {
-      return setData(diaryData);
+      setData(diaryData);
+      setFormOpen(false);
     } else {
-      return setData(null);
+      setData(diaryData);
+      setFormOpen(true);
     }
   };
-  useEffect(() => {
-    // console.log(diarys.length);
-    if (data) {
-      setFormOpen(true);
-    } else {
-      setFormOpen(false);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   // console.log(diarys.length);
+  //   if (!data && sameDay) {
+  //     setFormOpen(true);
+  //   } else {
+  //     setFormOpen(false);
+  //   }
+  // }, [data, sameDay]);
   return (
     <div className="w-full">
       {/* <Background> */}
@@ -210,8 +232,9 @@ function Diary() {
           />
         </div>
         <TopTitle>
-          <span>다이어리 페이지</span>
+          <h4 className="text-h4">다이어리</h4>
         </TopTitle>
+        <span>{insight}</span>
         <Calendar
           showDetailsHandle={showDetailsHandle}
           diarys={diarys}
@@ -253,7 +276,7 @@ function Diary() {
         ) : (
           ''
         )}
-        {!data && sameDay && formOpen ? (
+        {formOpen && sameDay && data ? (
           <FormContainer>
             <form action="submit">
               <TitleInputContainer

@@ -35,6 +35,7 @@ function Bucket() {
   const [selectedBucketContent, setSelectedBucketContent] = useState('');
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [buckets, setBuckets] = useState<Bucket[]>([]);
+  const [noticeOpen, setNoticeOpen] = useState<boolean>(false);
   // 수정, 삭제 모달 open
   // 수정, 삭제 모달 close
   const onEditOrDeleteModalClose = () => {
@@ -73,6 +74,11 @@ function Bucket() {
         });
         if (typeof response.data === 'object') {
           setBuckets(response.data);
+          if (response.data.length > 0) {
+            setNoticeOpen(false);
+          } else {
+            setNoticeOpen(true);
+          }
         }
       } catch (error) {
         throw error;
@@ -129,14 +135,15 @@ function Bucket() {
               setBuckets={setBuckets}
             />
           ))}
-        {buckets.length === 0 ? (
+
+        {noticeOpen ? (
           <div
             className="mt-[20vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow"
             style={{ boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.25)' }}
           >
             <EmptyAlert
               text={`생성된 버킷리스트가 없습니다. 우측 하단의 버튼을 눌러
-            버킷리스트를 생성해 보세요.`}
+          버킷리스트를 생성해 보세요.`}
             />
           </div>
         ) : (

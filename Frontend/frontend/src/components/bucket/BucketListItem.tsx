@@ -136,7 +136,7 @@ function BucketListItem({
             'Content-Type': 'multipart/form-data',
           },
         });
-
+        setIsClicked(false);
         get_user_bucket();
         Swal.fire({
           title: '버킷 완료 성공!',

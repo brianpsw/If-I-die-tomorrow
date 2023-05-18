@@ -145,7 +145,7 @@ const Survey: React.FC<PersonalityTestProps> = ({ onSubmit }) => {
         timer: 1000,
         showConfirmButton: false,
       });
-      navigate('/diary');
+      navigate('/');
     } catch (error) {
       console.error(error);
     }
