@@ -19,7 +19,7 @@ const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
 `;
 const TopTitle = styled.div`
-  ${tw`flex w-full text-white justify-center mt-4`}
+  ${tw`flex w-full text-white justify-center mt-4 text-p2`}
 `;
 interface Bucket {
   bucketId: number;
@@ -115,7 +115,7 @@ function Bucket() {
       <Container>
         <LogoContainer src={IIDT} />
         <TopTitle>
-          <h3 className="text-h3">버킷리스트</h3>
+          <h4 className="text-h4">버킷리스트</h4>
         </TopTitle>
 
         {buckets &&
