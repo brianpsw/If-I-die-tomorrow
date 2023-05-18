@@ -12,8 +12,7 @@ import BucketEditModal from '../../components/bucket/BucketEditModal';
 import AddButtonIcon from '../../assets/icons/AddButtonIcon.svg';
 import EmptyAlert from '../../components/common/EmptyAlert';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] overflow-y-auto`}
-  padding-bottom: 20%;
+  ${tw`flex items-center flex-col px-[24px] w-full h-[92vh] pb-[10%] overflow-y-auto`}
 `;
 const LogoContainer = styled.img`
   ${tw`self-start mt-[43px] w-[120px] my-[8px]`}
@@ -80,9 +79,9 @@ function Bucket() {
         if (typeof response.data === 'object') {
           setBuckets(response.data);
           if (response.data.length > 0) {
-            setNoticeOpen(false);
+            setNoticeOpen(() => false);
           } else {
-            setNoticeOpen(true);
+            setNoticeOpen(() => true);
           }
         }
       } catch (error) {
@@ -103,7 +102,11 @@ function Bucket() {
       ) : null}
       {/* 버킷 생성 모달 */}
       {openCreateModal ? (
-        <CreateModal onClose={onCreateModalClose} setBuckets={setBuckets} />
+        <CreateModal
+          onClose={onCreateModalClose}
+          setBuckets={setBuckets}
+          setNoticeOpen={setNoticeOpen}
+        />
       ) : null}
       {/* 버킷 수정 모달 */}
       {openBucketEditModal ? (
@@ -119,6 +122,7 @@ function Bucket() {
           onClose={onDeleteModalClose}
           selectedBucketId={selectedBucketId}
           setBuckets={setBuckets}
+          setNoticeOpen={setNoticeOpen}
         />
       ) : null}
       {/* <Background> */}
