@@ -84,6 +84,7 @@ function Diary() {
   const [sameDay, setSameDay] = useState<boolean>(false);
   //Form controller
   const [formOpen, setFormOpen] = useState<boolean>(false);
+  const [formOpen2, setFormOpen2] = useState<boolean>(false);
   const [isChecked, setIsChecked] = useState(false);
   const [completeContent, setCompleteContent] = useState('');
   const [completeTitle, setCompleteTitle] = useState('');
@@ -205,6 +206,7 @@ function Diary() {
     if (diaryData) {
       setData(diaryData);
       setFormOpen(false);
+      // setFormOpen2(false);
     } else {
       setData(diaryData);
       setFormOpen(true);
@@ -276,7 +278,7 @@ function Diary() {
         ) : (
           ''
         )}
-        {formOpen && sameDay && data ? (
+        {formOpen && sameDay && !data ? (
           <FormContainer>
             <form action="submit">
               <TitleInputContainer
