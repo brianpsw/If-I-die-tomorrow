@@ -31,7 +31,6 @@ const Slide = styled.div<{ imgUrl: string }>`
     background-repeat: no-repeat;
     min-height: 100vh;
     width: 100%;
-    background-attachment: fixed;
   `}
 `;
 
@@ -42,12 +41,12 @@ const Slide = styled.div<{ imgUrl: string }>`
 const Carousel = () => {
   // 슬라이드 이동
   const location = useLocation().pathname;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const backgroundImage = [Image3, Image2, Image1, Image4, Image5];
+  const [currentIndex, setCurrentIndex] = useState(2);
+  const backgroundImage = [Image1, Image2, Image3, Image4, Image5];
   useEffect(() => {
     if (location.startsWith('/diary') || location.startsWith('/survey')) {
       setCurrentIndex(0);
-      console.log(backgroundImage);
+      console.log(typeof Image1);
     } else if (location.startsWith('/bucket')) {
       setCurrentIndex(1);
     } else if (
