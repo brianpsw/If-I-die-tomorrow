@@ -82,12 +82,12 @@ If I Die Tomorrow는 웰다잉을 쉽게 준비할 수 있도록 도와주는 �
  - Sonarqube
  - JUnit
  
-8. FrontEnd
+8. BackEnd
  - Swagger
  - Firebase
  - 가비아 SMS Tool
  
-9. BackEnd
+9. FrontEnd
  - Tailwind CSS
  - Recoil
  - Styled Component
