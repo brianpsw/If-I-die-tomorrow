@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { useSetRecoilState, useRecoilState, useRecoilValue } from 'recoil';
@@ -11,6 +11,34 @@ import { defaultApi } from '../../api/axios';
 import HomeSemiRoom from '../../components/home/HomeSemiRoom';
 import { Logo, FeelingTxt } from './HomeEmotion';
 import Loading from '../../components/common/Loading';
+import { getToken } from 'firebase/messaging';
+import { messaging } from '../../App';
+
+const firebaseToken = async () => {
+  try {
+    const currentToken = await getToken(messaging, {
+      vapidKey: process.env.FIREBASE_PUBLICKEY,
+    });
+    console.log(currentToken);
+    if (currentToken) {
+      const response = await defaultApi.post(
+        requests.POST_TOKEN(),
+        {
+          currentToken,
+        },
+        { withCredentials: true },
+      );
+    } else {
+      // Show permission request UI
+      console.log(
+        'No registration token available. Request permission to generate one.',
+      );
+      // ...
+    }
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 function Home() {
   const [user, setUser] = useRecoilState(userState);
@@ -61,6 +89,7 @@ function Home() {
     } else {
       get_user();
       get_all_category();
+      firebaseToken();
     }
   }, []);
 
