@@ -158,6 +158,9 @@ const requests = {
   DELETE_RECEIVER(receiverId) {
     return `/api/receiver/${receiverId}`;
   },
+  POST_TOKEN() {
+    return `/api/token`;
+  },
 };
 
 export default requests;

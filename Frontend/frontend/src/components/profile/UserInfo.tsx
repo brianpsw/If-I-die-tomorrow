@@ -17,6 +17,20 @@ import {
   FillingText,
 } from '../../pages/Profile/MyPageEmotion';
 
+interface User {
+  userId: number;
+  name: string;
+  email: string;
+  age: number;
+  nickname: string;
+  sendAgree: boolean;
+  personalPage: string | null;
+  personalityId: number | null;
+  newCheck: boolean;
+  deleted: boolean;
+  providerType: string;
+}
+
 function UserInfo() {
   const user = useRecoilValue(userState);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(userState);
@@ -42,7 +56,7 @@ function UserInfo() {
     try {
       await defaultApi.get(requests.POST_LOGOUT(), { withCredentials: true });
       localStorage.removeItem('user');
-      setIsLoggedIn(null);
+      setIsLoggedIn({} as User);
       localStorage.removeItem('recoil-persist');
       Swal.fire({
         title: '로그아웃 성공!',
@@ -62,6 +76,26 @@ function UserInfo() {
     }
   };
 
+  // let deferredPrompt: any;
+
+  // window.addEventListener('beforeinstallprompt', (event) => {
+  //   event.preventDefault();
+  //   deferredPrompt = event;
+  // });
+
+  // const handlePwaInstall = async () => {
+  //   if (!deferredPrompt) {
+  //     alert('이미 앱이 설치되어있거나 지원되지 않는 환경입니다.');
+  //     return;
+  //   }
+
+  //   deferredPrompt.prompt();
+
+  //   const result = await deferredPrompt.userChoice;
+
+  //   deferredPrompt = null;
+  // };
+
   return (
     <div>
       <MyProfile>
@@ -80,6 +114,8 @@ function UserInfo() {
           <p className="text-p1">이메일: {loggedInUserEmail}</p>
           <br />
           <button onClick={handleLogout}>로그아웃</button>
+          {/* <br />
+          <button onClick={handlePwaInstall}> 앱 설치하기 </button> */}
         </SettingBox>
         <WillServiceWrap>
           <Link to="/will">
