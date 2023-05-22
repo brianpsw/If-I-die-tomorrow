@@ -16,15 +16,14 @@ import { messaging } from '../../App';
 
 const firebaseToken = async () => {
   try {
-    const currentToken = await getToken(messaging, {
+    const token = await getToken(messaging, {
       vapidKey: process.env.FIREBASE_PUBLICKEY,
     });
-    console.log(currentToken);
-    if (currentToken) {
+    if (token) {
       const response = await defaultApi.post(
         requests.POST_TOKEN(),
         {
-          currentToken,
+          token,
         },
         { withCredentials: true },
       );
