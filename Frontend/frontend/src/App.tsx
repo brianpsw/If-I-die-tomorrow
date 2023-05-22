@@ -55,7 +55,8 @@ function requestPermission() {
 }
 function App() {
   useEffect(() => {
-    requestPermission();
+    if ('Notification' in window && 'requestPermission' in Notification)
+      requestPermission();
   }, []);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
