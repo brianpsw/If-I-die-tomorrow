@@ -10,7 +10,6 @@ import { defaultApi } from '../../api/axios';
 
 import HomeSemiRoom from '../../components/home/HomeSemiRoom';
 import { Logo, FeelingTxt } from './HomeEmotion';
-import Loading from '../../components/common/Loading';
 import { getToken } from 'firebase/messaging';
 import { messaging } from '../../App';
 
@@ -98,9 +97,7 @@ function Home() {
       <FeelingTxt>
         밤하늘을 보며 <br /> 산책 한번 어때요?
       </FeelingTxt>
-      <Suspense fallback={<Loading />}>
-        <HomeSemiRoom />
-      </Suspense>
+      <HomeSemiRoom />
     </div>
   );
 }
