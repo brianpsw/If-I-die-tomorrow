@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "token")
+@Table(name = "token", uniqueConstraints = @UniqueConstraint(columnNames = { "userId", "token" }))
 public class Token {
 
     @Id
