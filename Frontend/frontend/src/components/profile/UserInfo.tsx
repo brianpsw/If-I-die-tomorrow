@@ -17,6 +17,20 @@ import {
   FillingText,
 } from '../../pages/Profile/MyPageEmotion';
 
+interface User {
+  userId: number;
+  name: string;
+  email: string;
+  age: number;
+  nickname: string;
+  sendAgree: boolean;
+  personalPage: string | null;
+  personalityId: number | null;
+  newCheck: boolean;
+  deleted: boolean;
+  providerType: string;
+}
+
 function UserInfo() {
   const user = useRecoilValue(userState);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(userState);
@@ -42,7 +56,7 @@ function UserInfo() {
     try {
       await defaultApi.get(requests.POST_LOGOUT(), { withCredentials: true });
       localStorage.removeItem('user');
-      setIsLoggedIn(null);
+      setIsLoggedIn({} as User);
       localStorage.removeItem('recoil-persist');
       Swal.fire({
         title: '로그아웃 성공!',
