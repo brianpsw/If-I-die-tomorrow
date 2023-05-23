@@ -169,7 +169,7 @@ function HomeScene() {
 function HomeSemiRoom() {
   return (
     <Canvas
-      style={{ width: '100vw', height: '100vh', paddingBottom: '70px' }}
+      style={{ width: '100vw', height: '100vh' }}
       orthographic
       camera={{
         position: [10, 5, 10],

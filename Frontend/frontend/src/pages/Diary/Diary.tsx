@@ -31,7 +31,7 @@ import {
   DateWrap,
 } from '../../components/feed/FeedEmotion';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh] overflow-y-auto pb-[70px]`}
+  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh] overflow-y-auto pb-[65px]`}
 `;
 
 const TopTitle = styled.div`
