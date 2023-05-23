@@ -1,19 +1,7 @@
 import styled from 'styled-components';
 import tw from 'twin.macro';
-import backgroundImg from '../../assets/images/mypage_bg.jpg';
 import Button from '../../components/common/Button';
 import textLogoImg from '../../assets/images/text_logo.png';
-
-export const Background = styled.div`
-  background-image: url(${backgroundImg});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh;
-  width: 100%;
-  position: relative;
-  background-attachment: fixed;
-`;
 
 export const Logo = styled.div`
   background-image: url(${textLogoImg});
@@ -35,7 +23,6 @@ export const Container = styled.div`
   ${tw`text-p2 flex flex-col mx-auto pt-36`}
   max-width: calc(100% - 48px);
   padding-bottom: 15%;
-  // border: solid 1px white;
 `;
 
 export const HeadText = styled.h1`
