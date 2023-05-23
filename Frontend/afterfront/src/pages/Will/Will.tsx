@@ -63,27 +63,26 @@ function Will(): React.JSX.Element {
       ) : null}
       {onWillDoc ? (
         <WillModal onClose={onWillDocModalClose}>
-          <div className="container mx-auto p-4 h-full">
-            <div className="bg-neutral-50 p-8 handwritten h-[80%]">
-              <div className="prose lg:prose-lg xl:prose-xl">
-                <p className="text-xl font-semibold mb-4">유언장</p>
-                <p className="text-lg leading-relaxed mb-6 whitespace-pre-wrap">
+          <div className="mx-auto p-6 w-full h-full">
+            <div className="overflow-auto bg-white p-8 rounded-[10px] h-full flex flex-col justify-between">
+              <div>
+                <p className="text-h4 mb-4">유언장</p>
+                <p className="text-p1 leading-relaxed mb-6 whitespace-pre-wrap">
                   {userData.will.content
                     ? userData.will.content
                     : '유언장 내용이 없습니다.'}
                 </p>
-                <div className="flex w-full justify-end">
-                  {userData.will.signUrl ? (
-                    <img
-                      className="h-32"
-                      src={userData.will.signUrl}
-                      alt="사인"
-                    />
-                  ) : (
-                    <img className="h-32" src={NotFound} alt="사인 없음" />
-                  )}
-                </div>
-                {/* More paragraphs... */}
+              </div>
+              <div className="flex w-full justify-end">
+                {userData.will.signUrl ? (
+                  <img
+                    className="h-32"
+                    src={userData.will.signUrl}
+                    alt="사인"
+                  />
+                ) : (
+                  <img className="h-32" src={NotFound} alt="사인 없음" />
+                )}
               </div>
             </div>
           </div>

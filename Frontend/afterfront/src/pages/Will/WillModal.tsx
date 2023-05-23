@@ -8,7 +8,7 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalWrapper = styled.div`
-  ${tw`bg-gray-100 flex flex-col items-center border-solid rounded-xl shadow w-[90vw] `}
+  ${tw`bg-gray-100 flex flex-col items-center border-solid rounded-[10px] shadow w-[90vw] h-[50vh]`}
 `;
 
 interface ModalProps {
