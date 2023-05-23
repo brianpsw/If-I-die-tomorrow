@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useRecoilState } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 import Room from './Room';
@@ -7,6 +7,7 @@ import AppTitle from '../../assets/images/app_title.svg';
 import Logo from '../../assets/icons/logo.svg';
 import styled from 'styled-components';
 import tw from 'twin.macro';
+import Loading from '../../components/common/Loading';
 
 const LogoContainer = styled.div`
   ${tw`flex items-center flex-col w-full space-y-6 mb-6`}
@@ -102,6 +103,10 @@ export default function Home() {
   if (Object.keys(userData).length === 0) {
     return <LoginForm setIsLogin={setUserData} />;
   } else {
-    return <Room />;
+    return (
+      <Suspense fallback={<Loading />}>
+        <Room />;
+      </Suspense>
+    );
   }
 }
