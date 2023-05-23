@@ -33,39 +33,41 @@ const TextBox = styled.div`
 
 function Will(): JSX.Element {
   return (
-    <div className="min-h-[100vh]" style={{ paddingBottom: '30%' }}>
+    <div className="min-h-[100vh] pb-[30%]">
       <TopBar title="유언장" />
-      <Container>
-        <Link to="/will/text">
-          <LinkWrapper>
-            <SmallBox imgUrl={Writing} />
-            <TextBox>
-              <p className="text-smT">유언장 등록</p>
-            </TextBox>
-          </LinkWrapper>
-        </Link>
-      </Container>
-      <Container>
-        <Link to="/will/sign">
-          <LinkWrapper>
-            <SmallBox imgUrl={Signiture} />
-            <TextBox>
-              <p className="text-smT">서명 등록</p>
-            </TextBox>
-          </LinkWrapper>
-        </Link>
-      </Container>
-      <Container>
-        <Link to="/will/video">
-          <LinkWrapper>
-            <SmallBox imgUrl={Video} />
+      <div className="pt-10">
+        <Container>
+          <Link to="/will/text">
+            <LinkWrapper>
+              <SmallBox imgUrl={Writing} />
+              <TextBox>
+                <p className="text-smT">유언장 등록</p>
+              </TextBox>
+            </LinkWrapper>
+          </Link>
+        </Container>
+        <Container>
+          <Link to="/will/sign">
+            <LinkWrapper>
+              <SmallBox imgUrl={Signiture} />
+              <TextBox>
+                <p className="text-smT">서명 등록</p>
+              </TextBox>
+            </LinkWrapper>
+          </Link>
+        </Container>
+        <Container>
+          <Link to="/will/video">
+            <LinkWrapper>
+              <SmallBox imgUrl={Video} />
 
-            <TextBox>
-              <p className="text-smT">동영상 유언장</p>
-            </TextBox>
-          </LinkWrapper>
-        </Link>
-      </Container>
+              <TextBox>
+                <p className="text-smT">동영상 유언장</p>
+              </TextBox>
+            </LinkWrapper>
+          </Link>
+        </Container>
+      </div>
     </div>
   );
 }
