@@ -1,5 +1,5 @@
 #  🌙 If I Die Tomorrow - 자율 PJT
-SSAFY 8기 2학기 A307 자율 프로젝트 - If I Die Tomorrow
+SSAFY 8기 2학기 A307 자율 프로젝트 - If I Die Tomorrow Test
 
 ## 🚩 If I Die Tomorrow - 개요
 **기간**
