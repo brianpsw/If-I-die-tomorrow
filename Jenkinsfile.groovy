@@ -16,6 +16,7 @@ void setBuildStatus(String message, String context, String state) {
 
 pipeline {
     agent any
+    options { disableConcurrentBuilds() }
     stages {
         stage('Checkout') {
 
