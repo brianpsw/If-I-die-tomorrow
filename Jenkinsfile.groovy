@@ -109,67 +109,6 @@ pipeline {
             }
         }
 
-        stage('Sonar Analysis-fe') {
-            when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                }
-            }
-            environment {
-                SCANNER_HOME = tool 'a307'
-            }
-          
-            steps {
-                withSonarQubeEnv('SonarQube-local'){
-              
-                    sh '''
-                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY_FE} \
-                    -Dsonar.sources=Frontend/ \
-                    -Dsonar.host.url=${SONAR_URL} \
-                    -Dsonar.login=${SONAR_TOKEN_FE}
-                    '''
-                }
-            }
-        }
-
-        stage('Sonar Analysis-be') {
-            when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                }
-            }
-            environment {
-                SCANNER_HOME = tool 'a307'
-            }
-          
-            steps {
-                withSonarQubeEnv('SonarQube-local'){
-              
-                    sh '''
-                    ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=Backend/ \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
-                    -Dsonar.host.url=${SONAR_URL} \
-                    -Dsonar.login=${SONAR_TOKEN}
-                    '''
-                }
-            }
-        }
-
         stage('BE Test') {
             when {
                 allOf {
