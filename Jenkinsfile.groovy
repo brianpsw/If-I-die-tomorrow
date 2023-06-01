@@ -1,18 +1,16 @@
-def getGitHub() {
-    return github(endpoint: 'https://api.github.com', credentialsId: 'github2')
-}
-
-def updateGitHubStatus(status) {
-    def github = getGitHub()
-    def sha = env.GITHUB_SHA
-
-    github.createCommitStatus(
-        env.ghprbActualCommit,
-        status,
-        context: 'Jenkins CI',
-        description: "Jenkins build ${status}",
-        targetUrl: env.BUILD_URL
-    )
+void setBuildStatus(String message, String context, String state) {
+  // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
+    withCredentials([string(credentialsId: 'github2', variable: 'TOKEN')]) {
+      // 'set -x' for debugging. Don't worry the access token won't be actually logged
+      // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
+        sh """
+            set -x
+            curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
+                -H \"Content-Type: application/json\" \
+                -X POST \
+                -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
+        """
+    } 
 }
 
 
@@ -179,11 +177,11 @@ pipeline {
                         echo "Status: ${qg.status}"
                         if(qg.status != 'OK') {
                             echo "NOT OK Status: ${qg.status}"
-                            updateGitHubStatus('failure')
+                            setBuildStatus("Failed", "sonarqube", "failure");
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         } else{
                             echo "OK Status: ${qg.status}"
-                            updateGitHubStatus('success')
+                            setBuildStatus("Passed", "sonarqube", "success");
                         }
                         echo "End~~~~"
                     }
