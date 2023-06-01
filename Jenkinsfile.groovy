@@ -179,7 +179,7 @@ pipeline {
                         echo "Status: ${qg.status}"
                         if(qg.status != 'OK') {
                             echo "NOT OK Status: ${qg.status}"
-                            updateGithubStatus('failure')
+                            updateGitHubStatus('failure')
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         } else{
                             echo "OK Status: ${qg.status}"
