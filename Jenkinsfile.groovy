@@ -183,7 +183,7 @@ pipeline {
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         } else{
                             echo "OK Status: ${qg.status}"
-                            updateGithubStatus('success')
+                            updateGitHubStatus('success')
                         }
                         echo "End~~~~"
                     }
