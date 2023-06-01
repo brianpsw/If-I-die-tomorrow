@@ -23,7 +23,7 @@ public class FileChecker {
 	}
 	
 	public static boolean videoCheck (InputStream inputStream) throws IOException {
-		List<String> validTypeList = Arrays.asList("video/mp4", "video/avi", "video/webm", "application/x-matroska");
+		List<String> validTypeList = Arrays.asList("video/mp4", "video/avi", "video/webm", "application/x-matroska", "video/quicktime");
 		
 		String mimeType = tika.detect(inputStream);
 		log.info("MimeType : " + mimeType);
