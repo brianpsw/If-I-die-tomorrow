@@ -92,6 +92,9 @@ pipeline {
                 git pull
                 git tag v1
                 git merge ${env.CHANGE_BRANCH}
+                cd Backend/ifIDieTomorrow
+                chmod +x gradlew
+                ./gradlew clean test
                 """                
                 withSonarQubeEnv('SonarQube-local'){
               
@@ -99,6 +102,7 @@ pipeline {
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
                     -Dsonar.sources=. \
                     -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.login=${SONAR_TOKEN}
                     '''
                 }
@@ -122,20 +126,7 @@ pipeline {
             }
             steps {
                 echo 'BE Testing...'
-                sh """
-                cd Backend/ifIDieTomorrow
-                chmod +x gradlew
-                ./gradlew clean test
-                """
-            }
-            post {
-                always {
-                    sh """
-                    git reset --hard v1
-                    git tag -d v1
-                    """
-                    junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
-                }
+                junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
             }
         }
 
