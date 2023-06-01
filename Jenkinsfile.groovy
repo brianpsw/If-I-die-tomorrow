@@ -22,7 +22,7 @@ pipeline {
         stage('Checkout') {
 
             steps {
-                echo "Branch Name: ${env.BRANCH_NAME} ${env.CHANGE_TARGET} ${env.CHANGE_BRANCH} test7"
+                echo "Branch Name: ${env.BRANCH_NAME} ${env.CHANGE_TARGET} ${env.CHANGE_BRANCH} test8"
                 git credentialsId: 'github2', url: 'https://github.com/brianpsw/If-I-die-tomorrow.git'
             }
         }
