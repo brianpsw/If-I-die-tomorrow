@@ -42,8 +42,11 @@ pipeline {
                 
                 sh """
                 git checkout -b ${env.CHANGE_BRANCH} origin/${env.CHANGE_BRANCH} || true
+                git switch ${env.CHANGE_BRANCH}
+                git pull
                 git checkout -b ${env.CHANGE_TARGET} origin/${env.CHANGE_TARGET} || true
                 git switch ${env.CHANGE_TARGET}
+                git pull
                 git tag v1
                 git merge ${env.CHANGE_BRANCH}
                 """     
@@ -83,8 +86,11 @@ pipeline {
                 
                 sh """
                 git checkout -b ${env.CHANGE_BRANCH} origin/${env.CHANGE_BRANCH} || true
+                git switch ${env.CHANGE_BRANCH}
+                git pull
                 git checkout -b ${env.CHANGE_TARGET} origin/${env.CHANGE_TARGET} || true
                 git switch ${env.CHANGE_TARGET}
+                git pull
                 git tag v1
                 git merge ${env.CHANGE_BRANCH}
                 """                
@@ -193,6 +199,7 @@ pipeline {
                 sh 'echo " Image Bulid Start"'
                 sh '''
                 git checkout -b develop-fe origin/develop-fe
+                git pull
                 cd Frontend/frontend
                 docker build -t front-react .
                 '''
@@ -216,6 +223,7 @@ pipeline {
                 sh 'echo " Image Bulid Start"'
                 sh '''
                 git checkout -b develop-be origin/develop-be
+                git pull
                 cd Backend/ifIDieTomorrow
                 docker build -t back-springboot -f ./DockerFile .
                 '''
