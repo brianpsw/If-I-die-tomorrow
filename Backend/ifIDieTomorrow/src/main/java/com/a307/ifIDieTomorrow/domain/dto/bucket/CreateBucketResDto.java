@@ -17,6 +17,7 @@ public class CreateBucketResDto {
 	private String imageUrl;
 	private Boolean secret;
 	private Integer report;
+	private String imageType;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	
@@ -30,6 +31,7 @@ public class CreateBucketResDto {
 				bucket.getImageUrl(),
 				bucket.getSecret(),
 				bucket.getReport(),
+				bucket.getImageType(),
 				bucket.getCreatedAt(),
 				bucket.getUpdatedAt()
 		);
