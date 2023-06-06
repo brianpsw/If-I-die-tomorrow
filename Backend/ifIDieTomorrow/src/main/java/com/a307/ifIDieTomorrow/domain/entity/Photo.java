@@ -33,6 +33,8 @@ public class Photo extends BaseEntity {
 	@Column(columnDefinition = "TEXT")
 	private String caption;
 	
+	private String imageType;
+	
 	public void updateCategory (String caption) {
 		this.caption = caption;
 	}
