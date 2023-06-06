@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class DiaryController {
 			@RequestPart(value = "data") CreateDiaryReqDto data,
 			@RequestPart(required = false, value = "photo") MultipartFile photo
 			) throws IOException, NotFoundException, NoPhotoException, IllegalArgumentException, ImageProcessingException, MetadataException {
-		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		if (photo != null && !FileChecker.imageCheck(photo.getInputStream()) && !FileChecker.videoCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(diaryService.createDiary(data, photo));
 	}
 
@@ -66,7 +67,7 @@ public class DiaryController {
 			@RequestPart(value = "data") UpdateDiaryReqDto data,
 			@RequestPart(value = "photo", required = false) MultipartFile photo
 			) throws NotFoundException, IOException, IllegalArgumentException, UnAuthorizedException, ImageProcessingException, MetadataException {
-		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		if (photo != null && !FileChecker.imageCheck(photo.getInputStream()) && !FileChecker.videoCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.OK).body(diaryService.updateDiary(data, photo));
 	}
 	
