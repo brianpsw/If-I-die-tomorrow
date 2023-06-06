@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryByUserResDto" +
-			"(d.diaryId, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt, COUNT(c.commentId)) " +
+			"(d.diaryId, d.title, d.content, d.imageUrl, d.secret, d.imageType, d.createdAt, d.updatedAt, COUNT(c.commentId)) " +
 			"FROM Diary d " +
 			"LEFT JOIN Comment c " +
 			"ON d.diaryId = c.typeId " +
@@ -25,7 +25,7 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 	List<GetDiaryByUserResDto> findAllByUserIdWithCommentCount (@Param("userId") Long userId);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
-			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
+			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.imageType, d.createdAt, d.updatedAt) " +
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
@@ -35,14 +35,14 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
 	Page<GetDiaryResDto> findAllBySecretIsFalseAndReportUnderLimit(Pageable pageable, @Param("reportLimit") Integer reportLimit);
 
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
-			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
+			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.imageType, d.createdAt, d.updatedAt) " +
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
 			"WHERE d.diaryId = :diaryId AND u.deleted = false")
 	Optional<GetDiaryResDto> findByIdWithUserNickName(@Param("diaryId") Long diaryId);
 	@Query("SELECT NEW com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto" +
-			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.createdAt, d.updatedAt) " +
+			"(d.diaryId, d.userId, u.nickname, d.title, d.content, d.imageUrl, d.secret, d.imageType, d.createdAt, d.updatedAt) " +
 			"FROM Diary d " +
 			"JOIN User u " +
 			"ON d.userId = u.userId " +
