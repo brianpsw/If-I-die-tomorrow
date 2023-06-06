@@ -12,6 +12,7 @@ public class GetPhotoResDto {
 	private Long photoId;
 	private String imageUrl;
 	private String caption;
+	private String imageType;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	
