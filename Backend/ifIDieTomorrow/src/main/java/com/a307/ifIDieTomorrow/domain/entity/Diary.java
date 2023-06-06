@@ -42,12 +42,14 @@ public class Diary extends BaseEntity{
 	@ColumnDefault("0")
 	private Integer report;
 
+	private String imageType;
 
-	public void updateDiary(String title, String content, String imageUrl, Boolean secret) {
+	public void updateDiary(String title, String content, String imageUrl, Boolean secret, String imageType) {
 		this.title = title;
 		this.content = content;
 		this.imageUrl = imageUrl;
 		this.secret = secret;
+		this.imageType = imageType;
 	}
 
 	public void reportDiary(){
