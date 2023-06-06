@@ -9,6 +9,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -56,6 +58,13 @@ public class BucketServiceImpl implements BucketService {
 //		사진 검증
 		if (data.getHasPhoto() && photo == null) throw new NoPhotoException("사진이 업로드 되지 않았습니다.");
 		
+		String type = null;
+		if (photo != null) {
+			InputStream is = photo.getInputStream();
+			if (FileChecker.videoCheck(is)) type = "video";
+			else if (FileChecker.imageCheck(is)) type = "image";
+		}
+		
 		Bucket bucket = Bucket.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				title(data.getTitle()).
@@ -63,6 +72,7 @@ public class BucketServiceImpl implements BucketService {
 				complete(data.getComplete()).
 				imageUrl(data.getHasPhoto() ? s3Upload.upload(photo, BUCKET) : "").
 				secret(data.getSecret()).
+				imageType(type).
 				build();
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
@@ -108,12 +118,20 @@ public class BucketServiceImpl implements BucketService {
 		// 사진이 업데이트되었고 기존에 사진이 있었다면 S3에서 사진을 삭제함
 		if (data.getUpdatePhoto() && bucket.getImageUrl() != null && !"".equals(bucket.getImageUrl())) s3Upload.delete(bucket.getImageUrl());
 		
+		String type = null;
+		if (photo != null) {
+			InputStream is = photo.getInputStream();
+			if (FileChecker.videoCheck(is)) type = "video";
+			else if (FileChecker.imageCheck(is)) type = "image";
+		}
+		
 		bucket.updateBucket(
 				data.getTitle(),
 				data.getContent(),
 				data.getComplete(),
 				data.getUpdatePhoto() ? (photo == null ? "" : s3Upload.upload(photo, BUCKET)) : bucket.getImageUrl(),
-				data.getSecret()
+				data.getSecret(),
+				data.getUpdatePhoto() ? (photo == null ? null : type) : bucket.getImageType()
 		);
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
