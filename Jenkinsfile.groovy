@@ -187,7 +187,8 @@ pipeline {
             steps{
                 sh 'echo " Image Bulid Start"'
                 sh '''
-                git checkout -b develop-fe origin/develop-fe
+                git checkout -b develop-fe origin/develop-fe || true
+                git switch develop-fe
                 git pull
                 cd Frontend/frontend
                 docker build -t front-react .
@@ -211,7 +212,8 @@ pipeline {
             steps{
                 sh 'echo " Image Bulid Start"'
                 sh '''
-                git checkout -b develop-be origin/develop-be
+                git checkout -b develop-be origin/develop-be || true
+                git switch develop-be
                 git pull
                 cd Backend/ifIDieTomorrow
                 docker build -t back-springboot -f ./DockerFile .
