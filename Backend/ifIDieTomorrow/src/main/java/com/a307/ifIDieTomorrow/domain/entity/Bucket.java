@@ -34,22 +34,23 @@ public class Bucket extends BaseEntity {
 	
 	private String complete;
 	
-	@Column
 	private String imageUrl;
 	
-	@Column
 	private Boolean secret;
 	
 	@Column(nullable = false)
 	@ColumnDefault("0")
 	private Integer report;
 	
-	public void updateBucket (String title, String content, String complete, String imageUrl, Boolean secret) {
+	private String imageType;
+	
+	public void updateBucket (String title, String content, String complete, String imageUrl, Boolean secret, String imageType) {
 		this.title = title;
 		this.content = content;
 		this.complete = complete;
 		this.imageUrl = imageUrl;
 		this.secret = secret;
+		this.imageType = imageType;
 	}
 	
 	public void updateTitle(String title) {
