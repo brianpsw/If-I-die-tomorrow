@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 	@Query("SELECT new com.a307.ifIDieTomorrow.domain.dto.photo.GetPhotoResDto" +
-			"(photoId, imageUrl, caption, createdAt, updatedAt) " +
+			"(photoId, imageUrl, caption, imageType, createdAt, updatedAt) " +
 			"FROM Photo " +
 			"WHERE category.categoryId = :categoryId AND userId = :userId " +
 			"ORDER BY createdAt DESC")
