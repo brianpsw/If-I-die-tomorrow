@@ -17,6 +17,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.a307.ifIDieTomorrow.global.util.ImageProcess;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import com.drew.imaging.ImageProcessingException;
@@ -137,11 +138,18 @@ public class PhotoServiceImpl implements PhotoService {
 		// 공용 카테고리가 아니면서 다른 유저가 만든 카테고리에 업로드하려 할 때
 		if (category.getUserId() != 0 && !category.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 카테고리 ID 입니다.");
 		
+		String type = null;
+		if (photo != null) {
+			if (FileChecker.videoCheck(photo.getInputStream())) type = "video";
+			else type = "image";
+		}
+		
 		Photo photoEntity = Photo.builder().
 				category(category).
 				userId(userId).
 				imageUrl(s3Upload.upload(photo, PHOTO)).
 				caption(data.getCaption()).
+				imageType(type).
 				build();
 		
 		return CreatePhotoResDto.toDto(photoRepository.save(photoEntity));
