@@ -60,9 +60,8 @@ public class BucketServiceImpl implements BucketService {
 		
 		String type = null;
 		if (photo != null) {
-			InputStream is = photo.getInputStream();
-			if (FileChecker.videoCheck(is)) type = "video";
-			else if (FileChecker.imageCheck(is)) type = "image";
+			if (FileChecker.videoCheck(photo.getInputStream())) type = "video";
+			else type = "image";
 		}
 		
 		Bucket bucket = Bucket.builder().
@@ -120,9 +119,8 @@ public class BucketServiceImpl implements BucketService {
 		
 		String type = null;
 		if (photo != null) {
-			InputStream is = photo.getInputStream();
-			if (FileChecker.videoCheck(is)) type = "video";
-			else if (FileChecker.imageCheck(is)) type = "image";
+			if (FileChecker.videoCheck(photo.getInputStream())) type = "video";
+			else type = "image";
 		}
 		
 		bucket.updateBucket(
@@ -131,7 +129,7 @@ public class BucketServiceImpl implements BucketService {
 				data.getComplete(),
 				data.getUpdatePhoto() ? (photo == null ? "" : s3Upload.upload(photo, BUCKET)) : bucket.getImageUrl(),
 				data.getSecret(),
-				data.getUpdatePhoto() ? (photo == null ? null : type) : bucket.getImageType()
+				data.getUpdatePhoto() ? type : bucket.getImageType()
 		);
 		
 		return CreateBucketResDto.toDto(bucketRepository.save(bucket));
