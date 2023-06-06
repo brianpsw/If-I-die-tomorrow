@@ -14,6 +14,7 @@ public class CreatePhotoResDto {
 	private Long categoryId;
 	private String imageUrl;
 	private String caption;
+	private String imageType;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	
@@ -23,6 +24,7 @@ public class CreatePhotoResDto {
 				photo.getCategory().getCategoryId(),
 				photo.getImageUrl(),
 				photo.getCaption(),
+				photo.getImageType(),
 				photo.getCreatedAt(),
 				photo.getUpdatedAt()
 		);
