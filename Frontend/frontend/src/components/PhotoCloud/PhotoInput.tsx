@@ -9,6 +9,7 @@ interface PhotoUpload {
   setImgUrl: React.Dispatch<React.SetStateAction<string>>;
   photoFile: File | null;
   setPhotoFile: React.Dispatch<React.SetStateAction<File | null>>;
+  uploadType: string;
 }
 
 const PhotoUploadWrapper = styled.div`
@@ -17,13 +18,18 @@ const PhotoUploadWrapper = styled.div`
 `;
 
 function PhotoInput(props: PhotoUpload) {
-  const { imgUrl, setImgUrl, photoFile, setPhotoFile } = props;
+  const { imgUrl, setImgUrl, photoFile, setPhotoFile, uploadType } = props;
+  const [fileType, setFileType] = useState<string | null>('');
   const handleInputPhoto = (e: any) => {
     const file = e.target.files?.[0];
+    console.log(file);
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImgUrl(imageUrl);
       setPhotoFile(file);
+      if (file.type.includes('image')) {
+        setFileType(() => 'image');
+      } else setFileType(() => 'video');
     }
   };
 
@@ -49,11 +55,19 @@ function PhotoInput(props: PhotoUpload) {
         }}
       >
         {imgUrl ? (
-          <img
-            className="image-upload-preview w-full h-full bg-auto"
-            src={imgUrl}
-            alt="upload-preview"
-          />
+          fileType === 'image' ? (
+            <img
+              className="image-upload-preview w-full h-full bg-auto"
+              src={imgUrl}
+              alt="upload-preview"
+            />
+          ) : (
+            <video
+              controls
+              className="image-upload-preview w-full h-full bg-auto"
+              src={imgUrl}
+            />
+          )
         ) : (
           <Icon
             icon="ic:round-photo-camera"
@@ -61,13 +75,23 @@ function PhotoInput(props: PhotoUpload) {
           />
         )}
       </div>
-      <input
-        id="photo-input"
-        type="file"
-        accept="image/*"
-        onChange={handleInputPhoto}
-        hidden
-      />
+      {uploadType == 'thumb' ? (
+        <input
+          id="photo-input"
+          type="file"
+          accept="image/jpeg,image/png,image/gif,image/bmp,image/x-windows-bmp"
+          onChange={handleInputPhoto}
+          hidden
+        />
+      ) : (
+        <input
+          id="photo-input"
+          type="file"
+          accept="image/jpeg,image/png,image/gif,image/bmp,image/x-windows-bmp,video/mp4,video/avi,video/webm,application/x-matroska,video/quicktime"
+          onChange={handleInputPhoto}
+          hidden
+        />
+      )}
     </PhotoUploadWrapper>
   );
 }

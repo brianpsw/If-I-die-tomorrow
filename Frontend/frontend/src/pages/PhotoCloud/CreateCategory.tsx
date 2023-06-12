@@ -178,6 +178,7 @@ function CreateCategory() {
                 setImgUrl={setImgUrl}
                 photoFile={photoFile}
                 setPhotoFile={setPhotoFile}
+                uploadType={'thumb'}
               />
             </div>
             <Button
