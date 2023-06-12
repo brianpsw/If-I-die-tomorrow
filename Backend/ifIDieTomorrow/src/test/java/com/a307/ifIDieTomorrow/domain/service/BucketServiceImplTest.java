@@ -265,7 +265,7 @@ class BucketServiceImplTest {
 						.content(data.getContent())
 						.secret(data.getSecret())
 						.report(0)
-						.imageUrl("https://example.com/new_test.jpg")
+						.imageUrl(null)
 						.build();
 				
 				/**
