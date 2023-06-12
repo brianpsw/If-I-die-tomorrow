@@ -15,6 +15,10 @@ export const Photo = styled.img`
   ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
 
+export const Video = styled.video`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
+`;
+
 export const CategoryWrapper = styled.div`
   ${tw`flex px-[24px] py-[16px] overflow-x-auto`}
   ::-webkit-scrollbar {

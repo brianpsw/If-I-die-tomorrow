@@ -12,6 +12,7 @@ import {
   PhotoWrapper,
   PhotoCardWrapper,
   Photo,
+  Video,
 } from '../../pages/PhotoCloud/PhotoCloudEmotion';
 import PhotoInput from './PhotoInput';
 
@@ -30,6 +31,7 @@ interface PhotoInfo {
   photoId: number;
   imageUrl: string;
   caption: string;
+  imageType: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -310,6 +312,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                 setImgUrl={setImgUrl}
                 photoFile={photoFile}
                 setPhotoFile={setPhotoFile}
+                uploadType={'thumb'}
               />
               <div className="w-full flex justify-center">
                 <Button
@@ -354,7 +357,12 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               photos!.map((photo: PhotoInfo) => {
                 return (
                   <PhotoCardWrapper key={photo.photoId}>
-                    <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
+                    {photo.imageType === 'image' ? (
+                      <Photo src={photo.imageUrl} alt="추억이 담긴 사진" />
+                    ) : (
+                      <Video controls src={photo.imageUrl} />
+                    )}
+
                     {editOrDeleteModalEpic.contentEdit === true &&
                     selectedPhotoId === photo.photoId.toString() ? (
                       <div>
