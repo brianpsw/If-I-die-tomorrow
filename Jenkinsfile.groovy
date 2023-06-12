@@ -128,6 +128,14 @@ pipeline {
                 echo 'BE Testing...'
                 junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
             }
+            post {
+                always {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    """
+                }
+            }
         }
 
         stage('FE Test') {
