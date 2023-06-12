@@ -146,13 +146,7 @@ class BucketServiceImplTest {
 		class NormalScenario {
 			
 			@Test
-			@DisplayName("사진 없는 내용 수정")
-			void updateAndReplacePhoto(){
-			
-			}
-			
-			@Test
-			@DisplayName("사진 포함한 내용 수정")
+			@DisplayName("내용 수정과 사진 수정")
 			void updateWithNewPhoto() throws IOException, IllegalArgumentException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
 				
 				// given
@@ -231,7 +225,7 @@ class BucketServiceImplTest {
 			}
 			
 			@Test
-			@DisplayName("사진 없이 내용 수정만")
+			@DisplayName("내용 수정")
 			void updatedWithNoPhoto() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
 				
 				/**
@@ -303,9 +297,74 @@ class BucketServiceImplTest {
 			}
 			
 			@Test
-			@DisplayName("기존 사진 삭제 + 내용 수정")
-			void updatedAndDeletePhoto(){
-			
+			@DisplayName("내용 수정과 기존 사진 삭제")
+			void updatedAndDeletePhoto() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content(null)
+						.secret(false)
+						.report(0)
+						.complete("2023-06-12")
+						.imageUrl("test.com")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.complete("2023-06-12")
+						.updatePhoto(true)
+						.build();
+				
+				/**
+				 * 수정된 버킷 (expected)
+				 */
+				Bucket updatedBucket = Bucket.builder()
+						.bucketId(1L)
+						.title(data.getTitle())
+						.userId(1L)
+						.complete(data.getComplete())
+						.content(data.getContent())
+						.secret(data.getSecret())
+						.report(0)
+						.imageUrl("")
+						.build();
+				
+				/**
+				 * 스터빙
+				 */
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				given(bucketRepository.save(any(Bucket.class))).willReturn(updatedBucket);
+				
+				// when
+				CreateBucketResDto result = bucketService.updateBucket(data, null);
+				
+				// then
+				/**
+				 * 동작 검증
+				 * 버킷 조회
+				 * 사진 없음
+				 */
+				then(bucketRepository).should().findByBucketId(data.getBucketId());
+				
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updatedBucket.getTitle());
+				BDDAssertions.then(result.getContent()).isEqualTo(updatedBucket.getContent());
+				BDDAssertions.then(result.getSecret()).isEqualTo(updatedBucket.getSecret());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedBucket.getImageUrl());
+				
 			}
 			
 		}
@@ -315,8 +374,8 @@ class BucketServiceImplTest {
 		class ExceptionScenario {
 			
 			@Test
-			@DisplayName("다이어리 아이디 잘못된 경우")
-			void wrongDiaryId() {
+			@DisplayName("버킷 아이디 잘못된 경우")
+			void wrongBucketId() {
 			
 			}
 			
