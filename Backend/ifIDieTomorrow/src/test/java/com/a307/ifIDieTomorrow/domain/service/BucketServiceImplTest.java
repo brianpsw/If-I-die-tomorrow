@@ -170,7 +170,6 @@ class BucketServiceImplTest {
 						.complete(null)
 						.imageUrl(null)
 						.build();
-				System.out.println(existingBucket.getBucketId());
 				
 				/**
 				 * 수정 내역
@@ -207,7 +206,6 @@ class BucketServiceImplTest {
 				given(s3Upload.upload(photo, "bucket")).willReturn("https://example.com/new_test.jpg");
 				given(bucketRepository.save(any(Bucket.class))).willReturn(updatedBucket);
 				
-				System.out.println(data.getBucketId());
 				// when
 				CreateBucketResDto result = bucketService.updateBucket(data, photo);
 				
@@ -234,8 +232,74 @@ class BucketServiceImplTest {
 			
 			@Test
 			@DisplayName("사진 없이 내용 수정만")
-			void updatedWithNoPhoto(){
-			
+			void updatedWithNoPhoto() throws ImageProcessingException, NotFoundException, IOException, UnAuthorizedException, MetadataException, IllegalArgumentException {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content(null)
+						.secret(true)
+						.report(0)
+						.complete(null)
+						.imageUrl(null)
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("updated title")
+						.content("updated content")
+						.secret(false)
+						.complete("2023-05-09")
+						.updatePhoto(false)
+						.build();
+				
+				/**
+				 * 수정된 버킷 (expected)
+				 */
+				Bucket updatedBucket = Bucket.builder()
+						.bucketId(1L)
+						.title(data.getTitle())
+						.userId(1L)
+						.complete(data.getComplete())
+						.content(data.getContent())
+						.secret(data.getSecret())
+						.report(0)
+						.imageUrl("https://example.com/new_test.jpg")
+						.build();
+				
+				/**
+				 * 스터빙
+				 */
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				given(bucketRepository.save(any(Bucket.class))).willReturn(updatedBucket);
+				
+				// when
+				CreateBucketResDto result = bucketService.updateBucket(data, null);
+				
+				// then
+				/**
+				 * 동작 검증
+				 * 버킷 조회
+				 * 사진 없음
+				 */
+				then(bucketRepository).should().findByBucketId(data.getBucketId());
+				then(s3Upload).shouldHaveNoInteractions();
+				
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updatedBucket.getTitle());
+				BDDAssertions.then(result.getContent()).isEqualTo(updatedBucket.getContent());
+				BDDAssertions.then(result.getSecret()).isEqualTo(updatedBucket.getSecret());
+				BDDAssertions.then(result.getImageUrl()).isEqualTo(updatedBucket.getImageUrl());
+				
 			}
 			
 			@Test
