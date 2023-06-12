@@ -119,6 +119,7 @@ function UploadPhoto() {
           setImgUrl={setImgUrl}
           photoFile={photoFile}
           setPhotoFile={setPhotoFile}
+          uploadType={'photo'}
         />
         <ContentWrapper>
           <textarea
