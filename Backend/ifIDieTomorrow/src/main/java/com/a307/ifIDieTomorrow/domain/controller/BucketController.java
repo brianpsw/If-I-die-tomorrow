@@ -34,7 +34,7 @@ public class BucketController {
 	@PostMapping("/title")
 	@Operation(summary = "버킷 리스트 제목 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucketWithTitle(
-			@RequestBody CreateBucketWithTitleDto data) {
+			@RequestBody CreateBucketWithTitleDto data) throws IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(data));
 	}
 	
