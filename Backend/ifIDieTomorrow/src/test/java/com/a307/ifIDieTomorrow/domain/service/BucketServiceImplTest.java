@@ -402,7 +402,7 @@ class BucketServiceImplTest {
 		class ExceptionScenario {
 			
 			@Test
-			@DisplayName("버킷 아이디 잘못됨")
+			@DisplayName("존재하지 않는 버킷 아이디")
 			void wrongBucketId() {
 				
 				/**
