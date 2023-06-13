@@ -103,7 +103,6 @@ public class CommunityServiceImpl implements CommunityService{
 
 
 		Comment comment = commentRepository.save(req.toEntity(userId));
-
 		return CreateCommentResDto.builder()
 				.commentId(comment.getCommentId())
 				.content(comment.getContent())
@@ -219,5 +218,4 @@ public class CommunityServiceImpl implements CommunityService{
 
 		return ReportResDto.toDto(report, reportCount);
 	}
-
 }
