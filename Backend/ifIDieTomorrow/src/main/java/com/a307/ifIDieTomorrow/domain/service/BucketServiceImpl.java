@@ -40,7 +40,9 @@ public class BucketServiceImpl implements BucketService {
 	private final CommentRepository commentRepository;
 	
 	@Override
-	public CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data) {
+	public CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data) throws IllegalArgumentException {
+		if ("".equals(data.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
+		
 		Bucket bucket = Bucket.builder().
 				userId(((UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUserId()).
 				title(data.getTitle()).
