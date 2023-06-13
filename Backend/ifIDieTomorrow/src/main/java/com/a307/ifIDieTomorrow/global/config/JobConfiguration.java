@@ -4,7 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.notification.SmsDto;
 import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto;
 import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
-import com.a307.ifIDieTomorrow.global.util.Notification;
+import com.a307.ifIDieTomorrow.global.util.NotificationUtil;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class JobConfiguration {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final UserRepository userRepository;
-	private final Notification notification;
+	private final NotificationUtil notificationUtil;
 	private final PhotoRepository photoRepository;
 	private final BucketRepository bucketRepository;
 	private final DiaryRepository diaryRepository;
@@ -170,7 +170,7 @@ public class JobConfiguration {
 		content.append("www.ifidietomorrow.co.kr/login").append(" 에 ").append("KAKAO".equals(user.getProviderType().toString()) ? "카카오" : "네이버").append(" 계정으로 로그인 해주세요.").append("\n");
 
 		try {
-			notification.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(user.getPhone()).build());
+			notificationUtil.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(user.getPhone()).build());
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		}
@@ -201,7 +201,7 @@ public class JobConfiguration {
 			content.append("비밀번호 : ").append(uuid);
 			
 			try {
-				notification.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(receiver.getPhoneNumber()).build());
+				notificationUtil.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(receiver.getPhoneNumber()).build());
 			} catch (IOException e) {
 				log.error(e.getMessage());
 			}
