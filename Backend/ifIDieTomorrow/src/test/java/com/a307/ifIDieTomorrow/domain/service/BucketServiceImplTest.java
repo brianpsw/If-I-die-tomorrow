@@ -3,8 +3,10 @@ package com.a307.ifIDieTomorrow.domain.service;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketResDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.CreateBucketWithTitleDto;
 import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketDto;
+import com.a307.ifIDieTomorrow.domain.dto.bucket.UpdateBucketTitleDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.UpdateDiaryReqDto;
 import com.a307.ifIDieTomorrow.domain.entity.Bucket;
+import com.a307.ifIDieTomorrow.domain.entity.Comment;
 import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
@@ -30,6 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -90,7 +93,7 @@ class BucketServiceImplTest {
 		class NormalScenario {
 			
 			@Test
-			@DisplayName("버킷 제목 생성")
+			@DisplayName("제목 입력됨")
 			void createBucketWithTitle() throws IllegalArgumentException {
 				
 				// given
@@ -491,7 +494,7 @@ class BucketServiceImplTest {
 			
 			@Test
 			@DisplayName("제목 없음")
-			void noTitle(){
+			void noTitle() {
 				
 				/**
 				 * 기존 버킷
@@ -528,6 +531,456 @@ class BucketServiceImplTest {
 				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
 						.isInstanceOf(IllegalArgumentException.class)
 						.hasMessage("제목이 없습니다.");
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("내용과 사진 모두 없음")
+			void noContentAndPhoto() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.build();
+				
+				/**
+				 * 수정 내역
+				 * 내용과 사진 모두 없음
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("new title")
+						.content("")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("내용과 사진이 모두 없습니다.");
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("버킷 달성 시기가 오늘 이후")
+			void invalidCompleteTime() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.build();
+				
+				/**
+				 * 수정 내역
+				 * 버킷 달성 날짜가 2222년 
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("new title")
+						.content("new content")
+						.secret(false)
+						.updatePhoto(false)
+						.complete("2222-04-22")
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("버킷 완료 날짜는 오늘 이후일 수 없습니다.");
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+		}
+		
+	}
+		
+	@Nested
+	@DisplayName("버킷 업데이트(제목)")
+	class UpdateBucketTitleTest {
+		
+		@Nested
+		@DisplayName("성공 케이스")
+		class NormalScenario {
+			
+			@Test
+			@DisplayName("제목 입력됨")
+			void withTitle() throws NotFoundException, UnAuthorizedException, IllegalArgumentException {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketTitleDto data = new UpdateBucketTitleDto(1L, "new title");
+				
+				/**
+				 * 수정된 버킷 (expected)
+				 */
+				Bucket updateBucket = Bucket.builder()
+						.bucketId(1L)
+						.title(data.getTitle())
+						.userId(1L)
+						.report(0)
+						.build();
+				
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				given(bucketRepository.save(any(Bucket.class))).willReturn(updateBucket);
+				
+				// when
+				CreateBucketResDto result = bucketService.updateBucketTitle(data);
+				
+				// then
+				/**
+				 * 동작 검증
+				 * 버킷 조회
+				 */
+				then(bucketRepository).should().findByBucketId(data.getBucketId());
+				
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(result.getTitle()).isEqualTo(updateBucket.getTitle());
+				
+			}
+		
+		}
+		
+		@Nested
+		@DisplayName("예외 케이스")
+		class ExceptionScenario {
+			
+			@Test
+			@DisplayName("존재하지 않는 버킷 아이디")
+			void wrongBucketId() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(2L)
+						.title("updated title")
+						.content("updated content")
+						.complete("2023-06-14")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				// when
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(NotFoundException.class);
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("다른 유저의 버킷")
+			void notTheAuthor() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(2L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("updated title")
+						.content("updated content")
+						.complete("2023-06-14")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(UnAuthorizedException.class);
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("제목 없음")
+			void noTitle() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("")
+						.content("updated content")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("제목이 없습니다.");
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+		}
+		
+	}
+	
+	@Nested
+	@DisplayName("버킷 삭제")
+	class DeleteBucketTest {
+		
+		@Nested
+		@DisplayName("성공 케이스")
+		class NormalScenario {
+			
+			@Test
+			@DisplayName("본인의 버킷")
+			void myBucket() throws NotFoundException, UnAuthorizedException {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket bucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("testing.com")
+						.build();
+				
+				Comment comment1 = Comment.builder().commentId(1L).build();
+				Comment comment2 = Comment.builder().commentId(2L).build();
+				List<Comment> comments = List.of(comment1, comment2);
+				
+				given(bucketRepository.findByBucketId(1L)).willReturn(Optional.of(bucket));
+				given(commentRepository.findAllByTypeIdAndType(1L, false)).willReturn(comments);
+				
+				// when
+				Long deleteBucketId = bucketService.deleteBucket(1L);
+				
+				// then
+				/**
+				 * 동작 검증
+				 * 버킷 조회
+				 * 사진 삭제
+				 * 댓글 삭제
+				 * 버킷 삭제
+				 */
+				then(bucketRepository).should().findByBucketId(1L);
+				then(s3Upload).should().delete("testing.com");
+				then(commentRepository).should().findAllByTypeIdAndType(1L, false);
+				then(commentRepository).should().deleteAllInBatch(comments);
+				then(bucketRepository).should().delete(bucket);
+				
+				/**
+				 * 결과 검증
+				 */
+				BDDAssertions.then(deleteBucketId).isEqualTo(1L);
+				
+			}
+			
+		}
+		
+		@Nested
+		@DisplayName("예외 케이스")
+		class ExceptionScenario {
+			
+			@Test
+			@DisplayName("존재하지 않는 버킷 아이디")
+			void wrongBucketId() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(2L)
+						.title("updated title")
+						.content("updated content")
+						.complete("2023-06-14")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				// when
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(NotFoundException.class);
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("다른 유저의 버킷")
+			void notTheAuthor() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(2L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.imageUrl("https://example.com/old_image.jpg")
+						.build();
+				
+				/**
+				 * 수정 내역
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("updated title")
+						.content("updated content")
+						.complete("2023-06-14")
+						.secret(false)
+						.updatePhoto(false)
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(UnAuthorizedException.class);
 				
 				then(bucketRepository).should(never()).save(any(Bucket.class));
 				then(s3Upload).shouldHaveNoInteractions();
