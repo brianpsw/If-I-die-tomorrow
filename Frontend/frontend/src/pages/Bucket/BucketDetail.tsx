@@ -30,6 +30,7 @@ interface Bucket {
   title: string;
   content: string;
   imageUrl: string;
+  imageType: string;
   complete: boolean;
   secret: boolean;
   createdAt: string;
@@ -76,6 +77,10 @@ const CreateDate = styled.p`
 
 const BucketImg = styled.div`
   ${tw`mt-2 mb-6 flex flex-col mx-auto w-full`}
+`;
+
+const Video = styled.video`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
 
 const SecretOrNotText = styled.p`
@@ -314,9 +319,16 @@ function BucketDetail() {
             </DotIcon>
           </BucketHeader>
           <BucketImg>
-            {bucket.imageUrl && bucket.imageUrl !== '""' && (
+            {/* {bucket.imageUrl && bucket.imageUrl !== '""' && (
               <img src={bucket.imageUrl} alt="Bucket" />
-            )}
+            )} */}
+            {bucket.imageUrl &&
+              bucket.imageUrl !== '""' &&
+              (bucket.imageType === 'image' ? (
+                <img src={bucket.imageUrl} alt="버킷이미지" />
+              ) : (
+                <Video controls src={bucket.imageUrl} />
+              ))}
           </BucketImg>
           <BucketText>{bucket.content}</BucketText>
         </BucketWrap>
