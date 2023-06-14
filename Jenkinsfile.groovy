@@ -65,6 +65,8 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -112,6 +114,8 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -133,6 +137,7 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -158,6 +163,7 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
