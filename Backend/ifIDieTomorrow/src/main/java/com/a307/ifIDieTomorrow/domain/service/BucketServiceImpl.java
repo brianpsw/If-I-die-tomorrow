@@ -113,6 +113,7 @@ public class BucketServiceImpl implements BucketService {
 		if(data.getTitle() == null || "".equals(data.getTitle().trim())) throw new IllegalArgumentException("제목이 없습니다.");
 		if((data.getContent() == null || "".equals(data.getContent().trim())) && (photo == null || photo.isEmpty())) throw new IllegalArgumentException("내용과 사진이 모두 없습니다.");
 		
+		if (data.getComplete() == null) throw new IllegalArgumentException("버킷 완료 날짜를 입력해주세요.");
 		LocalDate then  = LocalDate.parse(data.getComplete(), DateTimeFormatter.ISO_DATE);
 		if (LocalDate.now().isBefore(then)) throw new IllegalArgumentException("버킷 완료 날짜는 오늘 이후일 수 없습니다.");
 		
