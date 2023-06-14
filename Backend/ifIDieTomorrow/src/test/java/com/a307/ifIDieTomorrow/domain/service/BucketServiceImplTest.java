@@ -584,8 +584,8 @@ class BucketServiceImplTest {
 			}
 			
 			@Test
-			@DisplayName("버킷 달성 시기가 오늘 이후")
-			void invalidCompleteTime() {
+			@DisplayName("버킷 달성 날짜가 오늘 이후")
+			void invalidCompleteTime1() {
 				
 				/**
 				 * 기존 버킷
@@ -624,6 +624,53 @@ class BucketServiceImplTest {
 				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
 						.isInstanceOf(IllegalArgumentException.class)
 						.hasMessage("버킷 완료 날짜는 오늘 이후일 수 없습니다.");
+				
+				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(s3Upload).shouldHaveNoInteractions();
+				
+			}
+			
+			@Test
+			@DisplayName("버킷 달성 날짜 입력되지 않음")
+			void invalidCompleteTime2() {
+				
+				/**
+				 * 기존 버킷
+				 */
+				Bucket existingBucket = Bucket.builder()
+						.bucketId(1L)
+						.title("Test Title")
+						.userId(1L)
+						.content("Test Content")
+						.secret(true)
+						.report(0)
+						.build();
+				
+				/**
+				 * 수정 내역
+				 * 버킷 달성 날짜가 null
+				 */
+				UpdateBucketDto data = UpdateBucketDto.builder()
+						.bucketId(1L)
+						.title("new title")
+						.content("new content")
+						.secret(false)
+						.updatePhoto(false)
+						.complete(null)
+						.build();
+				
+				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				
+				// when
+				
+				
+				// then
+				/**
+				 * 예외처리 검증
+				 */
+				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+						.isInstanceOf(IllegalArgumentException.class)
+						.hasMessage("버킷 완료 날짜를 입력해주세요.");
 				
 				then(bucketRepository).should(never()).save(any(Bucket.class));
 				then(s3Upload).shouldHaveNoInteractions();
