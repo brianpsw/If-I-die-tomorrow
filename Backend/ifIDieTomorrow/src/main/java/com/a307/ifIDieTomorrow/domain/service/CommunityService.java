@@ -10,6 +10,7 @@ import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.google.firebase.messaging.FirebaseMessagingException;
 
 
 public interface CommunityService {
@@ -20,7 +21,7 @@ public interface CommunityService {
 
 	GetPageDto getDiaryWithComments(Integer pageNo, Integer pageSize);
 
-	CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException;
+	CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException, FirebaseMessagingException;
 
 	Long deleteComment(Long commentId) throws NotFoundException, UnAuthorizedException;
 

@@ -9,7 +9,9 @@ import com.a307.ifIDieTomorrow.domain.dto.community.GetBucketWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetDiaryWithCommentDto;
 import com.a307.ifIDieTomorrow.domain.dto.community.GetPageDto;
 import com.a307.ifIDieTomorrow.domain.dto.diary.GetDiaryResDto;
+import com.a307.ifIDieTomorrow.domain.entity.Bucket;
 import com.a307.ifIDieTomorrow.domain.entity.Comment;
+import com.a307.ifIDieTomorrow.domain.entity.Diary;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.BucketRepository;
 import com.a307.ifIDieTomorrow.domain.repository.CommentRepository;
@@ -21,6 +23,7 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import org.assertj.core.api.BDDAssertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -393,13 +396,24 @@ class CommunityServiceImplTest {
 
 			@Test
 			@DisplayName("다이어리에 댓글 생성")
-			void createCommentForDiary() throws NotFoundException, IllegalArgumentException {
+			void createCommentForDiary() throws NotFoundException, IllegalArgumentException, FirebaseMessagingException {
 
 				// Given
 				CreateCommentReqDto req = CreateCommentReqDto.builder()
 						.content("Test content")
 						.type(true)
 						.typeId(1L)
+						.build();
+
+				Diary diary = Diary.builder()
+						.diaryId(req.getTypeId())
+						.title("Test")
+						.content("Test content")
+						.userId(1L)
+						.secret(false)
+						.report(0)
+						.imageType(null)
+						.imageUrl(null)
 						.build();
 
 				Comment comment = Comment.builder()
@@ -415,6 +429,7 @@ class CommunityServiceImplTest {
 				given(diaryRepository.existsById(req.getTypeId())).willReturn(true);
 				given(commentRepository.save(any(Comment.class))).willReturn(comment);
 				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+				given(diaryRepository.findById(req.getTypeId())).willReturn(Optional.ofNullable(diary));
 
 				// When
 				CreateCommentResDto res = communityService.createComment(req);
@@ -431,7 +446,7 @@ class CommunityServiceImplTest {
 
 			@Test
 			@DisplayName("버킷에 댓글 생성")
-			void createCommentForBucket() throws NotFoundException, IllegalArgumentException {
+			void createCommentForBucket() throws NotFoundException, IllegalArgumentException, FirebaseMessagingException {
 
 				// Given
 				CreateCommentReqDto req = CreateCommentReqDto.builder()
@@ -448,11 +463,24 @@ class CommunityServiceImplTest {
 						.typeId(req.getTypeId())
 						.build();
 
+				Bucket bucket = Bucket.builder()
+						.bucketId(1L)
+						.userId(1L)
+						.secret(false)
+						.report(0)
+						.imageType(null)
+						.imageUrl(null)
+						.complete("2023-05-08")
+						.content("Test Content")
+						.title("Test")
+						.build();
+
 				ArgumentCaptor<Comment> commentCaptor = ArgumentCaptor.forClass(Comment.class);
 
 				given(bucketRepository.existsById(req.getTypeId())).willReturn(true);
 				given(commentRepository.save(any(Comment.class))).willReturn(comment);
 				given(userRepository.findUserNickNameByUserId(comment.getUserId())).willReturn(user.getNickname());
+				given(bucketRepository.findByBucketId(req.getTypeId())).willReturn(Optional.of(bucket));
 
 				// When
 				CreateCommentResDto res = communityService.createComment(req);
