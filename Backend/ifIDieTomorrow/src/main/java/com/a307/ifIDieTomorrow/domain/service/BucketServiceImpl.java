@@ -62,7 +62,7 @@ public class BucketServiceImpl implements BucketService {
 		
 		String type = null;
 		if (photo != null) {
-			if (FileChecker.videoCheck(photo.getInputStream())) type = "video";
+			if (FileChecker.videoCheck(FileChecker.getMimeType(photo.getInputStream()))) type = "video";
 			else type = "image";
 		}
 		
@@ -122,7 +122,7 @@ public class BucketServiceImpl implements BucketService {
 		
 		String type = null;
 		if (photo != null) {
-			if (FileChecker.videoCheck(photo.getInputStream())) type = "video";
+			if (FileChecker.videoCheck(FileChecker.getMimeType(photo.getInputStream()))) type = "video";
 			else type = "image";
 		}
 		

@@ -86,7 +86,8 @@ public class PhotoController {
 	public ResponseEntity<CreatePhotoResDto> createPhoto(
 			@RequestPart CreatePhotoDto data,
 			@RequestPart MultipartFile photo) throws IOException, NoPhotoException, IllegalArgumentException, NotFoundException, UnAuthorizedException, ImageProcessingException, MetadataException {
-		if (!FileChecker.imageCheck(photo.getInputStream()) && !FileChecker.videoCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		String mimeType = FileChecker.getMimeType(photo.getInputStream());
+		if (!FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.CREATED).body(photoService.createPhoto(data, photo));
 	}
 	
