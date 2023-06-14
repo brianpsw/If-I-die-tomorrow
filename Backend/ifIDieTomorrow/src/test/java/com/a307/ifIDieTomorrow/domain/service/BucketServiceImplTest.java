@@ -916,28 +916,16 @@ class BucketServiceImplTest {
 						.imageUrl("https://example.com/old_image.jpg")
 						.build();
 				
-				/**
-				 * 수정 내역
-				 */
-				UpdateBucketDto data = UpdateBucketDto.builder()
-						.bucketId(2L)
-						.title("updated title")
-						.content("updated content")
-						.complete("2023-06-14")
-						.secret(false)
-						.updatePhoto(false)
-						.build();
-				
 				// when
 				
 				// then
 				/**
 				 * 예외처리 검증
 				 */
-				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+				BDDAssertions.thenThrownBy(() -> bucketService.deleteBucket(2L))
 						.isInstanceOf(NotFoundException.class);
 				
-				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(bucketRepository).should(never()).delete(any(Bucket.class));
 				then(s3Upload).shouldHaveNoInteractions();
 				
 			}
@@ -959,19 +947,8 @@ class BucketServiceImplTest {
 						.imageUrl("https://example.com/old_image.jpg")
 						.build();
 				
-				/**
-				 * 수정 내역
-				 */
-				UpdateBucketDto data = UpdateBucketDto.builder()
-						.bucketId(1L)
-						.title("updated title")
-						.content("updated content")
-						.complete("2023-06-14")
-						.secret(false)
-						.updatePhoto(false)
-						.build();
 				
-				given(bucketRepository.findByBucketId(data.getBucketId())).willReturn(Optional.of(existingBucket));
+				given(bucketRepository.findByBucketId(1L)).willReturn(Optional.of(existingBucket));
 				
 				// when
 				
@@ -979,10 +956,10 @@ class BucketServiceImplTest {
 				/**
 				 * 예외처리 검증
 				 */
-				BDDAssertions.thenThrownBy(() -> bucketService.updateBucket(data, null))
+				BDDAssertions.thenThrownBy(() -> bucketService.deleteBucket(1L))
 						.isInstanceOf(UnAuthorizedException.class);
 				
-				then(bucketRepository).should(never()).save(any(Bucket.class));
+				then(bucketRepository).should(never()).delete(any(Bucket.class));
 				then(s3Upload).shouldHaveNoInteractions();
 				
 			}
