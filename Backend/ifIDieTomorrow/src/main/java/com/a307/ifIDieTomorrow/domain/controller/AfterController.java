@@ -1,7 +1,6 @@
 package com.a307.ifIDieTomorrow.domain.controller;
 
 import com.a307.ifIDieTomorrow.domain.service.AfterService;
-import com.a307.ifIDieTomorrow.global.aop.DownloadInterceptor;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.util.FileUtil;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,8 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +43,6 @@ public class AfterController {
     }
 
     @GetMapping("/download")
-    @DownloadInterceptor
     public ResponseEntity<Resource> downloadFile(HttpServletRequest request) throws IOException, NotFoundException {
         // Load file as Resource
         String uuid = UUID.randomUUID().toString();
