@@ -288,6 +288,7 @@ function BucketDetail() {
           secret={bucketDetail.secret}
           complete={bucketDetail.complete}
           image={bucketDetail.imageUrl}
+          imageType={bucketDetail.imageType}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
         />

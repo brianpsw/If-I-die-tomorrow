@@ -78,6 +78,7 @@ interface EditDiaryModalProps {
   content: string;
   secret: boolean;
   image: string;
+  imageType: string;
   onClose?: () => void;
   onUpdate?: (updatedDiary: any) => void;
 }
@@ -88,6 +89,7 @@ function EditDiaryModal({
   content,
   secret,
   image,
+  imageType,
   onClose,
   onUpdate,
 }: EditDiaryModalProps) {
@@ -99,6 +101,7 @@ function EditDiaryModal({
   const [updatePhoto, setUpdatePhoto] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string | null>(image);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [newImageType, setNewImageType] = useState(imageType);
 
   const removeImage = () => {
     setPhoto(null);
@@ -124,6 +127,7 @@ function EditDiaryModal({
           content: newContent,
           secret: newSecret,
           updatePhoto, // updatePhoto 추가
+          imageType: newImageType,
         }),
       );
 
@@ -159,6 +163,7 @@ function EditDiaryModal({
       setPhoto(file);
       setImageUpdated(true);
       setUpdatePhoto(true);
+      setNewImageType(file.type.startsWith('image') ? 'image' : 'video');
 
       // 이미지 미리보기 설정
       const reader = new FileReader();
@@ -230,12 +235,21 @@ function EditDiaryModal({
                           <path d="M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM175 175c9.4-9.4 24.6-9.4 33.9 0l47 47 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-47 47 47 47c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47-47 47c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l47-47-47-47c-9.4-9.4-9.4-24.6 0-33.9z" />
                         </svg>
                       </DeleteImageButton>
-                      <img
-                        className="image-upload-preview w-full h-full bg-auto "
-                        src={imageUrl}
-                        alt="upload-preview"
-                        onClick={handleClick}
-                      />
+                      {newImageType === 'image' ? (
+                        <img
+                          className="image-upload-preview w-full h-full bg-auto "
+                          src={imageUrl}
+                          alt="upload-preview"
+                          onClick={handleClick}
+                        />
+                      ) : (
+                        <video
+                          className="video-upload-preview w-full h-full bg-auto "
+                          src={imageUrl}
+                          controls
+                          onClick={handleClick}
+                        />
+                      )}
                     </div>
                   ) : (
                     <div
@@ -251,7 +265,7 @@ function EditDiaryModal({
                     type="file"
                     id="file-input"
                     onChange={handleFileChange}
-                    accept="image/*"
+                    accept="image/jpeg,image/png,image/gif,image/bmp,image/x-windows-bmp,video/mp4,video/avi,video/webm,application/x-matroska,video/quicktime"
                     hidden
                   />
                 </div>

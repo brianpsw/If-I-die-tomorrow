@@ -30,6 +30,7 @@ interface Diary {
   title: string;
   content: string;
   imageUrl: string;
+  imageType: string;
   secret: boolean;
   createdAt: string;
   updatedAt: string;
@@ -77,6 +78,9 @@ const DiaryImg = styled.div`
   ${tw`mt-2 mb-6 flex flex-col mx-auto w-full`}
 `;
 
+const Video = styled.video`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
+`;
 const SecretOrNotText = styled.p`
   ${tw`text-p1 inline-block rounded-[10px]`}
   width: content;
@@ -281,6 +285,7 @@ function DiaryDetail() {
           content={diaryDetail.content}
           secret={diaryDetail.secret}
           image={diaryDetail.imageUrl}
+          imageType={diaryDetail.imageType}
           onClose={handleEditModalClose}
           onUpdate={handleUpdate}
         />
@@ -314,9 +319,16 @@ function DiaryDetail() {
             </DotIcon>
           </DiaryHeader>
           <DiaryImg>
-            {diary.imageUrl && diary.imageUrl !== '""' && (
+            {/* {diary.imageUrl && diary.imageUrl !== '""' && (
               <img src={diary.imageUrl} alt="Diary" />
-            )}
+            )} */}
+            {diary.imageUrl &&
+              diary.imageUrl !== '""' &&
+              (diary.imageType === 'image' ? (
+                <img src={diary.imageUrl} alt="다이어리이미지" />
+              ) : (
+                <Video controls src={diary.imageUrl} />
+              ))}
           </DiaryImg>
           <DiaryText>{diary.content}</DiaryText>
         </DiaryWrap>
