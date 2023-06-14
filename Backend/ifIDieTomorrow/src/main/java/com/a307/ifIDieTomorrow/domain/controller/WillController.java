@@ -52,7 +52,8 @@ public class WillController {
 	@Operation(summary = "유언장 영상 수정", description = "유저의 영상을 수정합니다.")
 	public ResponseEntity<Long> updateVideo(
 			@RequestPart MultipartFile video) throws IOException, IllegalArgumentException, NoPhotoException, ImageProcessingException, MetadataException {
-		if (!FileChecker.videoCheck(video.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		String mimeType = FileChecker.getMimeType(video.getInputStream());
+		if (!FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
 		return ResponseEntity.status(HttpStatus.OK).body(willService.updateVideo(video));
 	}
 	
