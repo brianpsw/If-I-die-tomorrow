@@ -46,8 +46,10 @@ public class BucketController {
 			@RequestPart CreateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
 		// photo가 null이 아니면서 이미지도 영상도 아니라면 예외 던짐
-		String mimeType = FileChecker.getMimeType(photo.getInputStream());
-		if (photo != null && !FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		if (photo != null) {
+			String mimeType = FileChecker.getMimeType(photo.getInputStream());
+			if (!FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 
@@ -72,8 +74,10 @@ public class BucketController {
 			@RequestPart UpdateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException, IllegalArgumentException {
 		// photo가 null이 아니면서 이미지도 영상도 아니라면 예외 던짐
-		String mimeType = FileChecker.getMimeType(photo.getInputStream());
-		if (photo != null && !FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		if (photo != null) {
+			String mimeType = FileChecker.getMimeType(photo.getInputStream());
+			if (!FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
 	
