@@ -63,8 +63,8 @@ public class AfterServiceImpl implements AfterService{
         fileUtil.createDirectory(basicDirectory + uuid);
         String commonDirectory = basicDirectory + uuid + "/";
         fileUtil.copyDirectory("./IIDT", basicDirectory + uuid);
-        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getVideoUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getVideoUrl().substring(((GetWillByUserResDto)result.get("will")).getVideoUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getVideoUrl()));
-        fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getSignUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getSignUrl().substring(((GetWillByUserResDto)result.get("will")).getSignUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getSignUrl()));
+        if(((GetWillByUserResDto)result.get("will")).getVideoUrl() != null) fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getVideoUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getVideoUrl().substring(((GetWillByUserResDto)result.get("will")).getVideoUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getVideoUrl()));
+        if(((GetWillByUserResDto)result.get("will")).getSignUrl() != null ) fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getSignUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getSignUrl().substring(((GetWillByUserResDto)result.get("will")).getSignUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getSignUrl()));
         for (GetBucketResDto item : (ArrayList<GetBucketResDto>)result.get("buckets")
              ) {
             if(item.getImageUrl() != null && !"".equals(item.getImageUrl())){

@@ -12,6 +12,6 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(fileDelete);
+        registry.addInterceptor(fileDelete).addPathPatterns("/after/download");
     }
 }
