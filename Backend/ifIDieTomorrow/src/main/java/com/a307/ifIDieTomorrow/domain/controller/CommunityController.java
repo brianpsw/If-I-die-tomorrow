@@ -11,6 +11,7 @@ import com.a307.ifIDieTomorrow.global.exception.BadRequestException;
 import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +49,7 @@ public class CommunityController {
 	@Operation(summary = "댓글 작성", description = "댓글 작성입니다")
 	public ResponseEntity<CreateCommentResDto> createComment(
 			@RequestBody CreateCommentReqDto data
-	) throws NotFoundException, IllegalArgumentException {
+	) throws NotFoundException, IllegalArgumentException, FirebaseMessagingException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(communityService.createComment(data));
 	}
 

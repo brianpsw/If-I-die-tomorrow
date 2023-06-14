@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 )
 @EnableJpaAuditing
 @EnableScheduling
+@EnableAsync
 public class IfIDieTomorrowApplication {
 
 	public static void main(String[] args) {
