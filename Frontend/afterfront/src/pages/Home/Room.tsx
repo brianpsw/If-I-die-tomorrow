@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import * as THREE from 'three';
@@ -9,6 +9,7 @@ import Button from '../../components/common/Button';
 import Scene from '../../components/home/Scene';
 import { Icon } from '@iconify/react';
 import Map from '../../assets/images/minimap.png';
+import BgMusic from '../../assets/audio/the_first_star.mp3';
 import { useRecoilValue } from 'recoil';
 import { userDataState } from '../../states/UserDataState';
 
@@ -19,6 +20,8 @@ function Room() {
   const [isMapShow, setIsMapShow] = useState<boolean>(false);
   const [topPosition, setTopPosition] = useState<string>('48%');
   const [leftPosition, setLeftPosition] = useState<string>('48%');
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const userData = useRecoilValue(userDataState);
 
   let tmpTop = '48%';
@@ -35,6 +38,27 @@ function Room() {
     setTopPosition(() => tmpTop);
     setLeftPosition(() => tmpLeft);
   }, [tmpTop, tmpLeft]);
+
+  // 음악 컨트롤 하는 변수 및 함수
+  let bgMusic = new Audio(BgMusic);
+
+  const handleMusic = () => {
+    if (isPlaying) {
+      audioRef.current?.pause();
+      setIsPlaying((prev) => !prev);
+    } else {
+      audioRef.current?.play();
+      setIsPlaying((prev) => !prev);
+    }
+  };
+  // 페이지 접속시 음악은 틀어져있는 것이 기본값
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.play();
+      setIsPlaying((prev) => !prev);
+    }
+  }, []);
 
   const downloadWill = async () => {
     try {
@@ -120,6 +144,22 @@ function Room() {
             </p>
           </div>
         ) : null}
+        <div>
+          <audio ref={audioRef} src={BgMusic} />
+          {isPlaying ? (
+            <Icon
+              icon="mdi:music"
+              style={{ fontSize: '30px', color: '#111111', cursor: 'pointer' }}
+              onClick={() => handleMusic()}
+            />
+          ) : (
+            <Icon
+              icon="mdi:music-off"
+              style={{ fontSize: '30px', color: '#111111', cursor: 'pointer' }}
+              onClick={() => handleMusic()}
+            />
+          )}
+        </div>
       </div>
 
       <Canvas>
