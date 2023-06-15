@@ -107,7 +107,7 @@ public class CommunityServiceImpl implements CommunityService{
 
 
 		Comment comment = commentRepository.save(req.toEntity(userId));
-		Long writerId;
+		Long writerId = null;
 		if(req.getType()){
 			Optional<Diary> diary = diaryRepository.findById(req.getTypeId());
 			writerId = diary.orElseThrow().getUserId();
@@ -116,7 +116,7 @@ public class CommunityServiceImpl implements CommunityService{
 			writerId = bucket.orElseThrow().getUserId();
 		}
 
-		if(writerId.equals(userId)){
+		if(!writerId.equals(userId)){
 			firebaseUtil.sendPush(tokenRepository.findAllByUserId(writerId), new StringBuilder().append(userRepository.findUserNickNameByUserId(comment.getUserId())).toString(), comment.getContent());
 		}
 
