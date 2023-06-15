@@ -110,13 +110,13 @@ public class CommunityServiceImpl implements CommunityService{
 		Long writerId;
 		if(req.getType()){
 			Optional<Diary> diary = diaryRepository.findById(req.getTypeId());
-			writerId = diary.get().getUserId();
+			writerId = diary.orElseThrow().getUserId();
 		} else {
 			Optional<Bucket> bucket = bucketRepository.findByBucketId(req.getTypeId());
-			writerId = bucket.get().getUserId();
+			writerId = bucket.orElseThrow().getUserId();
 		}
 
-		if(writerId != userId){
+		if(writerId.equals(userId)){
 			firebaseUtil.sendPush(tokenRepository.findAllByUserId(writerId), new StringBuilder().append(userRepository.findUserNickNameByUserId(comment.getUserId())).toString(), comment.getContent());
 		}
 
