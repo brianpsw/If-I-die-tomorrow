@@ -132,6 +132,11 @@ If I Die Tomorrow는 웰다잉을 쉽게 준비할 수 있도록 도와주는 �
 - 박상우
 - 유선준
 - 이연수
+
+### Patch Note
+- version 0.0.1
+- [version 0.0.2](https://branch-basil-4c1.notion.site/6-16-a77c4565440b4f579dc0d977fc58e73a?pvs=4)
+
 ## 🚩 프로젝트 산출물
 
 - [기획서](https://file.notion.so/f/s/20db0581-833a-4af6-9030-f49d72ec7132/%EA%B8%B0%ED%9A%8D%EC%84%9C.pdf?id=03d9b3b1-37c6-476b-9ced-655567680259&table=block&spaceId=74f151e6-2b8b-4e55-97d2-590bdc3e2879&expirationTimestamp=1684518551235&signature=-PpkCS2MIs7aIR9K8MBMlAgg6n7PleiWAPFbzLFsLfo&downloadName=%EA%B8%B0%ED%9A%8D%EC%84%9C.pdf)
