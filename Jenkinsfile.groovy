@@ -65,6 +65,8 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -101,8 +103,8 @@ pipeline {
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
                     -Dsonar.sources=. \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.login=${SONAR_TOKEN}
                     '''
                 }
@@ -112,6 +114,8 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -133,6 +137,7 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
@@ -158,6 +163,7 @@ pipeline {
                     sh """
                     git reset --hard v1
                     git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
                     """
                 }
             }
