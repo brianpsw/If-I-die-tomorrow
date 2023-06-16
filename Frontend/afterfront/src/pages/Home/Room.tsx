@@ -22,6 +22,7 @@ function Room() {
   const [leftPosition, setLeftPosition] = useState<string>('48%');
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [playModal, setPlayModal] = useState<boolean>(true);
   const userData = useRecoilValue(userDataState);
 
   let tmpTop = '48%';
@@ -51,14 +52,15 @@ function Room() {
       setIsPlaying((prev) => !prev);
     }
   };
-  // 페이지 접속시 음악은 틀어져있는 것이 기본값
 
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.play();
-      setIsPlaying((prev) => !prev);
+  // 음악 재생을 위한 허용여부를 묻는 모달
+  const handlePlayModal = (check: boolean) => {
+    if (check) {
+      handleMusic();
     }
-  }, []);
+
+    setPlayModal(false);
+  };
 
   const downloadWill = async () => {
     try {
@@ -84,10 +86,38 @@ function Room() {
 
   return (
     <div className="relative">
+      {playModal ? (
+        <Modal>
+          {' '}
+          <div className="flex flex-col text-center">
+            <p className="text-p1 mt-6">배경음악을 허용하시겠습니까?</p>
+            <p className="text-p2 mt-2">
+              (우측상단 아이콘을 통해 조절이 가능합니다.)
+            </p>
+            <div className="flex justify-evenly my-6">
+              <Button
+                color="#36C2CC"
+                size="sm"
+                onClick={() => handlePlayModal(true)}
+              >
+                예
+              </Button>
+              <Button
+                style={{ color: '#9E9E9E' }}
+                color="#F6F6F6"
+                size="sm"
+                onClick={() => handlePlayModal(false)}
+              >
+                아니오
+              </Button>
+            </div>
+          </div>
+        </Modal>
+      ) : null}
       {isModalOpen ? (
         <Modal>
           <div className="flex flex-col">
-            <p className="text-p1 mt-6">해당 페이지로 이동하시겠습니까??</p>
+            <p className="text-p1 mt-6">해당 페이지로 이동하시겠습니까?</p>
             <div className="flex justify-evenly my-6">
               <Button
                 color="#36C2CC"
