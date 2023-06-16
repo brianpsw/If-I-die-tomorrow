@@ -6,6 +6,20 @@ import requests from '../../api/config';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
+interface User {
+  userId: number;
+  name: string;
+  email: string;
+  age: number;
+  nickname: string;
+  sendAgree: boolean;
+  personalPage: string | null;
+  personalityId: number | null;
+  newCheck: boolean;
+  deleted: boolean;
+  providerType: string;
+}
+
 function Withdrawal() {
   const [user, setUser] = useRecoilState(userState);
   const [isLoggedIn, setIsLoggedIn] = useRecoilState(userState);
@@ -23,9 +37,9 @@ function Withdrawal() {
 
       // 로그아웃 API 호출
       await defaultApi.get(requests.POST_LOGOUT(), { withCredentials: true });
-      setUser(null);
+      setUser({} as User);
       localStorage.removeItem('user');
-      setIsLoggedIn(null);
+      setIsLoggedIn({} as User);
       localStorage.removeItem('recoil-persist');
       Swal.fire({
         title: '회원탈퇴 성공!',

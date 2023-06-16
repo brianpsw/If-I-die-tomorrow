@@ -100,7 +100,7 @@ function HomeScene() {
   ];
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense>
       <directionalLight position={[200, 50, 100]} intensity={1.2} />
       <ambientLight intensity={0.6} />
       <mesh rotation={[0, 0, 0]} position={[10, -78, 10]}>
@@ -169,7 +169,7 @@ function HomeScene() {
 function HomeSemiRoom() {
   return (
     <Canvas
-      style={{ width: '100vw', height: '94vh' }}
+      style={{ height: 'calc(100vh - 70px)' }}
       orthographic
       camera={{
         position: [10, 5, 10],

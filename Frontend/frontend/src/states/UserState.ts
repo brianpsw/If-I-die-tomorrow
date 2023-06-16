@@ -1,6 +1,12 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
-const { persistAtom } = recoilPersist();
+const sessionStorage =
+  typeof window !== 'undefined' ? window.sessionStorage : undefined;
+
+const { persistAtom } = recoilPersist({
+  key: '내맘대로 정하는 키 이름',
+  storage: sessionStorage,
+});
 
 interface User {
   userId: number;
@@ -16,9 +22,9 @@ interface User {
   providerType: string;
 }
 
-export const userState = atom<User | null>({
+export const userState = atom<User>({
   key: 'userState',
-  default: null,
+  default: {} as User,
   effects_UNSTABLE: [persistAtom],
 });
 

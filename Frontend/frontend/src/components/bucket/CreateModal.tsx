@@ -28,9 +28,10 @@ interface Bucket {
 interface ModalProps {
   setBuckets: React.Dispatch<React.SetStateAction<Bucket[]>>;
   onClose?: () => void;
+  setNoticeOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function CreateModal({ onClose, setBuckets }: ModalProps) {
+function CreateModal({ onClose, setBuckets, setNoticeOpen }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [contentValue, setContentValue] = useState('');
   const [isValid, setIsValid] = useState(false);
@@ -48,6 +49,11 @@ function CreateModal({ onClose, setBuckets }: ModalProps) {
           withCredentials: true,
         });
         setBuckets(response.data);
+        if (response.data.length > 0) {
+          setNoticeOpen(() => false);
+        } else {
+          setNoticeOpen(() => true);
+        }
       } catch (error) {
         throw error;
       }

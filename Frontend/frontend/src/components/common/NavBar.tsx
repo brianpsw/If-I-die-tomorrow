@@ -22,6 +22,21 @@ const Navbar = styled.div`
   ${tw`flex bg-gray_100 justify-between fixed bottom-0 w-full h-[70px] min-w-[300px]`}
   padding: 9px 31px;
 `;
+
+interface User {
+  userId: number;
+  name: string;
+  email: string;
+  age: number;
+  nickname: string;
+  sendAgree: boolean;
+  personalPage: string | null;
+  personalityId: number | null;
+  newCheck: boolean;
+  deleted: boolean;
+  providerType: string;
+}
+
 function NavBar() {
   const navigate = useNavigate();
   const location = useLocation().pathname;
@@ -74,23 +89,23 @@ function NavBar() {
     }
   }, [location]);
   const handleDiary = () => {
-    if (user?.name !== undefined) navigate(`/diary`);
+    if (Object.keys(user).length !== 0) navigate(`/diary`);
   };
 
   const handleBucket = () => {
-    if (user?.name !== undefined) navigate(`/bucket`);
+    if (Object.keys(user).length !== 0) navigate(`/bucket`);
   };
 
   const handleHome = () => {
-    if (user?.name !== undefined) navigate(`/home`);
+    if (Object.keys(user).length !== 0) navigate(`/home`);
   };
 
   const handleFeed = () => {
-    if (user?.name !== undefined) navigate(`/feed`);
+    if (Object.keys(user).length !== 0) navigate(`/feed`);
   };
 
   const handleMypage = () => {
-    if (user?.name !== undefined) navigate(`/mypage`);
+    if (Object.keys(user).length !== 0) navigate(`/mypage`);
   };
 
   const onlyMovePage = (page: string) => {
@@ -99,7 +114,7 @@ function NavBar() {
     } else if (page === 'bucket') {
       navigate(`/bucket`);
     } else if (page === 'home') {
-      if (user?.name !== undefined) navigate(`/home`);
+      if (Object.keys(user).length !== 0) navigate(`/home`);
     } else if (page === 'feed') {
       navigate(`/feed`);
     } else {

@@ -26,8 +26,38 @@ import WillText from './pages/Will/WillText';
 import WillSign from './pages/Will/WillSign';
 import WillVideo from './pages/Will/WillVideo';
 import ScrollTop from './components/common/ScrollTop';
+import { useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import { getMessaging } from 'firebase/messaging';
+import './firebase-messaging-sw';
 
+const firebaseApp = initializeApp({
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTHDOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECTID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGEBUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGINGSENDERID,
+  appId: process.env.REACT_APP_FIREBASE_APPID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENTID,
+});
+
+// Retrieve an instance of Firebase Messaging so that it can handle background
+// messages.
+export const messaging = getMessaging(firebaseApp);
+
+function requestPermission() {
+  console.log('Requesting permission...');
+  Notification.requestPermission().then((permission) => {
+    if (permission === 'granted') {
+      console.log('Notification permission granted.');
+    }
+  });
+}
 function App() {
+  useEffect(() => {
+    if ('Notification' in window && 'requestPermission' in Notification)
+      requestPermission();
+  }, []);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <BrowserRouter>

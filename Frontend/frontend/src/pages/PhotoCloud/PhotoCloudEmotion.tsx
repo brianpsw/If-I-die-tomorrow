@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import tw from 'twin.macro';
 
 export const PhotoWrapper = styled.div`
-  ${tw`pb-[10px] mb-[70px] min-h-[100vh]`}
+  ${tw`pb-[10px] mb-[70px]`}
 `;
 
 export const PhotoCardWrapper = styled.div`
@@ -12,6 +12,10 @@ export const PhotoCardWrapper = styled.div`
 `;
 
 export const Photo = styled.img`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
+`;
+
+export const Video = styled.video`
   ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
 

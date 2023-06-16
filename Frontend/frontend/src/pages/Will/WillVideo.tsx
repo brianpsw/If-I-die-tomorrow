@@ -84,7 +84,7 @@ function WillVideo(): JSX.Element {
         setIsRecorded(false);
         setLoadingOpen(false);
         Swal.fire({
-          title: '서명 등록 성공!',
+          title: '동영상 등록 성공!',
           icon: 'success',
           timer: 1000,
           showConfirmButton: false,
@@ -92,7 +92,7 @@ function WillVideo(): JSX.Element {
       } catch (error) {
         setLoadingOpen(false);
         Swal.fire({
-          title: '서명 등록 실패...',
+          title: '동영상 등록 실패...',
           icon: 'error',
           confirmButtonText: '확인',
         });

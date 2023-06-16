@@ -113,7 +113,7 @@ function CreateCategory() {
   };
 
   return (
-    <div className="min-h-[100vh]" style={{ paddingBottom: '20%' }}>
+    <div className="pb-[70px] min-h-[100vh]">
       {isLoading && <Loading />}
       <div style={{ padding: '16px 24px' }}>
         <Icon
@@ -178,6 +178,7 @@ function CreateCategory() {
                 setImgUrl={setImgUrl}
                 photoFile={photoFile}
                 setPhotoFile={setPhotoFile}
+                uploadType={'thumb'}
               />
             </div>
             <Button
