@@ -88,7 +88,6 @@ function Room() {
     <div className="relative">
       {playModal ? (
         <Modal>
-          {' '}
           <div className="flex flex-col text-center">
             <p className="text-p1 mt-6">배경음악을 허용하시겠습니까?</p>
             <p className="text-p2 mt-2">
