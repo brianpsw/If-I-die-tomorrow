@@ -13,22 +13,22 @@ public class FileChecker {
 
 	private static final Tika tika = new Tika();
 	
-	public static boolean imageCheck (InputStream inputStream) throws IOException {
-		List<String> validTypeList = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/bmp", "image/x-windows-bmp");
-		
+	public static String getMimeType(InputStream inputStream) throws IOException {
 		String mimeType = tika.detect(inputStream);
 		log.info("MimeType : " + mimeType);
-		
-		return validTypeList.stream().anyMatch(validType -> validType.equalsIgnoreCase(mimeType));
+		return mimeType;
 	}
 	
-	public static boolean videoCheck (InputStream inputStream) throws IOException {
-		List<String> validTypeList = Arrays.asList("video/mp4", "video/avi", "video/webm", "application/x-matroska");
+	public static boolean imageCheck (String type) {
+		List<String> validTypeList = Arrays.asList("image/jpeg", "image/png", "image/gif", "image/bmp", "image/x-windows-bmp");
 		
-		String mimeType = tika.detect(inputStream);
-		log.info("MimeType : " + mimeType);
+		return validTypeList.stream().anyMatch(validType -> validType.equalsIgnoreCase(type));
+	}
+	
+	public static boolean videoCheck (String type) {
+		List<String> validTypeList = Arrays.asList("video/mp4", "video/avi", "video/webm", "application/x-matroska", "video/quicktime");
 		
-		return validTypeList.stream().anyMatch(validType -> validType.equalsIgnoreCase(mimeType));
+		return validTypeList.stream().anyMatch(validType -> validType.equalsIgnoreCase(type));
 	}
 	
 }

@@ -26,6 +26,8 @@ public class GetDiaryResDto {
 	private String imageUrl;
 
 	private Boolean secret;
+	
+	private String imageType;
 
 	private LocalDateTime createdAt;
 

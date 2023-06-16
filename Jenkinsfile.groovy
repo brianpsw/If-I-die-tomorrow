@@ -1,99 +1,36 @@
+void setBuildStatus(String message, String context, String state) {
+  // add a Github access token as a global 'secret text' credential on Jenkins with the id 'github-commit-status-token'
+    withCredentials([string(credentialsId: 'github1', variable: 'TOKEN')]) {
+      // 'set -x' for debugging. Don't worry the access token won't be actually logged
+      // Also, the sh command actually executed is not properly logged, it will be further escaped when written to the log
+        sh """
+            set -x
+            curl \"https://api.github.com/repos/org/repo/statuses/$GIT_COMMIT?access_token=$TOKEN\" \
+                -H \"Content-Type: application/json\" \
+                -X POST \
+                -d \"{\\\"description\\\": \\\"$message\\\", \\\"state\\\": \\\"$state\\\", \\\"context\\\": \\\"$context\\\", \\\"target_url\\\": \\\"$BUILD_URL\\\"}\"
+        """
+    } 
+}
+
+
 pipeline {
     agent any
-
-    options { 
-        skipDefaultCheckout()
-        gitLabConnection('gitlab') 
-    }
+    options { disableConcurrentBuilds() }
     stages {
-        stage('Clone') {
+        stage('Checkout') {
 
             steps {
-                echo "Running ${env.gitlabSourceBranch} on ${env.gitlabTargetBranch}"
-                echo "Clone ${env.gitlabActionType} ,   "
-                git branch: "${env.gitlabSourceBranch}", credentialsId: 'test2', url: 'https://lab.ssafy.com/s08-final/S08P31A307.git'
+                echo "Branch Name: ${env.BRANCH_NAME} ${env.CHANGE_TARGET} ${env.CHANGE_BRANCH} test9"
+                git credentialsId: 'github2', url: 'https://github.com/brianpsw/If-I-die-tomorrow.git'
             }
         }
-
-        stage('BE Test') {
-            when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                }
-            }
-            steps {
-                echo 'BE Testing...'
-                sh """
-                git checkout ${env.gitlabTargetBranch}
-                git tag v1
-                git merge ${env.gitlabSourceBranch}
-                cd Backend/ifIDieTomorrow
-                chmod +x gradlew
-                ./gradlew clean test
-                """
-            }
-            post {
-                always {
-                    sh """
-                    git reset --hard v1
-                    git tag -d v1
-                    """
-                    junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
-                }
-            }
-        }
-
-        stage('FE Test') {
-            when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                }
-            }
-            steps {
-                echo 'FE Testing...'
-                sh """
-                git checkout ${env.gitlabTargetBranch}
-                git tag v1
-                git merge ${env.gitlabSourceBranch}
-                cd Frontend/frontend
-                npm install --force && CI= npm run build
-                """
-            }
-            post {
-                always {
-                    sh """
-                    git reset --hard v1
-                    git tag -d v1
-                    """
-                }
-            }
-        }
-
+        
         stage('Sonar Analysis-fe') {
             when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
+                allOf {
+                    expression { env.CHANGE_TARGET == 'develop-fe' }
+                    expression { env.BRANCH_NAME ==~ /^PR-.*/ }
                 }
             }
             environment {
@@ -101,6 +38,18 @@ pipeline {
             }
           
             steps {
+                
+                sh """
+                git checkout -b ${env.CHANGE_BRANCH} origin/${env.CHANGE_BRANCH} || true
+                git switch ${env.CHANGE_BRANCH}
+                git pull
+                git checkout -b ${env.CHANGE_TARGET} origin/${env.CHANGE_TARGET} || true
+                git switch ${env.CHANGE_TARGET}
+                git pull
+                git tag v1
+                git merge ${env.CHANGE_BRANCH}
+                """     
+                
                 withSonarQubeEnv('SonarQube-local'){
               
                     sh '''
@@ -111,19 +60,23 @@ pipeline {
                     '''
                 }
             }
+            post {
+                failure {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
+                    """
+                }
+            }
         }
 
         stage('Sonar Analysis-be') {
             when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
+                allOf {
+                    expression { env.CHANGE_TARGET == 'develop-be' }
+                    expression { env.BRANCH_NAME ==~ /^PR-.*/ }
                 }
             }
             environment {
@@ -131,35 +84,95 @@ pipeline {
             }
           
             steps {
+                
+                sh """
+                git checkout -b ${env.CHANGE_BRANCH} origin/${env.CHANGE_BRANCH} || true
+                git switch ${env.CHANGE_BRANCH}
+                git pull
+                git checkout -b ${env.CHANGE_TARGET} origin/${env.CHANGE_TARGET} || true
+                git switch ${env.CHANGE_TARGET}
+                git pull
+                git tag v1
+                git merge ${env.CHANGE_BRANCH}
+                cd Backend/ifIDieTomorrow
+                chmod +x gradlew
+                ./gradlew clean test
+                """                
                 withSonarQubeEnv('SonarQube-local'){
               
                     sh '''
                     ${SCANNER_HOME}/bin/sonar-scanner -Dsonar.projectKey=${PROJECT_KEY} \
-                    -Dsonar.sources=Backend/ \
-                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
+                    -Dsonar.sources=. \
                     -Dsonar.host.url=${SONAR_URL} \
+                    -Dsonar.java.binaries=./Backend/ifIDieTomorrow/build/classes/java/ \
                     -Dsonar.login=${SONAR_TOKEN}
                     '''
                 }
             }
+            post {
+                failure {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    git switch master
+                    git branch -D ${env.CHANGE_BRANCH}
+                    """
+                }
+            }
         }
+
+        stage('BE Test') {
+            when {
+                allOf {
+                    expression { env.CHANGE_TARGET == 'develop-be' }
+                    expression { env.BRANCH_NAME ==~ /^PR-.*/ }
+                }
+            }
+            steps {
+                echo 'BE Testing...'
+                junit 'Backend/ifIDieTomorrow/build/test-results/**/*.xml'
+            }
+            post {
+                always {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
+                    """
+                }
+            }
+        }
+
+        stage('FE Test') {
+            when {
+                allOf {
+                    expression { env.CHANGE_TARGET == 'develop-fe' }
+                    expression { env.BRANCH_NAME ==~ /^PR-.*/ }
+                }
+            }
+            steps {
+                echo 'FE Testing...'
+                sh """
+                git status
+                cd Frontend/frontend
+                npm install --force && CI= npm run build
+                """
+            }
+            post {
+                always {
+                    sh """
+                    git reset --hard v1
+                    git tag -d v1
+                    git branch -D ${env.CHANGE_BRANCH}
+                    """
+                }
+            }
+        }
+  
 
         stage('SonarQube Quality Gate'){
             when {
-                anyOf {
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                    allOf {
-                        expression { env.gitlabTargetBranch == 'master' }
-                        expression { env.gitlabActionType == 'MERGE' }
-                    }
-                }
+                branch 'PR-*'
             }
             steps{
                 timeout(time: 1, unit: 'MINUTES') {
@@ -169,11 +182,11 @@ pipeline {
                         echo "Status: ${qg.status}"
                         if(qg.status != 'OK') {
                             echo "NOT OK Status: ${qg.status}"
-                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "failed")
+                            setBuildStatus("Failed", "sonarqube", "failure");
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         } else{
                             echo "OK Status: ${qg.status}"
-                            updateGitlabCommitStatus(name: "SonarQube Quality Gate", state: "success")
+                            setBuildStatus("Passed", "sonarqube", "success");
                         }
                         echo "End~~~~"
                     }
@@ -181,89 +194,16 @@ pipeline {
             }
         }
    
-        
-        stage('Docker FE Rm') {
-            when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
-            }
-            steps {
-                sh 'echo "Docker FE Rm Start"'
-                sh """
-                docker stop front-react || true
-                docker rm front-react || true
-                docker rmi -f front-react || true
-                """
-            }
-
-            post {
-                success {
-                    sh 'echo "Docker FE Rm Success"'
-                }
-                failure {
-                    sh 'echo "Docker FE Rm Fail"'
-                }
-            }
-        }
-        stage('Docker BE Rm') {
-            when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
-            }
-            steps {
-                sh 'echo "Docker BE Rm Start"'
-                sh """
-                docker stop back-springboot || true
-                docker rm back-springboot || true
-                docker rmi -f back-springboot || true
-                """
-            }
-
-            post {
-                success {
-                    sh 'echo "Docker BE Rm Success"'
-                }
-                failure {
-                    sh 'echo "Docker BE Rm Fail"'
-                }
-            }
-        }
-        
         stage('FE Dockerizing'){
             when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
+                branch 'develop-fe'
             }
             steps{
                 sh 'echo " Image Bulid Start"'
                 sh '''
+                git checkout -b develop-fe origin/develop-fe || true
+                git switch develop-fe
+                git pull
                 cd Frontend/frontend
                 docker build -t front-react .
                 '''
@@ -281,21 +221,14 @@ pipeline {
 
         stage('BE Dockerizing'){
             when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
+                branch 'develop-be'
             }
             steps{
                 sh 'echo " Image Bulid Start"'
                 sh '''
+                git checkout -b develop-be origin/develop-be || true
+                git switch develop-be
+                git pull
                 cd Backend/ifIDieTomorrow
                 docker build -t back-springboot -f ./DockerFile .
                 '''
@@ -310,20 +243,55 @@ pipeline {
                 }
             }
         }
+        
+        stage('Docker FE Rm') {
+            when {
+                branch 'develop-fe'
+            }
+            steps {
+                sh 'echo "Docker FE Rm Start"'
+                sh """
+                docker stop front-react || true
+                docker rm front-react || true
+                """
+            }
+
+            post {
+                success {
+                    sh 'echo "Docker FE Rm Success"'
+                }
+                failure {
+                    sh 'echo "Docker FE Rm Fail"'
+                }
+            }
+        }
+        stage('Docker BE Rm') {
+            when {
+                branch 'develop-be'
+            }
+            steps {
+                sh 'echo "Docker BE Rm Start"'
+                sh """
+                docker stop back-springboot || true
+                docker rm back-springboot || true
+                """
+            }
+
+            post {
+                success {
+                    sh 'echo "Docker BE Rm Success"'
+                }
+                failure {
+                    sh 'echo "Docker BE Rm Fail"'
+                }
+            }
+        }
+        
+        
 
         stage('BE Deploy') {
             when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-be' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
+                branch 'develop-be'
             }
             steps {
                 sh 'docker run -d -p 8000:8443 --name back-springboot --env-file .env -e TZ=Asia/Seoul --network my-network back-springboot'
@@ -342,17 +310,7 @@ pipeline {
 
         stage('FE Deploy') {
             when {
-                anyOf{
-                    allOf{
-                        expression { env.gitlabActionType == 'PUSH' }
-                        expression { env.gitlabTargetBranch == 'master' }
-                    }
-                    allOf{
-                        expression { env.gitlabTargetBranch == 'develop-fe' }
-                        expression { env.gitlabActionType == 'PUSH' }
-                    }
-                }
-
+                branch 'develop-fe'
             }
             steps {
                 sh 'docker run -d -p 3000:3000 --name front-react --env-file .env -e TZ=Asia/Seoul --network my-network front-react'

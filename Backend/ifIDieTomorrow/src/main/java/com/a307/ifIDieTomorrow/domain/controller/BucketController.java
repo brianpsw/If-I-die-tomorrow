@@ -12,6 +12,7 @@ import com.drew.metadata.MetadataException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.Tika;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class BucketController {
 	@PostMapping("/title")
 	@Operation(summary = "버킷 리스트 제목 생성", description = "제목만 있는 버킷 리스트를 생성합니다.")
 	public ResponseEntity<CreateBucketResDto> createBucketWithTitle(
-			@RequestBody CreateBucketWithTitleDto data) {
+			@RequestBody CreateBucketWithTitleDto data) throws IllegalArgumentException {
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucketWithTitle(data));
 	}
 	
@@ -43,7 +45,11 @@ public class BucketController {
 	public ResponseEntity<CreateBucketResDto> createBucket(
 			@RequestPart CreateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NoPhotoException, ImageProcessingException, MetadataException, IllegalArgumentException {
-		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		// photo가 null이 아니면서 이미지도 영상도 아니라면 예외 던짐
+		if (photo != null) {
+			String mimeType = FileChecker.getMimeType(photo.getInputStream());
+			if (!FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(bucketService.createBucket(data, photo));
 	}
 
@@ -67,7 +73,11 @@ public class BucketController {
 	public ResponseEntity<CreateBucketResDto> updateBucket(
 			@RequestPart UpdateBucketDto data,
 			@RequestPart(required = false) MultipartFile photo) throws IOException, NotFoundException, ImageProcessingException, UnAuthorizedException, MetadataException, IllegalArgumentException {
-		if (photo != null && !FileChecker.imageCheck(photo.getInputStream())) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		// photo가 null이 아니면서 이미지도 영상도 아니라면 예외 던짐
+		if (photo != null) {
+			String mimeType = FileChecker.getMimeType(photo.getInputStream());
+			if (!FileChecker.imageCheck(mimeType) && !FileChecker.videoCheck(mimeType)) throw new IllegalArgumentException("허용되지 않은 확장자입니다.");
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(bucketService.updateBucket(data, photo));
 	}
 	

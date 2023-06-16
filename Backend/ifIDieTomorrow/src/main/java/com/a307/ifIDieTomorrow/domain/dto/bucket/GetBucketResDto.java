@@ -21,6 +21,7 @@ public class GetBucketResDto {
 	private String complete;
 	private String imageUrl;
 	private Boolean secret;
+	private String imageType;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 

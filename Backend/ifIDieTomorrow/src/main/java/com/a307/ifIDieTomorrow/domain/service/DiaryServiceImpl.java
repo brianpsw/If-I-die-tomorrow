@@ -10,6 +10,7 @@ import com.a307.ifIDieTomorrow.global.exception.NoPhotoException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.FamousSayingGenerator;
+import com.a307.ifIDieTomorrow.global.util.FileChecker;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.MetadataException;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,7 +44,12 @@ public class DiaryServiceImpl implements DiaryService{
 //
 //		사진 검증
 		if (req.getHasPhoto() && (photo == null || photo.isEmpty())) throw new NoPhotoException("올리고자 하는 사진이 없습니다");
-
+		
+		String type = null;
+		if (photo != null) {
+			if (FileChecker.videoCheck(FileChecker.getMimeType(photo.getInputStream()))) type = "video";
+			else type = "image";
+		}
 
 		return CreateDiaryResDto.toDto(
 				diaryRepository.save(Diary.builder()
@@ -52,6 +59,7 @@ public class DiaryServiceImpl implements DiaryService{
 								.secret(req.getSecret())
 								.report(0)
 								.imageUrl(req.getHasPhoto() ? s3Upload.upload(photo, "diary") : "")
+								.imageType(type)
 								.build()
 				)
 		);
@@ -115,12 +123,19 @@ public class DiaryServiceImpl implements DiaryService{
 
 //		기존 사진 삭제
 		if (req.getUpdatePhoto() && diary.getImageUrl() != null && !"".equals(diary.getImageUrl())) s3Upload.delete(diary.getImageUrl());
+		
+		String type = null;
+		if (photo != null) {
+			if (FileChecker.videoCheck(FileChecker.getMimeType(photo.getInputStream()))) type = "video";
+			else type = "image";
+		}
 
 		diary.updateDiary(
 				req.getTitle(),
 				req.getContent(),
 				req.getUpdatePhoto() ? (photo == null ? "" : s3Upload.upload(photo, "diary")) : diary.getImageUrl(),
-				req.getSecret()
+				req.getSecret(),
+				req.getUpdatePhoto() ? type : diary.getImageType()
 		);
 
 		return CreateDiaryResDto.toDto(diaryRepository.save(diary));

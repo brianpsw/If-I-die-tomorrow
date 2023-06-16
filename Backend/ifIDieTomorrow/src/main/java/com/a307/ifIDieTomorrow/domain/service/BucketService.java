@@ -24,7 +24,7 @@ public interface BucketService {
 	
 	HashMap<String, Object> getBucketByBucketId (Long bucketId) throws NotFoundException, UnAuthorizedException;
 	
-	CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data);
+	CreateBucketResDto createBucketWithTitle (CreateBucketWithTitleDto data) throws IllegalArgumentException;
 	
 	CreateBucketResDto updateBucketTitle (UpdateBucketTitleDto data) throws NotFoundException, UnAuthorizedException, IllegalArgumentException;
 }

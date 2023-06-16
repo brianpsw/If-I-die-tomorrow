@@ -6,7 +6,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 /src/main/resources/keystore.p12
-
+/src/main/resources/if-i-die-tomorrow-firebase-adminsdk-rsuyq-a2f5940ef9.json
 ### STS ###
 .apt_generated
 .classpath

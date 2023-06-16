@@ -252,8 +252,8 @@ class DiaryServiceImplTest {
 
 				// given
 				List<GetDiaryByUserResDto> expected = Arrays.asList(
-						new GetDiaryByUserResDto(1L, "Title 1", "Content 1", "imageUrl1", true, LocalDateTime.now(), LocalDateTime.now(), 1L),
-						new GetDiaryByUserResDto(2L, "Title 2", "Content 2", "imageUrl2", false, LocalDateTime.now(), LocalDateTime.now(), 2L)
+						new GetDiaryByUserResDto(1L, "Title 1", "Content 1", "imageUrl1", true, "image", LocalDateTime.now(), LocalDateTime.now(), 1L),
+						new GetDiaryByUserResDto(2L, "Title 2", "Content 2", "imageUrl2", false, "image", LocalDateTime.now(), LocalDateTime.now(), 2L)
 				);
 
 
@@ -291,7 +291,7 @@ class DiaryServiceImplTest {
 
 				// given
 				Long diaryId = 1L;
-				GetDiaryResDto diaryDto = new GetDiaryResDto(1L, 1L, "userNickname", "diaryTitle", "imageUrl", "diaryContent", true, LocalDateTime.now(), LocalDateTime.now());
+				GetDiaryResDto diaryDto = new GetDiaryResDto(1L, 1L, "userNickname", "diaryTitle", "imageUrl", "diaryContent", true, "image", LocalDateTime.now(), LocalDateTime.now());
 				List<GetCommentResDto> comments = List.of(
 						new GetCommentResDto(1L, "Test Comment 1", 2L, "user 2 nickname", LocalDateTime.now(), LocalDateTime.now()),
 						new GetCommentResDto(2L, "Test Comment 2", 3L, "user 3 nickname", LocalDateTime.now(), LocalDateTime.now())

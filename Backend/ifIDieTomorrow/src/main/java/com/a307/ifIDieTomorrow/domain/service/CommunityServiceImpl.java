@@ -14,6 +14,8 @@ import com.a307.ifIDieTomorrow.global.exception.IllegalArgumentException;
 import com.a307.ifIDieTomorrow.global.exception.NotFoundException;
 import com.a307.ifIDieTomorrow.global.exception.UnAuthorizedException;
 import com.a307.ifIDieTomorrow.global.util.AdminUtil;
+import com.a307.ifIDieTomorrow.global.util.FirebaseUtil;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,7 +37,9 @@ public class CommunityServiceImpl implements CommunityService{
 	private final CommentRepository commentRepository;
 	private final UserRepository userRepository;
 	private final ReportRepository reportRepository;
+	private final TokenRepository tokenRepository;
 	private final AdminUtil adminUtil;
+	private final FirebaseUtil firebaseUtil;
 
 	@Override
 	public GetPageDto getBucketWithComments(Integer pageNo, Integer pageSize){
@@ -89,7 +93,7 @@ public class CommunityServiceImpl implements CommunityService{
 	}
 
 	@Override
-	public CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException {
+	public CreateCommentResDto createComment(CreateCommentReqDto req) throws NotFoundException, IllegalArgumentException, FirebaseMessagingException {
 
 		//		유저 정보 파싱
 		UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -103,6 +107,18 @@ public class CommunityServiceImpl implements CommunityService{
 
 
 		Comment comment = commentRepository.save(req.toEntity(userId));
+		Long writerId = null;
+		if(req.getType()){
+			Optional<Diary> diary = diaryRepository.findById(req.getTypeId());
+			writerId = diary.orElseThrow().getUserId();
+		} else {
+			Optional<Bucket> bucket = bucketRepository.findByBucketId(req.getTypeId());
+			writerId = bucket.orElseThrow().getUserId();
+		}
+
+		if(!writerId.equals(userId)){
+			firebaseUtil.sendPush(tokenRepository.findAllByUserId(writerId), new StringBuilder().append(userRepository.findUserNickNameByUserId(comment.getUserId())).toString(), comment.getContent());
+		}
 
 		return CreateCommentResDto.builder()
 				.commentId(comment.getCommentId())
@@ -140,7 +156,7 @@ public class CommunityServiceImpl implements CommunityService{
 		//		댓글
 		Comment comment = commentRepository.findById(req.getCommentId())
 				.orElseThrow(() -> new NotFoundException("잘못된 댓글 아이디입니다."));
-		
+
 		if ("".equals(req.getContent().trim())) throw new IllegalArgumentException("내용이 없습니다.");
 
 		//		유저 정보 파싱
@@ -219,5 +235,4 @@ public class CommunityServiceImpl implements CommunityService{
 
 		return ReportResDto.toDto(report, reportCount);
 	}
-
 }

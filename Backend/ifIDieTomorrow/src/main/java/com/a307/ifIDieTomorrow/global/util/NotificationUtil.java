@@ -17,7 +17,7 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-public class Notification {
+public class NotificationUtil {
     @Value("${notification.sms.id}")
     private String smsId;
     @Value("${notification.sms.url}")

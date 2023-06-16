@@ -26,6 +26,8 @@ public class CreateDiaryResDto {
 	private Boolean secret;
 
 	private Integer report;
+	
+	private String imageType;
 
 	private LocalDateTime createdAt;
 
@@ -40,6 +42,7 @@ public class CreateDiaryResDto {
 				.imageUrl(diary.getImageUrl())
 				.secret(diary.getSecret())
 				.report(diary.getReport())
+				.imageType(diary.getImageType())
 				.createdAt(diary.getCreatedAt())
 				.updatedAt(diary.getUpdatedAt())
 				.build();
