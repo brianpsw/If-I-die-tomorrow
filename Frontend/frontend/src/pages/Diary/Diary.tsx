@@ -31,7 +31,7 @@ import {
   DateWrap,
 } from '../../components/feed/FeedEmotion';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh] overflow-y-auto pb-[60px]`}
+  ${tw`flex items-center flex-col px-[24px] w-full overflow-y-auto mb-[80px]`}
 `;
 
 const TopTitle = styled.div`
@@ -237,7 +237,7 @@ function Diary() {
   //   }
   // }, [data, sameDay]);
   return (
-    <div className="min-h-[100vh]">
+    <div className="">
       {/* <Background> */}
       {loadingOpen ? <Loading /> : ''}
       <Container>
