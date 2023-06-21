@@ -92,7 +92,7 @@ function Home() {
   }, []);
 
   return (
-    <div className="min-h-[100vh] pb-[60px]">
+    <div>
       <Logo />
       <FeelingTxt>
         밤하늘을 보며 <br /> 산책 한번 어때요?
