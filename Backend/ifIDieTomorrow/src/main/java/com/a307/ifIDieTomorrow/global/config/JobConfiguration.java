@@ -9,11 +9,14 @@ import com.a307.ifIDieTomorrow.global.util.S3Upload;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.item.*;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,6 +48,9 @@ public class JobConfiguration {
 	private final WillRepository willRepository;
 	private final AfterRepository afterRepository;
 	private final S3Upload s3Upload;
+	
+	LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
+	LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
 
 	@Bean
 	public Job job(){
@@ -69,51 +75,49 @@ public class JobConfiguration {
 		return testing;
 	}
 	
-	
 	@Bean
 	public Step processUser(){
-		TaskletStep processUser = stepBuilderFactory.get("processUser")
-				.tasklet((contribution, chunkContext) -> {
-
-					log.info(">>>>> step processUser starts");
-
-					/**
-					 * 1. 사후 페이지가 없는 유저
-					 */
-					log.info(">>>>> 1.1: Fetch all users agreed to send service");
-					List<User> users = userRepository.findAllUsersWhereSendAgreeIsTrue()
-							.stream()
-							.filter(user -> user.getPersonalPage() == null)
-							.collect(Collectors.toList());
-
-					log.info("fetched {} users to process", users.size());
-
-					/**
-					 * 2. 6개월 이상 활동 안 한 유저
-					 */
-					log.info(">>>>> 1.2: six months ago");
-					LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
-
-					users.parallelStream()
-							.filter(user -> user.getUpdatedAt().isBefore(sixMonthsAgo))
-							.forEach(this::sendPage);
-
-					/**
-					 * 3. 3개월 ~ 6개월 간 활동 안 한 유저
-					 */
-					log.info(">>>>> 1.3: three months ago");
-
-					LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
-
-					users.parallelStream()
-							.filter(user -> user.getUpdatedAt().isAfter(sixMonthsAgo) && user.getUpdatedAt().isBefore(threeMonthsAgo))
-							.forEach(this::sendNotice);
-
-					return RepeatStatus.FINISHED;
+		return stepBuilderFactory.get("processUser")
+				.<User, User>chunk(10)  // Chunk 크기는 10
+				.reader(new ListItemReader<>(userRepository.findAllUsersWhereSendAgreeIsTrue()  // 특정 유저 조회
+														.stream()
+														.filter(user -> user.getPersonalPage() == null && user.getUpdatedAt().isBefore(threeMonthsAgo))
+														.collect(Collectors.toList())))
+				.writer(new ItemWriter<User>() {    // reader로 조회한 유저들 처리
+					@Override
+					public void write(List<? extends User> items) throws Exception {
+						log.info(">>>>> step processUser starts");
+						items.forEach(user -> {
+							if (user.getUpdatedAt().isBefore(sixMonthsAgo)) {
+								sendPage(user);
+								log.info("> " + user.getName() + "(" + user.getNickname() + ")님 6개월 이상 미접속, 사후 페이지 전송");
+							} else {
+								sendNotice(user);
+								log.info("> " + user.getName() + "(" + user.getNickname() + ")님 3개월 이상 미접속, 알림과 SMS 전송");
+							}
+						});
+					}
 				})
+				.faultTolerant()    // 예외 처리를 하기 위한 설정
+				.skip(Exception.class)  // 처리할 예외 유형 설정
+				.listener(new SkipListener<User, User>() {  // 예외 처리
+					@Override
+					public void onSkipInRead(Throwable t) {
+						log.error("유저 정보 조회 중 예외 발생 : " + t.getMessage());
+					}
+					
+					@Override
+					public void onSkipInWrite(User user, Throwable t) {
+						log.error(user.getName() + "(" + user.getNickname() + ") 회원 처리 중 예외 발생");
+					}
+					
+					@Override
+					public void onSkipInProcess(User item, Throwable t) {
+						// process 단계를 거치지 않기 때문에 구현하지 않음
+					}
+				})
+				.allowStartIfComplete(true)
 				.build();
-		processUser.setAllowStartIfComplete(true);
-		return processUser;
 	}
 	
 	@Bean
@@ -161,7 +165,7 @@ public class JobConfiguration {
 	}
 
 	private void sendNotice(User user)  {
-		// 알림을 보내는 뭔가
+		// 알림을 보내는 내용
 		StringBuilder content = new StringBuilder();
 		content.append("[If I Die Tomorrow]").append("\n");
 		content.append(user.getName()).append("님, ").append("\n");
