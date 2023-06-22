@@ -79,10 +79,7 @@ public class JobConfiguration {
 	public Step processUser(){
 		return stepBuilderFactory.get("processUser")
 				.<User, User>chunk(10)  // Chunk 크기는 10
-				.reader(new ListItemReader<>(userRepository.findAllUsersWhereSendAgreeIsTrue()  // 특정 유저 조회
-														.stream()
-														.filter(user -> user.getPersonalPage() == null && user.getUpdatedAt().isBefore(threeMonthsAgo))
-														.collect(Collectors.toList())))
+				.reader(new ListItemReader<>(userRepository.findAllBySendAgreeIsTrueAndPersonalPageIsNullAndUpdatedAtIsBefore(threeMonthsAgo)))  // 특정 유저 조회
 				.writer(new ItemWriter<User>() {    // reader로 조회한 유저들 처리
 					@Override
 					public void write(List<? extends User> items) throws Exception {
