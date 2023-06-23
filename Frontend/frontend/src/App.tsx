@@ -13,6 +13,7 @@ import Diary from './pages/Diary/Diary';
 import Login from './pages/LogIn/Login';
 import Nickname from './pages/LogIn/Nickname';
 import Feed from './pages/Feed/Feed';
+import CommentAlert from './pages/Feed/CommentAlert';
 import DiaryDetail from './pages/Diary/DiaryDetail';
 import BucketDetail from './pages/Bucket/BucketDetail';
 import MyPage from './pages/Profile/MyPage';
@@ -71,6 +72,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/nickname" element={<Nickname />} />
             <Route path="/feed" element={<Feed />} />
+            <Route path="/newcomment" element={<CommentAlert />} />
             <Route path="/diary/:diaryId" element={<DiaryDetail />} />
             <Route path="/bucket/:bucketId" element={<BucketDetail />} />
             <Route path="/mypage" element={<MyPage />} />
