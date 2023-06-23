@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import axios from 'axios';
 import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 import BucketDetail from '../../pages/Bucket/BucketDetail';
