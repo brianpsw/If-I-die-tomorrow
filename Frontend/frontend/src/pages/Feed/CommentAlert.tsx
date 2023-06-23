@@ -7,15 +7,22 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
 const Container = styled.div`
-  ${tw`text-p3`}
+  ${tw`text-p1`}
+  padding-bottom: 20%;
 `;
 
-const CommentList = styled.ul`
-  ${tw`mt-5`}
+const NewCommentWrap = styled.div`
+  ${tw`mt-10`}
 `;
 
-const CommentListItem = styled.li`
-  ${tw`mb-2`}
+const CardWrap = styled.div`
+  ${tw`mb-6 p-8 bg-white mx-auto shadow rounded`}
+  background-color: rgba(246, 246, 246, 0.7);
+  box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.25);
+  // border: solid 1px #9e9e9e;
+  border-radius: 10px;
+  box-sizing: border-box;
+  max-width: calc(100% - 48px);
 `;
 
 interface CommentNotification {
@@ -59,14 +66,24 @@ function CommentAlert() {
   return (
     <Container>
       <TopBar title="알림" />
-      <CommentList>
+      <NewCommentWrap>
         {comments.map((comment) => (
-          <CommentListItem key={comment.commentId}>
-            {comment.nickname}님이 회원님의 게시물에 댓글을 남겼습니다:{' '}
-            {comment.content}
-          </CommentListItem>
+          <Link
+            to={
+              comment.type
+                ? `/diary/${comment.typeId}`
+                : `/bucket/${comment.typeId}`
+            }
+            key={comment.commentId}
+          >
+            <CardWrap key={comment.commentId}>
+              <b>{comment.nickname}</b>님이 회원님의 게시물에 댓글을 남겼습니다:
+              <br />
+              {comment.content}
+            </CardWrap>
+          </Link>
         ))}
-      </CommentList>
+      </NewCommentWrap>
     </Container>
   );
 }
