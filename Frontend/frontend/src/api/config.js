@@ -128,6 +128,13 @@ const requests = {
   GET_DIARY_FEED(pageNo, pageSize) {
     return `/api/board/diary?page=${pageNo}&size=${pageSize}`;
   },
+  GET_NEW_COMMENT() {
+    return `/api/notification`;
+  },
+  GET_NEW_COMMENT_COUNT() {
+    return `/api/notification/count`;
+  },
+
   POST_REPORT_FEED() {
     return `/api/board/report`;
   },
