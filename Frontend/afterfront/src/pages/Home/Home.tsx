@@ -83,7 +83,7 @@ export default function Home() {
     async function fetchData() {
       try {
         const response = await fetch(
-          'https://ifidietomorrow.duckdns.org/api/after',
+          process.env.AFTER_LOGIN as unknown as URL,
           {
             method: 'GET',
             headers: {
