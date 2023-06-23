@@ -36,7 +36,7 @@ function App() {
           <Background>
             {userData && userData.preview ? (
               <Link
-                to={process.env.PREVIEW_END as unknown as URL}
+                to={process.env.REACT_APP_PREVIEW_END as unknown as URL}
                 target="_self"
                 reloadDocument={true}
                 replace={true}
