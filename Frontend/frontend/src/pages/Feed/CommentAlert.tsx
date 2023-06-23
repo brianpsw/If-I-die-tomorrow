@@ -8,12 +8,12 @@ import requests from '../../api/config';
 import { defaultApi } from '../../api/axios';
 
 const Container = styled.div`
-  ${tw`text-p1`}
+  ${tw``}
   padding-bottom: 20%;
 `;
 
 const NewCommentWrap = styled.div`
-  ${tw`mt-10`}
+  ${tw`mt-10 text-p1`}
 `;
 
 const CardWrap = styled.div`
