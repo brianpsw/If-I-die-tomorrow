@@ -55,7 +55,7 @@ function PhotoInput(props: PhotoUpload) {
         }}
       >
         {imgUrl ? (
-          fileType === 'image' ? (
+          fileType === 'image' || uploadType === 'thumb' ? (
             <img
               className="image-upload-preview w-full h-full bg-auto"
               src={imgUrl}
