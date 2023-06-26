@@ -57,7 +57,7 @@ public class PhotoController {
 	@PatchMapping("/category")
 	@Operation(summary = "카테고리 이름 변경", description = "카테고리 이름을 변경합니다.")
 	public ResponseEntity<CreateCategoryResDto> updateCategoryName(
-			@RequestBody UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException {
+			@RequestBody UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryName(data));
 	}
 	
@@ -66,7 +66,7 @@ public class PhotoController {
 	public ResponseEntity<CreateCategoryResDto> updateCategoryThumbnail(
 			@RequestPart UpdateCategoryThumbnailDto data,
 			@RequestPart MultipartFile image
-			) throws ImageProcessingException, NotFoundException, IOException, IllegalArgumentException, NoPhotoException, MetadataException {
+			) throws ImageProcessingException, NotFoundException, IOException, NoPhotoException, MetadataException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.OK).body(photoService.updateCategoryThumbnail(data, image));
 	}
 	
