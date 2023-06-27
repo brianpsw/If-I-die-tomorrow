@@ -73,7 +73,7 @@ public class PhotoController {
 	@DeleteMapping("/category/{categoryId}")
 	@Operation(summary = "카테고리 삭제", description = "카테고리를 삭제합니다.")
 	public ResponseEntity<Long> deleteCategory(
-			@PathVariable Long categoryId) throws NotFoundException, IllegalArgumentException {
+			@PathVariable Long categoryId) throws NotFoundException, UnAuthorizedException {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(photoService.deleteCategory(categoryId));
 	}
 	
