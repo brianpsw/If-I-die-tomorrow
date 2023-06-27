@@ -21,9 +21,26 @@ const Badge = styled.span`
 `;
 
 function AlertCount() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const getCount = async () => {
+      try {
+        const response = await defaultApi.get(
+          requests.GET_NEW_COMMENT_COUNT(),
+          { withCredentials: true },
+        );
+        setCount(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getCount();
+  }, []);
   return (
     <div>
-      <Badge>1</Badge>
+      <Badge>{count}</Badge>
     </div>
   );
 }
