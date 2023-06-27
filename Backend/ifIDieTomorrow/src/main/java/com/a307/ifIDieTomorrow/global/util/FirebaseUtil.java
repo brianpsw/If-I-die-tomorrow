@@ -47,6 +47,7 @@ public class FirebaseUtil {
                         .setTitle(title)
                         .setBody(body)
                         .build())
+                .setWebpushConfig(WebpushConfig.builder().setFcmOptions(WebpushFcmOptions.builder().setLink("https://www.google.com").build()).build())
                 .addAllTokens(registrationTokens)
                 .build();
         BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);
