@@ -4,7 +4,10 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
+import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.entity.User;
 import com.a307.ifIDieTomorrow.domain.repository.CategoryRepository;
 import com.a307.ifIDieTomorrow.domain.repository.PhotoRepository;
@@ -470,9 +473,20 @@ public class PhotoServiceImplTest {
 			class NormalScenario {
 				
 				@Test
-				@DisplayName("내가 만든 카테고리 삭제")
-				void deleteCategory() {
-				
+				@DisplayName("내 카테고리 삭제")
+				void deleteCategory() throws NotFoundException, UnAuthorizedException {
+					
+					// Given
+					given(categoryRepository.findByCategoryId(0L)).willReturn(Optional.of(category0));
+					
+					// When
+					Long categoryId = photoService.deleteCategory(0L);
+					
+					// Then
+					then(categoryRepository).should().findByCategoryId(categoryId);
+					then(photoRepository).should().deleteAllByCategory_CategoryId(categoryId);
+					then(categoryRepository).should().delete(category0);
+					
 				}
 				
 			}
@@ -485,11 +499,41 @@ public class PhotoServiceImplTest {
 				@DisplayName("존재하지 않는 카테고리 삭제")
 				void deleteCategoryWithWrongCategoryId() {
 					
+					// Given
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.deleteCategory(123L))
+							.isInstanceOf(NotFoundException.class);
+					
+					then(categoryRepository).should().findByCategoryId(123L);
+					then(categoryRepository).should(never()).delete(any());
+					
 				}
 				
 				@Test
 				@DisplayName("다른 유저의 카테고리 삭제")
 				void deleteCategoryOfOtherUser() {
+					
+					// Given
+					Category existingCategory = Category.builder()
+							.categoryId(1L)
+							.name("test1")
+							.imageUrl("test1.com")
+							.userId(2L)
+							.build();
+					
+					given(categoryRepository.findByCategoryId(1L)).willReturn(Optional.of(existingCategory));
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.deleteCategory(1L))
+							.isInstanceOf(UnAuthorizedException.class);
+					
+					then(categoryRepository).should().findByCategoryId(1L);
+					then(categoryRepository).should(never()).delete(any());
 					
 				}
 				
@@ -517,8 +561,56 @@ public class PhotoServiceImplTest {
 				
 				@Test
 				@DisplayName("사진과 캡션이 있는 포토 생성")
-				void createPhoto() {
-				
+				void createPhoto() throws ImageProcessingException, IOException, MetadataException, NotFoundException, UnAuthorizedException, NoPhotoException {
+					
+					// Given
+					CreatePhotoDto data = new CreatePhotoDto(0L, "test caption");
+					MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+					
+					Photo savedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(1L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("test caption")
+							.imageType("image")
+							.build();
+					
+					given(categoryRepository.findByCategoryId(0L)).willReturn(Optional.of(category0));
+					given(photoRepository.save(any(Photo.class))).willReturn(savedPhoto);
+					given(s3Upload.upload(photo, "photo")).willReturn("test.com");
+					
+					
+					// When
+					CreatePhotoResDto result = photoService.createPhoto(data, photo);
+					ArgumentCaptor<Photo> captor = ArgumentCaptor.forClass(Photo.class);
+					
+					// Then
+					/**
+					 * 동작 검증
+					 * 사진이 업로드됨
+					 * 포토클라우드에 저장됨
+					 */
+					then(s3Upload).should().upload(photo, "photo");
+					then(photoRepository).should().save(captor.capture());
+					
+					/**
+					 * 파라미터 검증
+					 * categoryId, caption
+					 */
+					Photo capturedPhoto = captor.getValue();
+					BDDAssertions.then(capturedPhoto.getCategory().getCategoryId()).isEqualTo(0L);
+					BDDAssertions.then(capturedPhoto.getCaption()).isEqualTo("test caption");
+					
+					/**
+					 * 결과 검증
+					 * photoId, categoryId, imageUrl, imageType
+					 */
+					BDDAssertions.then(result.getPhotoId()).isEqualTo(1L);
+					BDDAssertions.then(result.getCategoryId()).isEqualTo(0L);
+					BDDAssertions.then(result.getImageUrl()).isEqualTo("test.com");
+					BDDAssertions.then(result.getImageType()).isEqualTo("image");
+					
 				}
 				
 			}
@@ -530,19 +622,66 @@ public class PhotoServiceImplTest {
 				@Test
 				@DisplayName("사진이 없는 포토 생성")
 				void createPhotoWithoutImage() {
-				
+					
+					// Given
+					CreatePhotoDto data = new CreatePhotoDto(0L, "test caption");
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.createPhoto(data, null))
+							.isInstanceOf(NoPhotoException.class);
+					
+					then(photoRepository).shouldHaveNoInteractions();
+					then(s3Upload).shouldHaveNoInteractions();
+					
 				}
 				
 				@Test
 				@DisplayName("존재하지 않는 카테고리에 포토 생성")
 				void createPhotoInCategoryWithWrongCategoryId() {
-				
+					
+					// Given
+					CreatePhotoDto data = new CreatePhotoDto(123L, "test caption");
+					MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.createPhoto(data, photo))
+							.isInstanceOf(NotFoundException.class);
+					
+					then(photoRepository).shouldHaveNoInteractions();
+					then(s3Upload).shouldHaveNoInteractions();
+					
 				}
 				
 				@Test
 				@DisplayName("다른 유저의 카테고리에 포토 생성")
 				void createPhotoInCategoryOfOtherUser() {
-				
+					
+					// Given
+					CreatePhotoDto data = new CreatePhotoDto(1L, "test caption");
+					MockMultipartFile photo = new MockMultipartFile("file", "test.jpg", "image/jpeg", "test".getBytes());
+					
+					Category category = Category.builder()
+								.userId(2L)
+								.categoryId(1L)
+								.name("other's")
+								.imageUrl("other.com")
+								.build();
+					
+					given(categoryRepository.findByCategoryId(1L)).willReturn(Optional.of(category));
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.createPhoto(data, photo))
+							.isInstanceOf(UnAuthorizedException.class);
+					
+					then(photoRepository).shouldHaveNoInteractions();
+					then(s3Upload).shouldHaveNoInteractions();
+					
 				}
 				
 			}
