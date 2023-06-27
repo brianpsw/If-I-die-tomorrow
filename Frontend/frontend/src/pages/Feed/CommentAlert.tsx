@@ -58,7 +58,7 @@ async function fetchCommentNotifications(page: number) {
 
 function CommentAlert() {
   const [comments, setComments] = useState<CommentNotification[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(0);
   const [hasNext, setHasNext] = useState<boolean>(true);
 
   useEffect(() => {
