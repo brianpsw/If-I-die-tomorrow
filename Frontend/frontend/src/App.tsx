@@ -28,7 +28,7 @@ import WillVideo from './pages/Will/WillVideo';
 import ScrollTop from './components/common/ScrollTop';
 import { useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
-import { getMessaging } from 'firebase/messaging';
+import { getMessaging, onMessage } from 'firebase/messaging';
 import './firebase-messaging-sw';
 
 const firebaseApp = initializeApp({
@@ -45,6 +45,10 @@ const firebaseApp = initializeApp({
 // messages.
 export const messaging = getMessaging(firebaseApp);
 
+onMessage(messaging, (payload) => {
+  console.log('Message received. ', payload);
+  // ...
+});
 function requestPermission() {
   console.log('Requesting permission...');
   Notification.requestPermission().then((permission) => {
