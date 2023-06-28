@@ -30,7 +30,7 @@ public class TokenServiceImpl implements TokenService{
 		boolean flag = true;
 		for (Token token:
 			 tokenList) {
-			if(token.getToken() == data.getToken()){
+			if(data.getToken().equals(token.getToken())){
 				flag = false;
 				break;
 			}
