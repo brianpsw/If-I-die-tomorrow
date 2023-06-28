@@ -45,10 +45,6 @@ const firebaseApp = initializeApp({
 // messages.
 export const messaging = getMessaging(firebaseApp);
 
-onMessage(messaging, (payload) => {
-  console.log('Message received. ', payload);
-  // ...
-});
 function requestPermission() {
   console.log('Requesting permission...');
   Notification.requestPermission().then((permission) => {
@@ -61,6 +57,10 @@ function App() {
   useEffect(() => {
     if ('Notification' in window && 'requestPermission' in Notification)
       requestPermission();
+    onMessage(messaging, (payload) => {
+      console.log('Message received. ', payload);
+      // ...
+    });
   }, []);
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
