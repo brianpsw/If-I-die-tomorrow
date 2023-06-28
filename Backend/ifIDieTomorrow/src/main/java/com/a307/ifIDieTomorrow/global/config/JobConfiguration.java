@@ -84,7 +84,7 @@ public class JobConfiguration {
 					@Override
 					public void write(List<? extends User> items) throws Exception {
 						log.info(">>>>> step processUser starts");
-						items.forEach(user -> {
+						items.parallelStream().forEach(user -> {
 							if (user.getUpdatedAt().isBefore(sixMonthsAgo)) {
 								sendPage(user);
 								log.info("> " + user.getName() + "(" + user.getNickname() + ")님 6개월 이상 미접속, 사후 페이지 전송");
