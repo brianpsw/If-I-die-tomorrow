@@ -34,6 +34,11 @@ export const Image = styled.img`
   width: 70px;
 `;
 
+export const Video = styled.video`
+  ${tw`w-full mb-[8px]`}
+  width: 70px;
+`;
+
 export const ContentImg = styled.div`
   ${tw`flex justify-between`}
 `;
