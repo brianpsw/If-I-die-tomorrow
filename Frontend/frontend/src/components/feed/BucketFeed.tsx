@@ -12,6 +12,7 @@ import {
   Title,
   Content,
   Image,
+  Video,
   ContentImg,
   TitleContent,
   Meta,
@@ -38,6 +39,7 @@ interface BucketItem {
     secret: boolean;
     createdAt: string;
     updated: string;
+    imageType: string;
   };
   comments: Comment[];
 }
@@ -122,6 +124,7 @@ function BucketFeed() {
           items.map((item: BucketItem, index: number) => {
             const bucket = item.bucket;
             const commentCount = item.comments.length;
+            const isVideo = bucket.imageType === 'video';
             return (
               <Link
                 to={`/bucket/${bucket.bucketId}`}
@@ -157,9 +160,15 @@ function BucketFeed() {
                       </Content>
                     </TitleContent>
                     <div>
-                      {bucket.imageUrl && bucket.imageUrl !== '""' && (
-                        <Image src={bucket.imageUrl} alt="Bucket" />
+                      {isVideo && (
+                        <Video src={bucket.imageUrl} autoPlay muted />
                       )}
+
+                      {!isVideo &&
+                        bucket.imageUrl &&
+                        bucket.imageUrl !== '""' && (
+                          <Image src={bucket.imageUrl} alt="Bucket" />
+                        )}
                     </div>
                   </ContentImg>
                   <Meta>

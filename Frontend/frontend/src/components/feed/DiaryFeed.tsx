@@ -11,6 +11,7 @@ import {
   Title,
   Content,
   Image,
+  Video,
   ContentImg,
   TitleContent,
   Meta,
@@ -37,6 +38,7 @@ interface DiaryItem {
     secret: boolean;
     createdAt: string;
     updated: string;
+    imageType: string;
   };
   comments: Comment[];
 }
@@ -119,6 +121,21 @@ function DiaryFeed() {
           items.map((item: DiaryItem, index: number) => {
             const diary = item.diary;
             const commentCount = item.comments.length;
+            const isVideo = diary.imageType === 'video';
+            // 영상 URL을 배열로 저장합니다.
+            const videoFormats = [
+              '.mp4',
+              '.webm',
+              '.ogg',
+              // '.avi',
+              // '.quicktime',
+              // 추가적인 형식을 여기에 추가할 수 있습니다.
+            ];
+
+            // videoFormats 배열에 포함된 형식 중 해당하는 것을 찾아냅니다.
+            const videoFormat = videoFormats.find((format) =>
+              diary.imageUrl?.endsWith(format),
+            );
             return (
               <Link
                 to={`/diary/${diary.diaryId}`}
@@ -150,9 +167,13 @@ function DiaryFeed() {
                       </Content>
                     </TitleContent>
                     <div>
-                      {diary.imageUrl && diary.imageUrl !== '""' && (
-                        <Image src={diary.imageUrl} alt="Diary" />
-                      )}
+                      {isVideo && <Video src={diary.imageUrl} autoPlay muted />}
+
+                      {!isVideo &&
+                        diary.imageUrl &&
+                        diary.imageUrl !== '""' && (
+                          <Image src={diary.imageUrl} alt="Diary" />
+                        )}
                     </div>
                   </ContentImg>
                   <Meta>
