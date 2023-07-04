@@ -83,6 +83,9 @@ const Video = styled.video`
   ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
 
+const Image = styled.img`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
+`;
 const SecretOrNotText = styled.p`
   ${tw`text-p1 inline-block rounded-[10px]`}
   width: content;
@@ -263,6 +266,7 @@ function BucketDetail() {
   }
 
   const bucket = bucketDetail;
+  const isVideo = bucket.imageType === 'video';
 
   return (
     <div>
@@ -323,13 +327,11 @@ function BucketDetail() {
             {/* {bucket.imageUrl && bucket.imageUrl !== '""' && (
               <img src={bucket.imageUrl} alt="Bucket" />
             )} */}
-            {bucket.imageUrl &&
-              bucket.imageUrl !== '""' &&
-              (bucket.imageType === 'image' ? (
-                <img src={bucket.imageUrl} alt="버킷이미지" />
-              ) : (
-                <Video controls src={bucket.imageUrl} />
-              ))}
+            {isVideo && <Video src={bucket.imageUrl} autoPlay muted controls />}
+
+            {!isVideo && bucket.imageUrl && bucket.imageUrl !== '""' && (
+              <Image src={bucket.imageUrl} alt="bucket" />
+            )}
           </BucketImg>
           <BucketText>{bucket.content}</BucketText>
         </BucketWrap>
