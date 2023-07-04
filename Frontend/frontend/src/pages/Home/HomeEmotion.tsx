@@ -24,3 +24,15 @@ export const FeelingTxt = styled.h1`
   left: 24px;
   z-index: 1;
 `;
+
+export const CommentAlert = styled.div`
+  position: absolute;
+  top: 45px;
+  right: 24px;
+  // position: relative;
+  z-index: 1;
+`;
+
+export const CommentAlertIcon = styled.div`
+  position: relative;
+`;
