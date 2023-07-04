@@ -30,6 +30,18 @@ export const HeadText = styled.h1`
   color: white;
 `;
 
+export const CommentAlert = styled.div`
+  position: absolute;
+  top: 45px;
+  right: 24px;
+  // position: relative;
+  z-index: 1;
+`;
+
+export const CommentAlertIcon = styled.div`
+  position: relative;
+`;
+
 export const FillingText = styled.h4`
   ${tw`text-white`}
   text-shadow: 4px 4px 4px #111111;
