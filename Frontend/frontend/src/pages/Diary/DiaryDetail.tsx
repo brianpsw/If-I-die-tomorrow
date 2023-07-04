@@ -81,6 +81,11 @@ const DiaryImg = styled.div`
 const Video = styled.video`
   ${tw`w-full object-contain mb-6 rounded-[10px]`}
 `;
+
+const Image = styled.img`
+  ${tw`w-full object-contain mb-6 rounded-[10px]`}
+`;
+
 const SecretOrNotText = styled.p`
   ${tw`text-p1 inline-block rounded-[10px]`}
   width: content;
@@ -261,6 +266,7 @@ function DiaryDetail() {
   }
 
   const diary = diaryDetail;
+  const isVideo = diary.imageType === 'video';
 
   return (
     <div>
@@ -322,13 +328,19 @@ function DiaryDetail() {
             {/* {diary.imageUrl && diary.imageUrl !== '""' && (
               <img src={diary.imageUrl} alt="Diary" />
             )} */}
-            {diary.imageUrl &&
+            {/* {diary.imageUrl &&
               diary.imageUrl !== '""' &&
               (diary.imageType === 'image' ? (
                 <img src={diary.imageUrl} alt="다이어리이미지" />
               ) : (
                 <Video controls src={diary.imageUrl} />
-              ))}
+              ))} */}
+
+            {isVideo && <Video src={diary.imageUrl} autoPlay muted controls />}
+
+            {!isVideo && diary.imageUrl && diary.imageUrl !== '""' && (
+              <Image src={diary.imageUrl} alt="diary" />
+            )}
           </DiaryImg>
           <DiaryText>{diary.content}</DiaryText>
         </DiaryWrap>
