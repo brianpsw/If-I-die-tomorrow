@@ -48,7 +48,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 			"where (d.userId = :userId OR b.userId = :userId) " +
 			"AND c.userId != :userId " +
 			"AND u.deleted = false " +
-			"ORDER BY d.createdAt DESC")
+			"ORDER BY c.createdAt DESC")
 	Page<CreateCommentResDto> findAllByUserId(Pageable pageable, @Param("userId") Long userId);
 
 	@Query("SELECT COUNT" +
