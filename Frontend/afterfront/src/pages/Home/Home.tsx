@@ -27,7 +27,7 @@ function LoginForm({ setIsLogin }: any) {
     // Send password to backend server
     try {
       const response = await fetch(
-        'https://ifidietomorrow.duckdns.org/api/after',
+        process.env.REACT_APP_AFTER_LOGIN as unknown as URL,
         {
           method: 'POST',
           headers: {
@@ -83,7 +83,7 @@ export default function Home() {
     async function fetchData() {
       try {
         const response = await fetch(
-          'https://ifidietomorrow.duckdns.org/api/after',
+          process.env.REACT_APP_AFTER_LOGIN as unknown as URL,
           {
             method: 'GET',
             headers: {

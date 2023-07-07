@@ -22,7 +22,6 @@ function PhotoInput(props: PhotoUpload) {
   const [fileType, setFileType] = useState<string | null>('');
   const handleInputPhoto = (e: any) => {
     const file = e.target.files?.[0];
-    console.log(file);
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setImgUrl(imageUrl);
@@ -55,7 +54,7 @@ function PhotoInput(props: PhotoUpload) {
         }}
       >
         {imgUrl ? (
-          fileType === 'image' ? (
+          fileType === 'image' || uploadType === 'thumb' ? (
             <img
               className="image-upload-preview w-full h-full bg-auto"
               src={imgUrl}

@@ -17,6 +17,7 @@ self.addEventListener('push', function (e) {
     body: resultData.body,
     icon: resultData.image,
     tag: resultData.tag,
+    data: e.data.json().data,
     ...resultData,
   };
   console.log('push: ', { resultData, notificationTitle, notificationOptions });
@@ -26,7 +27,7 @@ self.addEventListener('push', function (e) {
 
 self.addEventListener('notificationclick', function (event) {
   console.log('notification click');
-  const url = '/';
+  const url = event.notification.data.link;
   event.notification.close();
   event.waitUntil(clients.openWindow(url));
 });

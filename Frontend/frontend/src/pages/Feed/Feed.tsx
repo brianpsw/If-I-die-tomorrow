@@ -8,6 +8,7 @@ import BucketFeed from '../../components/feed/BucketFeed';
 import { useNavigate, useLocation } from 'react-router-dom';
 import TopButton from '../../components/common/ScrollToTopButton';
 import textLogoImg from '../../assets/images/text_logo.png';
+import AlertCount from '../../components/feed/AlertCount';
 
 // const Background = styled.div`
 //   background-image: url(${backgroundImg});
@@ -30,6 +31,18 @@ const Logo = styled.div`
   position: absolute;
   top: 36px;
   left: 24px;
+`;
+
+const CommentAlert = styled.div`
+  position: absolute;
+  top: 45px;
+  right: 24px;
+  // position: relative;
+  z-index: 1;
+`;
+
+const CommentAlertIcon = styled.div`
+  position: relative;
 `;
 
 const Container = styled.div`
@@ -98,6 +111,25 @@ function Feed() {
     <div>
       <Link to="/home">
         <Logo />
+      </Link>
+      <Link to="/newcomment">
+        <CommentAlert>
+          <CommentAlertIcon>
+            <AlertCount />
+            <svg
+              width="24"
+              height="28"
+              viewBox="0 0 18 21"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M7 19H11C11 20.1 10.1 21 9 21C7.9 21 7 20.1 7 19ZM18 17V18H0V17L2 15V9C2 5.9 4 3.2 7 2.3V2C7 0.9 7.9 0 9 0C10.1 0 11 0.9 11 2V2.3C14 3.2 16 5.9 16 9V15L18 17ZM14 9C14 6.2 11.8 4 9 4C6.2 4 4 6.2 4 9V16H14V9Z"
+                fill="white"
+              />
+            </svg>
+          </CommentAlertIcon>
+        </CommentAlert>
       </Link>
       <Container>
         <FeedTab>

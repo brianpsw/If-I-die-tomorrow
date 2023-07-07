@@ -31,7 +31,7 @@ import {
   DateWrap,
 } from '../../components/feed/FeedEmotion';
 const Container = styled.div`
-  ${tw`flex items-center flex-col px-[24px] w-full h-[100vh] overflow-y-auto pb-[60px]`}
+  ${tw`flex items-center flex-col px-[24px] w-full overflow-y-auto mb-[80px]`}
 `;
 
 const TopTitle = styled.div`
@@ -59,7 +59,7 @@ const ContentInputContainer = styled.textarea`
   ${tw`flex flex-wrap w-full text-p1 h-[86px] p-[8px] rounded border-black break-all my-[16px]`}
 `;
 const PhotoContainer = styled.div`
-  ${tw`items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
+  ${tw`flex items-center self-end w-full min-h-[93px] my-[8px] rounded border border-dashed border-black`}
 `;
 const FeedCheckContainer = styled.div`
   ${tw`flex items-center w-full h-[24px] my-[8px]`}
@@ -237,7 +237,7 @@ function Diary() {
   //   }
   // }, [data, sameDay]);
   return (
-    <div className="min-h-[100vh]">
+    <div className="">
       {/* <Background> */}
       {loadingOpen ? <Loading /> : ''}
       <Container>
@@ -323,7 +323,7 @@ function Diary() {
               />
             </form>
             <PhotoContainer>
-              <div className="image-upload-container w-full h-full">
+              <div className="image-upload-container w-full">
                 {imageUrl ? (
                   <div className="relative">
                     <DeleteBtn onClick={handleDeleteItemImage}>
@@ -347,7 +347,7 @@ function Diary() {
                     onClick={handleClick}
                   >
                     <div className="flex flex-col justify-center items-center w-full h-full cursor-pointer">
-                      <img src={uploadIcon} alt="" />
+                      <img src={uploadIcon} alt="camera icon" />
                     </div>
                   </div>
                 )}
