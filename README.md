@@ -136,6 +136,7 @@ If I Die Tomorrow는 웰다잉을 쉽게 준비할 수 있도록 도와주는 �
 ### Patch Note
 - version 0.0.1
 - [version 0.0.2](https://branch-basil-4c1.notion.site/6-16-a77c4565440b4f579dc0d977fc58e73a?pvs=4)
+- [version 0.0.3](https://branch-basil-4c1.notion.site/7-7-2cfc853131a74d23bc1fc059ebcc5c5b?pvs=4)
 
 ## 🚩 프로젝트 산출물
 
