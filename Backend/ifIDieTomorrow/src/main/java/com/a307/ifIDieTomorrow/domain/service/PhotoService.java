@@ -22,9 +22,9 @@ import java.util.List;
 public interface PhotoService {
 	CreateCategoryResDto createCategory (CreateCategoryDto data, MultipartFile image) throws UnAuthorizedException, IllegalArgumentException, ImageProcessingException, IOException, MetadataException, NoPhotoException;
 	
-	CreateCategoryResDto updateCategoryName (UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException;
+	CreateCategoryResDto updateCategoryName (UpdateCategoryNameDto data) throws NotFoundException, IllegalArgumentException, UnAuthorizedException;
 	
-	Long deleteCategory (Long categoryId) throws NotFoundException, IllegalArgumentException;
+	Long deleteCategory (Long categoryId) throws NotFoundException, UnAuthorizedException;
 	
 	List<CreateCategoryResDto> getCategory ();
 	
@@ -40,5 +40,5 @@ public interface PhotoService {
 
 	List<GetPhotoByCategoryResDto> getPhotoByUser (Long userId);
 	
-	CreateCategoryResDto updateCategoryThumbnail (UpdateCategoryThumbnailDto data, MultipartFile image) throws NotFoundException, IllegalArgumentException, NoPhotoException, ImageProcessingException, IOException, MetadataException;
+	CreateCategoryResDto updateCategoryThumbnail (UpdateCategoryThumbnailDto data, MultipartFile image) throws NotFoundException, NoPhotoException, ImageProcessingException, IOException, MetadataException, UnAuthorizedException;
 }

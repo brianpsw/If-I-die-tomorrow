@@ -4,16 +4,21 @@ import com.a307.ifIDieTomorrow.domain.dto.notification.SmsDto;
 import com.a307.ifIDieTomorrow.domain.dto.receiver.CreateReceiverResDto;
 import com.a307.ifIDieTomorrow.domain.entity.*;
 import com.a307.ifIDieTomorrow.domain.repository.*;
+import com.a307.ifIDieTomorrow.global.util.FirebaseUtil;
 import com.a307.ifIDieTomorrow.global.util.NotificationUtil;
 import com.a307.ifIDieTomorrow.global.util.S3Upload;
+import com.google.firebase.messaging.FirebaseMessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.step.tasklet.TaskletStep;
+import org.springframework.batch.item.*;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +40,7 @@ public class JobConfiguration {
 	private final StepBuilderFactory stepBuilderFactory;
 	private final UserRepository userRepository;
 	private final NotificationUtil notificationUtil;
+	private final FirebaseUtil firebaseUtil;
 	private final PhotoRepository photoRepository;
 	private final BucketRepository bucketRepository;
 	private final DiaryRepository diaryRepository;
@@ -42,9 +48,13 @@ public class JobConfiguration {
 	private final CategoryRepository categoryRepository;
 	private final ReceiverRepository receiverRepository;
 	private final ReportRepository reportRepository;
+	private final TokenRepository tokenRepository;
 	private final WillRepository willRepository;
 	private final AfterRepository afterRepository;
 	private final S3Upload s3Upload;
+
+	LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
+	LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
 
 	@Bean
 	public Job job(){
@@ -55,7 +65,7 @@ public class JobConfiguration {
 				.next(finished())
 				.build();
 	}
-	
+
 	@Bean
 	public Step testing() {
 		TaskletStep testing = stepBuilderFactory.get("testing")
@@ -68,61 +78,56 @@ public class JobConfiguration {
 		testing.setAllowStartIfComplete(true);
 		return testing;
 	}
-	
-	
+
 	@Bean
 	public Step processUser(){
-		TaskletStep processUser = stepBuilderFactory.get("processUser")
-				.tasklet((contribution, chunkContext) -> {
-
-					log.info(">>>>> step processUser starts");
-
-					/**
-					 * 1. 사후 페이지가 없는 유저
-					 */
-					log.info(">>>>> 1.1: Fetch all users agreed to send service");
-					List<User> users = userRepository.findAllUsersWhereSendAgreeIsTrue()
-							.stream()
-							.filter(user -> user.getPersonalPage() == null)
-							.collect(Collectors.toList());
-
-					log.info("fetched {} users to process", users.size());
-
-					/**
-					 * 2. 6개월 이상 활동 안 한 유저
-					 */
-					log.info(">>>>> 1.2: six months ago");
-					LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
-
-					users.parallelStream()
-							.filter(user -> user.getUpdatedAt().isBefore(sixMonthsAgo))
-							.forEach(this::sendPage);
-
-					/**
-					 * 3. 3개월 ~ 6개월 간 활동 안 한 유저
-					 */
-					log.info(">>>>> 1.3: three months ago");
-
-					LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
-
-					users.parallelStream()
-							.filter(user -> user.getUpdatedAt().isAfter(sixMonthsAgo) && user.getUpdatedAt().isBefore(threeMonthsAgo))
-							.forEach(this::sendNotice);
-
-					return RepeatStatus.FINISHED;
+		return stepBuilderFactory.get("processUser")
+				.<User, User>chunk(10)  // Chunk 크기는 10
+				.reader(new ListItemReader<>(userRepository.findAllBySendAgreeIsTrueAndPersonalPageIsNullAndUpdatedAtIsBefore(threeMonthsAgo)))  // 특정 유저 조회
+				.writer(new ItemWriter<User>() {    // reader로 조회한 유저들 처리
+					@Override
+					public void write(List<? extends User> items) throws Exception {
+						log.info(">>>>> step processUser starts");
+						items.parallelStream().forEach(user -> {
+							if (user.getUpdatedAt().isBefore(sixMonthsAgo)) {
+								sendPage(user);
+								log.info("> " + user.getName() + "(" + user.getNickname() + ")님 6개월 이상 미접속, 사후 페이지 전송");
+							} else {
+								sendNotice(user);
+								log.info("> " + user.getName() + "(" + user.getNickname() + ")님 3개월 이상 미접속, 알림과 SMS 전송");
+							}
+						});
+					}
 				})
+				.faultTolerant()    // 예외 처리를 하기 위한 설정
+				.skip(Exception.class)  // 처리할 예외 유형 설정
+				.listener(new SkipListener<User, User>() {  // 예외 처리
+					@Override
+					public void onSkipInRead(Throwable t) {
+						log.error("유저 정보 조회 중 예외 발생 : " + t.getMessage());
+					}
+
+					@Override
+					public void onSkipInWrite(User user, Throwable t) {
+						log.error(user.getName() + "(" + user.getNickname() + ") 회원 처리 중 예외 발생");
+					}
+
+					@Override
+					public void onSkipInProcess(User item, Throwable t) {
+						// process 단계를 거치지 않기 때문에 구현하지 않음
+					}
+				})
+				.allowStartIfComplete(true)
 				.build();
-		processUser.setAllowStartIfComplete(true);
-		return processUser;
 	}
-	
+
 	@Bean
 	public Step deleteUser (){
 		TaskletStep deleteUser = stepBuilderFactory.get("deleteUser")
 				.tasklet((contribution, chunkContext) -> {
-					
+
 					log.info(">>>>> step deleteUser starts");
-					
+
 					/**
 					 * 1. 탈퇴 처리한 유저
 					 */
@@ -130,20 +135,20 @@ public class JobConfiguration {
 					List<User> users = userRepository.findAllUsersWhereDeletedIsTrue()
 							.stream()
 							.collect(Collectors.toList());
-					
+
 					log.info("fetched {} users to delete", users.size());
-					
+
 					/**
 					 * 2. 1달 이상 재접속 안 한 유저
 					 */
 					log.info(">>>>> 2.2: After a month");
-					
+
 					LocalDateTime monthAgo = LocalDateTime.now().minusMonths(1);
-					
+
 					users.parallelStream()
 							.filter(user -> user.getUpdatedAt().isBefore(monthAgo))
 							.forEach(this::deleteAll);
-					
+
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -161,7 +166,7 @@ public class JobConfiguration {
 	}
 
 	private void sendNotice(User user)  {
-		// 알림을 보내는 뭔가
+		// 알림을 보내는 내용
 		StringBuilder content = new StringBuilder();
 		content.append("[If I Die Tomorrow]").append("\n");
 		content.append(user.getName()).append("님, ").append("\n");
@@ -171,25 +176,28 @@ public class JobConfiguration {
 
 		try {
 			notificationUtil.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(user.getPhone()).build());
+			firebaseUtil.sendPush(tokenRepository.findAllByUserId(user.getUserId()), "로그인 요청 알림", content.toString(), "/login");
 		} catch (IOException e) {
+			log.error(e.getMessage());
+		} catch (FirebaseMessagingException e) {
 			log.error(e.getMessage());
 		}
 		log.info("send Notice to {}", user.getNickname());
 	}
-	
+
 	private void sendPage(User user){
 		// 퍼스널 페이지 null 이 아닌 것 채워넣기
 		String uuid = UUID.randomUUID().toString();
 		user.setPersonalPage(uuid);
 		userRepository.save(user);
-		
+
 		// After 에 UUID 저장
 		After after = After.builder()
 				.userId(user.getUserId())
 				.uuid(uuid)
 				.build();
 		afterRepository.save(after);
-		
+
 		// 문자로 사후 페이지와 UUID 전송
 		List<CreateReceiverResDto> list = receiverRepository.findAllByUserId(user.getUserId());
 		for (CreateReceiverResDto receiver : list) {
@@ -199,7 +207,7 @@ public class JobConfiguration {
 			content.append(user.getName()).append("님으로부터 편지가 도착했습니다.").append("\n");
 			content.append(user.getName()).append("님께서 생전에 남긴 기록들을 www.ifidietomorrow.co.kr/after 에서 확인하실 수 있습니다.").append("\n");
 			content.append("비밀번호 : ").append(uuid);
-			
+
 			try {
 				notificationUtil.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(receiver.getPhoneNumber()).build());
 			} catch (IOException e) {
@@ -207,52 +215,52 @@ public class JobConfiguration {
 			}
 			log.info("send Notice to {}", receiver.getName());
 		}
-		
+
 	}
-	
+
 	private void deleteAll(User user) {
 		Long userId = user.getUserId();
-		
+
 		// 포토 클라우드 정리
 		List<Photo> photos = photoRepository.findAllByUserId(userId);
 		photos.forEach(x -> s3Upload.delete(x.getImageUrl())); // 이미지 삭제
 		photoRepository.deleteAllInBatch(photos);
-		
+
 		// 버킷 리스트 정리
 		List<Bucket> buckets = bucketRepository.findAllByUserId(userId);
 		buckets.forEach(x -> {
 			if (!"".equals(x.getImageUrl())) s3Upload.delete(x.getImageUrl());
 		});
 		bucketRepository.deleteAllInBatch(buckets);
-		
+
 		// 다이어리 정리
 		List<Diary> diaries = diaryRepository.findAllByUserId(userId);
 		diaries.forEach(x -> {
 			if (!"".equals(x.getImageUrl())) s3Upload.delete(x.getImageUrl());
 		});
 		diaryRepository.deleteAllInBatch(diaries);
-		
+
 		// 댓글 정리
 		commentRepository.deleteAllByUserId(userId);
-		
+
 		// 카테고리 정리
 		List<Category> categories = categoryRepository.findAllByUserId(userId);
 		photos.forEach(x -> s3Upload.delete(x.getImageUrl())); // 이미지 삭제
 		categoryRepository.deleteAllInBatch(categories);
-		
+
 		// 리시버 정리
 		receiverRepository.deleteAllByUserId(userId);
-		
+
 		// 신고 정리
 		reportRepository.deleteAllByUserId(userId);
-		
+
 		// 유언 정리
 		willRepository.deleteByUserId(userId);
-		
+
 		// 유저 삭제
 		String nickname = user.getNickname();
 		userRepository.delete(user);
-		
+
 		log.info("deleted user {}", nickname);
 	}
 
