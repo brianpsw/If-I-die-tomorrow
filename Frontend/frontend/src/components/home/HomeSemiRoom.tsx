@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { MutableRefObject, Suspense, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { useRecoilValue } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
@@ -6,8 +6,6 @@ import { categoryState } from '../../states/CategoryState';
 import * as THREE from 'three';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { useGLTF, OrbitControls, useTexture } from '@react-three/drei';
-
-import Loading from '../common/Loading';
 
 function HomeScene() {
   const category = useRecoilValue(categoryState);
@@ -27,12 +25,12 @@ function HomeScene() {
   useFrame((state, delta) => {
     mixer.update(delta);
   });
-
+  // 썸네일 구를 눌렀을 때 해당 카테고리 url로 이동하는 이벤트
   const clickStar = (e: any, id: number) => {
     if (!preventDragClick) navigate(`/photo-cloud/${id}`);
     e?.stopPropagation();
   };
-
+  // 여우의 배를 눌렀을 때 애니메이션이 발동하는 이벤트
   const clickFox = (e: any) => {
     const earMove = mixer.clipAction(fox.animations[1]);
     default1.stop();
@@ -44,7 +42,7 @@ function HomeScene() {
     }, 1200);
     e?.stopPropagation();
   };
-
+  // 여우의 왼쪽 장미를 눌렀을 때 애니메이션이 발동하는 이벤트
   const clickRose = (e: any) => {
     const tailMove = mixer.clipAction(fox.animations[3]);
     default1.stop();
@@ -56,7 +54,7 @@ function HomeScene() {
     }, 2400);
     e?.stopPropagation();
   };
-
+  // 현재 마우스의 위치를 파악하는 함수
   const calculateMousePosition = (e: any) => {
     mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -((e.clientY / window.innerHeight) * 2 - 1);
@@ -86,17 +84,18 @@ function HomeScene() {
     }
   });
 
+  // 카테고리 썸네일 구의 위치
   const spherePosition = [
-    [25, 3, -10],
-    [10, 20, -10],
-    [10, 20, -30],
+    [-60, -10, -20],
+    [5, 32, -10],
+    [10, 22, -30],
     [-10, -10, -20],
-    [-25, 3, -10],
-    [5, 0, 30],
-    [-10, 3, 30],
-    [-10, 25, 20],
-    [40, 0, 20],
-    [3, -15, 50],
+    [-15, 5, -10],
+    [5, 0, -30],
+    [-55, -30, -30],
+    [-40, 15, -20],
+    [10, -20, -20],
+    [-50, -40, -10],
   ];
 
   return (
@@ -114,19 +113,17 @@ function HomeScene() {
             const texture = new THREE.TextureLoader().load(cat.imageUrl);
 
             return (
-              <group
-                key={cat.categoryId}
-                onClick={(e) => clickStar(e, cat.categoryId)}
-              >
+              <group key={cat.categoryId}>
                 <mesh
-                  rotation={[0, -Math.PI / 4, Math.PI / 9]}
+                  rotation={[0, Math.PI / 4, 0]}
                   position={position}
+                  onClick={(e) => clickStar(e, cat.categoryId)}
                 >
-                  <boxGeometry args={[15, 15, 15]} />
+                  <boxGeometry args={[12, 12, 12]} />
                   <meshStandardMaterial opacity={0} transparent={true} />
                 </mesh>
 
-                <mesh rotation={[0, 0, 0]} position={position}>
+                <mesh rotation={[0, -Math.PI / 4, 0]} position={position}>
                   <sphereGeometry args={[5, 16]} />
                   <meshStandardMaterial map={texture} />
                 </mesh>
