@@ -38,7 +38,7 @@ public class FirebaseUtil {
     }
 
     @Async
-    public void sendPush(List<Token> tokenList, String title, String body) throws FirebaseMessagingException {
+    public void sendPush(List<Token> tokenList, String title, String body, String url) throws FirebaseMessagingException {
 
         List<String> registrationTokens = tokenList.stream().map(o -> o.getToken()).collect(Collectors.toList());
 
@@ -47,6 +47,7 @@ public class FirebaseUtil {
                         .setTitle(title)
                         .setBody(body)
                         .build())
+                .putData("link", url)
                 .addAllTokens(registrationTokens)
                 .build();
         BatchResponse response = FirebaseMessaging.getInstance().sendMulticast(message);

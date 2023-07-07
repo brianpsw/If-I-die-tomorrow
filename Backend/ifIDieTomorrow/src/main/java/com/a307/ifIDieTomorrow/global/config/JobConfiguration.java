@@ -176,7 +176,7 @@ public class JobConfiguration {
 
 		try {
 			notificationUtil.sendSms(SmsDto.builder().smsContent(content.toString()).receiver(user.getPhone()).build());
-			firebaseUtil.sendPush(tokenRepository.findAllByUserId(user.getUserId()), "로그인 요청 알림", content.toString());
+			firebaseUtil.sendPush(tokenRepository.findAllByUserId(user.getUserId()), "로그인 요청 알림", content.toString(), "/login");
 		} catch (IOException e) {
 			log.error(e.getMessage());
 		} catch (FirebaseMessagingException e) {
