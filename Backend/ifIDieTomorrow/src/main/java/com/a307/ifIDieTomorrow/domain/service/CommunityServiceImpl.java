@@ -117,7 +117,7 @@ public class CommunityServiceImpl implements CommunityService{
 		}
 
 		if(!writerId.equals(userId)){
-			firebaseUtil.sendPush(tokenRepository.findAllByUserId(writerId), new StringBuilder().append(userRepository.findUserNickNameByUserId(comment.getUserId())).toString(), comment.getContent());
+			firebaseUtil.sendPush(tokenRepository.findAllByUserId(writerId), new StringBuilder().append(userRepository.findUserNickNameByUserId(comment.getUserId())).toString(), comment.getContent(), new StringBuilder().append("/").append(req.getType() ? "diary" : "bucket").append("/").append(req.getTypeId()).toString());
 		}
 
 		return CreateCommentResDto.builder()
