@@ -29,8 +29,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	
 	List<User> findAllBySendAgreeIsTrueAndPersonalPageIsNullAndUpdatedAtIsBefore(LocalDateTime localDateTime);
 	
-	@Query("SELECT u " +
-			"FROM User u " +
-			"WHERE u.deleted = true")
-	List<User> findAllUsersWhereDeletedIsTrue ();
+	List<User> findAllByDeletedIsTrueAndUpdatedAtIsBefore(LocalDateTime localDateTime);
 }
