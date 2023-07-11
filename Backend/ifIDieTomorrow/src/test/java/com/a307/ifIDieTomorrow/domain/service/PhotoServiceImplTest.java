@@ -6,6 +6,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.entity.User;
@@ -39,7 +40,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PhotoServiceImplTest {
@@ -697,9 +698,44 @@ public class PhotoServiceImplTest {
 			class NormalScenario {
 				
 				@Test
-				@DisplayName("이름이 입력된 카테고리 수정")
-				void updateCategory() {
-				
+				@DisplayName("캡션이 입력된 포토 수정")
+				void updateCategory() throws NotFoundException, UnAuthorizedException {
+					
+					// Given
+					Photo savedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(1L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("test caption")
+							.imageType("image")
+							.build();
+					
+					Photo updatedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(1L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("new caption")
+							.imageType("image")
+							.build();
+					
+					UpdatePhotoDto data = new UpdatePhotoDto(1L, "new caption");
+					
+					given(photoRepository.findByPhotoId(data.getPhotoId())).willReturn(Optional.of(savedPhoto));
+					given(photoRepository.save(any(Photo.class))).willReturn(updatedPhoto);
+					
+					// When
+					CreatePhotoResDto result = photoService.updatePhoto(data);
+					
+					// Then
+					/**
+					 * 결과 검증
+					 * photoId, caption
+					 */
+					BDDAssertions.then(result.getPhotoId()).isEqualTo(1L);
+					BDDAssertions.then(result.getCaption()).isEqualTo("new caption");
+					
 				}
 				
 			}
@@ -711,13 +747,46 @@ public class PhotoServiceImplTest {
 				@Test
 				@DisplayName("존재하지 않는 포토 수정")
 				void updatePhotoWithWrongPhotoId() {
-				
+					
+					// Given
+					UpdatePhotoDto data = new UpdatePhotoDto(9999L, "new caption");
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.updatePhoto(data))
+							.isInstanceOf(NotFoundException.class);
+					
+					then(photoRepository).should(never()).save(any(Photo.class));
+					
 				}
 				
 				@Test
 				@DisplayName("다른 유저의 포토 수정")
 				void updatePhotoOfOtherUser() {
-				
+					
+					// Given
+					Photo savedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(2L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("it's not yours")
+							.imageType("image")
+							.build();
+					
+					UpdatePhotoDto data = new UpdatePhotoDto(1L, "new caption");
+					
+					given(photoRepository.findByPhotoId(data.getPhotoId())).willReturn(Optional.of(savedPhoto));
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.updatePhoto(data))
+							.isInstanceOf(UnAuthorizedException.class);
+					
+					then(photoRepository).should(never()).save(any(Photo.class));
+					
 				}
 				
 			}
@@ -733,9 +802,47 @@ public class PhotoServiceImplTest {
 			class NormalScenario {
 				
 				@Test
-				@DisplayName("내가 만든 포토 삭제")
-				void deletePhoto() {
-				
+				@DisplayName("내 포토 삭제")
+				void deletePhoto() throws NotFoundException, UnAuthorizedException {
+					
+					// Given
+					Photo savedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(1L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("test caption")
+							.imageType("image")
+							.build();
+					
+					given(photoRepository.findByPhotoId(1L)).willReturn(Optional.of(savedPhoto));
+					ArgumentCaptor<Photo> captor = ArgumentCaptor.forClass(Photo.class);
+					
+					// When
+					Long deletedPhotoId = photoService.deletePhoto(1L);
+					
+					// Then
+					/**
+					 * 동작 검증
+					 * S3 이미지 삭제
+					 * 포토 삭제 
+					 */
+					then(s3Upload).should().delete(savedPhoto.getImageUrl());
+					then(photoRepository).should().delete(captor.capture());
+					
+					/**
+					 * 파라미터 검증
+					 * photoId
+					 */
+					Photo capturedPhoto = captor.getValue();
+					BDDAssertions.then(capturedPhoto.getPhotoId()).isEqualTo(deletedPhotoId);
+					
+					/**
+					 * 결과 검증
+					 * photoId
+					 */
+					BDDAssertions.then(deletedPhotoId).isEqualTo(1L);
+					
 				}
 				
 			}
@@ -747,13 +854,45 @@ public class PhotoServiceImplTest {
 				@Test
 				@DisplayName("존재하지 않는 포토 삭제")
 				void deletePhotoWithWrongPhotoId() {
-				
+					
+					// Given
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.deletePhoto(9999L))
+							.isInstanceOf(NotFoundException.class);
+					
+					then(s3Upload).should(never()).delete(any(String.class));
+					then(photoRepository).should(never()).delete(any(Photo.class));
+					
 				}
 				
 				@Test
 				@DisplayName("다른 유저의 포토 삭제")
 				void deletePhotoOfOtherUser() {
-				
+					
+					// Given
+					Photo savedPhoto = Photo.builder()
+							.photoId(1L)
+							.userId(2L)
+							.category(category0)
+							.imageUrl("test.com")
+							.caption("it's not yours")
+							.imageType("image")
+							.build();
+					
+					given(photoRepository.findByPhotoId(1L)).willReturn(Optional.of(savedPhoto));
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.deletePhoto(1L))
+							.isInstanceOf(UnAuthorizedException.class);
+					
+					then(s3Upload).should(never()).delete(any(String.class));
+					then(photoRepository).should(never()).delete(any(Photo.class));
+					
 				}
 				
 			}
