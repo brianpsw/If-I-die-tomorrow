@@ -699,7 +699,7 @@ public class PhotoServiceImplTest {
 				
 				@Test
 				@DisplayName("캡션이 입력된 포토 수정")
-				void updateCategory() throws NotFoundException, UnAuthorizedException {
+				void updateCaption() throws NotFoundException, UnAuthorizedException {
 					
 					// Given
 					Photo savedPhoto = Photo.builder()
