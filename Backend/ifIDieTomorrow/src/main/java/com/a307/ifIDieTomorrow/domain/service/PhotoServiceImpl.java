@@ -165,7 +165,7 @@ public class PhotoServiceImpl implements PhotoService {
 		// 본인의 사진이 아닌 경우
 		if (!photo.getUserId().equals(userId)) throw new UnAuthorizedException("접근할 수 없는 포토 ID 입니다.");
 		
-		photo.updateCategory(data.getCaption());
+		photo.updateCaption(data.getCaption());
 		
 		return CreatePhotoResDto.toDto(photoRepository.save(photo));
 	}
