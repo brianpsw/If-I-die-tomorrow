@@ -4,9 +4,7 @@ import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.CreateCategoryResDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryNameDto;
 import com.a307.ifIDieTomorrow.domain.dto.category.UpdateCategoryThumbnailDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.CreatePhotoResDto;
-import com.a307.ifIDieTomorrow.domain.dto.photo.UpdatePhotoDto;
+import com.a307.ifIDieTomorrow.domain.dto.photo.*;
 import com.a307.ifIDieTomorrow.domain.entity.Category;
 import com.a307.ifIDieTomorrow.domain.entity.Photo;
 import com.a307.ifIDieTomorrow.domain.entity.User;
@@ -34,6 +32,8 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -908,9 +908,53 @@ public class PhotoServiceImplTest {
 			class NormalScenario {
 				
 				@Test
-				@DisplayName("내가 만든 카테고리의 포토 조회")
-				void getPhotoByCategory() {
-				
+				@DisplayName("내 카테고리의 포토 조회")
+				void getPhotoByCategory() throws NotFoundException, UnAuthorizedException {
+					
+					// Given
+					GetPhotoResDto photo1 = new GetPhotoResDto(
+							1L,
+							"test.com",
+							"test1",
+							"image",
+							LocalDateTime.now(),
+							LocalDateTime.now());
+					
+					GetPhotoResDto photo2 = new GetPhotoResDto(
+							2L,
+							"test.com",
+							"test2",
+							"image",
+							LocalDateTime.now(),
+							LocalDateTime.now());
+					
+					List<GetPhotoResDto> list = Arrays.asList(photo1, photo2);
+					
+					given(categoryRepository.findByCategoryId(0L)).willReturn(Optional.of(category0));
+					given(photoRepository.findAllPhotoByCategory_CategoryId(0L, 1L)).willReturn(list);
+					
+					// When
+					GetPhotoByCategoryResDto getPhotoByCategoryResDto = photoService.getPhotoByCategory(0L);
+					
+					// Then
+					/**
+					 * 동작 검증
+					 * 카테고리의 포토 조회
+					 */
+					then(photoRepository).should().findAllPhotoByCategory_CategoryId(0L, 1L);
+					
+					/**
+					 * 결과 검증
+					 * category, size of list
+					 */
+					BDDAssertions.then(getPhotoByCategoryResDto.getCategory().getCategoryId()).isEqualTo(0L);
+					BDDAssertions.then(getPhotoByCategoryResDto.getCategory().getName()).isEqualTo("test");
+					BDDAssertions.then(getPhotoByCategoryResDto.getPhotos().size()).isEqualTo(2);
+					BDDAssertions.then(getPhotoByCategoryResDto.getPhotos().get(0).getPhotoId()).isEqualTo(1L);
+					BDDAssertions.then(getPhotoByCategoryResDto.getPhotos().get(0).getCaption()).isEqualTo("test1");
+					BDDAssertions.then(getPhotoByCategoryResDto.getPhotos().get(1).getPhotoId()).isEqualTo(2L);
+					BDDAssertions.then(getPhotoByCategoryResDto.getPhotos().get(1).getCaption()).isEqualTo("test2");
+					
 				}
 				
 			}
@@ -922,13 +966,39 @@ public class PhotoServiceImplTest {
 				@Test
 				@DisplayName("존재하지 않는 카테고리의 포토 조회")
 				void getPhotoByCategoryWithWrongCategoryId() {
-				
+					
+					// Given
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.getPhotoByCategory(9999L))
+							.isInstanceOf(NotFoundException.class);
+					
+					then(photoRepository).should(never()).findAllPhotoByCategory_CategoryId(9999L, 1L);
+					
 				}
 				
 				@Test
 				@DisplayName("다른 유저의 카테고리의 포토 조회")
 				void getPhotoByCategoryOfOtherUser() {
-				
+					
+					// Given
+					Category category1 = Category.builder()
+												.categoryId(1L)
+												.name("test")
+												.imageUrl("test.com")
+												.userId(2L)
+												.build();
+					
+					given(categoryRepository.findByCategoryId(1L)).willReturn(Optional.of(category1));
+					
+					// When
+					
+					// Then
+					BDDAssertions.thenThrownBy(() -> photoService.getPhotoByCategory(1L))
+							.isInstanceOf(UnAuthorizedException.class);
+					
 				}
 				
 			}
@@ -946,7 +1016,61 @@ public class PhotoServiceImplTest {
 				@Test
 				@DisplayName("내 포토 조회")
 				void getPhotoByUser() {
-				
+					
+					// Given
+					Category category1 = Category.builder()
+							.categoryId(1L)
+							.name("test")
+							.imageUrl("test.com")
+							.userId(1L)
+							.build();
+					
+					GetPhotoResDto photo1 = new GetPhotoResDto(1L, "test1.com", "test1", "image", LocalDateTime.now(), LocalDateTime.now());
+					GetPhotoResDto photo2 = new GetPhotoResDto(2L, "test2.com", "test2", "image", LocalDateTime.now(), LocalDateTime.now());
+					GetPhotoResDto photo3 = new GetPhotoResDto(3L, "test3.com", "test3", "image", LocalDateTime.now(), LocalDateTime.now());
+					GetPhotoResDto photo4 = new GetPhotoResDto(4L, "test4.com", "test4", "image", LocalDateTime.now(), LocalDateTime.now());
+					List<GetPhotoResDto> list1 = Arrays.asList(photo1, photo2);
+					List<GetPhotoResDto> list2 = Arrays.asList(photo3, photo4);
+					
+					CreateCategoryResDto categoryDto0 = CreateCategoryResDto.toDto(category0);
+					CreateCategoryResDto categoryDto1 = CreateCategoryResDto.toDto(category1);
+					
+					given(categoryRepository.findAllCategoryByUserId(1L)).willReturn(Arrays.asList(categoryDto0, categoryDto1));
+					given(photoRepository.findAllPhotoByCategory_CategoryId(0L, 1L)).willReturn(list1);
+					given(photoRepository.findAllPhotoByCategory_CategoryId(1L, 1L)).willReturn(list2);
+					
+					// When
+					List<GetPhotoByCategoryResDto> result = photoService.getPhotoByUser(1L);
+					
+					// Then
+					/**
+					 * 동작 검증
+					 * 유저 ID로 카테고리 조회
+					 * 카테고리 ID로 포토 조회
+					 */
+					then(categoryRepository).should(times(1)).findAllCategoryByUserId(1L);
+					then(photoRepository).should(times(1)).findAllPhotoByCategory_CategoryId(0L, 1L);
+					then(photoRepository).should(times(1)).findAllPhotoByCategory_CategoryId(1L, 1L);
+					
+					/**
+					 * 결과 검증
+					 * categories, photos
+					 */
+					BDDAssertions.then(result.get(0).getCategory().getCategoryId()).isEqualTo(0L);
+					BDDAssertions.then(result.get(0).getCategory().getName()).isEqualTo("test");
+					BDDAssertions.then(result.get(0).getPhotos().get(0).getPhotoId()).isEqualTo(1L);
+					BDDAssertions.then(result.get(0).getPhotos().get(0).getCaption()).isEqualTo("test1");
+					BDDAssertions.then(result.get(0).getPhotos().get(1).getPhotoId()).isEqualTo(2L);
+					BDDAssertions.then(result.get(0).getPhotos().get(1).getCaption()).isEqualTo("test2");
+					
+					BDDAssertions.then(result.get(1).getCategory().getCategoryId()).isEqualTo(1L);
+					BDDAssertions.then(result.get(1).getCategory().getName()).isEqualTo("test");
+					BDDAssertions.then(result.get(1).getPhotos().get(0).getPhotoId()).isEqualTo(3L);
+					BDDAssertions.then(result.get(1).getPhotos().get(0).getCaption()).isEqualTo("test3");
+					BDDAssertions.then(result.get(1).getPhotos().get(1).getPhotoId()).isEqualTo(4L);
+					BDDAssertions.then(result.get(1).getPhotos().get(1).getCaption()).isEqualTo("test4");
+					
+					
 				}
 				
 			}
