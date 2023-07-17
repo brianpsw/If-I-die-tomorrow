@@ -34,6 +34,21 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
+  const categoryStyle = {
+    width: '60px',
+    height: '60px',
+    borderRadius: '30px',
+    cursor: 'pointer',
+    display: 'flex',
+    flex: '0 0 auto',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: '10px',
+    backgroundSize: 'cover',
+    backgroundColor: 'white',
+    backgroundRepeat: 'no-repeat',
+  };
+
   const fetchData = async () => {
     try {
       const response = await defaultApi.get(requests.GET_ALL_CATEGORY(), {
@@ -73,20 +88,9 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
               return (
                 <div
                   style={{
-                    flex: '0 0 auto',
-                    width: '60px',
-                    height: '60px',
-                    backgroundColor: 'white',
-                    borderRadius: '30px',
+                    ...categoryStyle,
                     border: 'solid 2px #111',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: '10px',
-                    backgroundSize: 'cover',
                     backgroundImage: `url(${category.imageUrl})`,
-                    backgroundRepeat: 'no-repeat',
                   }}
                   key={category.categoryId}
                   onClick={() => handleCategory(category.categoryId)}
@@ -96,19 +100,8 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
               return (
                 <div
                   style={{
-                    flex: '0 0 auto',
-                    width: '60px',
-                    height: '60px',
-                    backgroundColor: 'white',
-                    borderRadius: '30px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginRight: '10px',
-                    backgroundSize: 'cover',
+                    ...categoryStyle,
                     backgroundImage: `url(${category.imageUrl})`,
-                    backgroundRepeat: 'no-repeat',
                   }}
                   key={category.categoryId}
                   onClick={() => handleCategory(category.categoryId)}
@@ -119,16 +112,9 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
         : null}
       {categoryData && categoryData!.length < 10 ? (
         <div
+          className="flex w-[55px] h-[55px] rounded-[30px] cursor-pointer justify-center items-center mr-[10px]"
           style={{
             flex: '0 0 auto',
-            width: '55px',
-            height: '55px',
-            borderRadius: '30px',
-            cursor: 'pointer',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            marginRight: '10px',
           }}
         >
           <Link to="/photo-cloud/create-category">
