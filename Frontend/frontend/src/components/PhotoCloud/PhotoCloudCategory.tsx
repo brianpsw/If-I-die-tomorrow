@@ -34,6 +34,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
   const { categoryId } = useParams();
   const [categoryData, setCategoryData] = useState<CategoryInfo[] | null>(null);
 
+  // 원 모양의 카테고리 버튼 스타일 코드
   const categoryStyle = {
     width: '60px',
     height: '60px',
@@ -85,6 +86,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
       {categoryData
         ? categoryData.map((category: CategoryInfo) => {
             if (categoryId === category.categoryId.toString()) {
+              // 선택된 카테고리일 경우 border에 스타일링을 더해줌
               return (
                 <div
                   style={{
@@ -98,6 +100,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
               );
             } else {
               return (
+                // 선택되지 않는 카테고리는 border 스타일링 없이 렌더링
                 <div
                   style={{
                     ...categoryStyle,
@@ -111,6 +114,7 @@ function PhotoCloudCategory(props: PhotoCloudProps) {
           })
         : null}
       {categoryData && categoryData!.length < 10 ? (
+        // 생성된 카테고리가 10개 미만일 때만 카테고리 생성 버튼 렌더링
         <div
           className="flex w-[55px] h-[55px] rounded-[30px] cursor-pointer justify-center items-center mr-[10px]"
           style={{
