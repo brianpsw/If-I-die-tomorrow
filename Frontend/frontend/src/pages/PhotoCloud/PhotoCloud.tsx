@@ -18,8 +18,30 @@ interface EditOrDeleteEpic {
   contentEdit: boolean;
 }
 
+export interface Category {
+  userId: number;
+  categoryId: number;
+  name: string;
+  imageUrl: string;
+}
+
+export interface PhotoInfo {
+  photoId: number;
+  imageUrl: string;
+  caption: string;
+  imageType: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CategoryPhoto {
+  category: Category;
+  photos: PhotoInfo[];
+}
+
 function PhotoCloud() {
   const [category, setCategory] = useRecoilState(categoryState);
+  const [photo, setPhoto] = useState<CategoryPhoto | null>(null);
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
@@ -47,17 +69,18 @@ function PhotoCloud() {
     setSelectedCategory(params.categoryId!);
   }, [params.categoryId]);
 
-  const fetchData = async () => {
+  // 전체 카테고리 api 가져오는 함수
+  const get_all_category = async () => {
     setIsCloudLoading(() => true);
     try {
-      const get_all_category = await defaultApi.get(
-        requests.GET_ALL_CATEGORY(),
-        {
-          withCredentials: true,
-        },
-      );
-      if (get_all_category.status === 200) {
-        setCategory(get_all_category.data);
+      const response = await defaultApi.get(requests.GET_ALL_CATEGORY(), {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        const { data } = response;
+        setCategory(data);
+        setDeleteCategory(false);
+        setEditCategoryThumbnail(false);
       }
     } catch (err) {
       console.error(err);
@@ -65,8 +88,26 @@ function PhotoCloud() {
     setIsCloudLoading(() => false);
   };
 
+  const get_photo = async () => {
+    try {
+      const response = await defaultApi.get(
+        requests.GET_PHOTO(selectedCategory),
+        {
+          withCredentials: true,
+        },
+      );
+      if (response.status === 200) {
+        const { data } = response;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // 처음 렌더시 카테고리와 해당 카테고리의 사진 가져오기
   useEffect(() => {
-    fetchData();
+    get_all_category();
+    get_photo();
   }, []);
 
   // 수정, 삭제 모달 close
@@ -143,11 +184,10 @@ function PhotoCloud() {
         ) : null}
         <TopBar title="포토 클라우드" />
         <PhotoCloudCategory
-          setDeleteCategory={setDeleteCategory}
           deleteCategory={deleteCategory}
           cancelEdit={cancelEdit}
-          setEditCategoryThumbnail={setEditCategoryThumbnail}
           editCategoryThumbnail={editCategoryThumbnail}
+          getCategory={get_all_category}
         ></PhotoCloudCategory>
         {selectedCategory && (
           <PhotoCloudDetail
