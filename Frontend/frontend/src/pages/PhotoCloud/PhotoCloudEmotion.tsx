@@ -20,6 +20,10 @@ export const Video = styled.video`
 `;
 
 export const CategoryWrapper = styled.div`
+  ${tw`px-[24px] py-[16px]`}
+`;
+
+export const CategoryContainer = styled.div`
   ${tw`flex px-[24px] py-[16px] overflow-x-auto`}
   ::-webkit-scrollbar {
     width: 10px;
