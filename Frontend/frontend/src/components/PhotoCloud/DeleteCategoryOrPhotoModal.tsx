@@ -1,14 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import styled from 'styled-components';
 import tw from 'twin.macro';
-
-import { useRecoilValue } from 'recoil';
-import { userState } from '../../states/UserState';
-import { useRecoilState } from 'recoil';
-import { categoryState } from '../../states/CategoryState';
 
 import Swal from 'sweetalert2';
 import requests from '../../api/config';
@@ -30,8 +25,8 @@ interface DeleteModalProps {
   onClose?: () => void;
   setDeleteCategory: React.Dispatch<React.SetStateAction<boolean>>;
   setDeleteContent: React.Dispatch<React.SetStateAction<boolean>>;
-  categoryOwner: number;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  getCategory: () => Promise<any>;
 }
 
 function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
@@ -41,76 +36,52 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
     onClose,
     setDeleteCategory,
     setDeleteContent,
-    categoryOwner,
     setIsLoading,
+    getCategory,
   } = props;
-  const [category, setCategory] = useRecoilState(categoryState);
-  const user = useRecoilValue(userState);
   const navigate = useNavigate();
   const modalRef = useRef<HTMLDivElement>(null);
-
-  const fetchData = async () => {
-    setIsLoading(() => true);
-    try {
-      const get_all_category = await defaultApi.get(
-        requests.GET_ALL_CATEGORY(),
-        {
-          withCredentials: true,
-        },
-      );
-      if (get_all_category.status === 200) {
-        setIsLoading(() => false);
-        setCategory(() => get_all_category.data);
-        return get_all_category.data;
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
 
   const deleteCategory = async (id: string) => {
     onClose?.();
     setIsLoading(() => true);
-    if (categoryOwner === user!.userId) {
-      try {
-        const delete_category = await defaultApi.delete(
-          requests.DELETE_CATEGORY(id),
-          { withCredentials: true },
-        );
-        if (delete_category.status === 204) {
-          setDeleteCategory(true);
-          setIsLoading(() => false);
-          Swal.fire({
-            title: '카테고리 삭제 성공!',
-            icon: 'success',
-            timer: 1000,
-            showConfirmButton: false,
-          });
-          const res = fetchData();
-          const getData = () => {
-            res.then((data) => {
-              if (data.length > 0) {
-                navigate(`/photo-cloud/${data[0].categoryId}`, {
-                  replace: true,
-                });
-              } else {
-                navigate('/');
-              }
-            });
-          };
-          getData();
-        }
-      } catch (err) {
-        console.error(err);
+
+    try {
+      const delete_category = await defaultApi.delete(
+        requests.DELETE_CATEGORY(id),
+        { withCredentials: true },
+      );
+      if (delete_category.status === 204) {
+        setDeleteCategory(true);
         setIsLoading(() => false);
         Swal.fire({
-          title: '카테고리 삭제 실패...',
-          icon: 'error',
-          confirmButtonText: '확인',
+          title: '카테고리 삭제 성공!',
+          icon: 'success',
+          timer: 1000,
+          showConfirmButton: false,
         });
+        const res = getCategory();
+        const getData = () => {
+          res.then((data: any) => {
+            if (data.length > 0) {
+              navigate(`/photo-cloud/${data[0].categoryId}`, {
+                replace: true,
+              });
+            } else {
+              navigate('/');
+            }
+          });
+        };
+        getData();
       }
-    } else {
-      alert('본인의 카테고리만 삭제할 수 있습니다.');
+    } catch (err) {
+      console.error(err);
+      setIsLoading(() => false);
+      Swal.fire({
+        title: '카테고리 삭제 실패...',
+        icon: 'error',
+        confirmButtonText: '확인',
+      });
     }
   };
 
@@ -191,9 +162,17 @@ function DeleteCategoryOrPhotoModal(props: DeleteModalProps) {
             onClick={handleDelete}
             color="#B3E9EB"
             size="sm"
-            style={{ color: '#04373B' }}
+            style={{ color: '#04373B', marginRight: '16px' }}
           >
             삭제하기
+          </Button>
+          <Button
+            onClick={handleClose}
+            color="#eeeeee"
+            size="sm"
+            style={{ color: '#04373B' }}
+          >
+            취소
           </Button>
         </div>
       </ModalWrapper>
