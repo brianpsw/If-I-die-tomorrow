@@ -35,7 +35,7 @@ public class Photo extends BaseEntity {
 	
 	private String imageType;
 	
-	public void updateCategory (String caption) {
+	public void updateCaption(String caption) {
 		this.caption = caption;
 	}
 	

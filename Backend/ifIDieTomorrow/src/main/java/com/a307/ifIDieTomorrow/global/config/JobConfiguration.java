@@ -55,6 +55,7 @@ public class JobConfiguration {
 
 	LocalDateTime sixMonthsAgo = LocalDateTime.now().minusMonths(6);
 	LocalDateTime threeMonthsAgo = LocalDateTime.now().minusMonths(3);
+	LocalDateTime monthAgo = LocalDateTime.now().minusMonths(1);
 
 	@Bean
 	public Job job(){
@@ -109,7 +110,7 @@ public class JobConfiguration {
 
 					@Override
 					public void onSkipInWrite(User user, Throwable t) {
-						log.error(user.getName() + "(" + user.getNickname() + ") 회원 처리 중 예외 발생");
+						log.error(user.getName() + "(" + user.getNickname() + ") 회원 처리 중 예외 발생 : " + t.getMessage());
 					}
 
 					@Override
@@ -123,37 +124,36 @@ public class JobConfiguration {
 
 	@Bean
 	public Step deleteUser (){
-		TaskletStep deleteUser = stepBuilderFactory.get("deleteUser")
-				.tasklet((contribution, chunkContext) -> {
-
-					log.info(">>>>> step deleteUser starts");
-
-					/**
-					 * 1. 탈퇴 처리한 유저
-					 */
-					log.info(">>>>> 2.1: Fetch all users agreed to send service");
-					List<User> users = userRepository.findAllUsersWhereDeletedIsTrue()
-							.stream()
-							.collect(Collectors.toList());
-
-					log.info("fetched {} users to delete", users.size());
-
-					/**
-					 * 2. 1달 이상 재접속 안 한 유저
-					 */
-					log.info(">>>>> 2.2: After a month");
-
-					LocalDateTime monthAgo = LocalDateTime.now().minusMonths(1);
-
-					users.parallelStream()
-							.filter(user -> user.getUpdatedAt().isBefore(monthAgo))
-							.forEach(this::deleteAll);
-
-					return RepeatStatus.FINISHED;
+		return stepBuilderFactory.get("deleteUser")
+				.<User, User>chunk(10)  // Chunk 크기는 10
+				.reader(new ListItemReader<>(userRepository.findAllByDeletedIsTrueAndUpdatedAtIsBefore(monthAgo)))  // 삭제 유저 조회
+				.writer(new ItemWriter<User>() {    // reader로 조회한 유저들 처리
+					@Override
+					public void write(List<? extends User> items) throws Exception {
+						log.info(">>>>> step deleteUser starts");
+						items.parallelStream().forEach(user -> deleteAll(user));
+					}
 				})
+				.faultTolerant()    // 예외 처리를 하기 위한 설정
+				.skip(Exception.class)  // 처리할 예외 유형 설정
+				.listener(new SkipListener<User, User>() {  // 예외 처리
+					@Override
+					public void onSkipInRead(Throwable t) {
+						log.error("유저 정보 조회 중 예외 발생 : " + t.getMessage());
+					}
+					
+					@Override
+					public void onSkipInWrite(User user, Throwable t) {
+						log.error(user.getName() + "(" + user.getNickname() + ") 회원 처리 중 예외 발생 : " + t.getMessage());
+					}
+					
+					@Override
+					public void onSkipInProcess(User item, Throwable t) {
+						// process 단계를 거치지 않기 때문에 구현하지 않음
+					}
+				})
+				.allowStartIfComplete(true)
 				.build();
-		deleteUser.setAllowStartIfComplete(true);
-		return deleteUser;
 	}
 
 	@Bean
