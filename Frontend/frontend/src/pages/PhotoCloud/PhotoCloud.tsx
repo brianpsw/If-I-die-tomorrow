@@ -106,7 +106,6 @@ function PhotoCloud() {
   // 처음 렌더시 카테고리와 해당 카테고리의 사진 가져오기
   useEffect(() => {
     get_all_category();
-    get_photo();
   }, []);
 
   // 카테고리 클릭시 해당 카테고리 사진 api 호출
