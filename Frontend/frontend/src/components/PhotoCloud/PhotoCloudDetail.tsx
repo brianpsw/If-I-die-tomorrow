@@ -82,7 +82,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
 
   const [editContent, setEditContent] = useState<string>('');
 
-  const categoryId = useParams();
+  const categoryId = useParams().categoryId;
   const photos = photoData?.photos;
 
   useEffect(() => {
@@ -207,7 +207,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               })
             ) : (
               <div
-                className="my-[20vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow w-5/6 mx-auto"
+                className="my-[10vh] bg-gray-100/70 p-[16px] rounded-[10px] shadow w-5/6 mx-auto"
                 style={{ boxShadow: '0px 8px 8px rgba(0, 0, 0, 0.25)' }}
               >
                 <EmptyAlert
@@ -220,7 +220,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
               <Link to={`/photo-cloud/upload-photo/${categoryId}`}>
                 <Icon
                   icon="ph:plus-circle"
-                  className="text-pink_100 w-[55px] h-[55px] mx-auto mt-4"
+                  className="text-pink_100 w-[55px] h-[55px] mx-auto mt-4 md:mb-[70px]"
                 />
               </Link>
             ) : null}
