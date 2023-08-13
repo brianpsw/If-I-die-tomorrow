@@ -28,19 +28,15 @@ function UploadPhoto() {
   const [checkContent, setCheckContent] = useState<boolean>(false);
 
   const handleContent = (e: any) => {
-    const expspaces = /  +/g;
+    const empty = /^\s*$/g;
     setContent(e.target.value);
-    if (content.length > 300) {
-      setCheckContent(false);
-      alert('300자 이상 작성할 수 없습니다.');
-    } else if (content === ' ') {
-      setCheckContent(false);
-      alert('내용을 입력해주세요');
-    } else if (expspaces.test(content)) {
-      setCheckContent(false);
-      alert('연속된 공백이 있으면 안됩니다.');
-    } else {
+    if (e.target.value.length < 301 && !empty.test(e.target.value)) {
       setCheckContent(true);
+    } else if (empty.test(e.target.value)) {
+      setCheckContent(false);
+    } else if (e.target.value.length >= 301) {
+      alert('내용을 1자 이상 300자 이내로 작성해주세요.');
+      setCheckContent(false);
     }
   };
 

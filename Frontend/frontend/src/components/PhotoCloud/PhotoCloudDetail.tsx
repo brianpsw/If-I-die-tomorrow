@@ -81,6 +81,7 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   } = props;
 
   const [editContent, setEditContent] = useState<string>('');
+  const [checkContent, setCheckContent] = useState<boolean>(false);
 
   const categoryId = useParams().categoryId;
   const photos = photoData?.photos;
@@ -95,12 +96,15 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
   }, [deleteContent]);
 
   const handleEditContent = (e: any) => {
-    const regExp = /^.{0,300}$/;
-
-    if (regExp.test(e.target.value)) {
+    const empty = /^\s*$/g;
+    if (e.target.value.length < 301 && !empty.test(e.target.value)) {
+      setCheckContent(true);
       setEditContent(e.target.value);
+    } else if (e.target.value.length >= 301) {
+      alert('내용을 1자 이상 300자 이내로 작성해주세요.');
+      setCheckContent(false);
     } else {
-      alert('내용은 300자이내여야합니다.');
+      setCheckContent(false);
     }
   };
 
@@ -158,21 +162,34 @@ function PhotoCloudDetail(props: PhotoCloudProps) {
                     selectedPhotoId === photo.photoId.toString() ? (
                       <div>
                         <textarea
+                          rows={5}
+                          maxLength={300}
                           defaultValue={photo.caption}
                           className="w-full min-h-[180px] rounded-[10px] p-4 text-p1"
                           onChange={(e: any) => handleEditContent(e)}
                         />
                         <div className="w-full flex justify-center mt-4">
-                          <Button
-                            color="#36C2CC"
-                            size="sm"
-                            style={{ color: '#04373B', marginRight: '16px' }}
-                            onClick={() =>
-                              checkEmptyBeforeSend(editContent, changeContent)
-                            }
-                          >
-                            입력
-                          </Button>
+                          {checkContent ? (
+                            <Button
+                              color="#36C2CC"
+                              size="sm"
+                              style={{ color: '#04373B', marginRight: '16px' }}
+                              onClick={() =>
+                                checkEmptyBeforeSend(editContent, changeContent)
+                              }
+                            >
+                              입력
+                            </Button>
+                          ) : (
+                            <Button
+                              color="#EEEEEE"
+                              size="sm"
+                              style={{ color: '#04373B', marginRight: '16px' }}
+                            >
+                              입력
+                            </Button>
+                          )}
+
                           <Button
                             color="#eeeeee"
                             size="sm"
