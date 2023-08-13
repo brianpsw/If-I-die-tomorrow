@@ -25,11 +25,22 @@ function UploadPhoto() {
   const [content, setContent] = useState<string>('');
   const params = useParams();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [checkContent, setCheckContent] = useState<boolean>(false);
 
   const handleContent = (e: any) => {
+    const expspaces = /  +/g;
     setContent(e.target.value);
     if (content.length > 300) {
+      setCheckContent(false);
       alert('300자 이상 작성할 수 없습니다.');
+    } else if (content === ' ') {
+      setCheckContent(false);
+      alert('내용을 입력해주세요');
+    } else if (expspaces.test(content)) {
+      setCheckContent(false);
+      alert('연속된 공백이 있으면 안됩니다.');
+    } else {
+      setCheckContent(true);
     }
   };
 
@@ -130,14 +141,25 @@ function UploadPhoto() {
             onChange={handleContent}
           ></textarea>
         </ContentWrapper>
-        <Button
-          color="#36C2CC"
-          size="lg"
-          style={{ color: '#04373B', margin: '0 auto' }}
-          onClick={handleSubmitPhoto}
-        >
-          사진 올리기
-        </Button>
+        {checkContent ? (
+          <Button
+            color="#36C2CC"
+            size="lg"
+            style={{ color: '#04373B', margin: '0 auto' }}
+            onClick={handleSubmitPhoto}
+          >
+            사진 올리기
+          </Button>
+        ) : (
+          <Button
+            color="#EEEEEE"
+            size="lg"
+            style={{ color: '#04373B', margin: '0 auto' }}
+            disabled
+          >
+            사진 올리기
+          </Button>
+        )}
       </div>
     </div>
   );
