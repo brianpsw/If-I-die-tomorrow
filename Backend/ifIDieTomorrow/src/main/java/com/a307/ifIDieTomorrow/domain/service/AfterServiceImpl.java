@@ -33,6 +33,7 @@ public class AfterServiceImpl implements AfterService{
     private final WillService willService;
     private final WillRepository willRepository;
     private final FileUtil fileUtil;
+    private final String[] directories = {"will", "bucket", "diary", "category", "photo"};
 
     @Override
     public Map<String, Object> getData(String pwd) throws NotFoundException {
@@ -62,6 +63,11 @@ public class AfterServiceImpl implements AfterService{
         String basicDirectory = "./";
         fileUtil.createDirectory(basicDirectory + uuid);
         String commonDirectory = basicDirectory + uuid + "/";
+        for (String name:
+             directories) {
+            fileUtil.createDirectory(commonDirectory + name);
+        }
+
         fileUtil.copyDirectory("./IIDT", basicDirectory + uuid);
         if(((GetWillByUserResDto)result.get("will")).getVideoUrl() != null) fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getVideoUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getVideoUrl().substring(((GetWillByUserResDto)result.get("will")).getVideoUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getVideoUrl()));
         if(((GetWillByUserResDto)result.get("will")).getSignUrl() != null ) fileUtil.downloadFile(((GetWillByUserResDto)result.get("will")).getSignUrl(), commonDirectory + "will/" + ((GetWillByUserResDto)result.get("will")).getSignUrl().substring(((GetWillByUserResDto)result.get("will")).getSignUrl().lastIndexOf("/") + 1) + fileUtil.getContentType(((GetWillByUserResDto)result.get("will")).getSignUrl()));
