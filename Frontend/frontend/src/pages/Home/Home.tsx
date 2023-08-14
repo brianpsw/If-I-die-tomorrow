@@ -18,6 +18,7 @@ import {
 import { getToken } from 'firebase/messaging';
 import { messaging } from '../../App';
 import AlertCount from '../../components/feed/AlertCount';
+import { Icon } from '@iconify/react';
 
 const firebaseToken = async () => {
   try {
@@ -87,6 +88,25 @@ function Home() {
     }
   };
 
+  const downloadWill = async () => {
+    try {
+      const response = await fetch(requests.base_url + '/api/after/download', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/octet-stream',
+        },
+        credentials: 'include',
+      });
+      const blob = await response.blob();
+      const downloadLink = document.createElement('a');
+      downloadLink.href = URL.createObjectURL(blob);
+      downloadLink.download = 'IIDT.zip';
+      downloadLink.click();
+    } catch (error) {
+      console.error('Error: ', error);
+    }
+  };
+
   useEffect(() => {
     if (user?.name === undefined && isLogin === false) {
       navigate('/login');
@@ -99,6 +119,22 @@ function Home() {
 
   return (
     <div>
+      {user && isLogin ? (
+        <div className="flex justify-center items-center h-[80px]">
+          <div
+            className="min-w-[150px] w-[20vw] py-2 bg-black rounded-[10vw] flex justify-center items-center cursor-pointer"
+            onClick={() => downloadWill()}
+          >
+            <Icon
+              icon="material-symbols:download-rounded"
+              style={{ fontSize: '30px', color: 'white' }}
+            />
+            <p className="text-p2 text-white text-center ml-2">
+              내 데이터 다운로드
+            </p>
+          </div>
+        </div>
+      ) : null}
       <Logo />
       <Link to="/newcomment">
         <CommentAlert>
