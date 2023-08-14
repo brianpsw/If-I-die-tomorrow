@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { categoryState } from '../../states/CategoryState';
 
 import requests from '../../api/config';
@@ -13,20 +13,42 @@ import EditOrDeleteModal from '../../components/common/EditOrDeleteModal';
 import DeleteCategoryOrPhotoModal from '../../components/PhotoCloud/DeleteCategoryOrPhotoModal';
 import TopBar from '../../components/common/TopBar';
 
-interface EditOrDeleteEpic {
+export interface EditOrDeleteEpic {
   titleEdit: boolean;
   contentEdit: boolean;
 }
 
+export interface Category {
+  userId: number;
+  categoryId: number;
+  name: string;
+  imageUrl: string;
+}
+
+export interface PhotoInfo {
+  photoId: number;
+  imageUrl: string;
+  caption: string;
+  imageType: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CategoryPhoto {
+  category: Category;
+  photos: PhotoInfo[];
+}
+
 function PhotoCloud() {
-  const [category, setCategory] = useRecoilState(categoryState);
+  const setCategory = useSetRecoilState(categoryState);
+  const [photo, setPhoto] = useState<CategoryPhoto | null>(null);
+  const { categoryId } = useParams();
+
   const [openEditOrDeleteModal, setOpenEditOrDeleteModal] =
     useState<boolean>(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState<boolean>(false);
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>('');
   const [selectedPhotoCaption, setSelectedPhotoCaption] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const [categoryOwner, setCategoryOwner] = useState<number | null>(null);
   const [epic, setEpic] = useState<string>('');
   const [targetId, setTargetId] = useState<string>('');
   const [editOrDeleteModalEpic, setEditOrDeleteModalEpic] =
@@ -39,38 +61,60 @@ function PhotoCloud() {
     useState<boolean>(false);
   const [deleteContent, setDeleteContent] = useState<boolean>(false);
 
-  const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
-  const [isCloudLoading, setIsCloudLoading] = useState<boolean>(false);
-  const params = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  useEffect(() => {
-    setSelectedCategory(params.categoryId!);
-  }, [params.categoryId]);
-
-  const fetchData = async () => {
-    setIsCloudLoading(() => true);
+  // 전체 카테고리 api 호출 함수
+  const get_all_category = async () => {
+    setIsLoading(() => true);
     try {
-      const get_all_category = await defaultApi.get(
-        requests.GET_ALL_CATEGORY(),
-        {
-          withCredentials: true,
-        },
-      );
-      if (get_all_category.status === 200) {
-        setCategory(get_all_category.data);
+      const response = await defaultApi.get(requests.GET_ALL_CATEGORY(), {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        const { data } = response;
+        setCategory(data);
+        setDeleteCategory(false);
+        setEditCategoryThumbnail(false);
+        // 카테고리 삭제 api 호출해서 결과를 받아올 때는 promise로 오기 때문에 return 값으로 data를 처리해줘야함.
+        return data;
       }
     } catch (err) {
       console.error(err);
     }
-    setIsCloudLoading(() => false);
+    setIsLoading(() => false);
+    return [];
   };
 
+  // 해당 카테고리의 사진 api 호출 함수
+  const get_photo = async () => {
+    setIsLoading(() => true);
+    try {
+      const response = await defaultApi.get(requests.GET_PHOTO(categoryId), {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        const { data } = response;
+        setPhoto(data);
+        setDeleteContent(false);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    setIsLoading(() => false);
+  };
+
+  // 처음 렌더시 카테고리와 해당 카테고리의 사진 가져오기
   useEffect(() => {
-    fetchData();
+    get_all_category();
   }, []);
 
+  // 카테고리 클릭시 해당 카테고리 사진 api 호출
+  useEffect(() => {
+    get_photo();
+  }, [categoryId]);
+
   // 수정, 삭제 모달 close
-  const onEditOrDeleteModalClose = () => {
+  const closeEditOrDeleteModal = () => {
     setOpenEditOrDeleteModal(false);
   };
 
@@ -90,83 +134,94 @@ function PhotoCloud() {
   };
 
   // 수정 취소
-
   const cancelEdit = () => {
-    if (epic === '제목') {
-      setEditOrDeleteModalEpic({
-        titleEdit: false,
-        contentEdit: false,
-      });
-    } else if (epic === '내용') {
-      setEditOrDeleteModalEpic({
-        titleEdit: false,
-        contentEdit: false,
-      });
-    }
+    setEditOrDeleteModalEpic({
+      titleEdit: false,
+      contentEdit: false,
+    });
   };
 
   //삭제 모달 open
-  const handleDeleteModalOpen = () => {
+  const openDeleteModal = () => {
     if (epic === '제목') {
-      setTargetId(selectedCategory);
+      setTargetId(categoryId!);
     } else if (epic === '내용') {
       setTargetId(selectedPhotoId);
     }
     setDeleteModalOpen(true);
   };
+
   //삭제 모달 close
-  const onDeleteModalClose = () => {
+  const closeDeleteModal = () => {
     setDeleteModalOpen(false);
   };
+
+  // 수정 api 호출 전 빈 값 체크하는 함수
+  const checkEmptyBeforeSend = (
+    targetContent: string,
+    sendFunc: () => void,
+  ) => {
+    const expspaces = /  +/g;
+    if (targetContent === '') {
+      alert('내용을 입력해주세요');
+    } else if (expspaces.test(targetContent)) {
+      alert('연속된 공백이 있으면 안됩니다.');
+    } else {
+      sendFunc();
+    }
+  };
+
+  const commonProps = {
+    setOpenEditOrDeleteModal,
+    setIsLoading,
+    setEpic,
+    editOrDeleteModalEpic,
+    setEditOrDeleteModalEpic,
+    cancelEdit,
+    checkEmptyBeforeSend,
+  };
+
   return (
     <div className="min-h-[100vh]">
-      {isDeleteLoading && <Loading />}
-      {isCloudLoading && <Loading />}
+      {isLoading && <Loading />}
       <div>
         {openEditOrDeleteModal ? (
           <EditOrDeleteModal
-            onClose={onEditOrDeleteModalClose}
+            onClose={closeEditOrDeleteModal}
             handleBucketEditModalOpen={handleEdit}
-            handleDeleteModalOpen={handleDeleteModalOpen}
+            handleDeleteModalOpen={openDeleteModal}
           />
         ) : null}
         {deleteModalOpen ? (
           <DeleteCategoryOrPhotoModal
-            onClose={onDeleteModalClose}
+            onClose={closeDeleteModal}
             targetId={targetId}
             epic={epic}
             setDeleteCategory={setDeleteCategory}
             setDeleteContent={setDeleteContent}
-            categoryOwner={categoryOwner!}
-            setIsLoading={setIsDeleteLoading}
+            setIsLoading={setIsLoading}
+            getCategory={get_all_category}
           />
         ) : null}
         <TopBar title="포토 클라우드" />
         <PhotoCloudCategory
-          setDeleteCategory={setDeleteCategory}
           deleteCategory={deleteCategory}
-          cancelEdit={cancelEdit}
           setEditCategoryThumbnail={setEditCategoryThumbnail}
           editCategoryThumbnail={editCategoryThumbnail}
-        ></PhotoCloudCategory>
-        {selectedCategory && (
+          getCategory={get_all_category}
+          {...commonProps}
+        />
+        {categoryId && (
           <PhotoCloudDetail
-            setOpenEditOrDeleteModal={setOpenEditOrDeleteModal}
             setSelectedPhotoId={setSelectedPhotoId}
             selectedPhotoId={selectedPhotoId}
-            selectedCategory={selectedCategory}
-            setEpic={setEpic}
-            epic={epic}
-            setEditOrDeleteModalEpic={setEditOrDeleteModalEpic}
-            editOrDeleteModalEpic={editOrDeleteModalEpic}
-            setDeleteContent={setDeleteContent}
             deleteContent={deleteContent}
             setSelectedPhotoCaption={setSelectedPhotoCaption}
             selectedPhotoCaption={selectedPhotoCaption}
-            cancelEdit={cancelEdit}
-            setCategoryOwner={setCategoryOwner}
-            setEditCategoryThumbnail={setEditCategoryThumbnail}
-          ></PhotoCloudDetail>
+            photoData={photo}
+            getPhoto={get_photo}
+            {...commonProps}
+          />
         )}
       </div>
     </div>
